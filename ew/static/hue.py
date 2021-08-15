@@ -172,7 +172,7 @@ hue_list = [
         ],
         str_saturate="It turns a fantastic shade of... well, everything!!",
         str_name="***Rainbow***",
-        str_desc="Its ***Rainbow*** hue dazzles and amazes you. It comprises the whole color spectrum in an crude, Photoshop-tier gradient. It’s so obnoxious… and yet, decadent!",
+        str_desc="Its ***Rainbow*** hue dazzles and amazes you. It comprises the whole color spectrum in a crude, Photoshop-tier gradient. It’s so obnoxious… and yet, decadent!",
     ),
     EwHue(
         id_hue=ewcfg.hue_id_pink,

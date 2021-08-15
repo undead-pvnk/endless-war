@@ -73,6 +73,7 @@ def get_weapon_type_stats(weapon_type):
             "crit_chance": 0.1,
             "crit_multiplier": 2,
             "hit_chance": 0.9,
+            "mass_apply_status": ewcfg.status_burning_id
         },
         "explosive": {
             "damage_multiplier": 0.5,
@@ -101,7 +102,7 @@ def get_weapon_type_stats(weapon_type):
     return types[weapon_type]
 
 
-def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_multiplier = None, crit_chance = None, crit_multiplier = None, hit_chance = None):
+def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_multiplier = None, crit_chance = None, crit_multiplier = None, hit_chance = None, apply_status = None, mass_apply_status = None):
     weapon_stats = get_weapon_type_stats(weapon_type)
     if cost_multiplier:
         weapon_stats["cost_multiplier"] = cost_multiplier
@@ -113,6 +114,10 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_mul
         weapon_stats["crit_multiplier"] = crit_multiplier
     if hit_chance:
         weapon_stats["hit_chance"] = hit_chance
+    if apply_status:
+        weapon_stats["apply_status"] = apply_status
+    if mass_apply_status:
+        weapon_stats["mass_apply_status"] = mass_apply_status
 
     def get_hit_damage(ctn):
         hit_damage = 0
@@ -122,7 +127,9 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_mul
         hit_roll = min(random.random(), random.random()) if player_has_sharptoother else random.random()
         guarantee_crit = (weapon_type == "precision" and ctn.user_data.sidearm == -1)
 
-        if hit_roll < (weapon_stats["hit_chance"] + ctn.hit_chance_mod):
+        ignore_hitchance = weapon_stats["hit_chance"] == -1
+
+        if (hit_roll < (weapon_stats["hit_chance"] + ctn.hit_chance_mod)) or ignore_hitchance:
             effective_multiplier = weapon_stats["damage_multiplier"]
             if "variable_damage_multiplier" in weapon_stats:
                 effective_multiplier += random.random() * weapon_stats["variable_damage_multiplier"]
@@ -132,6 +139,9 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_mul
                 hit_damage *= weapon_stats["crit_multiplier"]
                 if not ("shots" in weapon_stats):
                     ctn.crit = True
+
+            ctn.apply_status = weapon_stats.get("apply_status")
+            ctn.apply_bystander_status = weapon_stats.get("mass_apply_status")
 
         return hit_damage
 
@@ -202,6 +212,7 @@ def wef_staff(ctn = None):
         lambda ctn: (ctn.user_data.poi_death == ctn.user_data.poi) or (ctn.shootee_data.poi_death == ctn.shootee_data.poi),
         lambda ctn: (ctn.user_data.id_killer == ctn.shootee_data.id_user) or (ctn.user_data.id_user == ctn.shootee_data.id_killer),
         lambda ctn: (ctn.shootee_data.life_state == ewcfg.life_state_juvenile) or (ctn.shootee_data.life_state == ewcfg.life_state_enlisted and ctn.shootee_data.faction == ctn.user_data.faction),
+        lambda ctn: (ctn.shootee_data.gender == ctn.user_data.gender), # SGAB, or Same Gender Attack Bonus
     }
     for condition in conditions:
         try:
@@ -266,18 +277,6 @@ def wef_watercolors(ctn = None):
     elif aim == 1000:
         ctn.crit = True
         ctn.slimes_damage *= 1
-
-
-def wef_fingernails(ctn = None):
-    ctn.slimes_damage = int(ctn.slimes_damage * 0.8)
-    aim = (random.randrange(10) + 1)
-    user_mutations = ctn.user_data.get_mutations()
-    # ctn.sap_damage = 2
-    ctn.miss = False
-
-    if aim >= (10 - int(10 * ctn.crit_mod)):
-        ctn.crit = True
-        ctn.slimes_damage *= 2
 
 
 def wef_harpoon(ctn = None):
@@ -434,7 +433,7 @@ weapon_list = [
         str_weaponmaster="They are a rank {rank} {title} of the SMG.",
         # str_trauma_self = "Your copious amount of bullet holes trigger onlookers’ Trypophobia.",
         # str_trauma = "Their copious amount of bullet holes trigger onlookers’ Trypophobia.",
-        str_kill="**RATTA TATTA TAT!!** {name_player}’s bullet rip through what little was left of {name_target} after the initial barrage. All that remains is a few shreds of clothing and splatterings of slime. {emote_skull}",
+        str_kill="**RATTA TATTA TAT!!** {name_player}’s bullets rip through what little was left of {name_target} after the initial barrage. All that remains is a few shreds of clothing and splatterings of slime. {emote_skull}",
         str_killdescriptor="riddled with bullets",
         str_damage="A reckless barrage of bullets pummel {name_target}’s {hitzone}!!",
         str_duel="**RATTA TATTA TAT!!** {name_player} and {name_target} spray bullets across the floor and walls of the Dojo, having a great time.",
@@ -850,6 +849,7 @@ weapon_list = [
         fn_effect=get_normal_attack(weapon_type='tool'),
         str_description="It's a super fishing rod.",
         acquisition=ewcfg.acquisition_smelting,
+        classes=[ewcfg.weapon_class_juvie],
         stat=ewcfg.stat_fishingrod_kills,
         is_tool=1
     ),
@@ -1336,10 +1336,8 @@ weapon_list = [
         str_duel="",
         str_description="",
         str_scalp=" Multiple slash marks run across it.",
-        fn_effect=wef_fingernails,
+        fn_effect=get_normal_attack(weapon_type="normal", hit_chance=-1),
         price=0,
-        vendors=[],
-        classes=[],
         stat=ewcfg.stat_fingernails_kills,
         # sap_cost = 3,
         captcha_length=8
@@ -1415,7 +1413,7 @@ weapon_list = [
             "ripper",
             "motoraxe"
         ],
-        str_crit="**Critical hit!!** The jagged teeth of the chainsaw rest within {name_target}, body as the slime flies!!",
+        str_crit="**Critical hit!!** The jagged teeth of the chainsaw rest within {name_target}'s body as the slime flies!!",
         str_miss="**You missed!!** In {name_player}’s excitement and desperation neither chain nor saw hits {name_target}!",
         str_equip="You equip the chainsaw.",
         str_name="chainsaw",
@@ -1424,7 +1422,7 @@ weapon_list = [
         str_weaponmaster="They are a rank {rank} {title} of the chainsaw.",
         # str_trauma_self = "Your body runs jagged with large chunks missing and patches of skin torn up.",
         # str_trauma = "Their body runs jagged with large chunks missing and patches of skin torn up.",
-        str_kill="**REEERNREERN!!** {name_player} revs up their chainsaw and carves up {name_target}’s torso, cutting through the guts,bile,viscera, and slime; sending it all flying. They’ve been cut down to size. {emote_skull}",
+        str_kill="**REEERNREERN!!** {name_player} revs up their chainsaw and carves up {name_target}’s torso, cutting through the guts, bile, viscera, and slime, sending it all flying. They’ve been cut down to size. {emote_skull}",
         str_killdescriptor="chainsaw’d",
         str_damage="The numerous finely tooth blades tear at {name_target}’s {hitzone}!!",
         str_duel="**...** {name_player} and {name_target} clash with each other chainsaw blow for chainsaw blow like badasses.",
@@ -1461,11 +1459,12 @@ weapon_list = [
         str_reload="You carefully dip each bullet in a cup of tea before loading them into the gun.",
         str_reload_warning="**OH, BOTHER!** {name_player}’s hunting rifle just ran out bullets!!",
         str_scalp="A single, clean hole pierces the scalp. Ahhh, the thrill of the hunt...",
-        fn_effect=get_normal_attack(weapon_type='precision'),
-        classes=[ewcfg.weapon_class_ammo],
+        fn_effect=get_normal_attack(cost_multiplier=1.2, weapon_type='precision'),
+        classes=[ewcfg.weapon_class_ammo, ewcfg.weapon_class_captcha],
         stat=ewcfg.stat_huntingrifle_kills,
         clip_size=6,
-        acquisition=ewcfg.acquisition_smelting
+        acquisition=ewcfg.acquisition_smelting,
+        captcha_length=4
     ),
     EwWeapon(  # 38
         id_weapon=ewcfg.weapon_id_harpoon,
@@ -1519,11 +1518,40 @@ weapon_list = [
         str_scalp="A single, clean hole pierces the scalp. Ahhh, the thrill of the hunt...",
         fn_effect=get_normal_attack(cost_multiplier=0.7, weapon_type='burst_fire'),
         classes=[ewcfg.weapon_class_ammo],
-        stat=ewcfg.stat_huntingrifle_kills,
+        stat=ewcfg.stat_rifle_kills,
         clip_size=1000
+    ),
+    EwWeapon(  # 39
+        id_weapon=ewcfg.weapon_id_slimeoidwhistle,
+        alias=[
+            "slimeoidwhistle",
+            "swhistle",
+            "sw"
+        ],
+        str_crit="Your whistle makes a triumphant call!! {slimeoid_name} psyches itself up and unleashes {slimeoid_crit} upon {name_target} for a devastating and lethal blow!!",
+        str_miss="Your whistle makes an awful screech! {slimeoid_name} is wandering around aimlessly before looking at you with confusion.",
+        str_equip="You equip the whistle.",
+        str_name="slimeoid whistle",
+        str_weapon="a slimeoid whistle",
+        str_weaponmaster_self="You are a rank {rank} trainer of the slimeoid whistle.",
+        str_weaponmaster="They are a rank {rank} trainer of the the slimeoid whistle.",
+        str_kill="{name_player}’s shrill screech overpowers {name_target}'s screams. {slimeoid_name} {slimeoid_kill} They enjoy a nice fleshy snack after the deed is done. {emote_skull}",
+        str_killdescriptor="sicced on",
+        str_damage="{name_target} is {slimeoid_dmg} by {slimeoid_name}!!",
+        str_duel="[ ! ] {name_player} challenges {name_target} to a ‘slimeoid battle’. They summon their slimeoids and begin attacking each other.",
+        str_description="It's a little whistle. It's loud as hell, and every second you blow it it adds a couple zeroes to the ol' geiger counter.",
+        str_scalp="It’s drenched in slimeoid bile.",
+        fn_effect=get_normal_attack(weapon_type='burst_fire'),
+        classes=[],
+        stat=ewcfg.stat_whistle_kills,
+        acquisition=ewcfg.acquisition_smelting
     ),
 
 ]
+
+
+
+
 
 # A map of id_weapon to EwWeapon objects.
 weapon_map = {}
@@ -1547,4 +1575,50 @@ weapon_type_convert = {
     ewcfg.weapon_id_paintgun: wef_paintgun,
     ewcfg.weapon_id_paintbrush: get_normal_attack(weapon_type='small_game'),
     ewcfg.weapon_id_roomba: get_normal_attack()
+}
+
+slimeoid_weapon_type_convert = {
+    -1: get_normal_attack(weapon_type='tool'),
+    0:  get_normal_attack(weapon_type='tool'),
+    1:  get_normal_attack(weapon_type='tool'),
+    2:  get_normal_attack(weapon_type='small_game'),
+    3:  get_normal_attack(weapon_type='small_game'),
+    4:  get_normal_attack(),
+    5:  get_normal_attack(),
+    6:  get_normal_attack(weapon_type='variable_damage'),
+    7:  get_normal_attack(weapon_type='variable_damage'),
+    8:  get_normal_attack(weapon_type='heavy'),
+    9:  get_normal_attack(weapon_type='heavy'),
+    10: get_normal_attack(weapon_type='burst_fire'),
+}
+
+slimeoid_dmg_text = {
+    "blades":"slashed cleanly across the chest",
+    "teeth":"impaled by numerous sharp teeth",
+    "grip":"being deprived of oxygen",
+    "bludgeon":"struck hard in the skull",
+    "spikes":"skewered by a volley of jagged spikes",
+    "electricity":"tazed by a continuous arc of electricity",
+    "slam":"crushed under a massive weight"
+}
+
+slimeoid_kill_text = {
+    "blades":"unleashes a flurry of strikes too fast for the eye to see. After a few heartbeats, slices slowly slide apart like fresh cut salami.",
+    "teeth":"clenches their prey in its powerful jaws. Ripping and tearing the head from its body until there’s nothing left but a stump.",
+    "grip":"has a tight stranglehold on their prey, squeezing until their brain bursts out of their skull like a cyst filled with grey matter.",
+    "bludgeon":"swiftly bashes their prey with force of a semi truck. Their bones are flung out of their body before vaporizing against a nearby building.",
+    "spikes":"slings a hail of gnarled spikes, pinning their victim against the wall like a carnival act. It eagerly picks off meat chunks of its prey to feast on like skewered BBQ.",
+    "electricity":"filled with unlimited power, charges up for a massive powerful arc, unleashing a blinding lightning strike. The taste of metal fills the static-charged atmosphere before its prey is struck with 80 jigawats of power.",
+    "slam":"jumps high into the air. With the force of an atomic warhead they crash down through the stratosphere and obliterate their prey below, painting the district green. "
+}
+
+
+slimeoid_crit_text = {
+"spit":"a rain of high velocity corrosive acid",
+"laser":"a searing white hot photon beam",
+"spines":"a hail of massive jagged spikes",
+"throw":"its unmatched strength and throws a car",
+"TK":"a brain blast of psychic waves",
+"fire":"a torrent of unrelenting dragon-like flames",
+"webs":"a high pressure string shot of sticky webs"
 }

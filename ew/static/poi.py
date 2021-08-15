@@ -175,7 +175,7 @@ poi_list = [
         property_class = "c",
         is_district = True,
         is_capturable = True,
-        neighbors = {'arsonbrook': 60, 'brawlden': 60, 'oldnewyonkers': 60, 'greencakecafe': 20},
+        neighbors = {'arsonbrook': 60, 'brawlden': 60, 'oldnewyonkers': 60, 'greencakecafe': 20, 'rpcity': 20},
         topic = "Home to the R&D headquarters of many a small business and international conglomerate alike. Don't drink the water.",
         wikipage = "https://rfck.miraheze.org/wiki/Little_Chernobyl",
     ),
@@ -1262,7 +1262,7 @@ poi_list = [
         alias = ['outsidetheplannedparenthood', 'outsidetheplanned', 'plannedparenthood', 'planned'],
         str_name = "Outside the Planned Parenthood",
         str_desc = "Abandon hope, all ye who enter here. The NLACakaNM Planned Parenthood is different from the standard haunted house in that the unspeakable abominations living there are well-documented and deadly to even the most seasoned gangster. I would just stay away from the ruined old building and spray down the supermarket across the street. This street connects back into Jaywalker Plain. This street is connected to Pond Scum Road, Black Alleyways, and Tent City. This street also exits into The Jaywalker Plain Subway Station",
-        channel = "outside-the-planned-parenthood",
+        channel = "black-alleyways",
         major_role = "jaywalkerplain_major",
         minor_role = "jaywalkerplainstreeta_minor",
         permissions = {'jaywalkerplainstreeta': ['read', 'send', 'connect']},
@@ -2530,7 +2530,7 @@ poi_list = [
     ),
     EwPoi(
         id_poi = "slimecorpslimeoidlaboratory",
-        alias = ['lab', 'labs', 'laboratory', 'slimecorpslimeoidlaboratory', 'slimecorpslimeoidlab', 'slimecorplab', 'slimecorplabs', 'slimeoidlaboratory', 'slimeoidlab', 'slimeoidlabs', 'slab', 'slimeoid'],
+        alias = ['lab', 'labs', 'laboratory', 'slimecorpslimeoidlaboratory', 'slimecorpslimeoidlab', 'slimecorplab', 'slimecorplabs', 'slimeoidlaboratory', 'slimeoidlab', 'slimeoidlabs', 'slab', 'sl', 'slimeoid', 'build a bitch'],
         str_name = "N.L.A.C.U. Slimeoid Laboratory",
         str_desc = "A nondescript building containing mysterious industrial equipment Slimecorp left behind. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from the university on the entranceway explaining the use of its equipment. Use !instructions to read it.\nPast countless receptionists' desks, Slimeoid incubation tubes, legal waivers, and down at least one or two secured elevator shafts, lay several mutation test chambers. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a futuristic neon LED display which has a hundred different PoweShell windows open that are all running Discord bots. If you choose to tinker with mutations, an employee will take you to one of these rooms and inform you of the vast and varied ways they can legally fuck with your body's chemistry.\n\nExits into Brawlden.",
         channel = "nlacu-labs",
@@ -2829,7 +2829,7 @@ poi_list = [
     ),
     EwPoi(
         id_poi = "thecountryclub",
-        alias = ['country', 'club', 'cc'],
+        alias = ['country', 'club', 'cc', 'countryclub'],
         str_name = "The Country Club",
         str_desc = "On top of a grassy hill, behind several wired/electric fences, lies Dreadford's famous country club. The lodge itself is a huge, old wooden lodge from the 1800s, with hundreds of knick-knacks, hunting trophies, and historic photos hung up on the wall, and tacky rugs and furniture around a roaring fire in its center. Sprawling out from the club itself is the complex's signature golf course, where all the pompous rich assholes go to waste their time and chit-chat with each other about cheating on their wives.\n\nExits into Dreadford.",
         channel = "the-country-club",
@@ -4600,6 +4600,31 @@ poi_list = [
         is_outskirts = False,
         neighbors = {'maimridgestreeta': 20},
         isSplit= 'maimridgestreetc'
+    ),
+    EwPoi(
+        id_poi = "rpcity",
+        alias = [
+            "rp",
+            "rp city",
+            "roleplay city",
+            "rpc",
+            "costumestore",
+            "costume"
+        ],
+        str_name = "RP City",
+        str_desc = "This place gives you the fucking creeps. A run-down shell of its former self, the RP City store has been long forgotten by most of the residents of NLACakaNM, but every Double Halloween, it somehow comes crawling back. All the amenities and costumes are ragged and decrepit, but it seems there's still a fresh supply of costume creation kits. Oh yeah, the register is also manned by a ghost, because why wouldn't it be. He doesn't seem to mind you browsing though, you figure he's just here to collect a paycheck. Such is life... er... the afterlife, rather.",
+        channel = "rp-city",
+        major_role="littlechernobyl_major",
+        minor_role="nullminorrole",
+        permissions= {"rp-city": ["read", "send", "connect"]},
+        pvp = False,
+        closed = True, #TODO: Change this when Double Halloween comes around you fuckin nerds
+        str_closed = "RP City is closed outside of Double Halloween. Come back when it's a little... spookier.",
+        vendors = ["RP City"],
+        is_subzone = True,
+        mother_districts = [ "littlechernobyl" ],
+        neighbors = { "littlechernobyl": 20},
+        wikipage = "https://rfck.miraheze.org/wiki/Little_Chernobyl#RP_City"
     ),
 ]
 

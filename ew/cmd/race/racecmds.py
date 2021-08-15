@@ -28,6 +28,9 @@ async def set_race(cmd):
         'black',
         'aryan',
         'epic',  # this one is for you, meaty
+        'based',
+        'cringe',
+        'fucking idiot',
     ]
 
 

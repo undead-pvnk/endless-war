@@ -3,9 +3,9 @@ import random
 import time
 
 from . import core as ewutils
-from .combat import EwUser
 from .frontend import EwResponseContainer
 from ..backend import core as bknd_core
+from ..backend.user import EwUserBase as EwUser
 from ..backend.market import EwMarket
 from ..backend.player import EwPlayer
 from ..backend.slimeoid import EwSlimeoidBase
@@ -22,13 +22,6 @@ class EwSlimeoid(EwSlimeoidBase):
     def die(self):
         self.life_state = ewcfg.slimeoid_state_dead
         self.id_user = ""
-
-    def delete(self):
-        bknd_core.execute_sql_query("DELETE FROM slimeoids WHERE {id_slimeoid} = %s".format(
-            id_slimeoid=ewcfg.col_id_slimeoid
-        ), (
-            self.id_slimeoid,
-        ))
 
     def haunt(self):
         resp_cont = EwResponseContainer(id_server=self.id_server)
@@ -342,3 +335,68 @@ def find_slimeoid(slimeoid_search = None, id_user = None, id_server = None):
         bknd_core.databaseClose(conn_info)
 
     return slimeoid_sought
+
+def generate_slimeoid(id_owner = None, id_server = None, name = None, hue = None, level = None, persist = False, force_hue = False):
+    new_slimeoid = EwSlimeoid()
+    
+    if id_owner:
+        new_slimeoid.id_user = id_owner
+    
+    if id_server:
+        new_slimeoid.id_server = id_server
+    
+    if name:
+        new_slimeoid.name = name
+    else:
+        while new_slimeoid.name == "" or len(new_slimeoid.name) >= 32:
+            sl_name_prefix = [
+                "Dr. ", "Mr. ", "Mrs. ", "King ", "Queen ", "Sir ", "Xx_", "Lil' ", "Xr. ",
+                "Wet ", "Dry ", "Spicy ", "Sweet ", "Bitter ", "Sour ", "Savoury ", "Lord "
+            ]
+            sl_name_suffix = [
+                " the Destroyer", " the Wise", " III", " II", " IV", "_xX",
+            ]
+            new_name = random.choice(ewcfg.captcha_dict).capitalize()
+            if random.randint(0, 10) <= 2:
+                new_name = new_name + "-" + random.choice(ewcfg.captcha_dict).capitalize()
+            if random.randint(0, 10) <= 5:
+                new_name = random.choice(sl_name_prefix) + new_name
+            if random.randint(0, 10) >= 5:
+                new_name = new_name + random.choice(sl_name_suffix)
+            
+            new_slimeoid.name = new_name
+    if hue:
+        new_slimeoid.hue = hue
+    else:    
+        if random.randint(0, 2) == 0 or force_hue:
+            new_slimeoid.hue = random.choice(hue_static.hue_list).id_hue
+    if level:
+        new_slimeoid.level = level
+    else:
+        new_slimeoid.level = random.randint(1, 10)
+
+    for lvl in range(new_slimeoid.level):
+        choice = random.randint(0, 2)
+        if choice == 0:
+            new_slimeoid.atk += 1
+        elif choice == 1:
+            new_slimeoid.defense += 1
+        elif choice == 2:
+            new_slimeoid.intel += 1
+
+    # Generate all the body parts
+    new_slimeoid.body = random.choice(sl_static.body_names)
+    new_slimeoid.head = random.choice(sl_static.head_names)
+    new_slimeoid.legs = random.choice(sl_static.mobility_names)
+    new_slimeoid.armor = random.choice(sl_static.defense_names)
+    new_slimeoid.weapon = random.choice(sl_static.offense_names)
+    new_slimeoid.special = random.choice(sl_static.special_names)
+    new_slimeoid.ai = random.choice(sl_static.brain_names)
+
+    new_slimeoid.life_state = 2 # Finally, bring your creation to life!
+
+    if persist:
+        new_slimeoid.persist()
+
+    return new_slimeoid
+    

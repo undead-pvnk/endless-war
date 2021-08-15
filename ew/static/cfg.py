@@ -1,7 +1,7 @@
 # Global configuration options.
 
 
-version = "v4.0085 Cybersmell"
+version = "v4.0086 Gender Update"
 
 dir_msgqueue = 'msgqueue'
 
@@ -919,6 +919,7 @@ cmd_shoot_alt5 = cmd_prefix + 'curbstomp'
 cmd_shoot_alt6 = cmd_prefix + 'hug'
 cmd_shoot_alt7 = cmd_prefix + 'stab'
 cmd_shoot_alt8 = cmd_prefix + 'murder'
+cmd_shoot_alt9 = cmd_prefix + 'bust'
 cmd_attack = cmd_prefix + 'attack'
 cmd_reload = cmd_prefix + 'reload'
 cmd_reload_alt1 = cmd_prefix + 'loadthegun'
@@ -1211,6 +1212,7 @@ cmd_paycheck = cmd_prefix + 'paycheck'
 cmd_payday = cmd_prefix + 'payday'
 cmd_win = cmd_prefix + 'win'
 cmd_slimefest = cmd_prefix + 'slimefest'
+cmd_identify = cmd_prefix + 'identify'
 
 cmd_preserve = cmd_prefix + 'preserve'
 cmd_stink = cmd_prefix + 'stink'
@@ -1745,9 +1747,9 @@ bleed_half_life = 60 * 5  # five minutes
 bleed_tick_length = 10
 
 # how often to decide whether or not to spawn an enemy
-# enemy_spawn_tick_length = 60 * 3 # Three minutes
+enemy_spawn_tick_length = 60 * 3 # Three minutes
 # enemy_spawn_tick_length = 1
-enemy_spawn_tick_length = 30
+# enemy_spawn_tick_length = 30
 # how often it takes for hostile enemies to attack
 enemy_attack_tick_length = 5
 
@@ -1995,6 +1997,18 @@ emote_ms_8 = ":eight:"
 emote_delete_tweet = emote_blank
 # Slime twitter verified checkmark
 emote_verified = "<:slime_checkmark:797234128398319626>"
+
+# Emotes for !thrash and !dab variants
+emote_benkart = "<a:benkart:644520407734550529>"
+emote_munchykart = "<a:munchykart:644520408002854913>"
+emote_taasenchamp = "<:TaasenChamp:804369420583567392>"
+emote_freaker = "<a:FREAKER:638902310814220296>"
+emote_hellaben = "<:hellaben:431418525530456064>"
+emote_sweetmunch = "<:sweetmunch:431418525593108490>"
+emote_phantomhorn = "<:phantomhorn:431282111534858244>"
+emote_strawberrymilk = "<:strawberrymilk:431282128421126144>"
+emote_dab = "<a:dab:805341290220093450>"
+emote_thrash = "<a:thrash:805341344331202620>"
 
 # mining types
 mining_type_minesweeper = "minesweeper"
@@ -2251,6 +2265,7 @@ col_race = 'race'
 col_time_racialability = 'time_racialability'
 col_time_lastpremiumpurchase = 'time_lastpremiumpurchase'
 col_verified = 'verified'
+col_gender = 'gender'
 
 col_attack = 'attack'
 col_speed = 'speed'
@@ -2641,6 +2656,7 @@ stat_roomba_kills = 'roomba_kills'
 stat_chainsaw_kills = 'chainsaw_kills'
 stat_megachainsaw_kills = 'megachainsaw_kills'
 stat_huntingrifle_kills = 'huntingrifle_kills'
+stat_whistle_kills = 'whistle_kills'
 stat_harpoon_kills = 'harpoon_kills'
 
 # Categories of events that change your slime total, for statistics tracking
@@ -2754,6 +2770,8 @@ item_id_quattuorsexagintuplestuffedcrust = "quattuorsexagintuplestuffedcrust"
 item_id_forbiddenstuffedcrust = "theforbiddenstuffedcrust"
 item_id_forbidden111 = "theforbiddenoneoneone"
 item_id_tradingcardpack = "tradingcardpack"
+item_id_promotradingcardpack = "promotradingcardpack"
+item_id_tcgboosterbox = "tcgboosterbox"
 item_id_stick = "stick"
 item_id_gameguide = "gameguide"
 item_id_juviegradefuckenergybodyspray = "juviegradefuckenergybodyspray"
@@ -3068,6 +3086,8 @@ weapon_id_chainsaw = 'chainsaw'
 weapon_id_huntingrifle = 'huntingrifle'
 weapon_id_harpoon = 'harpoon'
 weapon_id_model397 = 'model397'
+weapon_id_slimeoidwhistle = 'whistle'
+
 
 weapon_id_spraycan = 'spraycan'
 weapon_id_paintgun = 'paintgun'
@@ -3241,7 +3261,8 @@ cabinets_list = [
     "This is a Flanders Killer 6 arcade cabinet.\nClearly this is the greatest game the world has ever conceived.\nhttps://www.silvergames.com/en/flanders-killer-6",
     "This is a Peasant's Quest arcade cabinet.\nThe struggles of the main guy here are a lot like what juvies go through: a rise to greatness, false hope, and inevitable worthless destruction. Onward!\nhttp://homestarrunner.com/disk4of12.html",
     "This is a Super Mario 63 arcade cabinet.\nSince Reggie Fils-Amie is too fucking cowardly to set foot in NLACakaNM, we have to resort to bootleg merchandise. Relatively good bootlegs, but bootlegs nonetheless.\nhttps://www.newgrounds.com/portal/view/498969",
-    "This is a World's Hardest Game arcade cabinet.\nThere were countless stories of moms getting bankrupted because their kids dumped their money into these.\nhttps://www.coolmathgames.com/0-worlds-hardest-game "
+    "This is a World's Hardest Game arcade cabinet.\nThere were countless stories of moms getting bankrupted because their kids dumped their money into these.\nhttps://www.coolmathgames.com/0-worlds-hardest-game",
+	"This is an Endless Warcade: Endless Climber arcade cabinet.\nCreated by **Sceptrai**, countless hours have been wasted by the citizens of NLACakaNM attempting to summit ENDLESS WAR itself.\nhttps://blastedheath.itch.io/endless-warcade-endless-climber"
 ]
 
 browse_list = [
@@ -3320,6 +3341,8 @@ jams_guitar = ["https://www.youtube.com/watch?v=hNRHHRjep3E&ab_channel=rtwodtwo5
 jams_maracas = ["https://www.youtube.com/watch?v=etYb-p8uhWA&ab_channel=GilvaSunner", "https://www.youtube.com/watch?v=EstIvN0_hcg&ab_channel=Cz%C5%82owiekDrzewo", "https://www.youtube.com/watch?v=l8R_OQz_BtU&ab_channel=majabsalu"]
 jams_cornet = ["https://www.youtube.com/watch?v=mPP65UcGxq0&ab_channel=Ham_", "https://www.youtube.com/watch?v=FJrUBEtoNQU&ab_channel=ropa79", "https://www.youtube.com/watch?v=KxibMBV3nFo&ab_channel=TheJazzplaylist"]
 jams_trombone = ["https://www.youtube.com/watch?v=WEWLuBB7_FE&ab_channel=mixablemusic", "https://www.youtube.com/watch?v=lqngnNy1_Cg&ab_channel=DaveYama", "https://www.youtube.com/watch?v=1ZGeYR8b-mg&ab_channel=AllThatJazzDonKaart"]
+jams_otamatone = ["https://www.youtube.com/watch?v=tADkFuime_g&ab_channel=TheRealSullyG","https://www.youtube.com/watch?v=guSESFWNrOY&ab_channel=TheRealSullyG","https://www.youtube.com/watch?v=JtOy2gf_JrA&ab_channel=TheRealSullyG","https://www.youtube.com/watch?v=2wEtVERXQWE","https://www.youtube.com/watch?v=x8hCe3j8CqU"]
+jams_whistle = ["https://www.youtube.com/watch?v=JcJDLg_U7tg", "https://www.youtube.com/watch?v=XSwxO95nEZE", "https://www.youtube.com/watch?v=zEYTE1QNSkk"]
 
 jam_tunes = {
     "solidpoudringuitar": jams_guitar,
@@ -3331,7 +3354,9 @@ jam_tunes = {
     "beastskindrums": jams_drums,
     "bass": jams_bass,
     "trombone": jams_trombone,
-    "cornet": jams_cornet
+    "cornet": jams_cornet,
+    "ferroslimeoidotamatone": jams_otamatone,
+    "whistle": jams_whistle
 }
 
 howls = [
@@ -3777,13 +3802,13 @@ void_fishing_text = [
                         "You get the urge to jump in and try to grab a fish, before the voice reminds you that you can't swim...",
                         "Did the water just wink at you?",
                         "That guy in the water looks so handsome... You should give him your number.",
-                        "Your mother motions you to join her in the water, it's nice and warm!",
+                        "Your mother motions you to join her in the water; it's nice and warm!",
                         "HAHAHAHA OH WOW",
                         "Hmmm?",
-                        "Man, the water looks fucking delicious, you should take a sip.",
+                        "Man, the water looks fucking delicious. You should take a sip.",
                         "Wait, why did you come here again?",
                         "God, what a beautiful smile. So many of them, too.",
-                        "Go on, take a nap, the fish will wait for you.",
+                        "Go on, take a nap. The fish will wait for you.",
                         "What is _that_?",
                         "The girl across the pond has such a nice voice... Please keep singing...",
                     ] + generic_fishing_text
@@ -3866,7 +3891,7 @@ help_responses = {
     weapon_id_molotov: "**The molotov bottles** are an incendiary weapon for sale at the Dojo. Made with a special slime-based concoction powerful enough to level Juvie's Row if applied correctly. This shit is like bottled malice.",
     weapon_id_grenades: "**The grenades** are an explosive weapon for sale at the Dojo. These may actually be nuclear powered, judging by their ability to wipe out entire districts full of gangsters in one blast.",
     weapon_id_dclaw: "**The Dragon Claw** is an incendiary weapon acquired via smelting. It merges into your body, turning your arm into a weapon of mass destruction.",
-    weapon_id_bow: "**The minecraft bow** is a small-game weapon acquired via smelting. The calming music most people hum while wielding this thing is quite the interesting contrast, when considered along with the impaled corpses they leave behind.",
+    weapon_id_bow: "**The Minecraft bow** is a small-game weapon acquired via smelting. The calming music most people hum while wielding this thing is quite the interesting contrast, when considered along with the impaled corpses they leave behind.",
 
     weapon_id_garrote: "**The Garrote Wire** is a unique weapon. It has a damage modifier of 1500%, no cost modifier, guaranteed hits, and a 1% chance for a crit, which does 1000% damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
     weapon_id_minigun: "The **Minigun** is a special variant of **variable damage weapons**. It deals ten attacks per kill command with an overall cost modifier of 500%, and each attack has a 30% damage modifier, 10% crit chance, a crit multiplier of 200%, and a 50% chance to hit, with a captcha of 6. This is a strange weapon that can potentially deal astronomical damage if used in the right circumstances, and if you're willing to deal with its exceptionally long captcha.",
@@ -3879,10 +3904,11 @@ help_responses = {
     weapon_id_watercolors: "**Watercolors** are a paint tool for sale at Based Hardware. It does a set 4000 influence per shot. It has a captcha length of 3, a miss chance of 10% and a .1% chance for a crit, which zeros out the whole district regardless of owner.",
     weapon_id_thinnerbomb: "**Thinner bombs** are a paint tool for sale at Based Hardware. It has a capping modifier of 0.15 and a spray cost mod of 2. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence. When you cap with a thinner bomb, it is used up, and you have to buy more. When decapping, damage is multiplied by 10.",
 
-    weapon_id_hoe: "**The Hoe** is a farming tool for sale at The Ooze Gardens Farms. It can be equipped by juvies to give a 1.5 modifier of slime gain on a !reap command.",
-    weapon_id_pitchfork: "**The Pitchfork** is a farming tool for sale at The Ooze Gardens Farms. It can be equipped by juvies to multiply your crops on a !reap command by 2.",
-    weapon_id_pickaxe: "**The Pickaxe** is a mining tool acquired via mining. Equipping the pickaxe as a gangster gives you double and a 1.5x chance of unearthing slime poudrins whilst mining.",
-    weapon_id_fishingrod: "**The Fishingrod** is a fishing tool acquired via smelting. The fishing rod when equipped doubles your slimegain from a !reel command.",
+    weapon_id_hoe: "**The Hoe** is a farming tool for sale at the Atomic Forest. It can be equipped by juvies to give a 1.5x modifier of slime gain on a !reap command.",
+    weapon_id_pitchfork: "**The Pitchfork** is a farming tool for sale at the Atomic Forest. It can be equipped by juvies to multiply your crops on a !reap command by 2.",
+    weapon_id_shovel: "**The Shovel** is a farming tool for sale at the Atomic Forest. It can be equipped by juvies to increase the chance of a poudrin upon a !reap command from 1/30 to 1/6.",
+    weapon_id_pickaxe: "**The Pickaxe** is a mining tool acquired via smelting. Equipping the pickaxe as a gangster gives you double slimegain and a 1.5x chance of unearthing slime poudrins whilst mining.",
+    weapon_id_fishingrod: "**The Fishingrod** is a fishing tool acquired via smelting. When equipped and fully anointed, the fishing rod increases the chance for rare fish upon a !reel.",
     # "otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
 }
 
@@ -3908,7 +3934,7 @@ weapon_help_responses_ordered_keys = [
     weapon_id_garrote, weapon_id_minigun, weapon_id_staff,
     weapon_id_spraycan, weapon_id_paintgun, weapon_id_paintroller, weapon_id_paintbrush,
     weapon_id_watercolors, weapon_id_thinnerbomb,
-    weapon_id_hoe, weapon_id_pitchfork, weapon_id_pickaxe, weapon_id_fishingrod,
+    weapon_id_hoe, weapon_id_pitchfork, weapon_id_shovel, weapon_id_pickaxe, weapon_id_fishingrod,
     "normal", "multiple-hit", "variable-damage",
     "small-game", "heavy", "defensive",
     "precision", "incendiary", "explosive",
@@ -4210,6 +4236,9 @@ enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
 enemy_type_civilian = 'civilian'
 enemy_type_civilian_innocent = 'innocent'
 
+enemy_type_slimeoidtrainer = 'slimeoidtrainer'
+enemy_type_ug_slimeoidtrainer = 'undergroundslimeoidtrainer'
+
 # Gankers Vs. Shamblers enemies
 enemy_type_gaia_poketubers = "poketubers"
 enemy_type_gaia_pulpgourds = "pulpgourds"
@@ -4284,6 +4313,8 @@ enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_gre
 
 # List of enemies that spawn in the Nuclear Beach
 pre_historic_enemies = [enemy_type_slimeasaurusrex, enemy_type_dinoslime, enemy_type_slimeadactyl, enemy_type_mammoslime]
+
+slimeoid_trainers = [enemy_type_slimeoidtrainer, enemy_type_ug_slimeoidtrainer]
 
 # List of enemies used in the Gankers Vs. Shamblers event
 gvs_enemies_gaiaslimeoids = [
@@ -4468,6 +4499,8 @@ enemy_drop_tables = {
 }
 for enemy in gvs_enemies:
     enemy_drop_tables[enemy] = [{item_id_slimepoudrin: [100, 1, 1]}]
+for enemy in slimeoid_trainers:
+    enemy_drop_tables[enemy] = [{item_id_slimepoudrin: [100, 1, 1]}]
 
 # When making a new enemy, make sure to fill out slimerange, ai, attacktype, displayname, raredisplayname, and aliases.
 # Enemy data tables. Slime is stored as a range from min to max possible slime upon spawning.
@@ -4646,6 +4679,22 @@ enemy_data_table = {
         "displayname": "Innocent Civilian",
         "raredisplayname": "Puppy-Eyed Youth",
         "aliases": ["townsfolk", "citizen", "civilian", "innocent", "person"]
+    },
+    enemy_type_slimeoidtrainer: {
+        "slimerange": [10001, 10001],
+        "ai": enemy_ai_defender,
+        "attacktype": enemy_attacktype_amateur,
+        "displayname": "Slimeoid Trainer",
+        "raredisplayname": "Slimeoid Champion",
+        "aliases": ["slimeoidt", "st", "strainer", "champ", "trainer"]
+    },
+    enemy_type_ug_slimeoidtrainer: {
+        "slimerange": [10001, 10001],
+        "ai": enemy_ai_defender,
+        "attacktype": enemy_attacktype_amateur,
+        "displayname": "Suspicious Slimeoid Trainer",
+        "raredisplayname": "Villainous Slimeoid Champion",
+        "aliases": ["slimeoidt", "sst", "sstrainer", "champ", "sustrainer", "villain"]
     },
     enemy_type_gaia_poketubers: {
         "slimerange": [100, 100],
@@ -5359,6 +5408,13 @@ dance_responses = [
     "{} gets the urge to !thrash, but holds back with all their might.",
     "{} just kind of stands there, awkwardly. What did you expect?",
     "{} makes a complete fool of themselves. Everyone gets secondhand embarrassment...",
+    "{} does the Renegade! https://www.youtube.com/watch?v=p8OctG2KWX0",
+    "{} does the Say So! https://www.youtube.com/watch?v=vXqcKCv8U78",
+    "{} does the Cannibal! https://www.youtube.com/watch?v=bn17Hr_EE9A",
+    "{} does the Good 4 U! https://www.youtube.com/watch?v=Zxcu_3hRq0E",
+    "{} does the Build a Bitch! https://www.youtube.com/watch?v=VIKktIQcx-A",
+    "{} does the Lock It! https://www.youtube.com/watch?v=0Mu9jJWx2Ts",
+    "{} does the WAP! https://www.youtube.com/watch?v=x69gQVuReVk"
 ]
 
 # links to SlimeCorp propaganda
@@ -5533,6 +5589,7 @@ captcha_dict = [
     'VIOLENT', 'SQUEEZE', 'LOBSTER', 'WESTERN', 'EASTERN',
     'REGIONS', 'DISCORD', 'KNUCKLE', 'MOLOTOV', 'SHAMBLE',
     'WARFARE', 'BIGIRON', 'POUDRIN', 'PATRIOT', 'MINIGUN',
+    'MONSTER', 'DIVORCE', 'GARROTE', 'ASSAULT', 'PICKAXE',
     # 8
     'GAMEPLAY', 'CONFLICT', 'EXCHANGE', 'FEEDBACK', 'GRENADES',
     'VIOLENCE', 'TACOBELL', 'PIZZAHUT', 'OUTSKIRT', 'WHATEVER',
@@ -5748,6 +5805,7 @@ cmd_debug6 = cmd_prefix + ewdebug.cmd_debug6
 cmd_debug7 = cmd_prefix + ewdebug.cmd_debug7
 cmd_debug8 = cmd_prefix + ewdebug.cmd_debug8
 cmd_debug9 = cmd_prefix + ewdebug.cmd_debug9
+
 cmd_debug11 = cmd_prefix + ewdebug.cmd_debug11
 
 
@@ -5816,3 +5874,4 @@ cmd_debug11 = cmd_prefix + ewdebug.cmd_debug11
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Little_Chernobyl#RP_City"
     },*/"""
+

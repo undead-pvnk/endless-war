@@ -639,7 +639,6 @@ async def item_use(cmd):
         if item.item_type == ewcfg.it_food:
             response = user_data.eat(item)
             user_data.persist()
-            asyncio.ensure_future(loop_utils.decrease_food_multiplier(user_data.id_user))
 
         if item.item_type == ewcfg.it_weapon:
             response = user_data.equip(item)
@@ -654,8 +653,14 @@ async def item_use(cmd):
         if item.item_type == ewcfg.it_item:
             name = item_sought.get('name')
             context = item.item_props.get('context')
-            if name == "Trading Cards":
-                response = itm_utils.unwrap(id_user=author, id_server=server, item=item)
+            if (context == "cardpack" or context == "promocardpack" or context == "boosterbox"):
+                repeats = 0
+                rarity = 1000
+                if context == "promocardpack":
+                    rarity = 500
+                elif context == "boosterbox":
+                    repeats = 36
+                response = itm_utils.unwrap(id_user=author, id_server=server, item=item, repeats=repeats, rarity=rarity)
             elif (context == 'repel' or context == 'superrepel' or context == 'maxrepel'):
                 statuses = user_data.getStatusEffects()
                 if ewcfg.status_repelaftereffects_id in statuses:
@@ -693,6 +698,7 @@ async def item_use(cmd):
                     item.item_props['gellphoneactive'] = 'true'
                     item.persist()
 
+                await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
             elif context == ewcfg.context_prankitem:
                 item_action = ""

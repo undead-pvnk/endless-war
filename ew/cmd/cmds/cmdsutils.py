@@ -11,7 +11,7 @@ from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 
 
-def gen_score_text(ew_id, skune):
+def gen_score_text(ew_id, slime_alias):
     user_data = EwUser(ew_id=ew_id)
 
     items = bknd_item.inventory(id_user=user_data.id_user, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
@@ -23,7 +23,7 @@ def gen_score_text(ew_id, skune):
         response = "{}'s power is beyond your understanding.".format(ew_id.display_name)
     else:
         # return somebody's score
-        response = "{} currently has {:,} {}{}.".format(ew_id.display_name, user_data.slimes, "slime" if skune is False else "skune", (" and {} {} poudrin{}".format(poudrin_amount, "slime" if skune is False else "skune", ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
+        response = "{} currently has {:,} {}{}.".format(ew_id.display_name, user_data.slimes, slime_alias, (" and {} {} poudrin{}".format(poudrin_amount, slime_alias, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
 
     return response
 

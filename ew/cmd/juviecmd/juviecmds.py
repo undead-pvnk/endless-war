@@ -133,6 +133,22 @@ async def crush(cmd):
                     )
 
                     gristcount += 1
+        elif item_data.item_props.get("id_item") == ewcfg.item_id_negapoudrin:
+            # delete a negapoudrin from the player's inventory
+            bknd_item.item_delete(id_item=sought_id)
+            crush_slimes = -1000000
+            # kill player if they have less than 1 million slime
+            if user_data.slimes < 1000000:
+                user_data.die(cause=ewcfg.cause_suicide)
+            # remove 1 million slime from the player
+            else:
+                levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
+                user_data.persist()
+
+                response = "You {} your hard-earned slime crystal with your bare teeth.\nAs the nerve endings in your teeth explode, you realize you bit into a negapoudrin! You writhe on the ground as slime gushes from all of your orifices.".format(command)
+            
+                if len(levelup_response) > 0:
+                    response += "\n\n" + levelup_response	
 
     else:
         if item_search:  # if they didnt forget to specify an item and it just wasn't found
@@ -841,4 +857,37 @@ async def juviemode(cmd):
     #	user_data.juviemode = 1
     #	user_data.persist()
     #	response = "You summon forth all the cowardice in your heart, to forgo even slime, the most basic joy. You vow to carry no more than 100,000, the NLACakaNM's legal limit, on your person at any time."
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+""" Gender :3 """
+
+async def identify(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    gender = cmd.message.content[(len(ewcfg.cmd_identify)):].strip()
+
+    if gender == "":
+        response = "Cool. Noted. Enjoy your lack of gender, slime."
+        user_data.gender = ""
+        user_data.persist()
+    elif gender in ewcfg.curse_words:
+        response = "Hey, no matter what, you're still a juvenile. **NO SWEARS**."
+    elif "\n" in gender:
+        response = "No fucking line breaks! WTF!"    
+    elif len(gender) > 16:
+        response = "Fucking god, your gender **CANNOT** be longer than that. Sorry, them's the rules."
+    elif gender == "boy":
+        response = "Radical! Enjoy your gender, slimeboi."
+        user_data.gender = "boi"
+        user_data.persist()
+    elif gender == "girl":
+        response = "Radical! Enjoy your gender, slimegorl."
+        user_data.gender = "gorl"
+        user_data.persist()
+    elif gender == "ancient obelisk":
+        response = "You can't have that gender. It's mine."
+    else:
+        response = "Radical! Enjoy your gender, slime{}.".format(gender)
+        user_data.gender = gender
+        user_data.persist()
+
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

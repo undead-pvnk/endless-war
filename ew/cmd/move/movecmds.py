@@ -261,11 +261,9 @@ async def move(cmd = None, isApt = False, isSplit = 0):
     time_move_end = int(time.time())
 
     # print('pathfinding in move function took {} seconds'.format(time_move_end - time_move_start))
-
     # Moving to or from a place not on the map (e.g. the sewers)
     # if poi.coord == None or poi_current == None or poi_current.coord == None:
-    if len(poi.neighbors.keys()) == 0 or poi_current == None or len(poi_current.neighbors.keys()) == 0 or (
-            walking_into_sewers and life_state == ewcfg.life_state_corpse):
+    if len(poi.neighbors.keys()) == 0 or poi_current == None or len(poi_current.neighbors.keys()) == 0 or (walking_into_sewers and life_state == ewcfg.life_state_corpse):
         if path.cost > 0:
             await asyncio.sleep(path.cost)
 
@@ -324,11 +322,23 @@ async def move(cmd = None, isApt = False, isSplit = 0):
 
             val = poi_current.neighbors.get(step.id_poi)
 
+            poi_last = poi_current
             poi_current = step
 
             user_data = EwUser(id_user=cmd.message.author.id, id_server=player_data.id_server, data_level=1)
             # mutations = user_data.get_mutations()
             if poi_current != None:
+
+                # Prevent access to the zone if it's closed.
+                if poi_current.closed == True:
+                    try:
+                        if poi_current.str_closed != None:
+                            message_closed = poi_current.str_closed
+                        else:
+                            message_closed = "The way into {} is blocked.".format(poi_current.str_name)
+                    finally:
+                        error_channel = fe_utils.get_channel(server=cmd.message.guild, channel_name=poi_last.channel)
+                        return await fe_utils.send_response(message_closed, cmd, channel=error_channel)
 
                 if len(user_data.faction) > 0 and user_data.poi in poi_static.capturable_districts:
                     district = EwDistrict(
@@ -368,22 +378,6 @@ async def move(cmd = None, isApt = False, isSplit = 0):
                     if ch.name == poi_current.channel:
                         channel = ch
                         break
-
-                # Prevent access to the zone if it's closed.
-                if poi_current.closed == True:
-                    try:
-                        if poi_current.str_closed != None:
-                            message_closed = poi_current.str_closed
-                        else:
-                            message_closed = "The way into {} is blocked.".format(poi_current.str_name)
-                    finally:
-                        return await fe_utils.send_message(cmd.client,
-                                                           channel,
-                                                           fe_utils.formatMessage(
-                                                               cmd.message.author,
-                                                               message_closed
-                                                           )
-                                                           )
 
                 if user_data.poi != poi_current.id_poi:
                     if walking_into_sewers and poi_current.id_poi == ewcfg.poi_id_thesewers:
@@ -835,25 +829,28 @@ async def teleport(cmd):
 
         if time_lastuse + 60 * 60 > time_now:
             response = "You can't do that again yet. Try again in about {} minute(s)".format(math.ceil((time_lastuse + 60 * 60 - time_now) / 60))
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            return await fe_utils.send_response(response, cmd)
 
         if cmd.tokens_count < 2 and not blj_used:
             response = "Teleport where?"
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            return await fe_utils.send_response(response, cmd)
         elif cmd.tokens_count < 2 and blj_used:
             response = "Backwards Long Jump where?"
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            return await fe_utils.send_response(response, cmd)
 
         poi = poi_static.id_to_poi.get(target_name)
 
         if poi is None:
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "Never heard of it."))
+            return await fe_utils.send_response("Never heard of it.", cmd)
 
-        if poi.id_poi == user_data.poi:
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You're already there, bitch."))
+        elif poi.id_poi == user_data.poi:
+            return await fe_utils.send_response("You're already there, bitch.", cmd)
 
-        if move_utils.inaccessible(user_data=user_data, poi=poi):
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
+        elif poi.closed:
+            return await fe_utils.send_response(poi.str_closed + " (bitch)", cmd)
+
+        elif move_utils.inaccessible(user_data=user_data, poi=poi):
+            return await fe_utils.send_response("You're not allowed to go there (bitch).", cmd)
 
         valid_destinations = set()
         neighbors = poi_static.poi_neighbors.get(user_data.poi)
