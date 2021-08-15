@@ -25,7 +25,7 @@ from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
 from .weputils import EwEffectContainer
 from .weputils import attackEnemy
-from .weputils import burn_bystanders
+from .weputils import apply_status_bystanders
 from .weputils import canAttack
 from .weputils import canCap
 from .weputils import fulfill_ghost_weapon_contract
@@ -82,7 +82,7 @@ async def attack(cmd, n1_die = None):
 
     # todo Created a weapon object to cover my bases, check if this is necessary. Also see if you can move this somewhere else
 
-    if weapon.id_weapon == ewcfg.weapon_id_slimeoidwhistle:
+    if weapon and weapon.id_weapon == ewcfg.weapon_id_slimeoidwhistle:
         slimeoid = EwSlimeoid(member=cmd.message.author)
 
     if n1_die is None:
@@ -318,20 +318,23 @@ async def attack(cmd, n1_die = None):
                 life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_shambler]
                 factions = ["", shootee_data.faction]
 
-                # Burn players in district
-                if ewcfg.weapon_class_burning in weapon.classes:
+                # Apply status to everyone in the district
+                if ctn.mass_apply_status:
                     if not miss:
-                        resp = burn_bystanders(user_data=user_data, burn_dmg=bystander_damage, life_states=life_states, factions=factions, district_data=district_data)
+                        resp = apply_status_bystanders(user_data=user_data, status=ewcfg.status_burning_id, value=bystander_damage, life_states=life_states, factions=factions, district_data=district_data)
                         resp_cont.add_response_container(resp)
 
-                elif ewcfg.weapon_class_exploding in weapon.classes:
+                # Explodes
+                if ctn.explode:
                     if not miss:
                         resp = weapon_explosion(user_data=user_data, shootee_data=shootee_data, district_data=district_data, market_data=market_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, time_now=time_now, target_enemy=False)
                         resp_cont.add_response_container(resp)
-
-                elif ewcfg.mutation_id_napalmsnot in user_mutations and ewcfg.mutation_id_napalmsnot not in shootee_mutations and (ewcfg.mutation_id_airlock not in shootee_mutations or market_data.weather != ewcfg.weather_rainy):
-                    resp = "**HCK-PTOOO!** " + shootee_data.applyStatus(id_status=ewcfg.status_burning_id, value=bystander_damage * .5, source=user_data.id_user).format(name_player=cmd.mentions[0].display_name)
-                    resp_cont.add_channel_response(cmd.message.channel.name, resp)
+                
+                # Apply status to target
+                if ctn.apply_status:
+                    if ctn.apply_status == ewcfg.status_burning_id and ewcfg.mutation_id_napalmsnot in user_mutations and ewcfg.mutation_id_napalmsnot not in shootee_mutations and not (ewcfg.mutation_id_airlock in shootee_mutations and market_data.weather == ewcfg.weather_rainy):
+                        resp = "**HCK-PTOOO!** " + shootee_data.applyStatus(id_status=ewcfg.status_burning_id, value=bystander_damage * .5, source=user_data.id_user).format(name_player=cmd.mentions[0].display_name)
+                        resp_cont.add_channel_response(cmd.message.channel.name, resp)
 
             # can't hit lucky lucy
             if shootee_data.life_state == ewcfg.life_state_lucky or ewcfg.status_n4 in shootee_data.getStatusEffects():
@@ -662,11 +665,11 @@ async def attack(cmd, n1_die = None):
                     if shootee_data.faction != "" and shootee_data.faction == user_data.faction:
                         shootee_data.trauma = ewcfg.trauma_id_betrayal
 
-                    if slimeoid.life_state == ewcfg.slimeoid_state_active:
+                    if slimeoid and slimeoid.life_state == ewcfg.slimeoid_state_active:
                         brain = sl_static.brain_map.get(slimeoid.ai)
                         response += "\n\n" + brain.str_kill.format(slimeoid_name=slimeoid.name)
 
-                    if shootee_slimeoid.life_state == ewcfg.slimeoid_state_active:
+                    if shootee_slimeoid and shootee_slimeoid.life_state == ewcfg.slimeoid_state_active:
                         brain = sl_static.brain_map.get(shootee_slimeoid.ai)
                         response += "\n\n" + brain.str_death.format(slimeoid_name=shootee_slimeoid.name)
 
@@ -764,9 +767,9 @@ async def attack(cmd, n1_die = None):
             if user_data.faction != shootee_data.faction and user_data.life_state not in (ewcfg.life_state_shambler, ewcfg.life_state_juvenile) and user_data.faction != ewcfg.faction_slimecorp:
                 # Give slimes to the boss if possible.
                 kingpin = fe_utils.find_kingpin(id_server=cmd.guild.id, kingpin_role=role_boss)
-                kingpin = EwUser(id_server=cmd.guild.id, id_user=kingpin.id_user)
-
+                
                 if kingpin:
+                    kingpin = EwUser(id_server=cmd.guild.id, id_user=kingpin.id_user)
                     if ewcfg.mutation_id_handyman in user_mutations and weapon.is_tool == 1:
                         boss_slimes *= 2
                     kingpin.change_slimes(n=boss_slimes)
@@ -1193,53 +1196,54 @@ async def spar(cmd):
 
 async def annoint(cmd):
     response = ""
+    user_data = EwUser(member=cmd.message.author)
+    weapon_item = EwItem(id_item=user_data.weapon)
 
     if cmd.tokens_count < 2:
-        response = "Specify a name for your weapon!"
+        annoint_name = weapon_item.item_props.get("weapon_name")
     else:
         annoint_name = cmd.message.content[(len(ewcfg.cmd_annoint)):].strip()
 
-        if len(annoint_name) > 32:
-            response = "That name is too long. ({:,}/32)".format(len(annoint_name))
-        else:
-            user_data = EwUser(member=cmd.message.author)
-            if user_data.life_state == ewcfg.life_state_shambler:
-                response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+    if len(annoint_name) > 32:
+        response = "That name is too long. ({:,}/32)".format(len(annoint_name))
+    else:
+        user_data = EwUser(member=cmd.message.author)
+        if user_data.life_state == ewcfg.life_state_shambler:
+            response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+        poudrin = bknd_item.find_item(item_search="slimepoudrin", id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter=ewcfg.it_item)
+
+        all_weapons = bknd_item.inventory(
+            id_server=cmd.guild.id,
+            item_type_filter=ewcfg.it_weapon
+        )
+        for weapon in all_weapons:
+            if weapon.get("name") == annoint_name and weapon.get("id_item") != user_data.weapon:
+                response = "**ORIGINAL WEAPON NAME DO NOT STEAL.**"
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-            poudrin = bknd_item.find_item(item_search="slimepoudrin", id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter=ewcfg.it_item)
+        if poudrin is None:
+            response = "You need a slime poudrin."
+        elif user_data.slimes < 100:
+            response = "You need more slime."
+        elif user_data.weapon < 0:
+            response = "Equip a weapon first."
+        else:
+            # Perform the ceremony.
+            user_data.change_slimes(n=-100, source=ewcfg.source_spending)
+            weapon_item.item_props["weapon_name"] = annoint_name
+            weapon_item.persist()
 
-            all_weapons = bknd_item.inventory(
-                id_server=cmd.guild.id,
-                item_type_filter=ewcfg.it_weapon
-            )
-            for weapon in all_weapons:
-                if weapon.get("name") == annoint_name and weapon.get("id_item") != user_data.weapon:
-                    response = "**ORIGINAL WEAPON NAME DO NOT STEAL.**"
-                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            if user_data.weaponskill < 10:
+                user_data.add_weaponskill(n=1, weapon_type=weapon_item.item_props.get("weapon_type"))
 
-            if poudrin is None:
-                response = "You need a slime poudrin."
-            elif user_data.slimes < 100:
-                response = "You need more slime."
-            elif user_data.weapon < 0:
-                response = "Equip a weapon first."
-            else:
-                # Perform the ceremony.
-                user_data.change_slimes(n=-100, source=ewcfg.source_spending)
-                weapon_item = EwItem(id_item=user_data.weapon)
-                weapon_item.item_props["weapon_name"] = annoint_name
-                weapon_item.persist()
+            # delete a slime poudrin from the player's inventory
+            bknd_item.item_delete(id_item=poudrin.get('id_item'))
 
-                if user_data.weaponskill < 10:
-                    user_data.add_weaponskill(n=1, weapon_type=weapon_item.item_props.get("weapon_type"))
+            user_data.persist()
 
-                # delete a slime poudrin from the player's inventory
-                bknd_item.item_delete(id_item=poudrin.get('id_item'))
-
-                user_data.persist()
-
-                response = "You place your weapon atop the poudrin and annoint it with slime. It is now known as {}!\n\nThe name draws you closer to your weapon. The poudrin was destroyed in the process.".format(annoint_name)
+            response = "You place your weapon atop the poudrin and annoint it with slime. It is now known as {}!\n\nThe name draws you closer to your weapon. The poudrin was destroyed in the process.".format(annoint_name)
 
     # Send the response to the player.
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

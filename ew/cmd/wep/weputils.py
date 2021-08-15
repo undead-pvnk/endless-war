@@ -39,6 +39,9 @@ class EwEffectContainer:
     hit_chance_mod = 0
     crit_mod = 0
 
+    explode = False
+    apply_status = None
+    mass_apply_status = None
     # sap_damage = 0
     # sap_ignored = 0
 
@@ -87,8 +90,8 @@ class EwEffectContainer:
 # self.sap_ignored = sap_ignored
 
 
-def burn_bystanders(user_data = None, burn_dmg = 0, life_states = None, factions = None, district_data = None):
-    if life_states != None and factions != None and district_data != None:
+def apply_status_bystanders(user_data = None, value = 0, life_states = None, factions = None, district_data = None, status = None):
+    if life_states != None and factions != None and district_data != None and status != None:
         bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions, pvp_only=True)
         resp_cont = EwResponseContainer(id_server=user_data.id_server)
         channel = poi_static.id_to_poi.get(district_data.name).channel
@@ -99,15 +102,21 @@ def burn_bystanders(user_data = None, burn_dmg = 0, life_states = None, factions
             bystander_player_data = EwPlayer(id_user=bystander, id_server=user_data.id_server)
             bystander_mutation = bystander_user_data.get_mutations()
 
-            if ewcfg.mutation_id_napalmsnot not in bystander_mutation and (ewcfg.mutation_id_airlock not in bystander_mutation or market_data.weather != ewcfg.weather_rainy):
-                resp = bystander_user_data.applyStatus(id_status=ewcfg.status_burning_id, value=burn_dmg, source=user_data.id_user).format(name_player=bystander_player_data.display_name)
-                resp_cont.add_channel_response(channel, resp)
+            if market_data.weather == ewcfg.weather_rainy and status == ewcfg.status_burning_id:
+                if ewcfg.mutation_id_napalmsnot in bystander_mutation or (ewcfg.mutation_id_airlock in bystander_mutation): 
+                    return
+                else:
+                    value = value // 2
+        
+            resp = bystander_user_data.applyStatus(id_status=status, value=value, source=user_data.id_user).format(name_player=bystander_player_data.display_name)
+            resp_cont.add_channel_response(channel, resp)
+
 
         bystander_enemies = district_data.get_enemies_in_district()
 
         for bystander in bystander_enemies:
             bystander_enemy_data = EwEnemy(id_enemy=bystander, id_server=user_data.id_server)
-            resp = bystander_enemy_data.applyStatus(id_status=ewcfg.status_burning_id, value=burn_dmg, source=user_data.id_user).format(name_player=bystander_enemy_data.display_name)
+            resp = bystander_enemy_data.applyStatus(id_status=status, value=value, source=user_data.id_user).format(name_player=bystander_enemy_data.display_name)
             resp_cont.add_channel_response(channel, resp)
 
         return resp_cont
@@ -784,7 +793,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
                     miss = True
 
                 if not miss:
-                    resp = burn_bystanders(user_data=user_data, burn_dmg=bystander_damage, life_states=life_states, factions=factions, district_data=district_data)
+                    resp = apply_status_bystanders(user_data=user_data, status=ewcfg.status_burning_id, value=bystander_damage, life_states=life_states, factions=factions, district_data=district_data)
                     resp_cont.add_response_container(resp)
 
             if ewcfg.weapon_class_exploding in weapon.classes:
@@ -995,7 +1004,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
         # give player item for defeating an enemy
         resp_cont.add_response_container(cmbt_utils.drop_enemy_loot(enemy_data, district_data))
 
-        if slimeoid.life_state == ewcfg.slimeoid_state_active:
+        if slimeoid and slimeoid.life_state == ewcfg.slimeoid_state_active:
             brain = sl_static.brain_map.get(slimeoid.ai)
             response += "\n" + brain.str_kill.format(slimeoid_name=slimeoid.name)
 

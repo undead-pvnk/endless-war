@@ -3,6 +3,7 @@ import time
 
 from . import core as ewutils
 from . import frontend as fe_utils
+from . import slimeoid as slimeoid_utils
 from .district import EwDistrict
 from .frontend import EwResponseContainer
 from ..backend import core as bknd_core
@@ -783,6 +784,13 @@ def spawn_enemy(
             # Sand bags only spawn in the dojo
             if enemytype == ewcfg.enemy_type_sandbag:
                 potential_chosen_poi = ewcfg.poi_id_dojo
+            # Slimeoid Trainers only spawn in the Arena
+            elif enemytype == ewcfg.enemy_type_slimeoidtrainer:
+                potential_chosen_poi = ewcfg.poi_id_arena
+            # Underground Trainers only spawn in the Subway
+            elif enemytype == ewcfg.enemy_type_ug_slimeoidtrainer:
+                potential_chosen_poi = random.choice(poi_static.transports)
+            # Everything else spawns in the outskrits TODO: Make this code not shit
             else:
                 potential_chosen_poi = random.choice(poi_static.outskirts)
 
@@ -879,6 +887,15 @@ def spawn_enemy(
 
                     resp_cont.add_response_container(sub_resp_cont)
 
+        if enemytype in ewcfg.slimeoid_trainers:
+            sl_level = 1
+            spawn_hue = False
+            if enemy.rare_status:
+                sl_level = random.randint(7, 10)
+            else:
+                sl_level = random.randint(1, 6)
+            new_sl = slimeoid_utils.generate_slimeoid(id_owner=enemy.id_enemy, id_server=id_server, level=sl_level, persist=True)
+
         if enemytype not in ewcfg.raid_bosses:
 
             if enemytype in ewcfg.gvs_enemies_gaiaslimeoids:
@@ -895,14 +912,19 @@ def spawn_enemy(
             elif enemytype == ewcfg.enemy_type_doublehorse:
                 response = "***HARK!!!***  Clopping echoes throughout the cave! The {} has arrived with {} slime, and {} levels. And on top of him rides...".format(
                     enemy.display_name, enemy.slimes, enemy.level)
-
+            
+            elif enemytype == ewcfg.enemy_type_sandbag:
+                    response = "A new {} just got sent in. It's level {}, and has {} slime.\n*'Don't hold back!'*, the Dojo Master cries out from afar.".format(
+                        enemy.display_name, enemy.level, enemy.slimes)
+            
+            elif enemytype in ewcfg.slimeoid_trainers:
+                response = "A {} is looking for a challenge! They are accompanied by {}, a {}-foot tall {}Slimeoid.".format(
+                    enemy.display_name, new_sl.name, new_sl.level, "" if new_sl.hue == "" else new_sl.hue + " ")
             else:
                 response = "**An enemy draws near!!** It's a level {} {}, and has {} slime.".format(enemy.level,
                                                                                                     enemy.display_name,
                                                                                                     enemy.slimes)
-                if enemytype == ewcfg.enemy_type_sandbag:
-                    response = "A new {} just got sent in. It's level {}, and has {} slime.\n*'Don't hold back!'*, the Dojo Master cries out from afar.".format(
-                        enemy.display_name, enemy.level, enemy.slimes)
+                
 
         ch_name = poi_static.id_to_poi.get(enemy.poi).channel
 

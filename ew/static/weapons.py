@@ -73,6 +73,7 @@ def get_weapon_type_stats(weapon_type):
             "crit_chance": 0.1,
             "crit_multiplier": 2,
             "hit_chance": 0.9,
+            "mass_apply_status": ewcfg.status_burning_id
         },
         "explosive": {
             "damage_multiplier": 0.5,
@@ -101,7 +102,7 @@ def get_weapon_type_stats(weapon_type):
     return types[weapon_type]
 
 
-def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_multiplier = None, crit_chance = None, crit_multiplier = None, hit_chance = None):
+def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_multiplier = None, crit_chance = None, crit_multiplier = None, hit_chance = None, apply_status = None, mass_apply_status = None):
     weapon_stats = get_weapon_type_stats(weapon_type)
     if cost_multiplier:
         weapon_stats["cost_multiplier"] = cost_multiplier
@@ -113,6 +114,10 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_mul
         weapon_stats["crit_multiplier"] = crit_multiplier
     if hit_chance:
         weapon_stats["hit_chance"] = hit_chance
+    if apply_status:
+        weapon_stats["apply_status"] = apply_status
+    if mass_apply_status:
+        weapon_stats["mass_apply_status"] = mass_apply_status
 
     def get_hit_damage(ctn):
         hit_damage = 0
@@ -122,7 +127,9 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_mul
         hit_roll = min(random.random(), random.random()) if player_has_sharptoother else random.random()
         guarantee_crit = (weapon_type == "precision" and ctn.user_data.sidearm == -1)
 
-        if hit_roll < (weapon_stats["hit_chance"] + ctn.hit_chance_mod):
+        ignore_hitchance = weapon_stats["hit_chance"] == -1
+
+        if (hit_roll < (weapon_stats["hit_chance"] + ctn.hit_chance_mod)) or ignore_hitchance:
             effective_multiplier = weapon_stats["damage_multiplier"]
             if "variable_damage_multiplier" in weapon_stats:
                 effective_multiplier += random.random() * weapon_stats["variable_damage_multiplier"]
@@ -132,6 +139,9 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_mul
                 hit_damage *= weapon_stats["crit_multiplier"]
                 if not ("shots" in weapon_stats):
                     ctn.crit = True
+
+            ctn.apply_status = weapon_stats.get("apply_status")
+            ctn.apply_bystander_status = weapon_stats.get("mass_apply_status")
 
         return hit_damage
 
@@ -266,18 +276,6 @@ def wef_watercolors(ctn = None):
     elif aim == 1000:
         ctn.crit = True
         ctn.slimes_damage *= 1
-
-
-def wef_fingernails(ctn = None):
-    ctn.slimes_damage = int(ctn.slimes_damage * 0.8)
-    aim = (random.randrange(10) + 1)
-    user_mutations = ctn.user_data.get_mutations()
-    # ctn.sap_damage = 2
-    ctn.miss = False
-
-    if aim >= (10 - int(10 * ctn.crit_mod)):
-        ctn.crit = True
-        ctn.slimes_damage *= 2
 
 
 def wef_harpoon(ctn = None):
@@ -1336,10 +1334,8 @@ weapon_list = [
         str_duel="",
         str_description="",
         str_scalp=" Multiple slash marks run across it.",
-        fn_effect=wef_fingernails,
+        fn_effect=get_normal_attack(weapon_type="normal", hit_chance=-1),
         price=0,
-        vendors=[],
-        classes=[],
         stat=ewcfg.stat_fingernails_kills,
         # sap_cost = 3,
         captcha_length=8
@@ -1461,11 +1457,12 @@ weapon_list = [
         str_reload="You carefully dip each bullet in a cup of tea before loading them into the gun.",
         str_reload_warning="**OH, BOTHER!** {name_player}’s hunting rifle just ran out bullets!!",
         str_scalp="A single, clean hole pierces the scalp. Ahhh, the thrill of the hunt...",
-        fn_effect=get_normal_attack(weapon_type='precision'),
-        classes=[ewcfg.weapon_class_ammo],
+        fn_effect=get_normal_attack(cost_multiplier=1.2, weapon_type='precision'),
+        classes=[ewcfg.weapon_class_ammo, ewcfg.weapon_class_captcha],
         stat=ewcfg.stat_huntingrifle_kills,
         clip_size=6,
-        acquisition=ewcfg.acquisition_smelting
+        acquisition=ewcfg.acquisition_smelting,
+        captcha_length=4
     ),
     EwWeapon(  # 38
         id_weapon=ewcfg.weapon_id_harpoon,
@@ -1519,7 +1516,7 @@ weapon_list = [
         str_scalp="A single, clean hole pierces the scalp. Ahhh, the thrill of the hunt...",
         fn_effect=get_normal_attack(cost_multiplier=0.7, weapon_type='burst_fire'),
         classes=[ewcfg.weapon_class_ammo],
-        stat=ewcfg.stat_huntingrifle_kills,
+        stat=ewcfg.stat_rifle_kills,
         clip_size=1000
     ),
     EwWeapon(  # 39

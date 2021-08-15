@@ -257,6 +257,7 @@ class EwEnemyBase:
             # If the enemy doesn't have an ID assigned yet, have the cursor give us the proper ID.
             if self.id_enemy == 0:
                 used_enemy_id = cursor.lastrowid
+                self.id_enemy = used_enemy_id
             # print('used new enemy id')
             else:
                 used_enemy_id = self.id_enemy

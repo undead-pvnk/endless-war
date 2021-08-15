@@ -36,7 +36,6 @@ import ew.utils.frontend as fe_utils
 import ew.utils.item as itm_utils
 import ew.utils.leaderboard as bknd_leaderboard
 import ew.utils.loop as loop_utils
-import ew.utils.market as market_utils
 import ew.utils.move as move_utils
 import ew.utils.rolemgr as ewrolemgr
 import ew.utils.slimeoid as slimeoid_utils
@@ -46,16 +45,13 @@ import ew.utils.weather as bknd_weather
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 
-import ew.backend.ads as bknd_ads
 import ew.backend.core as bknd_core
 import ew.backend.farm as bknd_farm
-import ew.backend.fish as bknd_fish
 import ew.backend.item as bknd_item
 import ew.backend.player as bknd_player
 import ew.backend.server as bknd_server
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
-from ew.backend.market import EwStock
 from ew.backend.player import EwPlayer
 from ew.backend.status import EwStatusEffect
 
@@ -65,8 +61,6 @@ import ew.static.cosmetics as cosmetics
 import ew.static.food as static_food
 import ew.static.items as static_items
 import ew.static.poi as poi_static
-import ew.static.vendors as vendors
-import ew.static.weather as weather_static
 
 import ew.static.cfg as ewcfg
 
@@ -290,10 +284,15 @@ async def on_ready():
         # ewutils.kill_quitters(server.id) #FIXME function get_member doesn't find users reliably
 
         asyncio.ensure_future(loop_utils.capture_tick_loop(id_server=server.id))
+
         asyncio.ensure_future(loop_utils.bleed_tick_loop(id_server=server.id))
+
         asyncio.ensure_future(loop_utils.enemy_action_tick_loop(id_server=server.id))
+
         asyncio.ensure_future(loop_utils.burn_tick_loop(id_server=server.id))
+
         asyncio.ensure_future(loop_utils.remove_status_loop(id_server=server.id))
+
         asyncio.ensure_future(loop_utils.event_tick_loop(id_server=server.id))
 
         asyncio.ensure_future(loop_utils.decrease_food_multiplier())
@@ -311,9 +310,14 @@ async def on_ready():
         if not debug:
             await transport_utils.init_transports(id_server=server.id)
             asyncio.ensure_future(bknd_weather.weather_tick_loop(id_server=server.id))
+        
         asyncio.ensure_future(slimeoid_utils.slimeoid_tick_loop(id_server=server.id))
+        
         asyncio.ensure_future(bknd_farm.farm_tick_loop(id_server=server.id))
+        
         asyncio.ensure_future(sports_utils.slimeball_tick_loop(id_server=server.id))
+
+        asyncio.ensure_future(loop_utils.clock_tick_loop(id_server=server.id))
 
         print('\nNUMBER OF CHANNELS IN SERVER: {}\n'.format(len(server.channels)))
 
@@ -395,177 +399,6 @@ async def on_ready():
                 ewutils.logMsg('Twitch handler hit an exception (continuing): {}'.format(json_string))
                 traceback.print_exc(file=sys.stdout)
 
-        # Adjust the exchange rate of slime for the market.
-        try:
-            for server in client.guilds:
-
-                # Load market data from the database.
-                market_data = EwMarket(id_server=server.id)
-
-                if market_data.time_lasttick + ewcfg.update_market <= time_now:
-
-                    market_response = ""
-                    exchange_data = EwDistrict(district=ewcfg.poi_id_stockexchange, id_server=server.id)
-
-                    for stock in ewcfg.stocks:
-                        s = EwStock(server.id, stock)
-                        # we don't update stocks when they were just added
-                        # or when shamblers have degraded it
-                        if s.timestamp != 0 and not exchange_data.is_degraded():
-                            s.timestamp = time_now
-                            market_response = market_utils.market_tick(s, server.id)
-                            await fe_utils.send_message(client, channels_stockmarket.get(server.id), market_response)
-
-                    market_data = EwMarket(id_server=server.id)
-                    market_data.time_lasttick = time_now
-
-                    # Advance the time and potentially change weather.
-                    market_data.clock += 1
-
-                    if market_data.clock >= 24 or market_data.clock < 0:
-                        market_data.clock = 0
-                        market_data.day += 1
-
-                    if market_data.clock == 6:
-                        # Update the list of available bazaar items by clearing the current list and adding the new items
-                        market_data.bazaar_wares.clear()
-
-                        bazaar_foods = []
-                        bazaar_cosmetics = []
-                        bazaar_general_items = []
-                        bazaar_furniture = []
-
-                        for item in vendors.vendor_inv.get(ewcfg.vendor_bazaar):
-                            if item in static_items.item_names:
-                                bazaar_general_items.append(item)
-
-                            elif item in static_food.food_names:
-                                bazaar_foods.append(item)
-
-                            elif item in cosmetics.cosmetic_names:
-                                bazaar_cosmetics.append(item)
-
-                            elif item in static_items.furniture_names:
-                                bazaar_furniture.append(item)
-
-                        market_data.bazaar_wares['slimecorp1'] = ewcfg.weapon_id_umbrella
-                        market_data.bazaar_wares['slimecorp2'] = ewcfg.cosmetic_id_raincoat
-
-                        market_data.bazaar_wares['generalitem'] = random.choice(bazaar_general_items)
-
-                        market_data.bazaar_wares['food1'] = random.choice(bazaar_foods)
-                        # Don't add repeated foods
-                        bw_food2 = None
-                        while bw_food2 is None or bw_food2 in market_data.bazaar_wares.values():
-                            bw_food2 = random.choice(bazaar_foods)
-
-                        market_data.bazaar_wares['food2'] = bw_food2
-
-                        market_data.bazaar_wares['cosmetic1'] = random.choice(bazaar_cosmetics)
-                        # Don't add repeated cosmetics
-                        bw_cosmetic2 = None
-                        while bw_cosmetic2 is None or bw_cosmetic2 in market_data.bazaar_wares.values():
-                            bw_cosmetic2 = random.choice(bazaar_cosmetics)
-
-                        market_data.bazaar_wares['cosmetic2'] = bw_cosmetic2
-
-                        bw_cosmetic3 = None
-                        while bw_cosmetic3 is None or bw_cosmetic3 in market_data.bazaar_wares.values():
-                            bw_cosmetic3 = random.choice(bazaar_cosmetics)
-
-                        market_data.bazaar_wares['cosmetic3'] = bw_cosmetic3
-
-                        market_data.bazaar_wares['furniture1'] = random.choice(bazaar_furniture)
-
-                        bw_furniture2 = None
-                        while bw_furniture2 is None or bw_furniture2 in market_data.bazaar_wares.values():
-                            bw_furniture2 = random.choice(bazaar_furniture)
-
-                        market_data.bazaar_wares['furniture2'] = bw_furniture2
-
-                        bw_furniture3 = None
-                        while bw_furniture3 is None or bw_furniture3 in market_data.bazaar_wares.values():
-                            bw_furniture3 = random.choice(bazaar_furniture)
-
-                        market_data.bazaar_wares['furniture3'] = bw_furniture3
-
-                        if random.random() < 0.05:  # 1 / 20
-                            market_data.bazaar_wares['minigun'] = ewcfg.weapon_id_minigun
-
-                        if random.random() < 0.05:  # 1 / 20
-                            market_data.bazaar_wares['bustedrifle'] = ewcfg.item_id_bustedrifle
-
-                    market_data.persist()
-
-                    ewutils.logMsg('The time is now {}.'.format(market_data.clock))
-
-                    if not ewutils.check_fursuit_active(market_data):
-                        cosmetic_utils.dedorn_all_costumes()
-
-                    if market_data.clock == 6 and market_data.day % 8 == 0:
-                        await apt_utils.rent_time(id_server=server.id)
-                        await loop_utils.pay_salary(id_server=server.id)
-
-                    market_data = EwMarket(id_server=server.id)
-
-                    market_data.persist()
-                    if market_data.clock == 6:
-                        response = ' The SlimeCorp Stock Exchange is now open for business.'
-                        await fe_utils.send_message(client, channels_stockmarket.get(server.id), response)
-                    elif market_data.clock == 20:
-                        response = ' The SlimeCorp Stock Exchange has closed for the night.'
-                        await fe_utils.send_message(client, channels_stockmarket.get(server.id), response)
-
-                    market_data = EwMarket(id_server=server.id)
-
-                    if random.randrange(3) == 0:
-                        pattern_count = len(weather_static.weather_list)
-
-                        if pattern_count > 1:
-                            weather_old = market_data.weather
-
-                            # if random.random() < 0.4:
-                            # 	market_data.weather = ewcfg.weather_bicarbonaterain
-
-                            # Randomly select a new weather pattern. Try again if we get the same one we currently have.
-                            while market_data.weather == weather_old:
-                                pick = random.randrange(len(weather_static.weather_list))
-                                market_data.weather = weather_static.weather_list[pick].name
-
-                        # Log message for statistics tracking.
-                        ewutils.logMsg("The weather changed. It's now {}.".format(market_data.weather))
-
-                    # Persist new data.
-                    market_data.persist()
-
-                    await apt_utils.setOffAlarms(id_server=server.id)
-
-                    # Decay slime totals
-                    loop_utils.decaySlimes(id_server=server.id)
-
-                    # Increase hunger for all players below the max.
-                    # ewutils.pushupServerHunger(id_server = server.id)
-
-                    # Decrease inebriation for all players above min (0).
-                    loop_utils.pushdownServerInebriation(id_server=server.id)
-
-                    # Remove fish offers which have timed out
-                    bknd_fish.kill_dead_offers(id_server=server.id)
-
-                    # kill advertisements that have timed out
-                    bknd_ads.delete_expired_ads(id_server=server.id)
-
-                    await loop_utils.give_kingpins_slime_and_decay_capture_points(id_server=server.id)
-                    await move_utils.send_gangbase_messages(server.id, market_data.clock)
-                    await move_utils.kick(server.id)
-
-                    # Post leaderboards at 6am NLACakaNM time.
-                    if market_data.clock == 6:
-                        await bknd_leaderboard.post_leaderboards(client=client, server=server)
-
-        except:
-            ewutils.logMsg('An error occurred in the scheduled slime market update task:')
-            traceback.print_exc(file=sys.stdout)
 
         # Parse files dumped into the msgqueue directory and send messages as needed.
         try:
@@ -1286,6 +1119,26 @@ async def on_message(message):
                     await bknd_leaderboard.post_leaderboards(client=client, server=server)
             except:
                 pass
+        
+        elif debug == True and cmd == (ewcfg.cmd_prefix + 'genslimeoid'):
+            user_data = EwUser(member=message.author)
+            if user_data.active_slimeoid == -1:
+                slimeoid_utils.generate_slimeoid(id_owner=user_data.id_user, id_server=user_data.id_server, persist=True)
+                return await fe_utils.send_message(client, message.channel, "Generated slimeoid for user. Take care of them!")
+            else:
+                return await fe_utils.send_message(client, message.channel, "You already have a slimeoid, bub!")
+        
+        elif debug == True and cmd == (ewcfg.cmd_prefix + 'massgenslimeoidnames'):
+            response = ""
+            for sl in range(10):
+                new_sl = slimeoid_utils.generate_slimeoid()
+                if new_sl.hue != "":
+                    hue_str = " **" + new_sl.hue + "** "
+                else:
+                    hue_str = ""
+                response += ("\n" + hue_str + new_sl.name)
+            return await fe_utils.send_message(client, message.channel, response)
+
 
 
         # didn't match any of the command words.

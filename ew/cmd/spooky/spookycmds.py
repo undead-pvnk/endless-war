@@ -99,6 +99,9 @@ async def revive(cmd):
                 # Get the player out of the sewers.
                 player_data.poi = ewcfg.poi_id_endlesswar
 
+            # Give newly spawned juvies a foul odour
+            player_data.applyStatus(ewcfg.status_repelled_id)
+
             player_data.persist()
             market_data.persist()
 

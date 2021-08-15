@@ -15,6 +15,7 @@ from ..backend.market import EwMarket
 from ..backend.player import EwPlayer
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
+from ..static import weather as weather_static
 
 """
 	Coroutine that continually calls weather_tick; is called once per server, and not just once globally
@@ -35,7 +36,7 @@ async def weather_tick(id_server = None):
     if id_server != None:
         try:
             market_data = EwMarket(id_server=id_server)
-
+            
             if market_data.weather == ewcfg.weather_sunny:
                 exposed_pois = []
                 exposed_pois.extend(poi_static.capturable_districts)
@@ -205,3 +206,24 @@ async def weather_tick(id_server = None):
 
         except:
             ewutils.logMsg("Error occurred in weather tick for server {}".format(id_server))
+
+async def weather_cycle(id_server = None):
+    market_data = EwMarket(id_server)
+    
+    # Potentially change the weather
+    if random.randrange(3) == 0:
+            pattern_count = len(weather_static.weather_list)
+
+            if pattern_count > 1:
+                weather_old = market_data.weather
+
+                # if random.random() < 0.4:
+                # 	market_data.weather = ewcfg.weather_bicarbonaterain
+
+                # Randomly select a new weather pattern. Try again if we get the same one we currently have.
+                while market_data.weather == weather_old:
+                    pick = random.randrange(len(weather_static.weather_list))
+                    market_data.weather = weather_static.weather_list[pick].name
+
+            # Log message for statistics tracking.
+            ewutils.logMsg("The weather changed. It's now {}.".format(market_data.weather))

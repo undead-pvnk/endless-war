@@ -562,33 +562,44 @@ async def lower_durability(general_item):
     general_item_data.persist()
 
 
-def unwrap(id_user = None, id_server = None, item = None):
+def unwrap(id_user = None, id_server = None, item = None, repeats = 0, rarity = 1000):
     response = "You eagerly rip open a pack of Secreatures™ trading cards!!"
     bknd_item.item_delete(item.id_item)
     slimexodia = False
+    pulls = {}
 
-    slimexodia_chance = 1 / 1000
+    for packs in range(repeats + 1):
+        slimexodia_chance = 1 / rarity
 
-    if random.random() < slimexodia_chance:
-        slimexodia = True
+        if random.random() < slimexodia_chance:
+            slimexodia = True
 
-    if slimexodia == True:
-        # If there are multiple possible products, randomly select one.
-        slimexodia_item = random.choice(static_items.slimexodia_parts)
+        if slimexodia == True:
+            
+            # If there are multiple possible products, randomly select one.
+            slimexodia_item = random.choice(static_items.slimexodia_parts)
+            if pulls.get(slimexodia_item):
+                pulls[slimexodia_item.str_name] += 1
+            else:
+                pulls[slimexodia_item.str_name] = 1
 
-        response += " There’s a single holographic card poking out of the swathes of repeats and late edition cards..."
-        response += " ***...What’s this?! It’s the legendary card {}!! If you’re able to collect the remaining pieces of Slimexodia, you might be able to smelt something incomprehensibly powerful!!***".format(slimexodia_item.str_name)
+            item_props = gen_item_props(slimexodia_item)
 
-        item_props = gen_item_props(slimexodia_item)
+            bknd_item.item_create(
+                item_type=slimexodia_item.item_type,
+                id_user=id_user.id,
+                id_server=id_server.id,
+                item_props=item_props
+            )
 
-        bknd_item.item_create(
-            item_type=slimexodia_item.item_type,
-            id_user=id_user.id,
-            id_server=id_server.id,
-            item_props=item_props
-        )
-
-    else:
+    if len(pulls) > 1:
+        response += " ***...What's this?!*** You manage to find a number of legendary cards, including:\n"
+        for card in pulls:
+            response += "**{}x** {}".format(pulls[card], card)
+    elif len(pulls) == 1:
+        response += " There’s a single holographic card poking out of the swathes of repeats and late edition cards...\n"
+        response += " ***...What’s this?! It’s the legendary card {}!! If you’re able to collect the remaining pieces of Slimexodia, you might be able to smelt something incomprehensibly powerful!!***\n".format(list(pulls.keys())[0])
+    elif len(pulls) == 0:
         response += " But… it’s mostly just repeats and late edition cards. You toss them away."
 
     return response
