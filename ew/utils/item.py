@@ -562,7 +562,7 @@ async def lower_durability(general_item):
     general_item_data.persist()
 
 
-def unwrap(id_user = None, id_server = None, item = None, repeats = 0, rarity = 74):
+def unwrap(id_user = None, id_server = None, item = None, repeats = 0, rarity = 10):
     response = "You eagerly rip open a pack of Secreatures™ trading cards!!"
     bknd_item.item_delete(item.id_item)
     slimexodia = False
