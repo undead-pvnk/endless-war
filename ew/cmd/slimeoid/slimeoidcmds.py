@@ -451,7 +451,7 @@ async def slimeoidbattle(cmd):
         
         # Try to find an enemy by the name / indicator given
         targetenemy = " ".join(cmd.tokens[1:]).lower()
-        challengee = cmbt_utils.find_enemy(targetenemy, EwUser())
+        challengee = cmbt_utils.find_enemy(targetenemy, challenger)
         
         if challengee is None:
             response = "Huh? Who do you want to challenge?"
