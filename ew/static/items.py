@@ -3455,7 +3455,7 @@ furniture_list = [
     ),
     EwFurniture(
         id_furniture = "ferroslimeoidotamatone",
-        str_name = "ferroidslimeoid Otamatone",
+        str_name = "ferroslimeoid Otamatone",
         str_desc = "An Otamatone, powered by the metallic voice of a ferroslimeoid.",
         rarity = "Patrician",
         acquisition = "smelting",
