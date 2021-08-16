@@ -591,6 +591,7 @@ def unwrap(id_user = None, id_server = None, item = None, repeats = 0, rarity = 
                 id_server=id_server.id,
                 item_props=item_props
             )
+            slimexodia = False
 
     if len(pulls) > 1:
         response += " ***...What's this?!*** You manage to find a number of legendary cards, including:\n"
