@@ -644,11 +644,11 @@ async def item_use(cmd):
             context = item.item_props.get('context')
             if (context == "cardpack" or context == "promocardpack" or context == "boosterbox"):
                 repeats = 0
-                rarity = 10
+                rarity = 1000
                 if context == "promocardpack":
                     rarity = 500
                 elif context == "boosterbox":
-                    repeats = 36
+                    repeats = 35
                 response = itm_utils.unwrap(id_user=author, id_server=server, item=item, repeats=repeats, rarity=rarity)
             elif (context == 'repel' or context == 'superrepel' or context == 'maxrepel'):
                 statuses = user_data.getStatusEffects()
