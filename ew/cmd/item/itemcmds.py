@@ -644,7 +644,7 @@ async def item_use(cmd):
             context = item.item_props.get('context')
             if (context == "cardpack" or context == "promocardpack" or context == "boosterbox"):
                 repeats = 0
-                rarity = 1000
+                rarity = 10
                 if context == "promocardpack":
                     rarity = 500
                 elif context == "boosterbox":
