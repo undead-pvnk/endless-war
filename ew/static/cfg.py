@@ -3175,7 +3175,7 @@ stock_tacobell = "tacobell"
 
 # default stock rates
 default_stock_market_rate = 1000
-default_stock_exchange_rate = 2000000
+default_stock_exchange_rate = 1000000
 
 vendor_stock_map = {
     vendor_kfc: stock_kfc,

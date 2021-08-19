@@ -16,7 +16,7 @@ class EwMarket:
     slimes_revivefee = 0
 
     market_rate = 1000
-    exchange_rate = 5000000
+    exchange_rate = 1000000
     boombust = 0
     time_lasttick = 0
     negaslime = 0
