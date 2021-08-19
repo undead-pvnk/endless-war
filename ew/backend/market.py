@@ -266,7 +266,7 @@ class EwStock:
             else:  # create new entry
                 self.timestamp = time.time()
                 self.market_rate = ewcfg.default_stock_market_rate
-                self.exchange_rate = 405425
+                self.exchange_rate = ewcfg.default_stock_exchange_rate
                 self.persist()
 
     def persist(self):
