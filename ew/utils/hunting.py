@@ -787,7 +787,7 @@ def spawn_enemy(
             # Slimeoid Trainers only spawn in the Arena
             elif enemytype == ewcfg.enemy_type_slimeoidtrainer:
                 potential_chosen_poi = ewcfg.poi_id_arena
-            # Underground Trainers only spawn in the Subway
+            # Underground Trainers only spawn in the Subway, Ferry, or Blimp
             elif enemytype == ewcfg.enemy_type_ug_slimeoidtrainer:
                 potential_chosen_poi = random.choice(poi_static.transports)
             # Everything else spawns in the outskrits TODO: Make this code not shit
@@ -903,7 +903,7 @@ def spawn_enemy(
             elif enemytype in ewcfg.gvs_enemies_shamblers:
                 response = "**A {} creeps forward!!** It spawned in {}!".format(enemy.display_name, enemy.gvs_coord)
             elif enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman:
-                response = "***BEHOLD!!!***  The {} has arrvied to challenge thee! He is of {} slime, and {} in level. Happy Double Halloween, you knuckleheads!".format(
+                response = "***BEHOLD!!!***  The {} has arrived to challenge thee! He is of {} slime, and {} in level. Happy Double Halloween, you knuckleheads!".format(
                     enemy.display_name, enemy.slimes, enemy.level)
 
                 if market_data.horseman_deaths >= 1:

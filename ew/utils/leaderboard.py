@@ -193,7 +193,7 @@ def make_slimeoids_top_board(server = None):
         data = cursor.fetchall()
         if data != None:
             for row in data:
-                board += "{} `{:_>3} | {}'s {}`".format(
+                board += "{} `{:_>3} | {}'s {}`\n".format(
                     ewcfg.emote_blank,
                     row[2],
                     row[0].replace("`", ""),
@@ -208,7 +208,7 @@ def make_slimeoids_top_board(server = None):
 
 
 def make_zines_top_board(server = None):
-    board = "{zine} ▓▓▓▓▓ BESTSELLING ZINES ▓▓▓▓▓ {zine}".format(
+    board = "{zine} ▓▓▓▓▓ BESTSELLING ZINES ▓▓▓▓▓ {zine}\n".format(
         zine="<:zine:655854388761460748>"
     )
 

@@ -731,9 +731,9 @@ async def battle_slimeoids(id_s1, id_s2, challengee_name, challenger_name, chann
 
         await asyncio.sleep(2)
 
-    # the challenger has lost
+    # the challengee has lost
     if s1_combat_data.hp <= 0:
-        result = -1
+        result = 1
         response = "\n" + s1_combat_data.legs.str_defeat.format(
             slimeoid_name=s1_combat_data.name
         )
@@ -757,9 +757,9 @@ async def battle_slimeoids(id_s1, id_s2, challengee_name, challenger_name, chann
 
         await fe_utils.send_message(client, channel, response)
         await asyncio.sleep(2)
-    # the challengee has lost
+    # the challenger has lost
     else:
-        result = 1
+        result = -1
         response = "\n" + s2_combat_data.legs.str_defeat.format(
             slimeoid_name=s2_combat_data.name
         )
