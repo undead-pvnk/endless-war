@@ -3746,12 +3746,29 @@ async def print_cache(cmd):
     if not cmd.message.author.guild_permissions.administrator:
         return await cmd_utils.fake_failed_command(cmd)
 
-    cache_dict = bknd_core.cached_db
-    response = "Current dict entries: \n\n"
-    for table in cache_dict.keys():
-        response += "Table `{}` contains: \n".format(table)
-        table_dict = cache_dict.get(table)
-        for entry_id in table_dict.keys():
-            response += "    ID: `{}`, Data: `{}`\n".format(entry_id, table_dict.get(entry_id))
+    response = "*{}*: Current cache types are: \n".format(cmd.message.author.display_name)
 
-    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    for object_type in bknd_core.cached_db.keys():
+        response += "    {}\n".format(object_type)
+
+    for object_type in bknd_core.cached_db.keys():
+        response += "\n{} Cache contains:\n".format(object_type)
+
+        for entry_id, entry in bknd_core.cached_db.get(object_type).entries.items():
+            response += "    Identifier: {}, Data: {}\n".format(entry_id, entry)
+
+    response = ""
+
+    guinea = EwItem(id_item=34)
+    response = "Item at retrieval: \n{}".format(guinea.__dict__)
+    await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+    guinea.item_props.update({"id_name": "FUCKFUCKFUCKFUCK"})
+    response = "Item after owner change: \n{}".format(guinea.__dict__)
+    await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+    reload = EwItem(id_item=34)
+    response = "Reloaded item data: \n{}".format(reload.__dict__)
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+    #return await fe_utils.send_message(cmd.client, cmd.message.channel, response)#fe_utils.formatMessage(cmd.message.author, response))

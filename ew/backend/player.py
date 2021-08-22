@@ -28,7 +28,7 @@ class EwPlayer:
             self.id_user = id_user
             self.id_server = id_server
 
-            cache_result = bknd_core.get_cache_result(table="players", id_entry=id_user)
+            cache_result = bknd_core.get_cache_result(obj_type=type(self).__name__, id_entry=id_user)
 
             if cache_result is not False:
                 self.__dict__ = cache_result
@@ -66,6 +66,9 @@ class EwPlayer:
                         ))
 
                         conn.commit()
+
+                    bknd_core.cache_data(obj_type=type(self).__name__, data=self.__dict__)
+
                 finally:
                     # Clean up the database handles.
                     cursor.close()
@@ -75,7 +78,7 @@ class EwPlayer:
 
     def persist(self):
         try:
-            bknd_core.cache_data(table="players", id_entry=self.id_user, data=self.__dict__)
+            bknd_core.cache_data(obj_type=type(self).__name__, data=self.__dict__)
         finally:
             pass
 

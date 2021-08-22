@@ -442,7 +442,7 @@ async def item_look(cmd):
 
             id_item = item.id_item
             name = item_sought.get('name')
-            response = item_sought.get('item_def').str_desc
+            response = static_items.item_def_map.get(item_sought.get('item_type')).str_desc
 
             # Replace up to two levels of variable substitutions.
             if response.find('{') >= 0:
@@ -1179,7 +1179,7 @@ async def propstand(cmd):
             response = "You affix the {} to a wooden mount. You know this priceless trophy will last thousands of years, so you spray it down with formaldehyde to preserve it forever. Or at least until you decide to remove it.".format(item_sought.get('name'))
             lookdesc = "A {} is mounted on the wall.".format(item_sought.get('name'))
             placedesc = "You mount the {} on the wall. God damn magnificent.".format(item_sought.get('name'))
-            fdesc = item_sought.get('item_def').str_desc
+            fdesc = static_items.item_def_map.get(item_sought.get('item_type')).str_desc
             if fdesc.find('{') >= 0:
                 fdesc = fdesc.format_map(item.item_props)
 
@@ -1792,7 +1792,7 @@ async def create_all(cmd):
 
         if item != None:
             number_of_each = 0
-            while number_of_each < 100:
+            while number_of_each < 1:
                 item_props = itm_utils.gen_item_props(item)
 
                 generated_item_id = bknd_item.item_create(

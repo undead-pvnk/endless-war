@@ -1350,6 +1350,20 @@ if token == None or len(token) == 0:
     ewutils.logMsg('Please place your API token in a file called "token", in the same directory as this script.')
     sys.exit(0)
 
+# Load the cache before connecting to discord, this way we arent missing heartbeats
+ewutils.logMsg("Loading items into cache...")
+cache_loaded = bknd_item.load_items_cache()
+if cache_loaded:
+    cached_item_num = len(bknd_core.cached_db.get("EwItem").entries.keys()) if "EwItem" in bknd_core.cached_db else 0
+    item_cache_size = ewutils.total_size(bknd_core.cached_db.get("EwItem")) if "EwItem" in bknd_core.cached_db else 0
+    ewutils.logMsg("Item caching successful. {} items loaded, using {} Bytes of memory".format(
+        cached_item_num,
+        item_cache_size
+    ))
+else:
+    ewutils.TERMINATE = True
+    ewutils.logMsg("Startup aborted. Failed to cache database.")
+
 # connect to discord and run indefinitely
 try:
     client.run(token)

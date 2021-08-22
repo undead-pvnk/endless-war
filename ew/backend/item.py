@@ -29,6 +29,8 @@ class EwItem:
 
     item_props = None
 
+    name = ""
+
     def __init__(
             self,
             id_item = None
@@ -40,10 +42,10 @@ class EwItem:
             # the item props don't reset themselves automatically which is why the items_prop table had tons of extraneous rows (like food items having medal_names)
             # self.item_props.clear()
 
-            cache_result = bknd_core.get_cache_result(table="items", id_entry=id_item)
+            cache_result = bknd_core.get_cache_result(obj_type=type(self).__name__, id_entry=id_item)
             if cache_result is not False:
                 self.__dict__ = cache_result
-                ewutils.logMsg("Item {} loaded from cache.".format(id_item))
+                #ewutils.logMsg("Item {} loaded from cache.".format(id_item))
             else:
                 try:
                     conn_info = bknd_core.databaseConnect()
@@ -66,7 +68,7 @@ class EwItem:
                     result = cursor.fetchone()
 
                     if result != None:
-                        ewutils.logMsg("Item {} loaded from database.".format(id_item))
+                        #ewutils.logMsg("Item {} loaded from database.".format(id_item))
                         # Record found: apply the data to this object.
                         self.id_server = result[0]
                         self.id_owner = result[1]
@@ -100,7 +102,8 @@ class EwItem:
                     if self.template == "-2":
                         self.persist()
 
-                    bknd_core.cache_data(table="items", id_entry=self.id_item, data=self.__dict__)
+                    self.update_name()
+                    bknd_core.cache_data(obj_type=type(self).__name__, data=self.__dict__)
 
                 finally:
                     # Clean up the database handles.
@@ -111,7 +114,8 @@ class EwItem:
 
     def persist(self):
 
-        bknd_core.cache_data(table="items", id_entry=self.id_item, data=self.__dict__)
+        self.update_name()
+        bknd_core.cache_data(obj_type=type(self).__name__, data=self.__dict__)
 
         if self.template == "-2":
             if self.item_type == ewcfg.it_item:
@@ -184,6 +188,14 @@ class EwItem:
             cursor.close()
             bknd_core.databaseClose(conn_info)
 
+    def update_name(self):
+        if self.name == "":
+            for key, value in self.item_props.items():
+                if key in ["item_name", "food_name", "cosmetic_name", "weapon_name"]:
+                    self.name = value
+            if self.name == "" and "weapon_type" in self.item_props.keys():
+                self.name = self.item_props.get("weapon_type")
+
 
 """
 	Finds the amount of Slime Poudrins inside your inventory.
@@ -220,8 +232,6 @@ def item_delete(
         id_item = None
 ):
     bknd_core.remove_entry(table="items", id_entry=id_item)
-
-    update_inventory_cache(id_item=id_item)
 
     try:
         conn_info = bknd_core.databaseConnect()
@@ -332,6 +342,7 @@ def item_create(
         cursor.close()
         bknd_core.databaseClose(conn_info)
 
+    EwItem(id_item=item_id) # Ensure it is loaded into the cache
     return item_id
 
 
@@ -351,6 +362,17 @@ def item_dropall(
                 user_data.id_user,
                 user_data.id_server
             ))
+
+        item_cache = bknd_core.cached_db.get("EwItem") if "EwItem" in bknd_core.cached_db.keys() else False
+        if item_cache:
+            for item_data in item_cache.find_entries(criteria={"id_owner": user_data.id_user, "id_server": user_data.id_server, "soulbound": 0}):
+                item_data.update({"id_owner": user_data.poi})
+                item_cache.set_entry(item_data)
+            # for item_id, item_data in bknd_core.cached_db.get('items').items():
+            #    if item_data.get("id_server") == user_data.id_server \
+            #            and item_data.get("id_owner") == user_data.id_user \
+            #            and item_data.get("soulbound"):
+            #        item_data.update({'id_owner': user_data.poi})
 
     except:
         ewutils.logMsg('Failed to drop items for user with id {}'.format(user_data.id_user))
@@ -378,6 +400,20 @@ def item_dedorn_cosmetics(
                 str(id_user),
                 id_server
             ))
+
+        item_cache = bknd_core.cached_db.get("EwItem") if "EwItem" in bknd_core.cached_db.keys() else False
+        if item_cache:
+            for item_data in item_cache.find_entries(criteria={"id_owner": id_user, "id_server": id_server}):
+                props = item_data.get("item_props") if "item_props" in item_data.keys() else False
+                if props:
+                    props.update({"adorned": False})
+                item_cache.set_entry(item_data)
+        #if 'items' in bknd_core.cached_db.keys():
+        #    for item_id, item_data in bknd_core.cached_db.get('items').items():
+        #        if item_data.get("id_server") == id_server and item_data.get("id_owner") == id_user:
+        #            props = item_data.get("item_props")
+        #            if "adorned" in props and props.get("adorned"):
+        #                props.update({'adorned': False})
 
     except:
         ewutils.logMsg('Failed to dedorn cosmetics for user with id {}'.format(id_user))
@@ -410,6 +446,18 @@ def item_destroyall(id_server = None, id_user = None, member = None):
             ))
 
             conn.commit()
+
+            item_cache = bknd_core.cached_db.get("EwItem") if "EwItem" in bknd_core.cached_db.keys() else False
+            if item_cache:
+                for item_data in item_cache.find_entries(criteria={"id_owner": id_user, "id_server": id_server, "soulbound": 0}):
+                    item_cache.delete_entry(item_data)
+            #if 'items' in bknd_core.cached_db.keys():
+            #    for item_id, item_data in bknd_core.cached_db.get('items').items():
+            #        if item_data.get("id_server") == id_server \
+            #          and item_data.get("id_owner") == id_user \
+            #          and item_data.get("soulbound"):
+            #            bknd_core.remove_entry(table="items", id_entry=item_id)
+
         finally:
             # Clean up the database handles.
             cursor.close()
@@ -512,6 +560,59 @@ def inventory(
         item_sorting_method = None,
 ):
     items = []
+
+    # Grab the cache if it exists
+    if "EwItem" in bknd_core.cached_db.keys() and id_server is not None:
+        item_cache = bknd_core.cached_db.get("EwItem")
+
+        # Setup criteria
+        criteria = {}
+        if id_user is not None: criteria.update({"id_owner": id_user})
+        if id_server is not None: criteria.update({"id_server": id_server})
+        if item_type_filter is not None: criteria.update({"item_type": item_type_filter})
+
+        found_items = item_cache.find_entries(criteria=criteria)
+
+        """for item_data in item_cache.values():
+            #printed = False
+            matches = False
+            try:
+                # Check for matching server id
+                matches = True if str(id_server) == str(item_data.get("id_server")) else False
+                #if not matches:
+                #    printed = True
+                #    ewutils.logMsg("Item {} with server {} failed to match with server {}".format(item_data.get("id_item"), item_data.get("id_server"), id_server))
+
+                # if id_user is None, equality doesn't matter. if they're both None, it is most likely a bugged item, ignore
+                matches = matches if ((id_user is None) or (str(id_user) == str(item_data.get("id_owner")))) else False
+                #if (not matches) and (not printed):
+                #    printed = True
+                #    ewutils.logMsg("Item {} with owner {} failed to match with user {}".format(item_data.get("id_item"), item_data.get("id_owner"), id_user))
+
+                # same as user id, No filter means no change, matched filer means no change, but you cant match to No Type
+                matches = matches if ((item_type_filter is None) or (item_data.get("item_type") == item_type_filter)) else False
+                #if (not matches) and (not printed):
+                #    ewutils.logMsg("Item {} with type {} failed to match with type {}".format(item_data.get("id_item"), item_data.get("item_type"), item_type_filter))
+
+            except ValueError:
+                ewutils.logMsg("Item Threw value error, most likely had a blank owner id. Data: \n{}".format(item_data))
+            except:
+                ewutils.logMsg("Unknown error checking inventory. Args: \n{} \nItem Data: \n{}".format([id_user, id_server, item_type_filter, item_sorting_method], item_data))
+"""
+            # If the item passed all checks, ensure the type is valid, and add to the list
+            #if matches and static_items.item_def_map.get(item_data.get("item_type")) is not None:
+        for item_data in found_items:
+            items.append(item_data)
+
+            # Calculate quantity and set it for the object, cant wait for this to cause a major bug
+            quantity = 1
+            if item_data.get('stack_max') > 0:
+                quantity = item_data.get('stack_size')
+
+            item_data.update({'quantity': quantity})
+
+        ewutils.logMsg("Player {} has cached inventory of {} items".format(id_user, len(items)))
+        return items
 
     try:
 
@@ -848,6 +949,7 @@ def give_item(
 
     if id_server is not None and id_user is not None and id_item is not None:
         item = EwItem(id_item=id_item)
+        item.id_owner = id_user
 
         # Ensure general limit implementation
         if ewutils.is_player_inventory(id_user, id_server):
@@ -871,7 +973,7 @@ def give_item(
             )
         )
 
-        update_inventory_cache(id_item=id_item, prev_id=item.id_owner, cur_id=id_user)
+        bknd_core.cache_data(obj_type=type(item).__name__, data=item.__dict__)
 
         remove_from_trades(id_item)
 
@@ -1153,43 +1255,24 @@ def get_weaponskill(user_data):
     return weaponskill
 
 
-""" finds the given item in cached inventories and moves it """
+""" Loads every item in the database into the cache. Returns true if successful, otherwise false. """
 
+def load_items_cache():
+    try:
+        # Grab the ID of every extant item
+        results = bknd_core.execute_sql_query("SELECT {id_item} FROM items".format(id_item=ewcfg.col_id_item))
 
-def update_inventory_cache(id_item=None, prev_id=None, cur_id=None):
-    # Just stop now if there arent even inventories to update
-    if "inventories" not in bknd_core.cached_db.keys():
-        return
+        # Initialize an EwItem for each returned ID
+        tracker = 0
+        for row in results:
+            tracker += 1
+            EwItem(id_item=row[0])
+            if tracker % 1000 == 0:
+                ewutils.logMsg("loaded 1k")
 
-    # Ensure it was passed an id
-    if id_item is not None:
-        inv_cache = bknd_core.cached_db.get("inventories")
-        quick_success = False
+        # Tell the client it didn't error out halfway
+        return True
 
-        # If given a previous owner, dont search the entire inventory cache
-        if prev_id is not None and prev_id in inv_cache.keys():
-            prev_inv = inv_cache.get(prev_id)
-
-            # Ensure the item is in the inventory so removing can't error out
-            if id_item in prev_inv:
-                prev_inv.remove(id_item)
-                quick_success = True
-
-        # Only check through all inventories if it wasn't where it should've been
-        # Or if not given anywhere to search
-        if not quick_success:
-            # Loop through all cached inventories
-            for inv_id, inv in inv_cache.items():
-                # delete the item from any inventory that isn't the new owner's
-                if id_item in inv and not inv_id == cur_id:
-                    inv.remove(id_item)
-
-        # Update the inventory of the new owner, if it is cached
-        if cur_id is not None and cur_id in inv_cache.keys():
-            cur_inv = inv_cache.get(cur_id)
-
-            # Ensure you arent reporting the same item twice in an inventory
-            if id_item not in cur_inv:
-                cur_inv.append(id_item)
-
-    return
+    except:
+        ewutils.logMsg("Failed to load all items from database into cache.")
+        return False
