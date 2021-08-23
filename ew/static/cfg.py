@@ -5701,6 +5701,27 @@ def set_client(cl):
     return client_ref
 
 
+"""
+    Tell the cache how to handle certain object types
+"""
+
+
+cacheable_types = ["EwItem"]
+
+obj_type_to_identifiers = {
+    "EwItem": [{"id_item", "id_entry"}],
+    # "EwPlayer": [{"id_user", "id_entry"}],
+    # "EwUser": [
+    #    {"id_user", "id_entry"},
+    #    {"id_server"}
+    # ],
+}
+
+obj_type_to_nested_props = {
+    "EwItem": ["item_props"],
+    # "EwEnemy": ["enemy_props"],
+}
+
 # scream = ""
 # for i in range(1, 10000):
 #     scream += "A"
@@ -5789,10 +5810,3 @@ cmd_debug9 = cmd_prefix + ewdebug.cmd_debug9
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Little_Chernobyl#RP_City"
     },*/"""
-
-all_globals = dir()
-all_item_ids = []
-for varname in all_globals:
-    if varname.startswith("item_id_") or varname.startswith("weapon_id_"):
-        all_item_ids.append(eval(varname))
-

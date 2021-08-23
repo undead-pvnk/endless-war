@@ -1675,8 +1675,7 @@ async def create_multi(cmd):
             name = item.str_name
 
     if item != None:
-        cache_size_before = ewutils.total_size(bknd_core.cached_db)
-        total_bytes_added = 0
+
         for x in range(number):
             item_props = itm_utils.gen_item_props(item)
 
@@ -1689,13 +1688,7 @@ async def create_multi(cmd):
                 item_props=item_props
             )
 
-            generated_item_size = ewutils.total_size(EwItem(id_item=generated_item_id).__dict__)
-            total_bytes_added += generated_item_size
-            ewutils.logMsg("Added {} bytes to cache. Total of {} added.".format(generated_item_size, total_bytes_added))
-
         response = "Created {} items **{}** for **{}**".format(number, name, item_recipient)
-        cache_size = ewutils.total_size(bknd_core.cached_db)
-        response += "\nCreation added {} bytes to the cache. Total memory use of cache now {} bytes.".format(cache_size - cache_size_before, cache_size)
     else:
         response = "Could not find item."
 
@@ -1730,12 +1723,12 @@ async def create_all(cmd):
     if not cmd.message.author.guild_permissions.administrator:
         return
 
-    number = 1
-    biggest_item_id = ""
-    biggest_item_size = 0
-    number_created = 0
+    try:
+        num_target = int(cmd.tokens[1])
+    except:
+        num_target = 1
 
-    cache_size_before = ewutils.total_size(bknd_core.cached_db)
+    number_created = 0
 
     item_recipient = None
     if cmd.mentions_count == 1:
@@ -1743,60 +1736,21 @@ async def create_all(cmd):
     else:
         item_recipient = cmd.message.author
 
-    for value in ewcfg.all_item_ids:
-        item = static_items.item_map.get(value)
+    list_all = static_items.item_list + static_items.furniture_list
+    list_all += static_food.food_list
+    list_all += static_fish.fish_list
+    list_all += static_weapons.weapon_list
+    list_all += cosmetics.cosmetic_items_list
 
-        item_type = ewcfg.it_item
-        if item != None:
-            item_id = item.id_item
-            name = item.str_name
-
-        # Finds the item if it's an EwFood item.
-        if item == None:
-            item = static_food.food_map.get(value)
-            item_type = ewcfg.it_food
-            if item != None:
-                item_id = item.id_food
-                name = item.str_name
-
-        # Finds the item if it's an EwCosmeticItem.
-        if item == None:
-            item = cosmetics.cosmetic_map.get(value)
-            item_type = ewcfg.it_cosmetic
-            if item != None:
-                item_id = item.id_cosmetic
-                name = item.str_name
-
-        if item == None:
-            item = static_items.furniture_map.get(value)
-            item_type = ewcfg.it_furniture
-            if item != None:
-                item_id = item.id_furniture
-                name = item.str_name
-                if item_id in static_items.furniture_pony:
-                    item.vendors = [ewcfg.vendor_bazaar]
-
-        if item == None:
-            item = static_weapons.weapon_map.get(value)
-            item_type = ewcfg.it_weapon
-            if item != None:
-                item_id = item.id_weapon
-                name = item.str_weapon
-
-        if item == None:
-            item = static_fish.fish_map.get(value)
-            item_type = ewcfg.it_food
-            if item != None:
-                item_id = item.id_fish
-                name = item.str_name
+    for item in list_all:
 
         if item != None:
             number_of_each = 0
-            while number_of_each < 1:
+            while number_of_each < num_target:
                 item_props = itm_utils.gen_item_props(item)
 
-                generated_item_id = bknd_item.item_create(
-                    item_type=item_type,
+                bknd_item.item_create(
+                    item_type=item.item_type,
                     id_user=item_recipient.id,
                     id_server=cmd.guild.id,
                     stack_max=-1,
@@ -1804,33 +1758,9 @@ async def create_all(cmd):
                     item_props=item_props
                 )
 
-                created_item = EwItem(id_item=generated_item_id)
-                item_mem_usage = ewutils.total_size(created_item.__dict__)
-
-                ewutils.logMsg("Created one {} which uses {} bytes when cached".format(value, item_mem_usage))
-
-                if item_mem_usage > biggest_item_size:
-                    biggest_item_id = value
-                    biggest_item_size = item_mem_usage
-
                 number_created += 1
                 number_of_each += 1
 
-    response = "Created {} items for **{}**.\nBiggest item was {} which used {} bytes.".format(number_created, item_recipient, biggest_item_id, biggest_item_size)
-    cache_size = ewutils.total_size(bknd_core.cached_db)
-    response += "\nCreation added {} bytes to the cache. Total memory use of cache now {} bytes.".format(cache_size - cache_size_before, cache_size)
+    response = "Created {} items for **{}**.".format(number_created, item_recipient)
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, response)
-
-"""
-def calculate_cache_size():
-    cache_size_total = 0
-
-    cache = bknd_core.cached_db
-    for table in cache.values():
-        for entry in table.values():
-            for data in entry.values():
-                
-
-    return cache_size_total
-"""

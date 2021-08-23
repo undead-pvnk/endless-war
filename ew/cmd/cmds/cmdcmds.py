@@ -3746,29 +3746,33 @@ async def print_cache(cmd):
     if not cmd.message.author.guild_permissions.administrator:
         return await cmd_utils.fake_failed_command(cmd)
 
+    arg = cmd.tokens[1:]
+
     response = "*{}*: Current cache types are: \n".format(cmd.message.author.display_name)
 
-    for object_type in bknd_core.cached_db.keys():
-        response += "    {}\n".format(object_type)
+    for cache in bknd_core.caches:
+        response += "    {}\n".format(cache.entry_type)
 
-    for object_type in bknd_core.cached_db.keys():
-        response += "\n{} Cache contains:\n".format(object_type)
+    for cache in bknd_core.caches:
+        response += "\n{} Cache contains:\n".format(cache.entry_type)
 
-        for entry_id, entry in bknd_core.cached_db.get(object_type).entries.items():
+        for entry_id, entry in cache.entries.items():
             response += "    Identifier: {}, Data: {}\n".format(entry_id, entry)
 
-    response = ""
+    if "security" in arg:
+        response = ""
 
-    guinea = EwItem(id_item=34)
-    response = "Item at retrieval: \n{}".format(guinea.__dict__)
-    await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+        guinea = EwItem(id_item=34)
+        response = "Item at retrieval: \n{}".format(guinea.__dict__)
+        await fe_utils.send_message(cmd.client, cmd.message.channel, response)
 
-    guinea.item_props.update({"id_name": "FUCKFUCKFUCKFUCK"})
-    response = "Item after owner change: \n{}".format(guinea.__dict__)
-    await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+        guinea.item_props.update({"id_name": "FUCKFUCKFUCKFUCK"})
+        response = "Item after owner change: \n{}".format(guinea.__dict__)
+        await fe_utils.send_message(cmd.client, cmd.message.channel, response)
 
-    reload = EwItem(id_item=34)
-    response = "Reloaded item data: \n{}".format(reload.__dict__)
+        reload = EwItem(id_item=34)
+        response = "Reloaded item data: \n{}".format(reload.__dict__)
+
     return await fe_utils.send_message(cmd.client, cmd.message.channel, response)
 
     #return await fe_utils.send_message(cmd.client, cmd.message.channel, response)#fe_utils.formatMessage(cmd.message.author, response))

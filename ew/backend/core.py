@@ -1,6 +1,5 @@
 import time
-import traceback
-from copy import copy, deepcopy
+from copy import copy
 
 import MySQLdb
 
@@ -9,38 +8,30 @@ from ..static import cfg as ewcfg
 db_pool = {}
 db_pool_id = 0
 
-cached_db = {
-    #'table-name': {
-    #   'idserverasnumber~entryidasnumber': {
-    #       ewcfg.col_id: entry
-    #   }
-    # },
-    #'inventories': {
-    #   '169282450621595648': [2, 6, 9, 25],
-    #   'owner_id': [all item id's belonging to them]
-    #}
-}
+caches = []
 
-obj_type_to_identifiers = {
-    "EwItem": [{"id_item", "id_entry"}],
-    "EwPlayer": [{"id_user", "id_entry"}],
-    #"EwUser": ["id_user", "id_server"],
-}
-
-obj_type_to_nested_props = {
-    "EwItem": ["item_props"],
-    #"EwEnemy": ["enemy_props"],
-}
 
 class ObjCache():
+    """
+        Template for caches. Initialized with the type.__name__ of the objects it stores.
+        Handles setting and retrieval of cached data, ensuring that all data entering or exiting the cache is
+        identified and copied as its type should be, and that the data within the cache is never directly pointed to
+        by an external function.
+        This ensures that the cache is only updated when these methods are called, and in the case where an object is
+        initialized and changed without being persisted, that the cached data is not affected
+    """
+
     entry_type = None
 
     identifiers = []
     nested_props = []
     entries = {}
 
-    def __init__(self, ew_obj_type = None):
-        """ Takes the string representing the class type. Found with `type(instance).__name__` """
+    def __init__(self, ew_obj_type=None):
+        """
+            Takes the string representing the class type. Found with `type(instance).__name__`
+            Sets up type specific variables used in the cache.
+        """
 
         # Track the object type stored in the cache
         self.entry_type = ew_obj_type
@@ -49,16 +40,25 @@ class ObjCache():
         self.entries = {}
 
         # Check if it has been given an identifying column
-        if ew_obj_type in obj_type_to_identifiers.keys():
+        if ew_obj_type in ewcfg.obj_type_to_identifiers.keys():
             # declare the unique columns
-            self.identifiers = obj_type_to_identifiers.get(ew_obj_type)
+            self.identifiers = ewcfg.obj_type_to_identifiers.get(ew_obj_type)
 
         # Find any nested properties so copying will work right
-        if ew_obj_type in obj_type_to_nested_props.keys():
-            self.nested_props = obj_type_to_nested_props.get(ew_obj_type)
+        if ew_obj_type in ewcfg.obj_type_to_nested_props.keys():
+            self.nested_props = ewcfg.obj_type_to_nested_props.get(ew_obj_type)
+
+        # Leave a pointer to this object so it can actually be found
+        caches.append(self)
 
     def get_data_id(self, data):
-        """ Takes a dictionary of all identifier names and values, and converts to a string """
+        """
+            Takes a dictionary of property names and values. Must at least contain the unique properties of the type.
+            Returns a string combining all unique properties, or False if a unique property is not present in the data.
+
+            Unnecessary for EwItems or EwPlayers, which have only one unique property. But necessary for expansion into
+            EwUsers or stocks which combine multiple fields to achieve unique identification
+        """
 
         # Set Up
         return_id = None
@@ -86,6 +86,14 @@ class ObjCache():
             return str(len(self.entries) + 1)
 
     def copy_entry(self, data):
+        """
+            Takes the data of an entry for the cache's given type.
+            Returns a surface copy of the data, with any fields defined as nested being surface copied individually.
+
+            Deepcopy works for the most part, but threw errors when used on EwPlayer data, so while those are not being
+            cached yet, the potential issue was pre-emptively fixed when found.
+        """
+
         # Run a surface level copy
         ret_dat = copy(data)
 
@@ -107,6 +115,11 @@ class ObjCache():
         return ret_dat
 
     def set_entry(self, data):
+        """
+            Takes data of the cache's entry type and updates the cache with a new copy of the data.
+            Returns true if successful, and False if it was unable to find the identifier or make a copy.
+        """
+
         # Attempt to get unique ID for the data
         entry_id = self.get_data_id(data)
         # Ensure saved data is separated from active use data
@@ -121,14 +134,24 @@ class ObjCache():
             return False
 
     def get_entry(self, unique_vals = None):
+        """
+            Takes dictionary of the values unique to all entries. Should just be the Primary Keys.
+            Returns a copy of the cached data, or False if there is no data with the given identifiers.
+        """
+
         # Convert identifiers to a string of consistent order and format
         id_str = self.get_data_id(unique_vals)
-        #print("Searching {} cache for id {}".format(self.entry_type, id_str))
 
         # Find the target data and copy it so nothing receives a pointer to the cache
         return self.copy_entry(self.entries.get(id_str)) if (id_str in self.entries.keys()) else False
 
     def delete_entry(self, unique_vals = None):
+        """
+            Takes the unique properties of a given entry as a dictionary of property names and values.
+            Returns True if the entry existed and was removed, returns false if nothing was found
+            Deletes entry if one matching the passed identifiers is found
+        """
+
         # Convert identifiers to a string of consistent order and format
         id_str = self.get_data_id(unique_vals)
 
@@ -136,7 +159,16 @@ class ObjCache():
             # Delete the entry if it exists
             self.entries.pop(id_str)
 
+            # Allow for things that use this to know whether something was successfully deleted
+            return True
+        return False
+
     def find_entries(self, criteria = None):
+        """
+            Takes a dictionary of object property names and values. Checks against all data entered in the cache.
+            Returns a list of copies of all data that met the given criteria.
+        """
+
         copied_matches = []
 
         # iterate through all entered data
@@ -214,12 +246,14 @@ def databaseClose(conn_info):
 
 
 """
-	Execute a given sql_query. (the purpose of this function is to minimize repeated code and keep functions readable)
+    Execute a given sql_query. (the purpose of this function is to minimize repeated code and keep functions readable)
 """
 
 
 def execute_sql_query(sql_query = None, sql_replacements = None):
     data = None
+    cursor = None
+    conn_info = None
 
     try:
         conn_info = databaseConnect()
@@ -231,52 +265,104 @@ def execute_sql_query(sql_query = None, sql_replacements = None):
         conn.commit()
     finally:
         # Clean up the database handles.
-        cursor.close()
-        databaseClose(conn_info)
+        if cursor is not None: cursor.close()
+        if conn_info is not None: databaseClose(conn_info)
 
     return data
 
 
-""" Check the cached_db for data, return the data like a sql query if found, otherwise return false"""
+""" Locate the cache, compile all given identifying values, and get the entry with the given identification and type """
 
 
-def get_cache_result(obj_type = None, id_server = None, id_entry = None):
-    #print("Obj Type {} with id {} attempting retrieval".format(obj_type, id_entry))
-    # Setup, and grab the cache if it exists
-    obj_cache = cached_db.get(obj_type) if obj_type in cached_db.keys() else False
-    result = False
+def get_cache_result(obj_type = None, obj = None, **kwargs):
+    """
+        Takes an object type and any given properties, or an object itself
+        Returns False on failure to find, otherwise returns specified entry data
 
-    # if the cache exists, try to grab the item
+        Any unspecified keywords will be assumed to be unique properties, and a given object will be considered the
+        an instance of the target object, and have its properties added as potential identifiers
+    """
+
+    # Setup for return, and grab the cache if it exists
+    obj_cache = get_cache(obj_type = obj_type, obj = obj, create = False)
+
+    # This ensures a proper type was passed
     if obj_cache is not False:
-        ids_dict = {
-            "id_server": id_server,
-            "id_entry": id_entry,
-        }
-        result = obj_cache.get_entry(unique_vals=ids_dict)
+        # Use given object's properties as example of target object
+        if obj is not None: kwargs.update(obj.__dict__)
 
-    #print("Found result: \n{}".format(result))
-    return result
+        # Look for and return entry with values matching what was given.
+        return obj_cache.get_entry(unique_vals=kwargs)
 
-
-""" Add a row to the cached database """
-def cache_data(obj_type = None, data = None):
-    if obj_type not in cached_db.keys():
-        # Initialize a cache for the given object type if it doesnt exist
-        cached_db.update({obj_type: ObjCache(ew_obj_type=obj_type)})
-
-    #print("Caching as {}:\n{}".format(obj_type, data))
-    # Grab the cache and send it the data
-    cached_db.get(obj_type).set_entry(data)
+    # Return False if the type is not cached
+    return False
 
 
-""" Removes an entry, from the cache """
-def remove_entry(obj_type = None, id_server = None, id_entry = None):
-    # Organize potential identifiers
-    identifiers = {
-        "id_server": id_server,
-        "id_entry": id_entry,
-    }
+def cache_data(obj_type = None, data = None, obj = None):
+    """
+        Takes an object's type and data, or the object itself. Will prioritize given "data" if mixed with an object.
+        Returns True if it was successfully cached, and false if given incomplete or incompatible data.
 
-    # Remove if it exists
-    if obj_type in cached_db.keys():
-        cached_db.get(obj_type).delete_entry(unique_vals = identifiers)
+        Will create a new cache if one does not yet exist for the given object type.
+    """
+
+    # Find or create the cache
+    type_cache = get_cache(obj_type=obj_type, obj = obj)
+
+    # Extracts the data from an object if that was passed in lieu of necessitating separating the values elsewhere
+    data = obj.__dict__ if ((data is None) and (obj is not None)) else data
+
+    # Get cache will return false if not passed a proper object type
+    if type_cache is not False:
+        # Attempt to save the given data in the cache of its type
+        return type_cache.set_entry(data)
+
+    # Indicate failure to find a cache
+    return False
+
+
+def remove_entry(obj_type = None, obj = None, **kwargs):
+    """
+        Takes the type of object or the object itself being targeted
+        Returns True or False if the cached data was found and removed or not
+
+        Extra keywords are assumed to be unique properties of the target data, as are all properties of a passed obj
+    """
+
+    # Attempt to find pre-existing cache of the specified type
+    type_cache = get_cache(obj_type = obj_type, obj = obj, create = False)
+
+    # If the cache was found, try to find and delete an entry with the given properties.
+    if type_cache is not False:
+        # if the entire object was given, use its properties for identification
+        if obj is not None: kwargs.update(obj.__dict__)
+        # attempt deletion and indicate success
+        return type_cache.delete_entry(unique_vals = kwargs)
+
+    # Return indicator of success
+    return False
+
+
+def get_cache(obj_type=None, obj = None, create=True):
+    """
+        Takes the type().__name__ of an object or an object, and bool determining creation
+        Returns a cache of the specified type if create, or if it already exists, otherwise False
+    """
+
+    # Allow for passing of entire objects in the place of having to pick over the data every time
+    obj_type = type(obj).__name__ if ((obj_type is None) and (obj is not None)) else obj_type
+
+    # Ensure a valid type was actually given
+    if obj_type in ewcfg.cacheable_types:
+        # Search through all caches
+        for cache in caches:
+            # Return the cache upon finding it
+            if cache.entry_type == obj_type:
+                return cache
+
+        if create:
+            # If no matching cache was found, create a new one and return it, unless specified otherwise
+            return ObjCache(ew_obj_type=obj_type)
+
+    # Return false if No cache was found or creatable
+    return False
