@@ -14,7 +14,12 @@ import ew.static.vendors as vendors
 import ew.static.cosmetics as cosmetics
 import ew.static.food as static_food
 import ew.static.items as static_items
-
+try:
+    from ew.cmd import debug as ewdebug
+except:
+    from ew.cmd import debug_dummy as ewdebug
+import ew.static.rstatic as static_relic
+import ew.utils.rutils as relic_utils
 """ update stock values according to market activity """
 
 
@@ -270,6 +275,7 @@ async def refresh_bazaar(id_server = None):
         bazaar_cosmetics = []
         bazaar_general_items = []
         bazaar_furniture = []
+        bazaar_relics = []
 
         for item in vendors.vendor_inv.get(ewcfg.vendor_bazaar):
             if item in static_items.item_names:
@@ -284,6 +290,11 @@ async def refresh_bazaar(id_server = None):
             elif item in static_items.furniture_names:
                 bazaar_furniture.append(item)
 
+            elif item in static_relic.relic_names and relic_utils.canCreateRelic(item=item, id_server=id_server) is not None:
+                bazaar_furniture.append(item)
+
+        if ewdebug.bazaarTurnout() == 1:
+            market_data.bazaar_wares['relic1'] = random.choice(bazaar_relics)
         market_data.bazaar_wares['slimecorp1'] = ewcfg.weapon_id_umbrella
         market_data.bazaar_wares['slimecorp2'] = ewcfg.cosmetic_id_raincoat
 
