@@ -1484,3 +1484,8 @@ async def cancel_trade(cmd):
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+async def bazaar_refresh(cmd):
+    if not cmd.message.author.guild_permissions.administrator:
+        return
+    print('GOO')
+    await market_utils.refresh_bazaar(id_server=cmd.guild.id)

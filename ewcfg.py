@@ -1498,6 +1498,7 @@ cmd_offer = cmd_prefix + 'offer'
 cmd_remove_offer = cmd_prefix + 'removeoffer'
 cmd_completetrade = cmd_prefix + 'completetrade'
 cmd_canceltrade = cmd_prefix + 'canceltrade'
+cmd_bazaar_refresh = cmd_prefix + 'refreshbazaar'
 
 # race
 cmd_set_race = cmd_prefix + 'setrace'

@@ -2461,6 +2461,7 @@ class EwUser(EwUserBase):
                 itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_cosmetic, fraction=cosmetic_fraction, rigor=rigor)  # Drop a random fraction of your unadorned cosmetics on the ground.
                 # bknd_item.item_dedorn_cosmetics(id_server=self.id_server, id_user=self.id_user)  # Unadorn all of your adorned hats.
 
+                itm_utils.die_dropall(user_data=self, item_type=ewcfg.it_relic, kill_method=cause)
                 itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_weapon, fraction=1, rigor=rigor)  # Drop random fraction of your unequipped weapons on the ground.
                 ewutils.weaponskills_clear(id_server=self.id_server, id_user=self.id_user, weaponskill=ewcfg.weaponskill_max_onrevive)
 

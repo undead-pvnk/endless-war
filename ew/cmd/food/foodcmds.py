@@ -98,8 +98,9 @@ async def menu(cmd):
                 weapon_item = static_weapons.weapon_map.get(item_name)
                 relic_item = static_relic.relic_map.get(item_name)
 
-                if relic_utils.canCreateRelic(item_name, cmd.guild.id) == None:
-                    relic_item = None
+                if relic_item is not None:
+                    if relic_utils.canCreateRelic(item_name, cmd.guild.id) == None:
+                        continue
 
                 # increase profits for the stock market
                 stock_data = None
@@ -286,7 +287,9 @@ async def order(cmd):
             item_type = ewcfg.it_relic
             if item != None and relic_utils.canCreateRelic(item.id_relic, cmd.guild.id):
                 item_id = item.id_relic
-                name = item.str_relic
+                name = item.str_name
+            elif item != None:
+                item = None
 
 
         if item != None:

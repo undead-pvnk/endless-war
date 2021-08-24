@@ -353,6 +353,9 @@ def item_dropall(
         ewutils.logMsg('Failed to drop items for user with id {}'.format(user_data.id_user))
 
 
+
+
+
 """
 	Dedorn all of a player's cosmetics
 """

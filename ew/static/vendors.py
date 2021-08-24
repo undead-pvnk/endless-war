@@ -80,14 +80,14 @@ for weapon in weapons.weapon_list:
 
 #Populate relic map
 for relic in static_relic.relic_list:
-	for vendor in relic.vendors:
-		vendor_list = vendor_inv.get(vendor)
+    for vendor in relic.vendors:
+        vendor_list = vendor_inv.get(vendor)
 
-		if vendor_list == None:
-			vendor_list = []
-			vendor_inv[vendor] = vendor_list
+        if vendor_list == None:
+            vendor_list = []
+            vendor_inv[vendor] = vendor_list
 
-		vendor_list.append(relic.id_relic)
+        vendor_list.append(relic.id_relic)
 
 # List of items you can obtain via milling.
 mill_results = []

@@ -2530,7 +2530,7 @@ poi_list = [
     ),
     EwPoi(
         id_poi = "slimecorpslimeoidlaboratory",
-        alias = ['lab', 'labs', 'laboratory', 'slimecorpslimeoidlaboratory', 'slimecorpslimeoidlab', 'slimecorplab', 'slimecorplabs', 'slimeoidlaboratory', 'slimeoidlab', 'slimeoidlabs', 'slab', 'sl', 'slimeoid', 'build a bitch'],
+        alias = ['lab', 'labs', 'laboratory', 'slimecorpslimeoidlaboratory', 'slimecorpslimeoidlab', 'slimecorplab', 'slimecorplabs', 'slimeoidlaboratory', 'slimeoidlab', 'slimeoidlabs', 'slab', 'slimeoid', 'build a bitch'],
         str_name = "N.L.A.C.U. Slimeoid Laboratory",
         str_desc = "A nondescript building containing mysterious industrial equipment Slimecorp left behind. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from the university on the entranceway explaining the use of its equipment. Use !instructions to read it.\nPast countless receptionists' desks, Slimeoid incubation tubes, legal waivers, and down at least one or two secured elevator shafts, lay several mutation test chambers. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a futuristic neon LED display which has a hundred different PoweShell windows open that are all running Discord bots. If you choose to tinker with mutations, an employee will take you to one of these rooms and inform you of the vast and varied ways they can legally fuck with your body's chemistry.\n\nExits into Brawlden.",
         channel = "nlacu-labs",

@@ -18,6 +18,7 @@ from . import leaderboard as leaderboard_utils
 from . import weather as weather_utils
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
+from . import rutils as relicutils
 from .combat import EwEnemy
 from .combat import EwUser
 from .district import EwDistrict
@@ -159,7 +160,7 @@ async def decaySlimes(id_server = None):
 
             for user in users:
                 user_data = EwUser(id_user=user[0], id_server=id_server)
-                slimes_to_decay = user_data.slimes - (user_data.slimes * (.5 ** (ewcfg.update_market / ewcfg.slime_half_life)))
+                slimes_to_decay = user_data.slimes - (user_data.slimes * (.5 ** (ewcfg.update_market / relicutils.calc_half_life(id_server=id_server, slime=user_data.slimes))))
 
                 # round up or down, randomly weighted
                 remainder = slimes_to_decay - int(slimes_to_decay)

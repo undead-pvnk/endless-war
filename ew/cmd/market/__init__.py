@@ -38,5 +38,7 @@ cmd_map = {
     ewcfg.cmd_remove_offer: marketcmds.remove_offer,
     ewcfg.cmd_completetrade: marketcmds.complete_trade,
     ewcfg.cmd_canceltrade: marketcmds.cancel_trade,
+    ewcfg.cmd_bazaar_refresh: marketcmds.bazaar_refresh,
+
 
 }

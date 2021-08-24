@@ -899,7 +899,6 @@ async def attack(cmd):
 					district_data.persist()
 					# Player was killed.
 					shootee_data.id_killer = user_data.id_user
-					ewitem.passRelics(id_shooter = cmd.message.author.id, id_shootee = shootee_data.id_user, id_server = shootee_data.id_server)
 					die_resp = shootee_data.die(cause = ewcfg.cause_killing)
 					#shootee_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 

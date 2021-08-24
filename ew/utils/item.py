@@ -72,6 +72,41 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
     # except:
     #	ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
 
+def die_dropall( #drops all items unless they have been rigor mortissed
+        user_data,
+        item_type ,
+        kill_method = '',
+        rigor = False
+):
+
+    if item_type != '':
+        type_filter = 'and item_type = \'{}\''.format(item_type)
+        print(type_filter)
+    else:
+        type_filter = ''
+
+    try:
+        if kill_method != ewcfg.cause_suicide and item_type == ewcfg.it_relic:
+            bknd_core.execute_sql_query(
+                "update items set it.id_user = %s WHERE id_user = %s AND id_server = %s and soulbound = 0 {}".format(
+                    type_filter), (
+                    user_data.id_killer,
+                    user_data.id_user,
+                    user_data.id_server
+                ))
+        else:
+            bknd_core.execute_sql_query( #this query excludes preserved items
+                "update items it left join items_prop ip on it.id_item = ip.id_item and ip.name = 'preserved' and ip.value = %s set it.id_user = %s WHERE id_user = %s AND id_server = %s and soulbound = 0 and ip.name IS NULL {}".format(type_filter), (
+                    user_data.id_user,
+                    user_data.poi,
+                    user_data.id_user,
+                    user_data.id_server
+                ))
+
+
+
+    except:
+        ewutils.logMsg('Failed to drop items for user with id {}'.format(user_data.id_user))
 
 def get_fingernail_item(cmd):
     item = static_weapons.weapon_map.get(ewcfg.weapon_id_fingernails)
@@ -582,17 +617,18 @@ def unwrap(id_user = None, id_server = None, item = None, repeats = 0, rarity = 
     response = "You eagerly rip open a pack of Secreatures™ trading cards!!"
     bknd_item.item_delete(item.id_item)
     slimexodia = False
-
+    card_loop = False
     new_card_chance = False
     slimexodia_chance = 1 / 1000
 
-    new_card_chance = 1/1000
+    new_card_ratio = 1/1000
 
     if random.random() < slimexodia_chance:
         slimexodia = True
 
-    if random.random() < new_card_chance and relic_utils.canCreateRelic(item=relic_utils.debug3, id_server=id_server):
+    if random.random() < new_card_ratio and relic_utils.canCreateRelic(item=relic_utils.debug3, id_server=id_server.id) == 1:
         new_card_chance = True
+        card_loop = True
 
     if slimexodia == True:
         # If there are multiple possible products, randomly select one.
@@ -627,9 +663,9 @@ def unwrap(id_user = None, id_server = None, item = None, repeats = 0, rarity = 
                 item_props=item_props
             )
 
-        elif new_card_chance == True:
-            new_card_chance = False
-            response += "  Huh? This one's sorta rigid. Heavy, too. You shrug and open it up anyway. Turns out this pack has been at the back of the storefront for so long that it petrified itself. \n\nYou got the Petrified Secreatures Card!"
+        elif new_card_chance == True and card_loop == True:
+            card_loop = False
+            response += relic_utils.debug5
             item_type = 'relic'
             item_props = relic_utils.debug4
 
@@ -648,7 +684,7 @@ def unwrap(id_user = None, id_server = None, item = None, repeats = 0, rarity = 
     elif len(pulls) == 1 and new_card_chance is False:
         response += " There’s a single holographic card poking out of the swathes of repeats and late edition cards...\n"
         response += " ***...What’s this?! It’s the legendary card {}!! If you’re able to collect the remaining pieces of Slimexodia, you might be able to smelt something incomprehensibly powerful!!***\n".format(list(pulls.keys())[0])
-    elif len(pulls) == 0:
+    elif len(pulls) == 0 and new_card_chance is False:
         response += " But… it’s mostly just repeats and late edition cards. You toss them away."
 
     return response
