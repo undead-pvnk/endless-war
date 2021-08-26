@@ -485,16 +485,23 @@ class EwUserBase:
             if phone_data.item_props.get('active') == 'true':
                 return True
         """
-        data = bknd_core.execute_sql_query(
-            "SELECT it.* FROM items it INNER JOIN items_prop itp ON it.id_item = itp.id_item WHERE it.{id_user} = '%s' AND itp.{name} = %s AND itp.{value} = %s".format(
-                id_user=ewcfg.col_id_user,
-                id_item=ewcfg.col_id_item,
-                name=ewcfg.col_name,
-                value=ewcfg.col_value
-            ), (
-                self.id_user,
-                "gellphoneactive",
-                "true"
-            ))
+        # Use cache if it exists
+        item_cache = bknd_core.get_cache(obj_type = "EwItem")
+        if item_cache is not False:
+            # Find all active gellphones belonging to the given user
+            data = item_cache.find_entries(criteria={"id_owner": self.id_user, "item_props": {"gellphoneactive": "true"}})
+
+        else:
+            data = bknd_core.execute_sql_query(
+                "SELECT it.* FROM items it INNER JOIN items_prop itp ON it.id_item = itp.id_item WHERE it.{id_user} = '%s' AND itp.{name} = %s AND itp.{value} = %s".format(
+                    id_user=ewcfg.col_id_user,
+                    id_item=ewcfg.col_id_item,
+                    name=ewcfg.col_name,
+                    value=ewcfg.col_value
+                ), (
+                    self.id_user,
+                    "gellphoneactive",
+                    "true"
+                ))
 
         return len(data) > 0

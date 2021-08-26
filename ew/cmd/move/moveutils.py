@@ -1,7 +1,7 @@
 import math
 import random
 
-from ew.backend import core as bknd_core
+from ew.backend import core as bknd_core, item as bknd_item
 from ew.backend.item import EwItem
 from ew.backend.mutation import EwMutation
 from ew.backend.player import EwPlayer
@@ -190,20 +190,12 @@ def get_slimeoids_resp(id_server, poi):
 def get_random_prank_item(user_data, district_data):
     response = ""
 
-    items_in_poi = bknd_core.execute_sql_query(
-        "SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
-            id_item=ewcfg.col_id_item,
-            id_owner=ewcfg.col_id_user,
-            id_server=ewcfg.col_id_server
-        ), (
-            user_data.poi,
-            district_data.id_server
-        ))
+    items_in_poi = bknd_item.inventory(id_user=user_data.poi, id_server=district_data.id_server)
 
     prank_items = []
 
     for item in items_in_poi:
-        id_item = item[0]
+        id_item = item.get("id_item")
         possible_prank_item = EwItem(id_item=id_item)
 
         context = possible_prank_item.item_props.get('context')

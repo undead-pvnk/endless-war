@@ -1,6 +1,7 @@
 import asyncio
 import random
 import re
+import sys
 import time
 
 import discord
@@ -441,7 +442,7 @@ async def item_look(cmd):
 
             id_item = item.id_item
             name = item_sought.get('name')
-            response = item_sought.get('item_def').str_desc
+            response = static_items.item_def_map.get(item_sought.get('item_type')).str_desc
 
             # Replace up to two levels of variable substitutions.
             if response.find('{') >= 0:
@@ -775,6 +776,11 @@ async def manually_edit_item_properties(cmd):
         item_id = cmd.tokens[1]
         column_name = cmd.tokens[2]
         column_value = cmd.tokens[3]
+
+        target_data = bknd_core.get_cache_result(obj_type="EwItem", id_item = item_id)
+        if target_data is not False:
+            target_data.get("item_props").update({column_name: column_value})
+            bknd_core.cache_data(obj_type="EwItem", data=target_data)
 
         bknd_core.execute_sql_query("REPLACE INTO items_prop({}, {}, {}) VALUES(%s, %s, %s)".format(
             ewcfg.col_id_item,
@@ -1186,7 +1192,7 @@ async def propstand(cmd):
             response = "You affix the {} to a wooden mount. You know this priceless trophy will last thousands of years, so you spray it down with formaldehyde to preserve it forever. Or at least until you decide to remove it.".format(item_sought.get('name'))
             lookdesc = "A {} is mounted on the wall.".format(item_sought.get('name'))
             placedesc = "You mount the {} on the wall. God damn magnificent.".format(item_sought.get('name'))
-            fdesc = item_sought.get('item_def').str_desc
+            fdesc = static_items.item_def_map.get(item_sought.get('item_type')).str_desc
             if fdesc.find('{') >= 0:
                 fdesc = fdesc.format_map(item.item_props)
 
@@ -1682,6 +1688,7 @@ async def create_multi(cmd):
             name = item.str_name
 
     if item != None:
+
         for x in range(number):
             item_props = itm_utils.gen_item_props(item)
 
@@ -1723,3 +1730,54 @@ async def manual_soulbind(cmd):
         await fe_utils.send_message(cmd.client, cmd.message.channel, response)
     else:
         return
+
+
+async def create_all(cmd):
+    if not cmd.message.author.guild_permissions.administrator:
+        return
+
+    # The proper usage is !createitem [item id] [recipient]. The opposite order is invalid.
+    if '<@' in cmd.tokens[1]:  # Triggers if the 2nd command token is a mention
+        response = "Proper usage of !createall: **!createall [Number of copies] [recipient]**."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+    try:
+        num_target = int(cmd.tokens[1])
+    except:
+        num_target = 1
+
+    number_created = 0
+
+    if cmd.mentions_count == 1:
+        item_recipient = cmd.mentions[0]
+    else:
+        item_recipient = cmd.message.author
+
+    list_all = static_items.item_list + static_items.furniture_list
+    list_all += static_food.food_list
+    list_all += static_fish.fish_list
+    list_all += static_weapons.weapon_list
+    list_all += cosmetics.cosmetic_items_list
+
+    for item in list_all:
+
+        if item != None:
+            number_of_each = 0
+            while number_of_each < num_target:
+                item_props = itm_utils.gen_item_props(item)
+
+                bknd_item.item_create(
+                    item_type=item.item_type,
+                    id_user=item_recipient.id,
+                    id_server=cmd.guild.id,
+                    stack_max=-1,
+                    stack_size=0,
+                    item_props=item_props
+                )
+
+                number_created += 1
+                number_of_each += 1
+
+    response = "Created {} items for **{}**.".format(number_created, item_recipient)
+
+    await fe_utils.send_message(cmd.client, cmd.message.channel, response)

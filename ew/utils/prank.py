@@ -31,31 +31,25 @@ async def activate_trap_items(district, id_server, id_user):
         return
 
     try:
-        conn_info = bknd_core.databaseConnect()
-        conn = conn_info.get('conn')
-        cursor = conn.cursor()
-
         district_channel_name = poi_static.id_to_poi.get(district).channel
-
         client = ewutils.get_client()
-
         server = client.get_guild(id_server)
-
         member = server.get_member(id_user)
-
         district_channel = fe_utils.get_channel(server=server, channel_name=district_channel_name)
-
         searched_id = district + '_trap'
+        item_cache = bknd_core.get_cache(obj_type = "EwItem")
 
-        cursor.execute("SELECT id_item, id_user FROM items WHERE id_user = %s AND id_server = %s".format(
-            id_item=ewcfg.col_id_item,
-            id_user=ewcfg.col_id_user
-        ), (
-            searched_id,
-            id_server,
-        ))
-
-        traps = cursor.fetchall()
+        if item_cache is not False:
+            traps = item_cache.find_entries(criteria={"id_owner": searched_id, "id_server": id_server})
+            traps = list(map(lambda dat: [dat.get("id_item"), dat.get("id_owner")], traps))
+        else:
+            traps = bknd_core.execute_sql_query("SELECT id_item, id_user FROM items WHERE id_user = %s AND id_server = %s".format(
+                id_item=ewcfg.col_id_item,
+                id_user=ewcfg.col_id_user
+            ), (
+                searched_id,
+                id_server,
+            ))
 
         if len(traps) == 0:
             # print('no traps')
