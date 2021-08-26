@@ -3129,6 +3129,8 @@ durability_items = [
     item_id_gaiaseedpack_aushucks
 ]
 
+all_item_ids = []
+
 vendor_dojo = "Dojo"
 
 weapon_class_ammo = "ammo"

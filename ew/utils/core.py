@@ -714,6 +714,39 @@ def get_slimernalia_kingpin(server):
 
 # Get the player with the most festivity
 def get_most_festive(server):
+    # Use the cache if it is enabled
+    item_cache = bknd_core.get_cache(obj_type = "EwItem")
+    if item_cache is not False:
+        # get a list of [id, festivitysum] for all users in server
+        dat = bknd_core.execute_sql_query("SELECT {id_user}, FLOOR({festivity}) + FLOOR({festivity_from_slimecoin}) FROM users WHERE {id_server} = %s".format(
+            id_user = ewcfg.col_id_user,
+            id_server = ewcfg.col_id_server,
+
+            festivity = ewcfg.col_festivity,
+            festivity_from_slimecoin = ewcfg.col_festivity_from_slimecoin,
+        ), (
+            server.id
+        ))
+
+        # iterate through all users in the server
+        for row in dat:
+            # Get all user furniture id'd as a sigil
+            sigils = item_cache.find_entries(criteria={
+                "id_owner": row[0],
+                "item_type": ewcfg.it_furniture,
+                "id_server": server.id,
+                "item_props": {"id_furniture": ewcfg.item_id_sigillaria},
+            })
+
+            # add 1000 festivity to the user's sum per sigil
+            row[1] += (len(sigils) * 1000)
+
+        # Sort the rows by the second index in each row, highest first
+        dat.sort(key=lambda row: row[1], reverse=True)
+
+        return dat[0][0]
+
+
     data = bknd_core.execute_sql_query(
         "SELECT users.{id_user}, FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) as total_festivity FROM users " \
         "LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} " \

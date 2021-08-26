@@ -113,7 +113,6 @@ class EwItem:
     def persist(self):
 
         self.update_name()
-        bknd_core.cache_data(obj = self)
 
         if self.template == "-2":
             if self.item_type == ewcfg.it_item:
@@ -132,6 +131,8 @@ class EwItem:
                 self.template = "MEDAL ITEM????"  # p sure these are fake news
             elif self.item_type == ewcfg.it_questitem:
                 self.template = "QUEST ITEM????"
+
+        bknd_core.cache_data(obj=self)
 
         try:
             conn_info = bknd_core.databaseConnect()
@@ -229,7 +230,7 @@ def find_poudrin(id_user = None, id_server = None):
 def item_delete(
         id_item = None
 ):
-    bknd_core.remove_entry(table="items", id_entry=id_item)
+    bknd_core.remove_entry(obj_type="EwItem", id_entry=id_item)
 
     try:
         conn_info = bknd_core.databaseConnect()
@@ -362,7 +363,7 @@ def item_dropall(
             ))
 
         # Get the item cache if it exists
-        item_cache = bknd_core.get_cache(obj_type="EwItem", create=False)
+        item_cache = bknd_core.get_cache(obj_type = "EwItem")
         if item_cache:
             # Get all non soulbound items belonging to the user in their current server
             criteria_for_drop = {"id_owner": user_data.id_user, "id_server": user_data.id_server, "soulbound": 0}
@@ -399,13 +400,16 @@ def item_dedorn_cosmetics(
             ))
 
         # Get the item cache if it exists
-        item_cache = bknd_core.get_cache(obj_type = "EwItem", create = False)
+        item_cache = bknd_core.get_cache(obj_type = "EwItem")
         if item_cache:
-            # Find all items belonging to the given user in that server
-            for item_data in item_cache.find_entries(criteria={"id_owner": id_user, "id_server": id_server}):
-                # If the item has an adornment indicator, make it False, and save
-                props = item_data.get("item_props")
-                if "adorned" in props.keys(): props.update({"adorned": False})
+            # Find all adorned items belonging to the given user in that server
+            for item_data in item_cache.find_entries(criteria={
+                "id_owner": id_user,
+                "id_server": id_server,
+                "item_props": {"adorned": "true"}
+            }):
+                # change the tag to dedorned and save the data
+                item_data.get("item_props").update({"adorned": False})
                 item_cache.set_entry(item_data)
 
     except:
@@ -441,7 +445,7 @@ def item_destroyall(id_server = None, id_user = None, member = None):
             conn.commit()
 
             # Get the item cache if it's being used
-            item_cache = bknd_core.get_cache(obj_type="EwItem", create=False)
+            item_cache = bknd_core.get_cache(obj_type = "EwItem")
             if item_cache:
                 # Find all non soulbound items belonging to the given user in that server
                 destruction_criteria = {"id_owner": id_user, "id_server": id_server, "soulbound": 0}
@@ -456,7 +460,7 @@ def item_destroyall(id_server = None, id_user = None, member = None):
 
 
 """
-    Loot all non-soulbound items from a player upon killing them, reassinging to id_user_target.
+    Transfers adorned cosmetics and equipped weapons (no sidearms) from the source to the target.
 """
 
 
@@ -467,28 +471,29 @@ def item_loot(
     if source_data == None or target_data == None:
         return
 
-    try:
-        # Transfer adorned cosmetics
-        data = bknd_core.execute_sql_query(
-            "SELECT id_item FROM items " +
-            "WHERE id_user = %s AND id_server = %s AND soulbound = 0 AND item_type = %s AND id_item IN (" +
-            "SELECT id_item FROM items_prop " +
-            "WHERE name = 'adorned' AND value = 'true' " +
-            ")"
-            , (
-                source_data.id_user,
-                source_data.id_server,
-                ewcfg.it_cosmetic
-            ))
+    # Use the cache if possible
+    item_cache = bknd_core.get_cache(obj_type = "EwItem")
+    if item_cache is not False:
+        # Find all cosmetics that can be moved and are adorned
+        criteria = {
+            "id_owner": source_data.id_user,
+            "id_server": source_data.id_server,
+            "soulbound": 0,
+            "item_type": ewcfg.it_cosmetic,
+            "item_props": {"adorned": "true"}
+        }
+        movable_cosmetics = item_cache.find_entries(criteria=criteria)
 
-        for row in data:
-            item_data = EwItem(id_item=row[0])
-            item_data.item_props["adorned"] = 'false'
-            item_data.id_owner = target_data.id_user
-            item_data.persist()
+        # Iterate through all found cosmetics
+        for item_data in movable_cosmetics:
+            # Dedorn the cosmetic
+            item = EwItem(id_item=item_data.get("id_item"))
+            item.item_props.update({"adorned": 'false'})
+            item.persist()
+            # Transfer ownership, abiding by capacity limits this time
+            give_item(id_user=target_data.id_user, id_server=target_data.id_server)
 
-        ewutils.logMsg('Transferred {} cosmetic items.'.format(len(data)))
-
+        # if the source has a weapon equipped
         if source_data.weapon >= 0:
             weapons_held = inventory(
                 id_user=target_data.id_user,
@@ -496,34 +501,77 @@ def item_loot(
                 item_type_filter=ewcfg.it_weapon
             )
 
+            # give the target the weapon if they have inventory space for it
             if len(weapons_held) <= target_data.get_weapon_capacity():
                 give_item(id_user=target_data.id_user, id_server=target_data.id_server, id_item=source_data.weapon)
 
-    except:
-        ewutils.logMsg("Failed to loot items from user {}".format(source_data.id_user))
+    # Use the database if there's no cache
+    else:
+
+        try:
+            # Transfer adorned cosmetics
+            data = bknd_core.execute_sql_query(
+                "SELECT id_item FROM items " +
+                "WHERE id_user = %s AND id_server = %s AND soulbound = 0 AND item_type = %s AND id_item IN (" +
+                "SELECT id_item FROM items_prop " +
+                "WHERE name = 'adorned' AND value = 'true' " +
+                ")"
+                , (
+                    source_data.id_user,
+                    source_data.id_server,
+                    ewcfg.it_cosmetic
+                ))
+
+            for row in data:
+                item_data = EwItem(id_item=row[0])
+                item_data.item_props["adorned"] = 'false'
+                item_data.id_owner = target_data.id_user
+                item_data.persist()
+
+            ewutils.logMsg('Transferred {} cosmetic items.'.format(len(data)))
+
+            if source_data.weapon >= 0:
+                weapons_held = inventory(
+                    id_user=target_data.id_user,
+                    id_server=target_data.id_server,
+                    item_type_filter=ewcfg.it_weapon
+                )
+
+                if len(weapons_held) <= target_data.get_weapon_capacity():
+                    give_item(id_user=target_data.id_user, id_server=target_data.id_server, id_item=source_data.weapon)
+
+        except:
+            ewutils.logMsg("Failed to loot items from user {}".format(source_data.id_user))
 
 
 """
-	Check how many items are in a given district or player's inventory
+    Check how many items are in a given district or player's inventory
 """
 
 
 def get_inventory_size(owner = None, id_server = None):
     if owner != None and id_server != None:
-        try:
-            items_in_poi = bknd_core.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
-                id_item=ewcfg.col_id_item,
-                id_owner=ewcfg.col_id_user,
-                id_server=ewcfg.col_id_server
-            ), (
-                owner,
-                id_server
-            ))
+        # Get data from cache if possible
+        item_cache = bknd_core.get_cache(obj_type = "EwItem")
+        if item_cache is not False:
+            target_items = item_cache.find_entries(criteria = {"id_owner": owner, "id_server": id_server})
+            return len(target_items)
 
-            return len(items_in_poi)
+        else:
+            try:
+                items_in_poi = bknd_core.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
+                    id_item=ewcfg.col_id_item,
+                    id_owner=ewcfg.col_id_user,
+                    id_server=ewcfg.col_id_server
+                ), (
+                    owner,
+                    id_server
+                ))
 
-        except:
-            return 0
+                return len(items_in_poi)
+
+            except:
+                return 0
     else:
         return 0
 
@@ -545,7 +593,7 @@ def inventory(
     items = []
 
     # Grab the cache if it exists
-    item_cache = bknd_core.get_cache(obj_type="EwItem", create=False)
+    item_cache = bknd_core.get_cache(obj_type = "EwItem")
     if (item_cache is not False) and (id_server is not None):
         # Setup criteria
         criteria = {}

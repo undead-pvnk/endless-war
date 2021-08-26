@@ -769,6 +769,11 @@ async def manually_edit_item_properties(cmd):
         column_name = cmd.tokens[2]
         column_value = cmd.tokens[3]
 
+        target_data = bknd_core.get_cache_result(obj_type="EwItem", id_item = item_id)
+        if target_data is not False:
+            target_data.get("item_props").update({column_name: column_value})
+            bknd_core.cache_data(obj_type="EwItem", data=target_data)
+
         bknd_core.execute_sql_query("REPLACE INTO items_prop({}, {}, {}) VALUES(%s, %s, %s)".format(
             ewcfg.col_id_item,
             ewcfg.col_name,

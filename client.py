@@ -1353,10 +1353,10 @@ if token == None or len(token) == 0:
 # Load the cache before connecting to discord, this way we arent missing heartbeats
 ewutils.logMsg("Loading items into cache...")
 cache_loaded = bknd_item.load_items_cache()
-if cache_loaded and (bknd_core.get_cache(obj_type="EwItem") is not False):
+if cache_loaded and (bknd_core.get_cache(obj_type = "EwItem") is not False):
     ewutils.logMsg("Item caching successful. {} items loaded, using {} Bytes of memory".format(
-        len(bknd_core.get_cache(obj_type="EwItem").entries.keys()),
-        ewutils.total_size(bknd_core.get_cache(obj_type="EwItem").entries)
+        len(bknd_core.get_cache(obj_type = "EwItem").entries.keys()),
+        ewutils.total_size(bknd_core.get_cache(obj_type = "EwItem").entries)
     ))
 else:
     ewutils.TERMINATE = True

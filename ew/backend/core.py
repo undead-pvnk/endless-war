@@ -177,9 +177,14 @@ class ObjCache():
             # Check against all given criteria
             meets = True
             for key, value in criteria.items():
-
+                # For search through props type things
+                if key in self.nested_props:
+                    for k2, v2 in value.items():
+                        if not (k2 in data.get(key).keys() and str(v2) == str(data.get(key).get(k2))):
+                            meets = False
+                            break
                 # Stop and mark if it isn't a match
-                if not ((key in data.keys()) and (str(value) == str(data.get(key)))):
+                elif not ((key in data.keys()) and (str(value) == str(data.get(key)))):
                     meets = False
                     break
 
@@ -307,7 +312,7 @@ def cache_data(obj_type = None, data = None, obj = None):
     """
 
     # Find or create the cache
-    type_cache = get_cache(obj_type=obj_type, obj = obj)
+    type_cache = get_cache(obj_type = obj_type, obj = obj, create = True)
 
     # Extracts the data from an object if that was passed in lieu of necessitating separating the values elsewhere
     data = obj.__dict__ if ((data is None) and (obj is not None)) else data
@@ -343,7 +348,7 @@ def remove_entry(obj_type = None, obj = None, **kwargs):
     return False
 
 
-def get_cache(obj_type=None, obj = None, create=True):
+def get_cache(obj_type=None, obj = None, create=False):
     """
         Takes the type().__name__ of an object or an object, and bool determining creation
         Returns a cache of the specified type if create, or if it already exists, otherwise False
