@@ -190,7 +190,7 @@ class EwItem:
     def update_name(self):
         if self.name == "":
             for key, value in self.item_props.items():
-                if key in ["item_name", "food_name", "cosmetic_name", "weapon_name"]:
+                if key in ["item_name", "food_name", "cosmetic_name", "weapon_name", "furniture_name"]:
                     self.name = value
             if self.name == "" and "weapon_type" in self.item_props.keys():
                 self.name = self.item_props.get("weapon_type")

@@ -1243,7 +1243,11 @@ async def annoint(cmd):
 
             user_data.persist()
 
-            response = "You place your weapon atop the poudrin and annoint it with slime. It is now known as {}!\n\nThe name draws you closer to your weapon. The poudrin was destroyed in the process.".format(annoint_name)
+            naming_text = "It is now known as {}!\n\nThe name draws you closer to your weapon. ".format(annoint_name)
+            if annoint_name == "" or annoint_name is None:
+                naming_text = ""
+
+            response = "You place your weapon atop the poudrin and annoint it with slime. {}The poudrin was destroyed in the process.".format(naming_text)
 
     # Send the response to the player.
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
