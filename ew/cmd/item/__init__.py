@@ -61,7 +61,7 @@ cmd_map = {
     ewcfg.cmd_forgemasterpoudrin: itemcmds.forge_master_poudrin,
     ewcfg.cmd_createitem: itemcmds.create_item,
     ewcfg.cmd_createmulti: itemcmds.create_multi,
-    '!createall': itemcmds.create_all,
+    ewcfg.cmd_createall: itemcmds.create_all,
 
     ewcfg.cmd_manualsoulbind: itemcmds.manual_soulbind,
 

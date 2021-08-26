@@ -1728,6 +1728,11 @@ async def create_all(cmd):
     if not cmd.message.author.guild_permissions.administrator:
         return
 
+    # The proper usage is !createitem [item id] [recipient]. The opposite order is invalid.
+    if '<@' in cmd.tokens[1]:  # Triggers if the 2nd command token is a mention
+        response = "Proper usage of !createall: **!createall [Number of copies] [recipient]**."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
     try:
         num_target = int(cmd.tokens[1])
     except:
@@ -1735,7 +1740,6 @@ async def create_all(cmd):
 
     number_created = 0
 
-    item_recipient = None
     if cmd.mentions_count == 1:
         item_recipient = cmd.mentions[0]
     else:
