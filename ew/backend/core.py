@@ -9,6 +9,9 @@ db_pool = {}
 db_pool_id = 0
 
 caches = []
+enabled_caches = []
+
+cache_type_to_load_fn = {}
 
 
 class ObjCache():
@@ -50,6 +53,10 @@ class ObjCache():
 
         # Leave a pointer to this object so it can actually be found
         caches.append(self)
+
+        # Load the cache if there are instructions for doing so
+        if (ew_obj_type in cache_type_to_load_fn.keys()) and (ew_obj_type in ewcfg.autoload_types):
+            cache_type_to_load_fn.get(ew_obj_type)()
 
     def get_data_id(self, data):
         """
@@ -358,7 +365,7 @@ def get_cache(obj_type=None, obj = None, create=False):
     obj_type = type(obj).__name__ if ((obj_type is None) and (obj is not None)) else obj_type
 
     # Ensure a valid type was actually given
-    if obj_type in ewcfg.cacheable_types:
+    if obj_type in enabled_caches:
         # Search through all caches
         for cache in caches:
             # Return the cache upon finding it

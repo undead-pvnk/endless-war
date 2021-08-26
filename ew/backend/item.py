@@ -1276,7 +1276,7 @@ def load_items_cache():
             tracker += 1
             EwItem(id_item=row[0])
             if tracker % 1000 == 0:
-                ewutils.logMsg("loaded {} items".format(tracker))
+                ewutils.logMsg("Loaded {} EwItems into cache.".format(tracker))
 
         # Tell the client it didn't error out halfway
         return True
@@ -1284,3 +1284,6 @@ def load_items_cache():
     except:
         ewutils.logMsg("Failed to load all items from database into cache.")
         return False
+
+
+bknd_core.cache_type_to_load_fn.update({"EwItem": load_items_cache})

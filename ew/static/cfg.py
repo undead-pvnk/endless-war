@@ -1494,6 +1494,8 @@ cmd_display_states = cmd_prefix + 'displaystates'
 cmd_press_button = cmd_prefix + 'press'
 cmd_call_elevator = cmd_prefix + 'callelevator'
 cmd_addstatuseffect = cmd_prefix + 'addstatuseffect'
+cmd_log_caches = cmd_prefix + 'cache'
+cmd_toggle_caches = cmd_prefix + 'togglecache'
 # SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
@@ -5704,11 +5706,13 @@ def set_client(cl):
 
 
 """
-    Tell the cache how to handle certain object types
+    Default settings for the cache
 """
 
 
 cacheable_types = ["EwItem"]
+
+autoload_types = ["EwItem"]
 
 obj_type_to_identifiers = {
     "EwItem": [{"id_item", "id_entry"}],

@@ -3762,3 +3762,53 @@ async def print_cache(cmd):
 
     ewutils.logMsg(typelog)
     ewutils.logMsg(datalog)
+
+
+async def toggle_cache(cmd):
+    if not cmd.message.author.guild_permissions.administrator:
+        return await cmd_utils.fake_failed_command(cmd)
+
+    response = ""
+    # Ensure correct token count
+    if len(cmd.tokens) == 3:
+        # Dont break if they pass incorrect arguments
+        try:
+            # Extract arguments
+            desired_status = int(cmd.tokens[1])
+            target_cache = cmd.tokens[2]
+
+            # If they want the cache enabled
+            if desired_status:
+                # If the cache is allowed and not already enabled, initialize it
+                if (target_cache in ewcfg.cacheable_types) and (target_cache not in bknd_core.enabled_caches):
+                    bknd_core.enabled_caches.append(target_cache)
+                    response += "Caching of {}s has been enabled.\n".format(target_cache)
+
+                    bknd_core.ObjCache(ew_obj_type=target_cache)
+                    response += "{} cache has been initialized.\n".format(target_cache)
+                # If the cache is already enabled, tell them
+                elif (target_cache in ewcfg.cacheable_types):
+                    response += "Caching of {}s was already enabled.\n".format(target_cache)
+                # Dont allow caching on non-configured types
+                else:
+                    response += "Caching of {}s is disabled in cfg. Cannot be enabled.\n".format(target_cache)
+
+            else:
+                # disable if it is enabled
+                if target_cache in bknd_core.enabled_caches:
+                    bknd_core.enabled_caches.remove(target_cache)
+                    response += "Caching of {}s has been disabled.\n".format(target_cache)
+
+                # remove the object from the list and delete it
+                for potential_victim in bknd_core.caches:
+                    if potential_victim.entry_type == target_cache:
+                        bknd_core.caches.remove(potential_victim)
+                        del potential_victim
+                        response += "{} cache has been deleted.\n".format(target_cache)
+
+        # Uh-oh, someone used the command wrong. teach them how
+        except ValueError:
+            response = "Command failed to convert str to int."
+            response += "Structure of command is !togglecache (1 for on or 0 for off) (name of object type)."
+
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

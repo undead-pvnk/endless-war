@@ -210,8 +210,11 @@ cmd_map = {
     ewcfg.cmd_shares: cmdcmds.shares,
     ewcfg.cmd_shares_alt1: cmdcmds.shares,
 
-    # Replies to admins with the current cache
-    '!cache': cmdcmds.print_cache,
+    # Prints all cached data to the console
+    ewcfg.cmd_log_caches: cmdcmds.print_cache,
+
+    # Used for toggling of caches
+    ewcfg.cmd_toggle_caches: cmdcmds.toggle_cache,
 
 }
 

@@ -1351,16 +1351,13 @@ if token == None or len(token) == 0:
     sys.exit(0)
 
 # Load the cache before connecting to discord, this way we arent missing heartbeats
-ewutils.logMsg("Loading items into cache...")
-cache_loaded = bknd_item.load_items_cache()
-if cache_loaded and (bknd_core.get_cache(obj_type = "EwItem") is not False):
-    ewutils.logMsg("Item caching successful. {} items loaded, using {} Bytes of memory".format(
-        len(bknd_core.get_cache(obj_type = "EwItem").entries.keys()),
-        ewutils.total_size(bknd_core.get_cache(obj_type = "EwItem").entries)
-    ))
-else:
-    ewutils.TERMINATE = True
-    ewutils.logMsg("Startup aborted. Failed to cache database.")
+ewutils.logMsg("Initializing caches...")
+
+# Set all predefined caches to enabled and initialize them
+for cache_type_name in ewcfg.cacheable_types:
+    ewutils.logMsg("Initializing {} cache.".format(cache_type_name))
+    bknd_core.enabled_caches.append(cache_type_name)
+    bknd_core.ObjCache(ew_obj_type=cache_type_name)
 
 # connect to discord and run indefinitely
 try:
