@@ -366,7 +366,7 @@ def item_dropall(
         item_cache = bknd_core.get_cache(obj_type = "EwItem")
         if item_cache:
             # Get all non soulbound items belonging to the user in their current server
-            criteria_for_drop = {"id_owner": user_data.id_user, "id_server": user_data.id_server, "soulbound": 0}
+            criteria_for_drop = {"id_owner": user_data.id_user, "id_server": user_data.id_server, "soulbound": False}
             for item_data in item_cache.find_entries(criteria=criteria_for_drop):
                 # Give the items to the floor
                 item_data.update({"id_owner": user_data.poi})
@@ -448,7 +448,7 @@ def item_destroyall(id_server = None, id_user = None, member = None):
             item_cache = bknd_core.get_cache(obj_type = "EwItem")
             if item_cache:
                 # Find all non soulbound items belonging to the given user in that server
-                destruction_criteria = {"id_owner": id_user, "id_server": id_server, "soulbound": 0}
+                destruction_criteria = {"id_owner": id_user, "id_server": id_server, "soulbound": False}
                 for item_data in item_cache.find_entries(criteria=destruction_criteria):
                     # attempt to delete the item from cache
                     item_cache.delete_entry(item_data)
@@ -478,7 +478,7 @@ def item_loot(
         criteria = {
             "id_owner": source_data.id_user,
             "id_server": source_data.id_server,
-            "soulbound": 0,
+            "soulbound": False,
             "item_type": ewcfg.it_cosmetic,
             "item_props": {"adorned": "true"}
         }
