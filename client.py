@@ -120,6 +120,21 @@ if debug == True:
 
 ewutils.logMsg('Using database: {}'.format(ewcfg.database))
 
+ewcfg.debugroom = ewdebug.debugroom
+ewcfg.debugroom_short = ewdebug.debugroom_short
+ewcfg.debugpiers = ewdebug.debugpiers
+ewcfg.debugfish_response = ewdebug.debugfish_response
+ewcfg.debugfish_goal = ewdebug.debugfish_goal
+ewcfg.cmd_debug1 = ewcfg.cmd_prefix + ewdebug.cmd_debug1
+ewcfg.cmd_debug2 = ewcfg.cmd_prefix + ewdebug.cmd_debug2
+ewcfg.cmd_debug3 = ewcfg.cmd_prefix + ewdebug.cmd_debug3
+ewcfg.cmd_debug4 = ewcfg.cmd_prefix + ewdebug.cmd_debug4
+# ewcfg.debug5 = ewdebug.debug5
+ewcfg.cmd_debug6 = ewcfg.cmd_prefix + ewdebug.cmd_debug6
+ewcfg.cmd_debug7 = ewcfg.cmd_prefix + ewdebug.cmd_debug7
+ewcfg.cmd_debug8 = ewcfg.cmd_prefix + ewdebug.cmd_debug8
+ewcfg.cmd_debug9 = ewcfg.cmd_prefix + ewdebug.cmd_debug9
+
 
 @client.event
 async def on_member_remove(member):

@@ -5788,21 +5788,17 @@ obj_type_to_nested_props = {
 #     scream += "A"
 #     
 # print(scream)
-try:
-    from ew.cmd import debug as ewdebug
-except:
-    from ew.cmd import debug_dummy as ewdebug
-debugroom = ewdebug.debugroom
-debugroom_short = ewdebug.debugroom_short
-debugpiers = ewdebug.debugpiers
-debugfish_response = ewdebug.debugfish_response
-debugfish_goal = ewdebug.debugfish_goal
-cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
-cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
-cmd_debug3 = cmd_prefix + ewdebug.cmd_debug3
-cmd_debug4 = cmd_prefix + ewdebug.cmd_debug4
-# debug5 = ewdebug.debug5
-cmd_debug6 = cmd_prefix + ewdebug.cmd_debug6
-cmd_debug7 = cmd_prefix + ewdebug.cmd_debug7
-cmd_debug8 = cmd_prefix + ewdebug.cmd_debug8
-cmd_debug9 = cmd_prefix + ewdebug.cmd_debug9
+debugroom = None
+debugroom_short = None
+debugpiers = None
+debugfish_response = None
+debugfish_goal = None
+cmd_debug1 = None
+cmd_debug2 = None
+cmd_debug3 = None
+cmd_debug4 = None
+# debug5 = None
+cmd_debug6 = None
+cmd_debug7 = None
+cmd_debug8 = None
+cmd_debug9 = None
