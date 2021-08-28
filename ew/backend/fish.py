@@ -130,6 +130,17 @@ class EwRecord:
 
                 # Retrieve object
 
+                print("SELECT {}, {}, {}, {}, {} FROM records WHERE record_type = %s AND id_server = %s".format(
+                        ewcfg.col_id_user,
+                        ewcfg.col_record_amount,
+                        ewcfg.col_legality,
+                        ewcfg.col_id_post,
+                        ewcfg.col_id_image
+                    ),(
+                        self.record_type,
+                        self.id_server
+                    ))
+
                 cursor.execute(
                     "SELECT {}, {}, {}, {}, {} FROM records WHERE record_type = %s AND id_server = %s".format(
                         ewcfg.col_id_user,

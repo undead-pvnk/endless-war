@@ -4078,7 +4078,7 @@ item_unique_commands = {
     "laptopcomputer": "LAPTOP\n!browse: Browse the web on your laptop for RFCK Discord servers if it is in your apartment.",
     "cigarette": "CIGARETTE\n!smoke <cigarette>: Smoke cigarettes.",
     "cigar": "CIGAR\n!smoke <cigar>: Smoke cigars.",
-    "pictureframe": "PICTURE FRAME\n!frame <image link>: Put an image in a picture frame.",
+    "pictureframe": "PICTURE FRAME\n!frame <image link>: Put an image in a picture frame.\n!titleframe <title>: Add a title to a picture frame.",
     "television": "TV\n!watch: Watch TV if it's in your apartment. Stop watching by taking the TV out of your apartment."
 }
 

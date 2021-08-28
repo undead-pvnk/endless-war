@@ -275,6 +275,15 @@ async def on_ready():
                 elif (channel.name == ewcfg.channel_slimetwitter):
                     channels_slimetwitter[server.id] = channel
                     ewutils.logMsg("• found channel for slime twitter: {}".format(channel.name))
+
+                elif (channel.name == ewcfg.channel_artexhibits):
+                    channels_artexhibits[server.id] = channel
+                    ewutils.logMsg("• found channel for art exhibits: {}".format(channel.name))
+
+                elif (channel.name == ewcfg.channel_deviantsplaart):
+                    channels_deviantsplaart[server.id] = channel
+                    ewutils.logMsg("• found channel for deviantSPLAART: {}".format(channel.name))
+
         ewdebug.initialize_gamestate(id_server=server.id)
         # create all the districts in the database
         for poi_object in poi_static.poi_list:
@@ -1214,15 +1223,15 @@ async def on_raw_reaction_add(payload):
                 if (str(payload.emoji) == ewcfg.emote_delete_tweet):
                     await message.delete()
     elif (payload.guild_id is not None # not a dm
-        and channels_deviantsplaart[payload.guild_id] is not None # server has a slime twitter channel
+        and channels_deviantsplaart.get(payload.guild_id) is not None # server has a slime twitter channel
         and payload.channel_id == channels_deviantsplaart[payload.guild_id].id):
         message = await channels_deviantsplaart[payload.guild_id].fetch_message(payload.message_id)
         if str(payload.emoji) == ewcfg.emote_111 or str(payload.emoji) == ewcfg.emote_111_debug:
             for react in message.reactions:
-                if react.count >= 10 and react.emoji.id in [720412882143150241, 431547758181220377]:
-                    msgtext = message.content
+                if react.count >= 2 and react.emoji.id in [720412882143150241, 431547758181220377]:
+                    msgtext = "-------------------------------------------------\n" + message.content
                     title = msgtext.split('::', 1)
-                    current_record = EwRecord(id_server=payload.guild_id, record_type=title)
+                    current_record = EwRecord(id_server=payload.guild_id, record_type=title[0])
                     current_record.legality = 0
                     current_record.persist()
 

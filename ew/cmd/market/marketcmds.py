@@ -494,11 +494,11 @@ async def art_donate(id_item, cmd):
         response = "\"Suuuuuuure. Pictures of spoons. That's nice... Uh...How about you go play outside? I don't think you belong here.\""
 
     else:
-        gamestate = EwGamestate(id_server=item_obj.id_server, id_state='artplayer')
-        if gamestate is not None:
+        #gamestate = EwGamestate(id_server=item_obj.id_server, id_state='artplayer')
+        if 1 is not None:
 
             if item_obj.item_props.get('title') is not None:
-                new_record = EwRecord(id_server=cmd.guild_id, record_type = item_obj.item_props.get('title'))
+                new_record = EwRecord(id_server=cmd.guild.id, record_type = item_obj.item_props.get('title'))
                 if new_record.id_user != -1:
                     return "\"Sorry, it looks like that title is already taken. I'll assume that isn't a forgery and just uh...look the other way.\""
                 elif "::" in item_obj.item_props.get('title'):
@@ -510,7 +510,7 @@ async def art_donate(id_item, cmd):
                     new_record.persist()
 
 
-                bknd_item.give_item(id_item=id_item, id_user=gamestate.value, id_server=item_obj.id_server)
+
                 response = '"OK, thank you for your donation. We\'ll probably maybe add it to our collection once our appraisers get to it. Go along now."'
 
 
@@ -518,6 +518,7 @@ async def art_donate(id_item, cmd):
                 artserv = fe_utils.get_channel(server=cmd.guild, channel_name='deviant-splaart')
                 post_text = "{}::\nBy {}\n\n{}".format(item_obj.item_props.get('title'), player_obj.display_name, item_obj.item_props.get('furniture_desc'))
                 await fe_utils.send_message(cmd.client, artserv, post_text)
+                bknd_item.item_delete(id_item)
 
             else:
                 response = "\"It doesn't have a title! Get one and I'll add it after that.\" "

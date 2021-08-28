@@ -192,6 +192,22 @@ async def consult(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
+async def frame_title(cmd):
+    playermodel = EwPlayer(id_user=cmd.message.author.id)
+    usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
+    namechange = cmd.message.content[(len(ewcfg.cmd_titleframe)):].strip()
+
+    if bknd_item.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server, item_type_filter = ewcfg.it_furniture):
+        item_sought = bknd_item.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server, item_type_filter = ewcfg.it_furniture)
+        item = EwItem(id_item=item_sought.get('id_item'))
+        item.item_props['title'] = namechange
+        item.persist()
+        response = "You title the image: {}.".format(namechange)
+    else:
+        response = "You don't have a frame."
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 async def signlease(cmd):
     target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
     if target_name == None or len(target_name) == 0:
