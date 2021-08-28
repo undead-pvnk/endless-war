@@ -1,7 +1,7 @@
 # Global configuration options.
 
 
-version = "v4.0086 Gender Update"
+version = "v4.009 I AM SPEED."
 
 dir_msgqueue = 'msgqueue'
 
