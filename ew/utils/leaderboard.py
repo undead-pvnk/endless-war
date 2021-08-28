@@ -44,7 +44,7 @@ async def post_leaderboards(client = None, server = None):
 
     topdonated = make_userdata_board(server=server.id, category=ewcfg.col_splattered_slimes, title=ewcfg.leaderboard_donated)
     resp_cont.add_channel_response(leaderboard_channel, topdonated)
-    
+
     topslimeoids = make_slimeoids_top_board(server=server.id)
     resp_cont.add_channel_response(leaderboard_channel, topslimeoids)
 
@@ -103,22 +103,42 @@ def make_stocks_top_board(server = None):
 def make_freshness_top_board(server = None):
     entries = []
     try:
-        all_adorned = bknd_core.execute_sql_query("SELECT id_item FROM items WHERE id_server = %s " +
-                                                  "AND id_item IN (SELECT id_item FROM items_prop WHERE name = 'adorned' AND value = 'true')",
-                                                  (server,)
-                                                  )
+        # if the cache exists use it
+        item_cache = bknd_core.get_cache(obj_type = "EwItem")
+        if item_cache is not False:
+            # get the same data, and reformat the same way
+            dat_adorned = item_cache.find_entries(criteria={"id_server": server, "item_props": {"adorned": "true"}})
+            all_adorned = tuple(map(lambda a: a.get("id_item"), dat_adorned))
 
-        all_adorned = tuple(map(lambda a: a[0], all_adorned))
+            if len(all_adorned) == 0:
+                return format_board(entries=entries, title=ewcfg.leaderboard_fashion)
 
-        if len(all_adorned) == 0:
-            return format_board(entries=entries, title=ewcfg.leaderboard_fashion)
+            # since find_entries returns all data for an object no need to fetch new info
+            all_basefresh = list(map(lambda a: [
+                    a.get("id_item"),
+                    # In case someone has something adorned that has no freshness stat, default to zero
+                    a.get("item_props").get("freshness") if "freshness" in a.get("item_props").keys() else '0'
+                ], dat_adorned
+            ))
 
-        all_basefresh = bknd_core.execute_sql_query("SELECT id_item, value FROM items_prop WHERE name = 'freshness' " +
-                                                    "AND id_item IN %s",
-                                                    (all_adorned,)
-                                                    )
+            all_users = list(map(lambda a: [a.get("id_item"), a.get("id_owner")], dat_adorned))
+        else:
+            all_adorned = bknd_core.execute_sql_query("SELECT id_item FROM items WHERE id_server = %s " +
+                                                      "AND id_item IN (SELECT id_item FROM items_prop WHERE name = 'adorned' AND value = 'true')",
+                                                      (server,)
+                                                      )
 
-        all_users = bknd_core.execute_sql_query("SELECT id_item, id_user FROM items WHERE id_item IN %s", (all_adorned,))
+            all_adorned = tuple(map(lambda a: a[0], all_adorned))
+
+            if len(all_adorned) == 0:
+                return format_board(entries=entries, title=ewcfg.leaderboard_fashion)
+
+            all_basefresh = bknd_core.execute_sql_query("SELECT id_item, value FROM items_prop WHERE name = 'freshness' " +
+                                                        "AND id_item IN %s",
+                                                        (all_adorned,)
+                                                        )
+
+            all_users = bknd_core.execute_sql_query("SELECT id_item, id_user FROM items WHERE id_item IN %s", (all_adorned,))
 
         fresh_map = {}
 
@@ -380,29 +400,72 @@ def make_district_control_board(id_server, title):
 # SLIMERNALIA
 def make_slimernalia_board(server, title):
     entries = []
-    data = bknd_core.execute_sql_query(
-        "SELECT {display_name}, {state}, {faction}, FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) as total_festivity FROM users " \
-        "LEFT JOIN (SELECT id_user, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}) f on users.{id_user} = f.{id_user}, players " \
-        "WHERE users.{id_server} = %s AND users.{id_user} = players.{id_user} ORDER BY total_festivity DESC LIMIT 5".format(
-            id_user=ewcfg.col_id_user,
-            id_server=ewcfg.col_id_server,
-            id_item=ewcfg.col_id_item,
-            festivity=ewcfg.col_festivity,
-            festivity_from_slimecoin=ewcfg.col_festivity_from_slimecoin,
-            name=ewcfg.col_name,
-            display_name=ewcfg.col_display_name,
-            value=ewcfg.col_value,
-            state=ewcfg.col_life_state,
-            faction=ewcfg.col_faction
-        ), (
-            "id_furniture",
-            ewcfg.item_id_sigillaria,
-            server
-        )
-    )
+    # Use the cache if it is enabled
+    item_cache = bknd_core.get_cache(obj_type = "EwItem")
+    if item_cache is not False:
+        # get a list of [id, name, lifestate, faction, basefestivitysum] for all users in server
+        dat = bknd_core.execute_sql_query("SELECT  {id_user}, {display_name}, {state}, {faction}, FLOOR({festivity}) + FLOOR({festivity_from_slimecoin}) FROM users WHERE {id_server} = %s".format(
+                id_user=ewcfg.col_id_user,
+                id_server=ewcfg.col_id_server,
+                display_name=ewcfg.col_display_name,
+                state=ewcfg.col_life_state,
+                faction=ewcfg.col_faction,
 
-    for row in data:
-        entries.append(row)
+                festivity=ewcfg.col_festivity,
+                festivity_from_slimecoin=ewcfg.col_festivity_from_slimecoin,
+            ), (
+                server
+            ))
+
+        # iterate through all users, add sigillaria festivity to the base
+        for row in dat:
+            # Get all user sigs
+            sigs = item_cache.find_entries(
+                criteria={
+                    "id_owner": row[0],
+                    "item_type": ewcfg.it_furniture,
+                    "id_server": server,
+                    "item_props": {"id_furniture": ewcfg.item_id_sigillaria}
+                }
+            )
+
+            # Add 1000 to total festivity per sig
+            row[4] += len(sigs) * 1000
+
+            # remove id to match return format
+            row.pop(0)
+
+        # Sort the rows by the 4th value in the list (which is the festivity, after removing the id), highest first
+        dat.sort(key=lambda row: row[3], reverse=True)
+
+        # add the top 5 to be returned
+        for i in range(5):
+            entries.append(dat[i])
+
+    else:
+        data = bknd_core.execute_sql_query(
+            "SELECT {display_name}, {state}, {faction}, FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) as total_festivity FROM users " \
+            "LEFT JOIN (SELECT id_user, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}) f on users.{id_user} = f.{id_user}, players " \
+            "WHERE users.{id_server} = %s AND users.{id_user} = players.{id_user} ORDER BY total_festivity DESC LIMIT 5".format(
+                id_user=ewcfg.col_id_user,
+                id_server=ewcfg.col_id_server,
+                id_item=ewcfg.col_id_item,
+                festivity=ewcfg.col_festivity,
+                festivity_from_slimecoin=ewcfg.col_festivity_from_slimecoin,
+                name=ewcfg.col_name,
+                display_name=ewcfg.col_display_name,
+                value=ewcfg.col_value,
+                state=ewcfg.col_life_state,
+                faction=ewcfg.col_faction
+            ), (
+                "id_furniture",
+                ewcfg.item_id_sigillaria,
+                server
+            )
+        )
+
+        for row in data:
+            entries.append(row)
 
     return format_board(entries=entries, title=title)
 

@@ -120,6 +120,21 @@ if debug == True:
 
 ewutils.logMsg('Using database: {}'.format(ewcfg.database))
 
+ewcfg.debugroom = ewdebug.debugroom
+ewcfg.debugroom_short = ewdebug.debugroom_short
+ewcfg.debugpiers = ewdebug.debugpiers
+ewcfg.debugfish_response = ewdebug.debugfish_response
+ewcfg.debugfish_goal = ewdebug.debugfish_goal
+ewcfg.cmd_debug1 = ewcfg.cmd_prefix + ewdebug.cmd_debug1
+ewcfg.cmd_debug2 = ewcfg.cmd_prefix + ewdebug.cmd_debug2
+ewcfg.cmd_debug3 = ewcfg.cmd_prefix + ewdebug.cmd_debug3
+ewcfg.cmd_debug4 = ewcfg.cmd_prefix + ewdebug.cmd_debug4
+# ewcfg.debug5 = ewdebug.debug5
+ewcfg.cmd_debug6 = ewcfg.cmd_prefix + ewdebug.cmd_debug6
+ewcfg.cmd_debug7 = ewcfg.cmd_prefix + ewdebug.cmd_debug7
+ewcfg.cmd_debug8 = ewcfg.cmd_prefix + ewdebug.cmd_debug8
+ewcfg.cmd_debug9 = ewcfg.cmd_prefix + ewdebug.cmd_debug9
+
 
 @client.event
 async def on_member_remove(member):
@@ -1202,6 +1217,15 @@ token = ewutils.getToken()
 if token == None or len(token) == 0:
     ewutils.logMsg('Please place your API token in a file called "token", in the same directory as this script.')
     sys.exit(0)
+
+# Load the cache before connecting to discord, this way we arent missing heartbeats
+ewutils.logMsg("Initializing caches...")
+
+# Set all predefined caches to enabled and initialize them
+for cache_type_name in ewcfg.cacheable_types:
+    ewutils.logMsg("Initializing {} cache.".format(cache_type_name))
+    bknd_core.enabled_caches.append(cache_type_name)
+    bknd_core.ObjCache(ew_obj_type=cache_type_name)
 
 # connect to discord and run indefinitely
 try:

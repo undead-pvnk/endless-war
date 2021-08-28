@@ -1142,6 +1142,7 @@ cmd_create = cmd_prefix + 'create'
 cmd_forgemasterpoudrin = cmd_prefix + 'forgemasterpoudrin'
 cmd_createitem = cmd_prefix + 'createitem'
 cmd_createmulti = cmd_prefix + 'createmulti'
+cmd_createall = cmd_prefix + 'createall'
 cmd_manualsoulbind = cmd_prefix + 'soulbind'
 cmd_editprops = cmd_prefix + 'editprops'
 cmd_setslime = cmd_prefix + 'setslime'
@@ -1496,6 +1497,8 @@ cmd_display_states = cmd_prefix + 'displaystates'
 cmd_press_button = cmd_prefix + 'press'
 cmd_call_elevator = cmd_prefix + 'callelevator'
 cmd_addstatuseffect = cmd_prefix + 'addstatuseffect'
+cmd_log_caches = cmd_prefix + 'cache'
+cmd_toggle_caches = cmd_prefix + 'togglecache'
 # SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
@@ -3145,6 +3148,8 @@ durability_items = [
     item_id_gaiaseedpack_steelbeans,
     item_id_gaiaseedpack_aushucks
 ]
+
+all_item_ids = []
 
 vendor_dojo = "Dojo"
 
@@ -5755,26 +5760,45 @@ def set_client(cl):
     return client_ref
 
 
+"""
+    Default settings for the cache
+"""
+
+
+cacheable_types = ["EwItem"]
+
+autoload_types = ["EwItem"]
+
+obj_type_to_identifiers = {
+    "EwItem": [{"id_item", "id_entry"}],
+    # "EwPlayer": [{"id_user", "id_entry"}],
+    # "EwUser": [
+    #    {"id_user", "id_entry"},
+    #    {"id_server"}
+    # ],
+}
+
+obj_type_to_nested_props = {
+    "EwItem": ["item_props"],
+    # "EwEnemy": ["enemy_props"],
+}
+
 # scream = ""
 # for i in range(1, 10000):
 #     scream += "A"
 #     
 # print(scream)
-try:
-    from ew.cmd import debug as ewdebug
-except:
-    from ew.cmd import debug_dummy as ewdebug
-debugroom = ewdebug.debugroom
-debugroom_short = ewdebug.debugroom_short
-debugpiers = ewdebug.debugpiers
-debugfish_response = ewdebug.debugfish_response
-debugfish_goal = ewdebug.debugfish_goal
-cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
-cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
-cmd_debug3 = cmd_prefix + ewdebug.cmd_debug3
-cmd_debug4 = cmd_prefix + ewdebug.cmd_debug4
-# debug5 = ewdebug.debug5
-cmd_debug6 = cmd_prefix + ewdebug.cmd_debug6
-cmd_debug7 = cmd_prefix + ewdebug.cmd_debug7
-cmd_debug8 = cmd_prefix + ewdebug.cmd_debug8
-cmd_debug9 = cmd_prefix + ewdebug.cmd_debug9
+debugroom = None
+debugroom_short = None
+debugpiers = None
+debugfish_response = None
+debugfish_goal = None
+cmd_debug1 = None
+cmd_debug2 = None
+cmd_debug3 = None
+cmd_debug4 = None
+# debug5 = None
+cmd_debug6 = None
+cmd_debug7 = None
+cmd_debug8 = None
+cmd_debug9 = None

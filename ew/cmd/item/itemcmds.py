@@ -1,7 +1,9 @@
 import asyncio
 import random
 import re
+import sys
 import time
+from copy import copy, deepcopy
 
 import discord
 
@@ -188,69 +190,122 @@ async def squeeze(cmd):
 """
 
 
+inv_channel_ids = []
+
+
 async def inventory_print(cmd):
-    community_chest = False
-    can_message_user = True
-    item_type = None
+    # Setup basic variables
+    target_channel = cmd.message.channel
+    target_inventory = cmd.message.author.id
+    is_player_inventory = True
+    targeting_dms = False
 
-    inventory_source = cmd.message.author.id
-
+    # Retrieve indirect data
     player = EwPlayer(id_user=cmd.message.author.id)
+    user_data = EwUser(id_user=player.id_user, id_server=player.id_server)
+    poi_data = poi_static.id_to_poi.get(user_data.poi)
 
-    user_data = EwUser(id_user=cmd.message.author.id, id_server=player.id_server)
-    poi = poi_static.id_to_poi.get(user_data.poi)
+    # Note if this is in dms or not, so dms don't get formatted
+    if isinstance(cmd.message.channel, discord.DMChannel) and cmd.message.channel.recipient.id == cmd.message.author.id:
+        targeting_dms = True
+
+    # Check if it's a chest or not
     if cmd.tokens[0].lower() == ewcfg.cmd_communitychest:
-        if poi.community_chest == None:
-            response = "There is no community chest here."
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        elif cmd.message.channel.name != poi.channel:
-            response = "You can't see the community chest from here."
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        community_chest = True
-        can_message_user = False
-        inventory_source = poi.community_chest
 
+        # Stop now if there's no community chest
+        if poi_data.community_chest is None:
+            resp_txt = "There is no community chest here."
+            response = fe_utils.formatMessage(cmd.message.author, resp_txt) if not targeting_dms else resp_txt
+
+            return await fe_utils.send_message(cmd.client, target_channel, response)
+
+        # Ensure they are checking chests in the poi channel or their dms
+        if (not targeting_dms) and (target_channel.name != poi_data.channel):
+                resp_txt = "You can't see the community chest from here."
+                response = fe_utils.formatMessage(cmd.message.author, resp_txt) if not targeting_dms else resp_txt
+
+                return await fe_utils.send_message(cmd.client, target_channel, response)
+
+        # Mark as search for chest
+        is_player_inventory = False
+        target_inventory = poi_data.community_chest
+
+    else:
+        # Ensure the inventory response in sent in dms, in case they requested it from in-server
+        target_channel = cmd.message.author
+        targeting_dms = True
+
+    # Don't interrupt if there is already an inventory printing in that channel
+    if target_channel.id in inv_channel_ids:
+        resp_txt = "Let the last inventory finish, prick."
+        response = fe_utils.formatMessage(cmd.message.author, resp_txt) if not targeting_dms else resp_txt
+
+        return await fe_utils.send_message(cmd.client, target_channel, response)
+
+    # Check if the user has the bot blocked from dms, by dming them of course
+    if targeting_dms:
+        try:
+            resp_txt = "__You are holding:__" if is_player_inventory else "__The community chest contains:__"
+            await fe_utils.send_message(cmd.client, target_channel, resp_txt)
+        except:
+            # you can only tell them to unblock you if the channel they sent it through isn't their dms
+            if cmd.message.channel.id != cmd.message.author.id:
+                resp_txt = "You'll have to allow Endless War to send you DMs to check your inventory!"
+                response = fe_utils.formatMessage(cmd.message.author, resp_txt)
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+    # All checks passed, let other prints know this channel is busy until the response is sent
+    inv_channel_ids.append(target_channel.id)
+
+    # Set default formatting and filtering parameters
     sort_by_type = False
     sort_by_name = False
     sort_by_id = False
 
     stacking = False
     search = False
-    stacked_message_list = []
-    stacked_item_map = {}
+    item_type = None
 
+    # Set new parameters if given
     if cmd.tokens_count > 1:
-        token_list = cmd.tokens[1:]
-        lower_token_list = []
-        for token in token_list:
-            token = token.lower()
-            lower_token_list.append(token)
+        # standardize case
+        lower_token_list = list(map(lambda tok: tok.lower(), cmd.tokens))
 
+        # Sort by type
         if 'type' in lower_token_list:
             sort_by_type = True
+        # Sort by name
         elif 'name' in lower_token_list:
             sort_by_name = True
+        # Sort by id
         elif 'id' in lower_token_list:
             sort_by_id = True
 
+        # Stack items of same name
         if 'stack' in lower_token_list:
             stacking = True
 
+        # Filter to general items
         if 'general' in lower_token_list:
             item_type = ewcfg.it_item
 
+        # Filter to Weapon items
         if 'weapon' in lower_token_list:
             item_type = ewcfg.it_weapon
 
+        # Filter to furniture items
         if 'furniture' in lower_token_list:
             item_type = ewcfg.it_furniture
 
+        # Filter to cosmetic items
         if 'cosmetic' in lower_token_list:
             item_type = ewcfg.it_cosmetic
 
+        # Filter to food items
         if 'food' in lower_token_list:
             item_type = ewcfg.it_food
 
+        # Search for a particular item. Ignore formatting parameters
         if 'search' in lower_token_list:
             stacking = False
             sort_by_id = False
@@ -258,80 +313,79 @@ async def inventory_print(cmd):
             sort_by_type = False
             search = True
 
+    # Finally, actually grab the inventory
     if sort_by_id:
         items = bknd_item.inventory(
-            id_user=inventory_source,
-            id_server=player.id_server,
+            id_user=target_inventory,
+            id_server=user_data.id_server,
             item_sorting_method='id',
             item_type_filter=item_type
         )
     elif sort_by_type:
         items = bknd_item.inventory(
-            id_user=inventory_source,
-            id_server=player.id_server,
+            id_user=target_inventory,
+            id_server=user_data.id_server,
             item_sorting_method='type',
             item_type_filter=item_type
         )
     elif search == True:
         items = itm_utils.find_item_all(
             item_search=ewutils.flattenTokenListToString(cmd.tokens[2:]),
-            id_server=player.id_server,
-            id_user=inventory_source,
+            id_server=user_data.id_server,
+            id_user=target_inventory,
             exact_search=False,
             search_names=True
         )
     else:
         items = bknd_item.inventory(
-            id_user=inventory_source,
-            id_server=player.id_server,
+            id_user=target_inventory,
+            id_server=user_data.id_server,
             item_type_filter=item_type
         )
 
-    if community_chest:
-        if len(items) == 0:
-            response = "The community chest is empty."
-        else:
-            response = "__The community chest contains:__"
-    else:
-        if len(items) == 0:
-            response = "You don't have anything."
-        else:
-            response = "__You are holding:__"
+    # Strip unnecessary data
+    items = list(map(lambda dat: {
+        "id_item": dat.get("id_item"),
+        "quantity": dat.get("quantity"),
+        "name": dat.get("name"),
+        "soulbound": dat.get("soulbound"),
+        "item_type": dat.get("item_type")
+    }, items))
 
-    msg_handle = None
-    try:
-        if can_message_user:
-            msg_handle = await fe_utils.send_message(cmd.client, cmd.message.author, response)
-    except discord.errors.Forbidden:
-        response = "You'll have to allow Endless War to send you DMs to check your inventory!"
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    except:
-        can_message_user = False
-
-    if msg_handle is None:
-        can_message_user = False
-
-    if not can_message_user:
-        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
+    # sort by name if requested
     if sort_by_name:
         items = sorted(items, key=lambda item: item.get('name').lower())
 
+    # Setup a response container so the item data can get nuked ASAP, regardless of messages getting ratelimited
+    resp_ctn = fe_utils.EwResponseContainer(client=cmd.client, id_server=cmd.guild.id)
+
+    # Chests get to have the special empty response if they arent checked in dms, invs just cant be checked elsewhere
+    if not targeting_dms:
+        # Generate first message
+        if len(items) == 0:
+            response = fe_utils.formatMessage(cmd.message.author, "The community chest is empty.")
+        else:
+            response = fe_utils.formatMessage(cmd.message.author, "__The community chest contains:__")
+
+        # set it to be sent
+        resp_ctn.add_channel_response(target_channel, response)
+
     if len(items) > 0:
 
+        # Set variable defaults
+        stacked_item_map = {}
         response = ""
         current_type = ""
 
         for item in items:
-            id_item = item.get('id_item')
-            quantity = item.get('quantity')
 
             if not stacking:
+                # Generate the item's line in the response based on the specified formatting
                 response_part = "\n{id_item}: {soulbound_style}{name}{soulbound_style}{quantity}".format(
                     id_item=item.get('id_item'),
                     name=item.get('name'),
                     soulbound_style=("**" if item.get('soulbound') else ""),
-                    quantity=(" x{:,}".format(quantity) if (quantity > 1) else "")
+                    quantity=(" x{:,}".format(item.get("quantity")) if (item.get("quantity") > 1) else "")
                 )
 
                 # Print item type labels if sorting by type and showing a new type of items
@@ -339,20 +393,20 @@ async def inventory_print(cmd):
                     if current_type != item.get('item_type'):
                         current_type = item.get('item_type')
                         response_part = "\n**=={}==**".format(current_type.upper()) + response_part
-            else:
 
-                item_name = item.get('name')
-                if item_name in stacked_item_map:
-                    stacked_item = stacked_item_map.get(item_name)
+            else:
+                # Add item quantity to existing stack
+                if item.get('name') in stacked_item_map:
+                    stacked_item = stacked_item_map.get(item.get("name"))
                     stacked_item['quantity'] += item.get('quantity')
+                # Create stack for new item name
                 else:
-                    stacked_item_map[item_name] = item
+                    stacked_item_map[item.get("name")] = item
 
             if not stacking and len(response) + len(response_part) > 1492:
-                if can_message_user:
-                    await fe_utils.send_message(cmd.client, cmd.message.author, response)
-                else:
-                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                # Format the response if necessary and add to the container
+                response = fe_utils.formatMessage(cmd.message.author, response) if not targeting_dms else response
+                resp_ctn.add_channel_response(target_channel, response)
 
                 response = ""
 
@@ -360,17 +414,24 @@ async def inventory_print(cmd):
                 response += response_part
 
         if stacking:
+            # Setup variables
             current_type = ""
             item_names = stacked_item_map.keys()
+
+            # Sort the names if necessary
             if sort_by_name:
                 item_names = sorted(item_names)
+
+            # iterate through all stacks
             for item_name in item_names:
+                # Get the stack's item data
                 item = stacked_item_map.get(item_name)
-                quantity = item.get('quantity')
+
+                # Generate the stack's line in the response
                 response_part = "\n{soulbound_style}{name}{soulbound_style}{quantity}".format(
                     name=item.get('name'),
                     soulbound_style=("**" if item.get('soulbound') else ""),
-                    quantity=(" **x{:,}**".format(quantity) if (quantity > 0) else "")
+                    quantity=(" **x{:,}**".format(item.get("quantity")) if (item.get("quantity") > 0) else "")
                 )
 
                 # Print item type labels if sorting by type and showing a different type of items
@@ -379,19 +440,36 @@ async def inventory_print(cmd):
                         current_type = item.get('item_type')
                         response_part = "\n**=={}==**".format(current_type.upper()) + response_part
 
+                # If the message is getting too long to send
                 if len(response) + len(response_part) > 1492:
-                    if can_message_user:
-                        await fe_utils.send_message(cmd.client, cmd.message.author, response)
-                    else:
-                        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    # Add it to the responses, and start a new one
+                    # Format the response if necessary and add to the container
+                    response = fe_utils.formatMessage(cmd.message.author, response) if not targeting_dms else response
+                    resp_ctn.add_channel_response(target_channel, response)
 
                     response = ""
+
+                # Add the generated line to the response
                 response += response_part
 
-        if can_message_user:
-            await fe_utils.send_message(cmd.client, cmd.message.author, response)
-        else:
-            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        # Now that we have the responses, get the data out of memory
+        del items
+
+        # Format the response if necessary and add to the container
+        response = fe_utils.formatMessage(cmd.message.author, response) if not targeting_dms else response
+        resp_ctn.add_channel_response(target_channel, response)
+
+    else:
+        resp_txt = "Nothing."
+        response = fe_utils.formatMessage(cmd.message.author, resp_txt) if not targeting_dms else resp_txt
+        resp_ctn.add_channel_response(target_channel, response)
+
+
+    # Send the response(s) then remove the target channel from the list of places already receiving inventories
+    await resp_ctn.post()
+    inv_channel_ids.remove(target_channel.id)
+
+    return
 
 
 """
@@ -441,7 +519,7 @@ async def item_look(cmd):
 
             id_item = item.id_item
             name = item_sought.get('name')
-            response = item_sought.get('item_def').str_desc
+            response = static_items.item_def_map.get(item_sought.get('item_type')).str_desc
 
             # Replace up to two levels of variable substitutions.
             if response.find('{') >= 0:
@@ -775,6 +853,11 @@ async def manually_edit_item_properties(cmd):
         item_id = cmd.tokens[1]
         column_name = cmd.tokens[2]
         column_value = cmd.tokens[3]
+
+        target_data = bknd_core.get_cache_result(obj_type="EwItem", id_item = item_id)
+        if target_data is not False:
+            target_data.get("item_props").update({column_name: column_value})
+            bknd_core.cache_data(obj_type="EwItem", data=target_data)
 
         bknd_core.execute_sql_query("REPLACE INTO items_prop({}, {}, {}) VALUES(%s, %s, %s)".format(
             ewcfg.col_id_item,
@@ -1186,7 +1269,7 @@ async def propstand(cmd):
             response = "You affix the {} to a wooden mount. You know this priceless trophy will last thousands of years, so you spray it down with formaldehyde to preserve it forever. Or at least until you decide to remove it.".format(item_sought.get('name'))
             lookdesc = "A {} is mounted on the wall.".format(item_sought.get('name'))
             placedesc = "You mount the {} on the wall. God damn magnificent.".format(item_sought.get('name'))
-            fdesc = item_sought.get('item_def').str_desc
+            fdesc = static_items.item_def_map.get(item_sought.get('item_type')).str_desc
             if fdesc.find('{') >= 0:
                 fdesc = fdesc.format_map(item.item_props)
 
@@ -1682,6 +1765,7 @@ async def create_multi(cmd):
             name = item.str_name
 
     if item != None:
+
         for x in range(number):
             item_props = itm_utils.gen_item_props(item)
 
@@ -1723,3 +1807,54 @@ async def manual_soulbind(cmd):
         await fe_utils.send_message(cmd.client, cmd.message.channel, response)
     else:
         return
+
+
+async def create_all(cmd):
+    if not cmd.message.author.guild_permissions.administrator:
+        return
+
+    # The proper usage is !createitem [item id] [recipient]. The opposite order is invalid.
+    if '<@' in cmd.tokens[1]:  # Triggers if the 2nd command token is a mention
+        response = "Proper usage of !createall: **!createall [Number of copies] [recipient]**."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+    try:
+        num_target = int(cmd.tokens[1])
+    except:
+        num_target = 1
+
+    number_created = 0
+
+    if cmd.mentions_count == 1:
+        item_recipient = cmd.mentions[0]
+    else:
+        item_recipient = cmd.message.author
+
+    list_all = static_items.item_list + static_items.furniture_list
+    list_all += static_food.food_list
+    list_all += static_fish.fish_list
+    list_all += static_weapons.weapon_list
+    list_all += cosmetics.cosmetic_items_list
+
+    for item in list_all:
+
+        if item != None:
+            number_of_each = 0
+            while number_of_each < num_target:
+                item_props = itm_utils.gen_item_props(item)
+
+                bknd_item.item_create(
+                    item_type=item.item_type,
+                    id_user=item_recipient.id,
+                    id_server=cmd.guild.id,
+                    stack_max=-1,
+                    stack_size=0,
+                    item_props=item_props
+                )
+
+                number_created += 1
+                number_of_each += 1
+
+    response = "Created {} items for **{}**.".format(number_created, item_recipient)
+
+    await fe_utils.send_message(cmd.client, cmd.message.channel, response)

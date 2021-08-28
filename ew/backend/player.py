@@ -28,7 +28,13 @@ class EwPlayer:
             self.id_user = id_user
             self.id_server = id_server
 
+            #cache_result = bknd_core.get_cache_result(obj = self)
+
+            #if cache_result is not False:
+            #    self.__dict__ = cache_result
+
             try:
+
                 conn_info = bknd_core.databaseConnect()
                 conn = conn_info.get('conn')
                 cursor = conn.cursor()
@@ -48,6 +54,7 @@ class EwPlayer:
                     self.display_name = result[2]
                 elif id_server != None:
                     # Create a new database entry if the object is missing.
+                    ewutils.logMsg("Player {} was not found in database.".format(id_user))
                     cursor.execute("REPLACE INTO players({}, {}) VALUES(%s, %s)".format(
                         ewcfg.col_id_user,
                         ewcfg.col_id_server
@@ -57,6 +64,9 @@ class EwPlayer:
                     ))
 
                     conn.commit()
+
+                #bknd_core.cache_data(self)
+
             finally:
                 # Clean up the database handles.
                 cursor.close()
@@ -65,6 +75,8 @@ class EwPlayer:
     """ Save user data object to the database. """
 
     def persist(self):
+        #bknd_core.cache_data(obj = self)
+
         try:
             conn_info = bknd_core.databaseConnect()
             conn = conn_info.get('conn')

@@ -577,18 +577,36 @@ async def balance_cosmetics(cmd):
         id_cosmetic = cmd.tokens[1]
 
         try:
-            data = bknd_core.execute_sql_query(
-                "SELECT {id_item}, {item_type}, {col_soulbound}, {col_stack_max}, {col_stack_size} FROM items WHERE {id_server} = {server_id} AND {item_type} = '{type_item}'".format(
-                    id_item=ewcfg.col_id_item,
-                    item_type=ewcfg.col_item_type,
-                    col_soulbound=ewcfg.col_soulbound,
-                    col_stack_max=ewcfg.col_stack_max,
-                    col_stack_size=ewcfg.col_stack_size,
-                    id_server=ewcfg.col_id_server,
+            # Pull info from the cache if items are being cached
+            item_cache = bknd_core.get_cache(obj_type = "EwItem")
+            if item_cache is not False:
+                # find all cosmetics for the target server
+                server_cosmetic_data = item_cache.find_entries(criteria={"id_server": cmd.guild.id, "item_type": ewcfg.it_cosmetic})
 
-                    server_id=cmd.guild.id,
-                    type_item=ewcfg.it_cosmetic
-                ))
+                # format the results the same way the sql query would
+                data = list(map(lambda dat: [
+                    dat.get("id_item"),
+                    dat.get("item_type"),
+                    dat.get("soulbound"),
+                    dat.get("stack_max"),
+                    dat.get("stack_size")
+                ], server_cosmetic_data))
+                if len(data) == 0:
+                    data = None
+
+            else:
+                data = bknd_core.execute_sql_query(
+                    "SELECT {id_item}, {item_type}, {col_soulbound}, {col_stack_max}, {col_stack_size} FROM items WHERE {id_server} = {server_id} AND {item_type} = '{type_item}'".format(
+                        id_item=ewcfg.col_id_item,
+                        item_type=ewcfg.col_item_type,
+                        col_soulbound=ewcfg.col_soulbound,
+                        col_stack_max=ewcfg.col_stack_max,
+                        col_stack_size=ewcfg.col_stack_size,
+                        id_server=ewcfg.col_id_server,
+
+                        server_id=cmd.guild.id,
+                        type_item=ewcfg.it_cosmetic
+                    ))
 
             if data != None:
                 for row in data:
