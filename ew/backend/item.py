@@ -969,6 +969,7 @@ def give_item(
             )
 
             if len(other_items) >= ewcfg.generic_inv_limit:
+                del other_items
                 return False
 
         bknd_core.execute_sql_query(
@@ -1066,6 +1067,10 @@ def find_item(item_search = None, id_user = None, id_server = None, item_type_fi
                 break
             if item_sought == None and item_search in item_name:
                 item_sought = item
+
+        # Trust me just this once, this was necessary. use createall to make a huge item store and snag or scavenge
+        # Open task manager at look at memory usage after ratelimiting the bot. It's insane
+        del items
 
     return item_sought
 

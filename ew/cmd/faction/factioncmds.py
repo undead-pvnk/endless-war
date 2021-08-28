@@ -107,7 +107,7 @@ async def store(cmd):
         else:
             response = "{} which item? (check **!inventory**)".format(cmd.tokens[0])
 
-    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 """retrieve items from a communal chest in your gang base"""
@@ -139,6 +139,7 @@ async def take(cmd):
             )
 
             if len(food_items) >= user_data.get_food_capacity():
+                del food_items
                 response = "You can't carry any more food items."
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
@@ -150,9 +151,11 @@ async def take(cmd):
             )
 
             if user_data.life_state == ewcfg.life_state_corpse:
+                del weapons_held
                 response = "Ghosts can't hold weapons."
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
             elif len(weapons_held) >= user_data.get_weapon_capacity():
+                del weapons_held
                 response = "You can't carry any more weapons."
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
@@ -163,6 +166,7 @@ async def take(cmd):
                 item_type_filter=item_sought.get('item_type')
             )
             if len(other_items) >= ewcfg.generic_inv_limit:
+                del other_items
                 response = ewcfg.str_generic_inv_limit.format(item_sought.get('item_type'))
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
@@ -170,10 +174,12 @@ async def take(cmd):
 
         response = "You retrieve a {} from the community chest.".format(item_sought.get("name"))
 
+        del item_sought
+
     else:
         if item_search:
             response = "There isn't one here."
         else:
             response = "{} which item? (check **{}**)".format(cmd.tokens[0], ewcfg.cmd_communitychest)
 
-    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
