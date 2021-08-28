@@ -91,9 +91,7 @@ async def activate_trap_items(district, id_server, id_user):
         bknd_item.item_delete(trap_id_item)
 
     finally:
-        # Clean up the database handles.
-        cursor.close()
-        bknd_core.databaseClose(conn_info)
+        pass
     await fe_utils.send_message(client, district_channel, fe_utils.formatMessage(member, response))
 
 

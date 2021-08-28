@@ -459,6 +459,12 @@ async def inventory_print(cmd):
         response = fe_utils.formatMessage(cmd.message.author, response) if not targeting_dms else response
         resp_ctn.add_channel_response(target_channel, response)
 
+    else:
+        resp_txt = "Nothing."
+        response = fe_utils.formatMessage(cmd.message.author, resp_txt) if not targeting_dms else resp_txt
+        resp_ctn.add_channel_response(target_channel, response)
+
+
     # Send the response(s) then remove the target channel from the list of places already receiving inventories
     await resp_ctn.post()
     inv_channel_ids.remove(target_channel.id)
