@@ -527,7 +527,7 @@ async def slimeoidbattle(cmd):
             winnings = bet * 2
 
         if not pvp_battle:
-            winnings = 10000 * challengee_slimeoid.level
+            winnings = 1000000 * challengee_slimeoid.level
 
         # The actual battle goes here
         result = await battle_slimeoids(
