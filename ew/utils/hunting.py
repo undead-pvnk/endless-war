@@ -730,7 +730,7 @@ def spawn_enemy(
         pre_chosen_faction = None,
         pre_chosen_owner = None,
         pre_chosen_coord = None,
-        pre_chosen_rarity = False,
+        pre_chosen_rarity = None,
         pre_chosen_props = None,
         manual_spawn = False,
 ):

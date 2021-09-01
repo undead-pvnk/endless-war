@@ -970,7 +970,7 @@ async def purify(cmd):
 
                 user_data.persist()
 
-                response += "\n\nYou have purified yourself and are now a level 1 slimeboi.\nThe bond you've forged with your weapon has grown weaker as a result."
+                response += "\n\nYou have purified yourself and are now a level 1 slime{}.\nThe bond you've forged with your weapon has grown weaker as a result.".format(user_data.gender)
     else:
         response = "Purify yourself how? With what? Your own piss?"
 

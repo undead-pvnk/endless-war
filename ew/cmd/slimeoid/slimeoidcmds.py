@@ -527,7 +527,7 @@ async def slimeoidbattle(cmd):
             winnings = bet * 2
 
         if not pvp_battle:
-            winnings = 10000 * challengee_slimeoid.level
+            winnings = 1000000 * challengee_slimeoid.level
 
         # The actual battle goes here
         result = await battle_slimeoids(
@@ -554,7 +554,10 @@ async def slimeoidbattle(cmd):
             trainer_name = winner_trainer_name
             )
         if winnings != 0 and isinstance(winner, EwUser):
-            response += "\nThey recieve {:,} slime!".format(winnings)
+            if pvp_battle:
+                response += "\nThey recieve {:,} slime!".format(winnings)
+            if not pvp_battle:
+                response += "\nThey recieve {:,} slimecoin!".format(winnings)
 
         if challengee_slimeoid.coating != '' and pvp_battle:
             response += "\n{} coating has been tarnished by battle.".format(challengee_slimeoid.name, challengee_slimeoid.coating)
@@ -576,8 +579,12 @@ async def slimeoidbattle(cmd):
             # Update the winner's state one last time, then give 'em their winnings!
             challenger = EwUser(member=author)
             if winner.life_state != ewcfg.life_state_corpse and pvp_battle:
-                challenger.change_slimes(n=winnings)
+                winner.change_slimes(n=winnings)
+                winner.persist()
+            if winner.life_state != ewcfg.life_state_corpse and not pvp_battle:
+                challenger.change_slimecoin(n=winnings, coinsource=ewcfg.coinsource_bounty)
                 challenger.persist()
+
         
         if not pvp_battle and not isinstance(winner, EwEnemy):
             # Fucking delete 'em if they lose!
@@ -1149,8 +1156,8 @@ async def negaslimeoidbattle(cmd):
 
     # Start game
     try:
-        result = await battle_slimeoids(id_s1=challengee_slimeoid.id_slimeoid, id_s2=challenger_slimeoid.id_slimeoid, channel=cmd.message.channel, battle_type=ewcfg.battle_type_nega)
-        if result == -1:
+        result = await battle_slimeoids(id_s1=challengee_slimeoid.id_slimeoid, id_s2=challenger_slimeoid.id_slimeoid, channel=cmd.message.channel, battle_type=ewcfg.battle_type_nega, challengee_name="null", challenger_name=author.display_name)
+        if result == 1:
             # Losing in a nega battle means death
             district_data = EwDistrict(district=challenger.poi, id_server=cmd.guild.id)
             slimes = int(2 * 10 ** (challengee_slimeoid.level - 2))
@@ -1159,7 +1166,7 @@ async def negaslimeoidbattle(cmd):
             challengee_slimeoid.delete()
             response = "The dulled colors become vibrant again, as {} fades back into its own reality.".format(challengee_slimeoid.name)
             await fe_utils.send_message(cmd.client, cmd.message.channel, response)
-        elif result == 1:
+        elif result == -1:
             # Dedorn all items
             cosmetics = bknd_item.inventory(
                 id_user=cmd.message.author.id,
