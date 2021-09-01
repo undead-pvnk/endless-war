@@ -412,6 +412,7 @@ class EwItem:
                 ewutils.logMsg('Updated cosmetic to new format: {}'.format(self.id_item))
 
 
+
 """
 	Finds the amount of Slime Poudrins inside your inventory.
 """
