@@ -1869,3 +1869,22 @@ async def create_all(cmd):
     response = "Created {} items for **{}**.".format(number_created, item_recipient)
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+
+async def manual_transfer(cmd):
+    if not cmd.message.author.guild_permissions.administrator:
+        return
+    item_id = cmd.tokens[1]
+    destination = cmd.tokens[2]
+    if cmd.mentions_count == 1:
+        target = EwUser(member=cmd.mentions[0])
+        destination = str(target.id_user)
+    item_sought = EwItem(id_item=item_id)
+    print(item_sought.item_props)
+    if item_sought:
+        item_sought.id_owner = destination
+        response = "OK, item moved."
+        item_sought.persist()
+    else:
+        response = "Can't move that. It's !moveitem <item id> <destination>"
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
