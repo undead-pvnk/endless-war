@@ -63,6 +63,9 @@ cmd_map = {
     ewcfg.cmd_createmulti: itemcmds.create_multi,
     ewcfg.cmd_moveitem: itemcmds.manual_transfer,
 
+    ewcfg.cmd_createall: itemcmds.create_all,
+
+
     ewcfg.cmd_manualsoulbind: itemcmds.manual_soulbind,
 
     # SLIMERNALIA

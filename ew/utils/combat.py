@@ -2466,6 +2466,13 @@ class EwUser(EwUserBase):
                 ewutils.weaponskills_clear(id_server=self.id_server, id_user=self.id_user, weaponskill=ewcfg.weaponskill_max_onrevive)
 
             try:
+                item_cache = bknd_core.get_cache(obj_type = "EwItem")
+                if item_cache is not False:
+                    tgt_itms = item_cache.find_entries(criteria={"item_props": {"preserved": self.id_user}})
+                    for itm_dat in tgt_itms:
+                        itm_dat.get("item_props").pop("preserved")
+                        item_cache.set_entry(data=itm_dat)
+
                 bknd_core.execute_sql_query(
                     "DELETE FROM items_prop WHERE {} = %s AND  {} = %s".format(
                         ewcfg.col_name,
@@ -3046,6 +3053,21 @@ class EwUser(EwUserBase):
         return bknd_item.get_freshness(self)
 
     def get_festivity(self):
+        # Use cache if available
+        item_cache = bknd_core.get_cache(obj_type = "EwItem")
+        if item_cache is not False:
+            # Get all user furniture id'd as a sigil
+            sigils = item_cache.find_entries(criteria={
+                "id_owner": self.id_user,
+                "item_type": ewcfg.it_furniture,
+                "id_server": self.id_server,
+                "item_props": {"id_furniture": ewcfg.item_id_sigillaria},
+            })
+
+            # return the sum of festivity props and 1000 per sigil
+            return self.festivity + self.festivity_from_slimecoin + (len(sigils)*1000)
+
+
         data = bknd_core.execute_sql_query(
             "SELECT {festivity} + COALESCE(sigillaria, 0) + {festivity_from_slimecoin} FROM users " \
             "LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} " \

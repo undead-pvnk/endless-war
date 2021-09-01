@@ -829,12 +829,13 @@ async def scavenge(cmd):
 
             user_data.persist()
 
-            if not response == "":
-                await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
             # gangsters don't need their roles updated
             if user_data.life_state == ewcfg.life_state_juvenile:
                 await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+
+            if not response == "":
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
     else:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You'll find no slime here, this place has been picked clean. Head into the city to try and scavenge some slime."))
 

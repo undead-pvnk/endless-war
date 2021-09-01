@@ -1470,6 +1470,7 @@ async def remove_item(cmd):
                 item_type_filter=ewcfg.it_food
             )
             if len(food_items) >= usermodel.get_food_capacity():
+                del food_items
                 response = "You can't carry any more food."
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         elif item_sought.get('item_type') == ewcfg.it_weapon:
@@ -1479,6 +1480,7 @@ async def remove_item(cmd):
                 item_type_filter=ewcfg.it_weapon
             )
             if len(wep_items) >= usermodel.get_weapon_capacity():
+                del wep_items
                 response = "You can't carry any more weapons."
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
@@ -1489,6 +1491,7 @@ async def remove_item(cmd):
                 item_type_filter=item_sought.get('item_type')
             )
             if len(other_items) >= ewcfg.generic_inv_limit:
+                del other_items
                 response = ewcfg.str_generic_inv_limit.format(item_sought.get('item_type'))
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 

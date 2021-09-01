@@ -457,20 +457,11 @@ def item_lootrandom(user_data):
     response = ""
 
     try:
-
-        items_in_poi = bknd_core.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
-            id_item=ewcfg.col_id_item,
-            id_owner=ewcfg.col_id_user,
-            id_server=ewcfg.col_id_server
-        ), (
-            user_data.poi,
-            user_data.id_server
-        ))
+        # find_item() uses the inventory() function anyway, so why have custom sql here followed by what you're avoiding
+        items_in_poi = bknd_item.inventory(id_user=user_data.poi, id_server=user_data.id_server)
 
         if len(items_in_poi) > 0:
-            id_item = random.choice(items_in_poi)[0]
-
-            item_sought = bknd_item.find_item(item_search=str(id_item), id_user=user_data.poi, id_server=user_data.id_server)
+            item_sought = random.choice(items_in_poi)
 
             response += "You found a {}!".format(item_sought.get('name'))
 
@@ -482,7 +473,7 @@ def item_lootrandom(user_data):
                         metric=ewcfg.stat_poudrins_looted,
                         n=1
                     )
-                bknd_item.give_item(id_user=user_data.id_user, id_server=user_data.id_server, id_item=id_item)
+                bknd_item.give_item(id_user=user_data.id_user, id_server=user_data.id_server, id_item=item_sought.get("id_item"))
             else:
                 response += " But you couldn't carry any more {}s, so you tossed it back.".format(item_sought.get('item_type'))
 
@@ -676,6 +667,7 @@ def unwrap(id_user = None, id_server = None, item = None, repeats = 0, rarity = 
                 id_server=id_server.id,
                 item_props=item_props
             )
+            slimexodia = False
 
     if len(pulls) > 1:
         response += " ***...What's this?!*** You manage to find a number of legendary cards, including:\n"

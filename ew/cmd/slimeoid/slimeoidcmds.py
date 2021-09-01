@@ -451,7 +451,7 @@ async def slimeoidbattle(cmd):
         
         # Try to find an enemy by the name / indicator given
         targetenemy = " ".join(cmd.tokens[1:]).lower()
-        challengee = cmbt_utils.find_enemy(targetenemy, EwUser())
+        challengee = cmbt_utils.find_enemy(targetenemy, challenger)
         
         if challengee is None:
             response = "Huh? Who do you want to challenge?"
@@ -548,6 +548,7 @@ async def slimeoidbattle(cmd):
             winner = challengee
             winner_slimeoid_name = challengee_slimeoid.name
             winner_trainer_name = target_name
+
         response = "\n**{slimeoid_name} has won the Slimeoid battle!! The crowd erupts into cheers for {slimeoid_name} and {trainer_name}!!** :tada:".format(
             slimeoid_name = winner_slimeoid_name,
             trainer_name = winner_trainer_name
@@ -567,6 +568,10 @@ async def slimeoidbattle(cmd):
         
         await fe_utils.send_message(cmd.client, cmd.message.channel, response)
 
+        # Putting this here because something broke, and... idk!!!! Geez!!!!
+        ewutils.active_slimeoidbattles[challenger_slimeoid_id] = False
+        ewutils.active_slimeoidbattles[challengee_slimeoid_id] = False
+
         if pvp_battle or not isinstance(winner, EwEnemy):
             # Update the winner's state one last time, then give 'em their winnings!
             challenger = EwUser(member=author)
@@ -576,7 +581,7 @@ async def slimeoidbattle(cmd):
         
         if not pvp_battle and not isinstance(winner, EwEnemy):
             # Fucking delete 'em if they lose!
-            response = "{name} is out of useable Slimeoids! {name} blacked out!".format(challengee.display_name)
+            response = "{name} is out of useable Slimeoids! {name} blacked out!".format(name=challengee.display_name)
             await fe_utils.send_message(cmd.client, cmd.message.channel, response)
             
             bknd_hunting.delete_enemy(challengee)

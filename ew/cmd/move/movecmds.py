@@ -1213,6 +1213,13 @@ async def flush_subzones(cmd):
 
         used_mother_district = mother_districts[0]
 
+        item_cache = bknd_core.get_cache(obj_type = "EwItem")
+        if item_cache is not False:
+            targets_data = item_cache.find_entries(criteria={"id_owner": subzone, "id_server": cmd.guild.id})
+            for itm_dat in targets_data:
+                itm_dat.update({"id_owner": used_mother_district})
+                item_cache.set_entry(data=itm_dat)
+
         bknd_core.execute_sql_query("UPDATE items SET {id_owner} = %s WHERE {id_owner} = %s AND {id_server} = %s".format(
             id_owner=ewcfg.col_id_user,
             id_server=ewcfg.col_id_server
@@ -1250,6 +1257,13 @@ async def flush_streets(cmd):
                 user_data.persist()
                 member = cmd.guild.get_member(player)
                 await ewrolemgr.updateRoles(client=cmd.client, member=member)
+
+            item_cache = bknd_core.get_cache(obj_type = "EwItem")
+            if item_cache is not False:
+                targets_data = item_cache.find_entries(criteria={"id_owner": poi.id_poi, "id_server": cmd.guild.id})
+                for itm_dat in targets_data:
+                    itm_dat.update({"id_owner": poi.father_district})
+                    item_cache.set_entry(data=itm_dat)
 
             bknd_core.execute_sql_query("UPDATE items SET {id_owner} = %s WHERE {id_owner} = %s AND {id_server} = %s".format(
                 id_owner=ewcfg.col_id_user,

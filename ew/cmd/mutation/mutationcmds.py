@@ -539,7 +539,7 @@ async def piss(cmd):
         elif cmd.mentions_count > 1:
             response = "Whoa, one water-sports fetishist at a time, pal!"
 
-    if user_data.life_state == ewcfg.life_state_corpse:
+    elif user_data.life_state == ewcfg.life_state_corpse:
         if cmd.mentions_count == 0:
             response = "You grow a ghost dick, unzip it, and just start ghost pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment, and it’s just as perfect as you could have possibly imagined. You love ghost pissing so much."
             if random.randint(1, 100) < 3:

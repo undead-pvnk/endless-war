@@ -1,7 +1,7 @@
 # Global configuration options.
 
 
-version = "v4.0086 Gender Update"
+version = "v4.009 I AM SPEED."
 
 dir_msgqueue = 'msgqueue'
 
@@ -1146,6 +1146,7 @@ cmd_create = cmd_prefix + 'create'
 cmd_forgemasterpoudrin = cmd_prefix + 'forgemasterpoudrin'
 cmd_createitem = cmd_prefix + 'createitem'
 cmd_createmulti = cmd_prefix + 'createmulti'
+cmd_createall = cmd_prefix + 'createall'
 cmd_manualsoulbind = cmd_prefix + 'soulbind'
 cmd_editprops = cmd_prefix + 'editprops'
 cmd_setslime = cmd_prefix + 'setslime'
@@ -1504,6 +1505,8 @@ cmd_display_states = cmd_prefix + 'displaystates'
 cmd_press_button = cmd_prefix + 'press'
 cmd_call_elevator = cmd_prefix + 'callelevator'
 cmd_addstatuseffect = cmd_prefix + 'addstatuseffect'
+cmd_log_caches = cmd_prefix + 'cache'
+cmd_toggle_caches = cmd_prefix + 'togglecache'
 # SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
@@ -3163,6 +3166,8 @@ durability_items = [
     item_id_gaiaseedpack_steelbeans,
     item_id_gaiaseedpack_aushucks
 ]
+
+all_item_ids = []
 
 vendor_dojo = "Dojo"
 
@@ -5782,97 +5787,47 @@ def set_client(cl):
     return client_ref
 
 
+"""
+    Default settings for the cache
+"""
+
+
+cacheable_types = ["EwItem"]
+
+autoload_types = ["EwItem"]
+
+obj_type_to_identifiers = {
+    "EwItem": [{"id_item", "id_entry"}],
+    # "EwPlayer": [{"id_user", "id_entry"}],
+    # "EwUser": [
+    #    {"id_user", "id_entry"},
+    #    {"id_server"}
+    # ],
+}
+
+obj_type_to_nested_props = {
+    "EwItem": ["item_props"],
+    # "EwEnemy": ["enemy_props"],
+}
+
 # scream = ""
 # for i in range(1, 10000):
 #     scream += "A"
 #     
 # print(scream)
 
-try:
-    from ew.cmd import debug as ewdebug
-except:
-    from ew.cmd import debug_dummy as ewdebug
-
-
-debugroom = ewdebug.debugroom
-debugroom_short = ewdebug.debugroom_short
-
-cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
-cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
-cmd_debug3 = cmd_prefix + ewdebug.cmd_debug3
-cmd_debug4 = cmd_prefix + ewdebug.cmd_debug4
-# debug5 = ewdebug.debug5
-cmd_debug6 = cmd_prefix + ewdebug.cmd_debug6
-cmd_debug7 = cmd_prefix + ewdebug.cmd_debug7
-cmd_debug8 = cmd_prefix + ewdebug.cmd_debug8
-cmd_debug9 = cmd_prefix + ewdebug.cmd_debug9
-
-cmd_debug11 = cmd_prefix + ewdebug.cmd_debug11
-
-
-"""    /*"rpcity": {
-        "id_poi": "rpcity",
-        "alias": [
-            "rp",
-            "rp city",
-            "roleplay city",
-            "rpc",
-            "costumestore",
-            "costume"
-        ],
-        "str_name": "RP City",
-        "str_desc": "This place gives you the fucking creeps. A run-down shell of its former self, the RP City store has been long forgotten by most of the residents of NLACakaNM, but every Double Halloween, it somehow comes crawling back. All the amenities and costumes are ragged and decrepit, but it seems there's still a fresh supply of costume creation kits. Oh yeah, the register is also manned by a ghost, because why wouldn't it be. He doesn't seem to mind you browsing though, you figure he's just here to collect a paycheck. Such is life... er... the afterlife, rather.",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "rp-city",
-        "role": "RP City",
-        "major_role": "littlechernobyl_major",
-        "minor_role": "nullminorrole",
-        "permissions": {
-            "rpcity": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": false,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [
-            "RP City"
-        ],
-        "property_class": "",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": true,
-        "is_apartment": false,
-        "is_street": false,
-        "mother_districts": [
-            "littlechernobyl"
-        ],
-        "father_district": "",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": false,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": true,
-        "max_degradation": 10000,
-        "neighbors": {
-            "littlechernobyl": 20
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Little_Chernobyl#RP_City"
-    },*/"""
+debugroom = None
+debugroom_short = None
+debugpiers = None
+debugfish_response = None
+debugfish_goal = None
+cmd_debug1 = None
+cmd_debug2 = None
+cmd_debug3 = None
+cmd_debug4 = None
+# debug5 = None
+cmd_debug6 = None
+cmd_debug7 = None
+cmd_debug8 = None
+cmd_debug9 = None
 
