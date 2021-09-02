@@ -101,7 +101,8 @@ class EwItem:
                         self.persist()
 
                     self.update_format()
-                    self.update_name()
+                    if len(self.item_props) > 0:
+                        self.update_name()
                     bknd_core.cache_data(obj = self)
 
                 finally:
@@ -550,6 +551,7 @@ def item_create(
                 if item_props != None:
                     item_inst.item_props.update(item_props)
 
+                item_inst.update_name()
                 item_inst.persist()
 
             conn.commit()
