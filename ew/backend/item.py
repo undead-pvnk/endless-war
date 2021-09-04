@@ -100,9 +100,8 @@ class EwItem:
                     if self.template == "-2":
                         self.persist()
 
-                    self.update_format()
-                    if len(self.item_props) > 0:
-                        self.update_name()
+
+                    self.update_name()
                     bknd_core.cache_data(obj = self)
 
                 finally:
@@ -193,224 +192,12 @@ class EwItem:
             bknd_core.databaseClose(conn_info)
 
     def update_name(self):
-        if self.name in ["", None]:
-            itm_def = static_items.item_def_map.get(self.item_type)
-            name = self.name
-            if itm_def is not None:
-                name = itm_def.str_name
-                # Name requires variable substitution. Look up the item properties.
-                if name.find('{') >= 0:
-
-                    if self.id_item >= 0:
-                        name = name.format_map(self.item_props)
-
-                        if name.find('{') >= 0:
-                            try:
-                                name = name.format_map(self.item_props)
-                            except:
-                                pass
-                        # print("Exception caught in ewitem -- Item might have brackets inside name.")
-                        # If a key error comes from here, it's likely that an item somehow got a { symbol placed inside its name
-                        # Normally curly brackets are used for renaming an item based on what comes from item_def, such as {item_name}
-                        # Therefore, in most circumstances we can ignore when a key error comes from here, since that item has already been given a name.
-
-            # if a weapon has no name show its type instead
-            if name in ["", None] and self.item_type == ewcfg.it_weapon:
-                name = self.item_props.get("weapon_type")
-
-            if name in ["", None]:
-                name = "This mf don't got a name"
-
-            self.name = name
-
-
-    def update_format(self):
-        if self.item_type == 'slimepoudrin':
-            item_type = ewcfg.it_item
-            self.item_type = item_type
-            for item in static_items.item_list:
-                if item.context == "poudrin":
-                    item_props = {
-                        'id_item': item.id_item,
-                        'context': item.context,
-                        'item_name': item.str_name,
-                        'item_desc': item.str_desc
-                    }
-            item_def = static_items.item_def_map.get(item_type)
-            self.item_props.update(item_def.item_props)
-            self.item_props.update(item_props)
-            self.persist()
-
-            ewutils.logMsg('Updated poudrin to new format: {}'.format(self.id_item))
-
-        if self.item_type == ewcfg.it_cosmetic:
-            item_type = ewcfg.it_cosmetic
-            self.item_type = item_type
-
-            if 'fashion_style' not in self.item_props.keys():
-                if self.item_props.get('id_cosmetic') == 'soul':
-                    self.item_props = {
-                        'id_cosmetic': self.item_props['id_cosmetic'],
-                        'cosmetic_name': self.item_props['cosmetic_name'],
-                        'cosmetic_desc': self.item_props['cosmetic_desc'],
-                        'str_onadorn': ewcfg.str_soul_onadorn,
-                        'str_unadorn': ewcfg.str_soul_unadorn,
-                        'str_onbreak': ewcfg.str_soul_onbreak,
-                        'rarity': ewcfg.rarity_patrician,
-                        'attack': 6,
-                        'defense': 6,
-                        'speed': 6,
-                        'ability': None,
-                        'durability': ewcfg.soul_durability,
-                        'size': 6,
-                        'fashion_style': ewcfg.style_cool,
-                        'freshness': 10,
-                        'adorned': 'false',
-                        'user_id': self.item_props['user_id']
-                    }
-                elif self.item_props.get('id_cosmetic') == 'scalp':
-                    self.item_props = {
-                        'id_cosmetic': self.item_props['id_cosmetic'],
-                        'cosmetic_name': self.item_props['cosmetic_name'],
-                        'cosmetic_desc': self.item_props['cosmetic_desc'],
-                        'str_onadorn': ewcfg.str_generic_onadorn,
-                        'str_unadorn': ewcfg.str_generic_unadorn,
-                        'str_onbreak': ewcfg.str_generic_onbreak,
-                        'rarity': ewcfg.rarity_plebeian,
-                        'attack': 1,
-                        'defense': 0,
-                        'speed': 0,
-                        'ability': None,
-                        'durability': ewcfg.generic_scalp_durability,
-                        'size': 1,
-                        'fashion_style': ewcfg.style_cool,
-                        'freshness': 0,
-                        'adorned': 'false',
-                    }
-                elif self.item_props.get('rarity') == ewcfg.rarity_princeps:
-
-                    # TODO: Make princeps have custom stats, etc. etc.
-                    current_name = self.item_props.get('cosmetic_name')
-                    current_desc = self.item_props.get('cosmetic_desc')
-
-                    print("Updated Princep '{}' for user with ID {}".format(current_name, self.id_owner))
-
-                    self.item_props = {
-                        'id_cosmetic': 'princep',
-                        'cosmetic_name': current_name,
-                        'cosmetic_desc': current_desc,
-                        'str_onadorn': ewcfg.str_generic_onadorn,
-                        'str_unadorn': ewcfg.str_generic_unadorn,
-                        'str_onbreak': ewcfg.str_generic_onbreak,
-                        'rarity': ewcfg.rarity_princeps,
-                        'attack': 3,
-                        'defense': 3,
-                        'speed': 3,
-                        'ability': None,
-                        'durability': ewcfg.base_durability * 100,
-                        'size': 1,
-                        'fashion_style': ewcfg.style_cool,
-                        'freshness': 100,
-                        'adorned': 'false',
-                    }
-
-                    pass
-                elif self.item_props.get('context') == 'costume':
-
-                    self.item_props = {
-                        'id_cosmetic': 'dhcostume',
-                        'cosmetic_name': self.item_props['cosmetic_name'],
-                        'cosmetic_desc': self.item_props['cosmetic_desc'],
-                        'str_onadorn': ewcfg.str_generic_onadorn,
-                        'str_unadorn': ewcfg.str_generic_unadorn,
-                        'str_onbreak': ewcfg.str_generic_onbreak,
-                        'rarity': ewcfg.rarity_plebeian,
-                        'attack': 1,
-                        'defense': 1,
-                        'speed': 1,
-                        'ability': None,
-                        'durability': ewcfg.base_durability * 100,
-                        'size': 1,
-                        'fashion_style': ewcfg.style_cute,
-                        'freshness': 0,
-                        'adorned': 'false',
-                    }
-                elif self.item_props.get('id_cosmetic') == 'cigarettebutt':
-                    self.item_props = {
-                        'id_cosmetic': 'cigarettebutt',
-                        'cosmetic_name': self.item_props['cosmetic_name'],
-                        'cosmetic_desc': self.item_props['cosmetic_desc'],
-                        'str_onadorn': ewcfg.str_generic_onadorn,
-                        'str_unadorn': ewcfg.str_generic_unadorn,
-                        'str_onbreak': ewcfg.str_generic_onbreak,
-                        'rarity': ewcfg.rarity_plebeian,
-                        'attack': 2,
-                        'defense': 0,
-                        'speed': 0,
-                        'ability': None,
-                        'durability': ewcfg.base_durability / 2,
-                        'size': 1,
-                        'fashion_style': ewcfg.style_cool,
-                        'freshness': 5,
-                        'adorned': 'false',
-                    }
-
-                else:
-                    # print('ITEM PROPS: {}'.format(item_data.item_props))
-
-                    item = cosmetics.cosmetic_map.get(self.item_props.get('id_cosmetic'))
-
-                    if item == None:
-                        if self.item_props.get('id_cosmetic') == None:
-                            print('Item {} lacks an id_cosmetic attribute. Formatting now...'.format(self.id_item))
-                            placeholder_id = 'oldcosmetic'
-                        else:
-                            print('Item {} has an invlaid id_cosmetic of {}. Formatting now...'.format(
-                                self.item_props, self.item_props.get('id_cosmetic')))
-                            placeholder_id = self.item_props.get('id_cosmetic')
-
-                        self.item_props = {
-                            'id_cosmetic': placeholder_id,
-                            'cosmetic_name': self.item_props.get('cosmetic_name'),
-                            'cosmetic_desc': self.item_props.get('cosmetic_desc'),
-                            'str_onadorn': ewcfg.str_generic_onadorn,
-                            'str_unadorn': ewcfg.str_generic_unadorn,
-                            'str_onbreak': ewcfg.str_generic_onbreak,
-                            'rarity': ewcfg.rarity_plebeian,
-                            'attack': 1,
-                            'defense': 1,
-                            'speed': 1,
-                            'ability': None,
-                            'durability': ewcfg.base_durability,
-                            'size': 1,
-                            'fashion_style': ewcfg.style_cool,
-                            'freshness': 0,
-                            'adorned': 'false',
-                        }
-
-                    else:
-
-                        self.item_props = {
-                            'id_cosmetic': item.id_cosmetic,
-                            'cosmetic_name': item.str_name,
-                            'cosmetic_desc': item.str_desc,
-                            'str_onadorn': item.str_onadorn if item.str_onadorn else ewcfg.str_generic_onadorn,
-                            'str_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
-                            'str_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
-                            'rarity': item.rarity if item.rarity else ewcfg.rarity_plebeian,
-                            'attack': 0,
-                            'defense': 0,
-                            'speed': 0,
-                            'ability': item.ability if item.ability else None,
-                            'durability': item.durability if item.durability else ewcfg.base_durability,
-                            'size': item.size if item.size else 1,
-                            'fashion_style': item.style if item.style else ewcfg.style_cool,
-                            'freshness': item.freshness if item.freshness else 0,
-                            'adorned': 'false',
-                        }
-
-                self.persist()
-                ewutils.logMsg('Updated cosmetic to new format: {}'.format(self.id_item))
+        if self.name == "":
+            for key, value in self.item_props.items():
+                if key in ["item_name", "food_name", "cosmetic_name", "weapon_name", "furniture_name"]:
+                    self.name = value
+            if self.name == "" and "weapon_type" in self.item_props.keys():
+                self.name = self.item_props.get("weapon_type")
 
 
 
@@ -1490,24 +1277,24 @@ def get_weaponskill(user_data):
 """ Loads every item in the database into the cache. Returns true if successful, otherwise false. """
 
 def load_items_cache():
-    #try:
-    # Grab the ID of every extant item
-    results = bknd_core.execute_sql_query("SELECT {id_item} FROM items".format(id_item=ewcfg.col_id_item))
+    try:
+        # Grab the ID of every extant item
+        results = bknd_core.execute_sql_query("SELECT {id_item} FROM items".format(id_item=ewcfg.col_id_item))
 
-    # Initialize an EwItem for each returned ID
-    tracker = 0
-    for row in results:
-        tracker += 1
-        EwItem(id_item=row[0])
-        if tracker % 1000 == 0:
-            ewutils.logMsg("Loaded {} EwItems into cache.".format(tracker))
+        # Initialize an EwItem for each returned ID
+        tracker = 0
+        for row in results:
+            tracker += 1
+            EwItem(id_item=row[0])
+            if tracker % 1000 == 0:
+                ewutils.logMsg("Loaded {} EwItems into cache.".format(tracker))
 
-    # Tell the client it didn't error out halfway
-    return True
+        # Tell the client it didn't error out halfway
+        return True
 
-    #except:
-    #    ewutils.logMsg("Failed to load all items from database into cache.")
-    #    return False
+    except:
+        ewutils.logMsg("Failed to load all items from database into cache.")
+        return False
 
 
 bknd_core.cache_type_to_load_fn.update({"EwItem": load_items_cache})

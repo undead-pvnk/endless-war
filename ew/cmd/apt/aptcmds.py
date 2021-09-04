@@ -1118,7 +1118,8 @@ async def apt_look(cmd):
 
     market_data = EwMarket(id_server=playermodel.id_server)
     clock_data = ewutils.weather_txt(market_data)
-    furn_response = furn_response.format(time=clock_data[16:20])
+    clock_data = clock_data[16:20]
+    furn_response = furn_response.format(time=clock_data)
     resp_cont.add_channel_response(cmd.message.channel, furn_response)
 
     response = ""
