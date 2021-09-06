@@ -142,7 +142,7 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None, secret_
 
 # Determines the size of the fish
 def gen_fish_size(mastery_bonus = 0):
-    size_number = random.randint(mastery_bonus * 5, 100)
+    size_number = random.randint(min(mastery_bonus * 5, 100), 100)
 
     if size_number >= 0 and size_number < 6:  # 5%
         size = ewcfg.fish_size_miniscule
