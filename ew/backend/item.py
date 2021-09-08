@@ -195,7 +195,7 @@ class EwItem:
     def update_name(self):
         name_assigned = False
         if self.id_item > 0:
-            name_prop_list = ["item_name", "food_name", "cosmetic_name", "weapon_name", "furniture_name"]
+            name_prop_list = ["item_name", "food_name", "cosmetic_name", "weapon_name", "furniture_name", "title"]
             if self.item_props is not None:
                 for name_prop in name_prop_list:
                     if name_prop in self.item_props.keys():

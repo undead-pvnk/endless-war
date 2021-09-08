@@ -876,9 +876,9 @@ def can_slimeoid_battle(challenger: EwUser = None, challengee = None, challenger
             elif challenger_data.poi != challengee_data.poi:
                 response = "Both slimeoid trainers must be in the same place."
             
-            elif challenger_data.slimes < bet:
+            elif challenger_data.slimes < bet or challenger_data.slimes < 0:
                 response = "You don't have enough slime!"
-            elif challengee_data.slimes < bet:
+            elif challengee_data.slimes < bet or challengee_data.slimes < 0:
                 response = "They don't have enough slime!"
 
             elif challengee_data.life_state == ewcfg.life_state_corpse:
