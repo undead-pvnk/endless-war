@@ -1305,10 +1305,10 @@ async def clock_tick_loop(id_server = None, force_active = False):
 
                     ewutils.logMsg('The time is now {}.'.format(market_data.clock))
 
-                    market_data.persist()
                     ewutils.logMsg("Updating stocks...")
                     await market_utils.update_stocks(id_server)
-                    
+                    market_data.persist()
+
                     ewutils.logMsg("Handling weather cycle...")
                     await weather_utils.weather_cycle(id_server)
 

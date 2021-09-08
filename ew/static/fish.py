@@ -354,7 +354,7 @@ fish_list = [
         rarity = "uncommon",
         catch_time = None,
         catch_weather = None,
-        str_desc = "This fish looks quite tired of your bullshit",
+        str_desc = "This fish looks quite tired of your bullshit.",
         slime = None,
     ),
     EwFish(
@@ -849,7 +849,7 @@ fish_list = [
         rarity = "promo",
         catch_time = None,
         catch_weather = "foggy",
-        str_desc = "This one looks fucking terrifying. I'm serious",
+        str_desc = "This one looks fucking terrifying. I'm serious.",
         slime = "saltwater",
     ),
     EwFish(
