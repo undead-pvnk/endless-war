@@ -1345,9 +1345,11 @@ async def clock_tick_loop(id_server = None, force_active = False):
 
                     ewutils.logMsg("Finished clock tick.")  
 
+                    sex_channel = fe_utils.get_channel(server=server, channel_name=ewcfg.channel_stockexchange)
+
                     if market_data.clock == 6 or force_active:
                         response = ' The SlimeCorp Stock Exchange is now open for business.'
-                        await fe_utils.send_message(client, ewcfg.channel_stockexchange, response)
+                        await fe_utils.send_message(client, sex_channel, response)
                         ewutils.logMsg("Started bazaar refresh...")
                         await market_utils.refresh_bazaar(id_server)
                         ewutils.logMsg("...finished bazaar refresh.")
@@ -1362,7 +1364,7 @@ async def clock_tick_loop(id_server = None, force_active = False):
 
                     elif market_data.clock == 20:
                         response = ' The SlimeCorp Stock Exchange has closed for the night.'
-                        await fe_utils.send_message(client, ewcfg.channel_stockexchange, response)
+                        await fe_utils.send_message(client, sex_channel, response)
                   
                 await asyncio.sleep(60)
     except:

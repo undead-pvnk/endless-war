@@ -152,8 +152,16 @@ async def smelt(cmd):
                     item = random.choice(possible_results)
 
                     if not bknd_item.check_inv_capacity(user_data=user_data, item_type=item.item_type):
-                        response = "You can't carry any more {}s.".format(item.item_type)
-                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                        # Check for ingredients of the same type as the target item
+                        same_type_count = 0
+                        for ingred_id in owned_ingredients:
+                            ingredient_it = EwItem(id_item=ingred_id)
+                            if ingredient_it.item_type == item.item_type:
+                                same_type_count += 1
+                        # Allow people to craft items over the type limit if it lowers the overall number of that type
+                        if same_type_count <= 1:
+                            response = "You can't carry any more {}s.".format(item.item_type)
+                            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
                     item_props = itm_utils.gen_item_props(item)
 
