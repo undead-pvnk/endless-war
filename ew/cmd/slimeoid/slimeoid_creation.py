@@ -305,7 +305,10 @@ async def change_stat(cmd):
             # Go to final response
 
         # Check if player is trying to lower a stat below zero
-        #if ((slimeoid_data.atk + moxie_mod < 0) or (slimeoid_data.defense + grit_mod < 0) or (slimeoid_data.intel + chutzpah_mod < 0)):
+        elif ((slimeoid_data.atk + moxie_mod < 0) or (slimeoid_data.defense + grit_mod < 0) or (slimeoid_data.intel + chutzpah_mod < 0)):
+            response = f"You cannot reduce your slimeoid's {changed_stat} any further."
+            response += stat_breakdown_str(slimeoid_data.atk, slimeoid_data.defense, slimeoid_data.intel, available_points - 1)
+            
         elif (available_points >= slimeoid_data.level):
             response = f"You cannot reduce your slimeoid's {changed_stat} any further."
             response += stat_breakdown_str(slimeoid_data.atk, slimeoid_data.defense, slimeoid_data.intel, available_points - 1)

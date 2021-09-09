@@ -56,14 +56,16 @@ async def dissolveslimeoid(cmd):
         if district_data.is_degraded():
             response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        if slimeoid.life_state == ewcfg.slimeoid_state_forming:
-            response = "You hit a large red button with a white X on it. Immediately a buzzer goes off and the half-formed body of what would have been your new Slimeoid is flushed out of the gestation tank and down a drainage tube, along with your poudrin and slime. What a waste."
+            
         else:
-            brain = sl_static.brain_map.get(slimeoid.ai)
-            response = brain.str_dissolve.format(
-                slimeoid_name=slimeoid.name
-            )
-            response += "{}".format(ewcfg.emote_slimeskull)
+            if slimeoid.life_state != ewcfg.slimeoid_state_forming:
+                brain = sl_static.brain_map.get(slimeoid.ai)
+                response = brain.str_dissolve.format(
+                    slimeoid_name=slimeoid.name
+                )
+                response += "{}".format(ewcfg.emote_slimeskull)
+            else:
+                response = "You hit a large red button with a white X on it. Immediately a buzzer goes off and the half-formed body of what would have been your new Slimeoid is flushed out of the gestation tank and down a drainage tube, along with your poudrin and slime. What a waste."                
 
             cosmetics = bknd_item.inventory(
                 id_user=cmd.message.author.id,
