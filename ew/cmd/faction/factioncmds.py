@@ -116,6 +116,10 @@ async def store(cmd):
 async def take(cmd):
     user_data = EwUser(member=cmd.message.author)
     response = ""
+    admin = 0
+    if cmd.message.author.guild_permissions.administrator:
+        admin = 1
+
 
     poi = poi_static.id_to_poi.get(user_data.poi)
     if poi.community_chest == None:
@@ -128,7 +132,7 @@ async def take(cmd):
 
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-    item_sought = bknd_item.find_item(item_search=item_search, id_user=poi.community_chest, id_server=cmd.guild.id if cmd.guild is not None else None)
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=poi.community_chest, id_server=cmd.guild.id if cmd.guild is not None else None, admin = admin)
 
     if item_sought:
         if item_sought.get('item_type') == ewcfg.it_food:
