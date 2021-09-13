@@ -519,6 +519,8 @@ async def slimeoidbattle(cmd):
     # Start game
     if accepted == 1:
         # Don't change slimes unless we realllllyyyyyy have to
+        # Winnings needs to be established in order for this to work.
+        winnings = 0
         if bet != 0:
             challengee.change_slimes(n=-bet, source=ewcfg.source_slimeoid_betting)
             challenger.change_slimes(n=-bet, source=ewcfg.source_slimeoid_betting)
