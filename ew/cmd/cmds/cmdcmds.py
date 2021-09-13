@@ -3771,6 +3771,19 @@ async def print_cache(cmd):
     if not cmd.message.author.guild_permissions.administrator:
         return await cmd_utils.fake_failed_command(cmd)
 
+    if len(cmd.tokens) > 1:
+        target_id = cmd.tokens[1]
+        cache = bknd_core.get_cache("EwItem")
+
+        if cache is not False:
+            target = cache.get_entry(unique_vals={"id_item": target_id})
+            if target is not False:
+                ewutils.logMsg("Target Item Data: \n{}".format(target))
+                return
+
+        ewutils.logMsg("No item with specified id found.")
+        return
+
     typelog = "*{}*: Current cache types are: \n".format(cmd.message.author.display_name)
     datalog = ""
 
@@ -3778,12 +3791,15 @@ async def print_cache(cmd):
         typelog += "    {} with {} entries\n".format(cache.entry_type, len(cache.entries))
         datalog += "\n{} Cache contains:\n".format(cache.entry_type)
 
-        entry_iter = 0
-        for entry_id, entry in cache.entries.items():
-            datalog += "    Identifier: {}, Data: {}\n".format(entry_id, entry)
-            entry_iter += 1
-            if entry_iter % 1000 == 0:
-                ewutils.logMsg("Building string for cache, this may take a bit...")
+        if len(cache.entries) < 5000:
+            entry_iter = 0
+            for entry_id, entry in cache.entries.items():
+                datalog += "    Identifier: {}, Data: {}\n".format(entry_id, entry)
+                entry_iter += 1
+                if entry_iter % 1000 == 0:
+                    ewutils.logMsg("Building string for cache, this may take a bit...")
+        else:
+            datalog += "    Over 5000 entries. Please specify one.\n"
 
     ewutils.logMsg(typelog)
     ewutils.logMsg(datalog)
