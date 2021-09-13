@@ -3620,7 +3620,7 @@ quadrants_comments_relationship = [
     "How embarrassing!",
     "Epic.",
     "Have you no shame...?",
-    "Lke that's gonna last."
+    "Like that's gonna last."
 ]
 
 # list of stock ids
