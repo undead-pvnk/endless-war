@@ -452,6 +452,17 @@ food_list = [
         str_desc = "A grilled 12oz sirloin steak and similarly sized rock lobster tail, served with scalloped potatoes, broccoli, asparagus, shallot herb butter alongside a portrait of the chef that was autographed and kissed with a vibrant red lipstick. What, does he think he's better than you? You break the portrait with your fist and your hand starts to bleed.",
         time_expir = 43200,
     ),
+        EwFood(
+        id_food = "sushi",
+        alias = ['sushi', 'sus', 'rolls', 'sush', ],
+        recover_hunger = 420,
+        price = 4500,
+        str_name = "a plate of sushi",
+        vendors = ['Red Mobster Seafood', 'vending machine'],
+        str_eat = "Sliding the sushi into your maw you feel the week old rice stick to the roof of your mouth as you turn the slimy raw fish into mush with your molars, it feels a bit oily running down your throat but you wash it down with soy sauce.",
+        str_desc = "On the small plate you have in front of you are three pieces of sushi each with a different characteristic, the one on the left looks a little fuzzy with green spots decorating the rice, the one in the middle would look perfectly normal if it wasn’t for the strange juices pooling under it, the last piece on the right looks like it’s never seen a refrigerator and has hardened so much you think you might break your teeth eating it. Comes with an expired packet of soy sauce.",
+        time_expir = 43200,
+    ),
     EwFood(
         id_food = "kingpincrab",
         alias = ['crab', 'kingpin', 'kp', 'crb', 'krb', 'pin'],
@@ -603,8 +614,8 @@ food_list = [
         price = 100,
         str_name = "a glass of milk",
         vendors = ["Smoker's Cough", 'bazaar'],
-        str_eat = "You take a swig of a nice, cold glass of whole milk and your palette is instantly clear of any sugary or syrupy foods you may have been eating. You are left in total cow induced euphoria.",
-        str_desc = "A simple glass of milk. Looks kinda,,, Sussy,:smirk::smirk:,, am i right?? Like,:smirk::smirk:, sussy???:smirk:? SUSSY BAKA:cat::milk::cat::milk::smirk::smirk:???:rofl::rofl::joy::joy::astronaut::astronaut::smirk::smirk::smirk::smirk::smirk::smirk::smirk::smirk::smirk::smirk::smirk:?? ",
+        str_eat = "You take a swig of a nice, cold glass of whole milk and your palette is instantly clear of any sugary or syrupy foods you may have been eating. You are left in total slime cow induced euphoria.",
+        str_desc = "A simple glass of milk. Nothing more, nothing less.",
         time_expir = 43200,
     ),
     EwFood(
