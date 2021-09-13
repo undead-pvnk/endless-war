@@ -1080,14 +1080,20 @@ def find_item(item_search = None, id_user = None, id_server = None, item_type_fi
         items = inventory(id_user=id_user, id_server=id_server, item_type_filter=item_type_filter)
         item_sought = None
 
+        item_search_list = list(map(lambda it: {
+            "id_item": it.get("id_item"),
+            "name": it.get("name"),
+            "original": it
+        }, items))
+
         # find the first (i.e. the oldest) item that matches the search
-        for item in items:
+        for item in item_search_list:
             item_name = ewutils.flattenTokenListToString(item.get('name'))
             if item.get('id_item') == item_search_int or item_name == item_search:
-                item_sought = item
+                item_sought = item.get("original")
                 break
             if item_sought == None and item_search in item_name:
-                item_sought = item
+                item_sought = item.get("original")
 
         # Trust me just this once, this was necessary. use createall to make a huge item store and snag or scavenge
         # Open task manager at look at memory usage after ratelimiting the bot. It's insane
