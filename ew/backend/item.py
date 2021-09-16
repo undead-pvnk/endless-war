@@ -97,6 +97,8 @@ class EwItem:
                         # Item not found.
                         self.id_item = -1
 
+                    self.fix_template()
+
                     if self.template == "-2":
                         self.persist()
 
@@ -115,24 +117,7 @@ class EwItem:
     def persist(self):
 
         self.update_name()
-
-        if self.template == "-2":
-            if self.item_type == ewcfg.it_item:
-                self.template = self.item_props.get("id_item", "bad general item id")
-            elif self.item_type == ewcfg.it_food:
-                self.template = self.item_props.get("id_food", "bad food id")
-            elif self.item_type == ewcfg.it_weapon:
-                self.template = self.item_props.get("weapon_type", "bad weapon id")
-            elif self.item_type == ewcfg.it_cosmetic:
-                self.template = self.item_props.get("id_cosmetic", "bad cosmetic id")
-            elif self.item_type == ewcfg.it_furniture:
-                self.template = self.item_props.get("id_furniture", "bad furniture id")
-            elif self.item_type == ewcfg.it_book:
-                self.template = "player book"
-            elif self.item_type == ewcfg.it_medal:
-                self.template = "MEDAL ITEM????"  # p sure these are fake news
-            elif self.item_type == ewcfg.it_questitem:
-                self.template = "QUEST ITEM????"
+        self.fix_template()
 
         # Fix the expiration time before caching
         self.time_expir = self.time_expir if self.time_expir is not None else self.item_props['time_expir'] if 'time_expir' in self.item_props.keys() else 0
@@ -216,6 +201,32 @@ class EwItem:
                 else:
                     self.name = ""
 
+    def fix_template(self):
+        bad_templates = ["-2", "bad general item id", "bad food id", "bad weapon id", "bad cosmetic id", "bad furniture id"]
+
+        if self.template in bad_templates:
+            if self.item_type == ewcfg.it_item:
+                if "id_name" in self.item_props.keys():
+                    self.template = self.item_props.get("id_name", "bad general item id")
+                elif "id_item" in self.item_props.keys():
+                    self.template = self.item_props.get("id_item", "bad general item id")
+                else:
+                    self.template = "bad general item id"
+            elif self.item_type == ewcfg.it_food:
+                self.template = self.item_props.get("id_food", "bad food id")
+            elif self.item_type == ewcfg.it_weapon:
+                self.template = self.item_props.get("weapon_type", "bad weapon id")
+            elif self.item_type == ewcfg.it_cosmetic:
+                self.template = self.item_props.get("id_cosmetic", "bad cosmetic id")
+            elif self.item_type == ewcfg.it_furniture:
+                self.template = self.item_props.get("id_furniture", "bad furniture id")
+            elif self.item_type == ewcfg.it_book:
+                self.template = "player book"
+            elif self.item_type == ewcfg.it_medal:
+                self.template = "MEDAL ITEM????"  # p sure these are fake news
+            elif self.item_type == ewcfg.it_questitem:
+                self.template = "QUEST ITEM????"
+
 
 """
 	Finds the amount of Slime Poudrins inside your inventory.
@@ -296,17 +307,22 @@ def item_create(
         return
 
     if item_type == ewcfg.it_item:
-        template_id = item_props.get("id_name", "bad general item id")
+        if "id_name" in item_props.keys():
+            template_id = item_props.get("id_name", "bad general item id")
+        elif "id_item" in item_props.keys():
+            template_id = item_props.get("id_item", "bad general item id")
+        else:
+            template_id = "bad general item id"
     elif item_type == ewcfg.it_food:
         template_id = item_props.get("id_food", "bad food id")
     elif item_type == ewcfg.it_weapon:
-        template_id = item_props.get("weapon_type", "bad food id")
+        template_id = item_props.get("weapon_type", "bad weapon id")
     elif item_type == ewcfg.it_cosmetic:
-        template_id = item_props.get("id_cosmetic", "bad food id")
+        template_id = item_props.get("id_cosmetic", "bad cosmetic id")
     elif item_type == ewcfg.it_furniture:
-        template_id = item_props.get("id_furniture ", "bad furniture id")
+        template_id = item_props.get("id_furniture", "bad furniture id")
     elif item_type == ewcfg.it_book:
-        template_id = item_props.get("id_food", "bad food id")
+        template_id = "player book"
     elif item_type == ewcfg.it_medal:
         template_id = "MEDAL ITEM????"  # p sure these are fake news
     elif item_type == ewcfg.it_questitem:
