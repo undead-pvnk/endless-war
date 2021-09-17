@@ -227,6 +227,9 @@ class EwItem:
             elif self.item_type == ewcfg.it_questitem:
                 self.template = "QUEST ITEM????"
 
+            if self.template not in bad_templates:
+                self.persist()
+
 
 """
 	Finds the amount of Slime Poudrins inside your inventory.
