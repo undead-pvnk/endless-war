@@ -3853,3 +3853,23 @@ async def toggle_cache(cmd):
             response += " Structure of command is !togglecache (1 for on or 0 for off) (name of object type)."
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def verify_cache(cmd):
+    # Only allow admins to use this
+    if not cmd.message.author.guild_permissions.administrator:
+        return await cmd_utils.fake_failed_command(cmd)
+    
+    # Get items how find_item would
+    server_id = cmd.guild.id
+    server_items = bknd_item.inventory(id_server=server_id)
+
+    # Iterate through all items
+    for item_data in server_items:
+        # log the ID and data if it fails where find_item would
+        try:
+            flat_name = ewutils.flattenTokenListToString(item_data.get("name"))
+        except:
+            ewutils.logMsg("Item {}'s name failed flattening. Data: \n{}".format(item_data.get("id_item"), item_data))
+
+    return
