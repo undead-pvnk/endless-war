@@ -121,16 +121,12 @@ async def setOffAlarms(id_server = None):
         for brick in brickinv:
             brick_obj = EwItem(id_item=brick.get('id_item'))
             id_user = brick_obj.id_owner.replace("brickshit", "")
-            print(id_user)
             brick_user = EwUser(id_server=id_server, id_user=id_user)
             brick_member = server.get_member(user_id=int(id_user))
             poi = poi_static.id_to_poi.get(brick_user.poi)
             channel_brick = fe_utils.get_channel(server, poi.channel)
-            print('pass1')
             if brick_member != None:
-                print('pass2')
                 if brick_member:
-                    print('pass3')
                     try:
                         await fe_utils.send_message(client, channel_brick, fe_utils.formatMessage(brick_member, "UUUUUUUUUUGGGGGGGGGGGGHHHHHHHHHHH... OOOOOOOOOOOOOOOOOAAAAAAAAAAAAAAAHHHHH th-tunk. You just shit a brick. Congratulations?"))
                         brick_obj.id_owner = poi.id_poi

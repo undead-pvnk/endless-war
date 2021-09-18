@@ -970,7 +970,7 @@ async def purify(cmd):
 
                 user_data.persist()
 
-                response += "\n\nYou have purified yourself and are now a level 1 slimeboi.\nThe bond you've forged with your weapon has grown weaker as a result."
+                response += "\n\nYou have purified yourself and are now a level 1 slime{}.\nThe bond you've forged with your weapon has grown weaker as a result.".format(user_data.gender)
     else:
         response = "Purify yourself how? With what? Your own piss?"
 
@@ -3771,6 +3771,19 @@ async def print_cache(cmd):
     if not cmd.message.author.guild_permissions.administrator:
         return await cmd_utils.fake_failed_command(cmd)
 
+    if len(cmd.tokens) > 1:
+        target_id = cmd.tokens[1]
+        cache = bknd_core.get_cache("EwItem")
+
+        if cache is not False:
+            target = cache.get_entry(unique_vals={"id_item": target_id})
+            if target is not False:
+                ewutils.logMsg("Target Item Data: \n{}".format(target))
+                return
+
+        ewutils.logMsg("No item with specified id found.")
+        return
+
     typelog = "*{}*: Current cache types are: \n".format(cmd.message.author.display_name)
     datalog = ""
 
@@ -3778,12 +3791,15 @@ async def print_cache(cmd):
         typelog += "    {} with {} entries\n".format(cache.entry_type, len(cache.entries))
         datalog += "\n{} Cache contains:\n".format(cache.entry_type)
 
-        entry_iter = 0
-        for entry_id, entry in cache.entries.items():
-            datalog += "    Identifier: {}, Data: {}\n".format(entry_id, entry)
-            entry_iter += 1
-            if entry_iter % 1000 == 0:
-                ewutils.logMsg("Building string for cache, this may take a bit...")
+        if len(cache.entries) < 5000:
+            entry_iter = 0
+            for entry_id, entry in cache.entries.items():
+                datalog += "    Identifier: {}, Data: {}\n".format(entry_id, entry)
+                entry_iter += 1
+                if entry_iter % 1000 == 0:
+                    ewutils.logMsg("Building string for cache, this may take a bit...")
+        else:
+            datalog += "    Over 5000 entries. Please specify one.\n"
 
     ewutils.logMsg(typelog)
     ewutils.logMsg(datalog)
@@ -3837,3 +3853,23 @@ async def toggle_cache(cmd):
             response += " Structure of command is !togglecache (1 for on or 0 for off) (name of object type)."
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def verify_cache(cmd):
+    # Only allow admins to use this
+    if not cmd.message.author.guild_permissions.administrator:
+        return await cmd_utils.fake_failed_command(cmd)
+    
+    # Get items how find_item would
+    server_id = cmd.guild.id
+    server_items = bknd_item.inventory(id_server=server_id)
+
+    # Iterate through all items
+    for item_data in server_items:
+        # log the ID and data if it fails where find_item would
+        try:
+            flat_name = ewutils.flattenTokenListToString(item_data.get("name"))
+        except:
+            ewutils.logMsg("Item {}'s name failed flattening. Data: \n{}".format(item_data.get("id_item"), item_data))
+
+    return

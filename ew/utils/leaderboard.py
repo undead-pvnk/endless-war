@@ -191,7 +191,7 @@ def make_freshness_top_board(server = None):
 
 
 def make_slimeoids_top_board(server = None):
-    board = "{mega} ▓▓▓▓▓ TOP SLIMEOIDS (CLOUT) ▓▓▓▓▓ {mega}\n".format(
+    board = "{mega} ▓▓▓▓▓ TOP SLIMEOIDS (CLOUT) ▓▓▓▓▓ {mega}".format(
         mega="<:megaslime:436877747240042508>"
     )
 
@@ -213,7 +213,7 @@ def make_slimeoids_top_board(server = None):
         data = cursor.fetchall()
         if data != None:
             for row in data:
-                board += "{} `{:_>3} | {}'s {}`\n".format(
+                board += "\n{} `{:_>3} | {}'s {}`".format(
                     ewcfg.emote_blank,
                     row[2],
                     row[0].replace("`", ""),

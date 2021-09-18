@@ -215,6 +215,9 @@ cmd_map = {
     # Used for toggling of caches
     ewcfg.cmd_toggle_caches: cmdcmds.toggle_cache,
 
+    # Verify that the cache is functional
+    ewcfg.cmd_verify_cache: cmdcmds.verify_cache,
+
 }
 
 dm_cmd_map = {

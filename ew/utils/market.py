@@ -37,9 +37,12 @@ async def stock_market_tick(stock_data, id_server):
 
     # Invest/Withdraw effects
     coin_rate = 0
-    stock_at_last_tick = EwStock(id_server=id_server, stock=stock_data.id_stock, timestamp=market_data.time_lasttick)
-    latest_stock = EwStock(id_server=id_server, stock=stock_data.id_stock)
-    total_shares = [latest_stock.total_shares, stock_at_last_tick.total_shares]
+    #stock_at_last_tick = EwStock(id_server=id_server, stock=stock_data.id_stock, timestamp=market_data.time_lasttick)
+    #latest_stock = EwStock(id_server=id_server, stock=stock_data.id_stock)
+    if stock_data.previous_entry != 0:
+        total_shares = [stock_data.total_shares, stock_data.previous_entry[4]]
+    else:
+        total_shares = [stock_data.total_shares, EwStock(id_server=id_server, stock=stock_data.id_stock, timestamp=market_data.time_lasttick).total_shares]
 
     # Add profit bonus.
     profits = company_data.recent_profits

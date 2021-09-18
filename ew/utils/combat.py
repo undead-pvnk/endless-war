@@ -2348,7 +2348,7 @@ class EwUser(EwUserBase):
         new_level = ewutils.level_byslime(self.slimes)
         if new_level > self.slimelevel:
             if self.life_state != ewcfg.life_state_corpse:
-                response += "You have been empowered by slime and are now a level {} slimeboi.".format(new_level)
+                response += "You have been empowered by slime and are now a level {} slime{}.".format(new_level, self.gender)
             for level in range(self.slimelevel + 1, new_level + 1):
                 current_mutations = self.get_mutations()
                 if (level >= self.get_mutation_level() + self.get_mutation_next_level()) and (self.life_state not in [ewcfg.life_state_corpse, ewcfg.life_state_shambler]) and (self.get_mutation_level() < 50):

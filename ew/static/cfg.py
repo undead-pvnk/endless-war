@@ -1507,6 +1507,7 @@ cmd_call_elevator = cmd_prefix + 'callelevator'
 cmd_addstatuseffect = cmd_prefix + 'addstatuseffect'
 cmd_log_caches = cmd_prefix + 'cache'
 cmd_toggle_caches = cmd_prefix + 'togglecache'
+cmd_verify_cache = cmd_prefix + 'verifycache'
 # SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
@@ -3647,7 +3648,7 @@ quadrants_comments_relationship = [
     "How embarrassing!",
     "Epic.",
     "Have you no shame...?",
-    "Lke that's gonna last."
+    "Like that's gonna last."
 ]
 
 # list of stock ids

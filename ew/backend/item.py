@@ -101,6 +101,8 @@ class EwItem:
                     if self.template == "-2":
                         self.persist()
 
+                    #self.update_format()
+
                     self.update_name()
                     bknd_core.cache_data(obj = self)
 
@@ -192,12 +194,28 @@ class EwItem:
             bknd_core.databaseClose(conn_info)
 
     def update_name(self):
-        if self.name == "":
-            for key, value in self.item_props.items():
-                if key in ["item_name", "food_name", "cosmetic_name", "weapon_name", "furniture_name"]:
-                    self.name = value
-            if self.name == "" and "weapon_type" in self.item_props.keys():
-                self.name = self.item_props.get("weapon_type")
+        name_assigned = False
+        if self.id_item > 0:
+            name_prop_list = ["item_name", "food_name", "cosmetic_name", "weapon_name", "furniture_name", "title", "qitem_name" ,"medal_name"]
+            if self.item_props is not None:
+                for name_prop in name_prop_list:
+                    if name_prop in self.item_props.keys():
+                        self.name = self.item_props.get(name_prop)
+                        name_assigned = True
+                if ((not name_assigned) or self.name == "") and "weapon_type" in self.item_props.keys():
+                    self.name = self.item_props.get("weapon_type")
+                    name_assigned = True
+            if not name_assigned:
+                item_def = static_items.item_def_map.get(self.item_type)
+                if item_def is not None:
+                    self.name = item_def.str_name
+                    # This should be followed by variable substitution where neccessary but
+                    # item props arent properly defined with the item defs, and this code should
+                    # only be run if the item has not had props generated and given yet.
+                    # this function should be immediately rerun upon generation of item props
+                    # anyways so this name should never be displayed
+                else:
+                    self.name = ""
 
 
 """
@@ -1066,7 +1084,7 @@ def check_inv_capacity(user_data = None, item_type = None):
 """
 
 
-def find_item(item_search = None, id_user = None, id_server = None, item_type_filter = None):
+def find_item(item_search = None, id_user = None, id_server = None, item_type_filter = None, admin = 0):
     item_sought = None
 
     # search for an ID instead of a name
@@ -1074,19 +1092,24 @@ def find_item(item_search = None, id_user = None, id_server = None, item_type_fi
         item_search_int = int(item_search)
     except:
         item_search_int = None
-
     if item_search:
         items = inventory(id_user=id_user, id_server=id_server, item_type_filter=item_type_filter)
         item_sought = None
 
+        item_search_list = list(map(lambda it: {
+            "id_item": it.get("id_item"),
+            "name": it.get("name"),
+            "original": it
+        }, items))
+
         # find the first (i.e. the oldest) item that matches the search
-        for item in items:
+        for item in item_search_list:
             item_name = ewutils.flattenTokenListToString(item.get('name'))
             if item.get('id_item') == item_search_int or item_name == item_search:
-                item_sought = item
+                item_sought = item.get("original")
                 break
             if item_sought == None and item_search in item_name:
-                item_sought = item
+                item_sought = item.get("original")
 
         # Trust me just this once, this was necessary. use createall to make a huge item store and snag or scavenge
         # Open task manager at look at memory usage after ratelimiting the bot. It's insane
@@ -1291,24 +1314,24 @@ def get_weaponskill(user_data):
 """ Loads every item in the database into the cache. Returns true if successful, otherwise false. """
 
 def load_items_cache():
-    try:
-        # Grab the ID of every extant item
-        results = bknd_core.execute_sql_query("SELECT {id_item} FROM items".format(id_item=ewcfg.col_id_item))
+    #try:
+    # Grab the ID of every extant item
+    results = bknd_core.execute_sql_query("SELECT {id_item} FROM items".format(id_item=ewcfg.col_id_item))
 
-        # Initialize an EwItem for each returned ID
-        tracker = 0
-        for row in results:
-            tracker += 1
-            EwItem(id_item=row[0])
-            if tracker % 1000 == 0:
-                ewutils.logMsg("Loaded {} EwItems into cache.".format(tracker))
+    # Initialize an EwItem for each returned ID
+    tracker = 0
+    for row in results:
+        tracker += 1
+        EwItem(id_item=row[0])
+        if tracker % 1000 == 0:
+            ewutils.logMsg("Loaded {} EwItems into cache.".format(tracker))
 
-        # Tell the client it didn't error out halfway
-        return True
+    # Tell the client it didn't error out halfway
+    return True
 
-    except:
-        ewutils.logMsg("Failed to load all items from database into cache.")
-        return False
+    #except:
+        #ewutils.logMsg("Failed to load all items from database into cache.")
+        #return False
 
 
 bknd_core.cache_type_to_load_fn.update({"EwItem": load_items_cache})
