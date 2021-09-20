@@ -171,7 +171,7 @@ async def attack(cmd, n1_die = None):
         slimes_damage = int(5 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier)  # ten times slime spent, multiplied by both multipliers
 
         # Tool damage is maximized at level 35 but proportional cost remains the same
-        slimes_spent = int(ewutils.slime_bylevel(capped_level) / 30)
+        slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 30)
 
         if user_data.weaponskill < 5:
             hit_chance_mod -= (5 - user_data.weaponskill) / 10
