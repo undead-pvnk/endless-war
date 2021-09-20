@@ -293,8 +293,13 @@ async def attack(cmd, n1_die = None):
                     resp_cont.add_channel_response(cmd.message.channel.name, response)
                     resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
                     await resp_cont.post()
-                    msg = await cmd.client.wait_for('message', timeout=5, check=lambda message: message.author == member)
 
+                    try:
+                        msg = await cmd.client.wait_for('message', timeout=5,
+                                                        check=lambda message: message.author == member)
+                    except asyncio.exceptions.TimeoutError:
+                        msg = None
+                        
                     user_data = EwUser(member=cmd.message.author, data_level=1)
                     shootee_data = EwUser(member=member, data_level=1)
 
