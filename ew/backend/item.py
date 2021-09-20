@@ -1094,12 +1094,8 @@ def find_item(item_search = None, id_user = None, id_server = None, item_type_fi
         item_search_int = int(item_search)
     except:
         item_search_int = None
-    if admin == 1:
-        print("check 1, in function")
     if item_search:
         items = inventory(id_user=id_user, id_server=id_server, item_type_filter=item_type_filter)
-        if admin == 1:
-            print("check 2, inventory successful")
         item_sought = None
 
         item_search_list = list(map(lambda it: {
@@ -1111,8 +1107,6 @@ def find_item(item_search = None, id_user = None, id_server = None, item_type_fi
         # find the first (i.e. the oldest) item that matches the search
         for item in item_search_list:
             item_name = ewutils.flattenTokenListToString(item.get('name'))
-            if admin == 1:
-                print(item_name)
             if item.get('id_item') == item_search_int or item_name == item_search:
                 item_sought = item.get("original")
                 break
