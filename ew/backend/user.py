@@ -109,6 +109,9 @@ class EwUserBase:
         if self.move_speed <= 0:
             self.move_speed = 1
 
+        if self.slimelevel <= 0:
+            self.slimelevel = 1
+
         # self.sap = max(0, min(self.sap, ewutils.sap_max_bylevel(self.slimelevel) - self.hardened_sap))
 
         # self.hardened_sap = max(0, min(self.hardened_sap, ewutils.sap_max_bylevel(self.slimelevel) - self.sap))
