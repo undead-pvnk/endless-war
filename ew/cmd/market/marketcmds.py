@@ -404,14 +404,16 @@ async def museum_donate(cmd):
 
 async def fish_donate(id_item, cmd):
     item_obj = EwItem(id_item=id_item)
-    length = float(item_obj.item_props.get('length'))
+    length = item_obj.item_props.get('length')
     id_fish = item_obj.item_props.get('id_food')
     user_data = EwUser(member=cmd.message.author)
 
     if length is None:
-        length = ewdebug.calc_fish_length(median=ewcfg.fish_size_median[item_obj.item_props.get('size')])
+        length = float((ewcfg.fish_size_range.get(item_obj.item_props.get('size'))[0] + ewcfg.fish_size_range.get(item_obj.item_props.get('size'))[1])/2)
         item_obj.item_props['length'] = length
         item_obj.persist()
+    else:
+        length = float(length)
     current_record = EwRecord(id_server=cmd.guild.id, record_type=id_fish)
     if current_record.record_amount > length:
         response = "\"That's a...rather small specimen, wouldn't you say? We only store the largest aquatic fauna in our exhibit.\""
@@ -432,18 +434,26 @@ async def fish_donate(id_item, cmd):
 
         current_record.id_user = cmd.message.author.id
 
+        rawdesc = item_obj.item_props.get('food_desc')
+        cleandesc = rawdesc[:rawdesc.rfind("It's")]
+
         player = EwPlayer(id_user=item_obj.id_owner, id_server=cmd.guild.id)
-        museum_text = "\n{}\nDonated by {}\n{}\nLENGTH:{} INCHES\n{}".format(item_obj.item_props.get('food_name').upper(), player.display_name, current_record.id_image, item_obj.item_props.get('length'), item_obj.item_props.get('food_desc'))
+        museum_text = "-------------------------------------------------\n{}\nDonated by {}\n{}\nLENGTH:{} INCHES\n{}".format(item_obj.item_props.get('food_name').upper(), player.display_name, current_record.id_image, item_obj.item_props.get('length'), cleandesc)
         sent_message = await fe_utils.send_message(cmd.client, aquarium, museum_text)
         current_record.id_post = sent_message.id
         current_record.persist()
 
+        slimes_awarded = 100000
+
+        if length > 78:
+            slimes_awarded *= 5
+
         user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
-        user_data.change_slimes(n=500000)
+        user_data.change_slimes(n=100000)
         user_data.persist()
 
 
-        response = "The curator is taken aback by the sheer girth of your {}! But, without missing a beat she swipes your fish from you and runs behind the tanks to drop it right in with the rest of them. After a few minutes, he returns with the old record-setting fish impaled through the gills by harpoon gun.\"They can't all be winners, eh? Oh yeah, here's your tip.\"\n\nYou got 500,000 slime!".format(item_obj.item_props.get('food_name'))
+        response = "The curator is taken aback by the sheer girth of your {}! But, without missing a beat she swipes your fish from you and runs behind the tanks to drop it right in with the rest of them. After a few minutes, he returns with the old record-setting fish impaled through the gills by harpoon gun.\"They can't all be winners, eh? Oh yeah, here's your tip.\"\n\nYou got {} slime!".format(item_obj.item_props.get('food_name'), slimes_awarded)
         bknd_item.item_delete(id_item = id_item)
 
     return response
@@ -468,7 +478,7 @@ async def relic_donate(id_item, cmd):
             return relic_obj.str_museum
 
 
-        museum_text = "{}\nDiscovered by {}\n-...-\n{}\n-------------------------------------------------".format(relic_obj.str_name, player.display_name, relic_obj.str_museum)
+        museum_text = "-------------------------------------------------\n{}\nDiscovered by {}\n-...-\n{}".format(relic_obj.str_name, player.display_name, relic_obj.str_museum)
 
         relic_channel = fe_utils.get_channel(server=cmd.guild, channel_name='relic-exhibits')
         sent_message = await fe_utils.send_message(cmd.client, relic_channel, museum_text)
@@ -481,7 +491,7 @@ async def relic_donate(id_item, cmd):
         user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
         user_data.change_slimes(n=payout)
         user_data.persist()
-        response = "The curator takes the {} and excitedly jaunts into his backroom. Just when you suspect he's about to steal it, he bursts out the door with your relic in hand and gives it right back, along with {:,} slime.\n\n\"I made a replica for the museum. Don't tell anybody, but you can have this one back. A promise is a promise, haha.\"".format(relic_obj.str_str_name, payout)
+        response = "The curator takes the {} and excitedly jaunts into his backroom. Just when you suspect he's about to steal it, he bursts out the door with your relic in hand and gives it right back, along with {:,} slime.\n\n\"I made a replica for the museum. Don't tell anybody, but you can have this one back. A promise is a promise, haha.\"".format(relic_obj.str_name, payout)
 
     return response
 
@@ -542,18 +552,18 @@ def check_art_for_duplicates(link):
 async def populate_image(cmd):
     if cmd.message.author.guild_permissions.administrator:
         if cmd.tokens_count != 4:
-            response = "Invalid command. Try !addart <fish/art> <title> <link>."
+            response = "Invalid command. Try !addart <fish/relic> <title> <link>."
         else:
             type = cmd.tokens[1]
             item = cmd.tokens[2]
             link = cmd.tokens[3]
 
-            if type == "art":
-                channel = fe_utils.get_channel(server=cmd.guild, channel_name='art-exhibits')
+            if type == "relic":
+                channel = fe_utils.get_channel(server=cmd.guild, channel_name='relic-exhibits')
             elif type == "fish":
                 channel = fe_utils.get_channel(server=cmd.guild, channel_name='aquarium')
             else:
-                response = "Invalid command. Try !addart <fish/art> <title> <link>"
+                response = "Invalid command. Try !addart <relic/art> <title> <link>"
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
             record = EwRecord(id_server=cmd.guild.id, record_type=item)

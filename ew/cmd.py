@@ -2479,8 +2479,8 @@ async def create_item(cmd):
 		value = cmd.tokens[1]
 	else:
 		return
-	
 	item_recipient = None
+
 	if cmd.mentions_count == 1:
 		item_recipient = cmd.mentions[0]
 	else:

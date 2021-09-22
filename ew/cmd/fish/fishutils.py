@@ -27,6 +27,7 @@ class EwFisher:
     inhabitant_id = None
     fleshling_reeled = False
     ghost_reeled = False
+    length = 0
 
     def stop(self):
         self.fishing = False
@@ -43,6 +44,7 @@ class EwFisher:
         self.inhabitant_id = None
         self.fleshling_reeled = False
         self.ghost_reeled = False
+        self.length = 0
 
 
 fishers = {}
@@ -141,8 +143,56 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None, secret_
 
 
 # Determines the size of the fish
-def gen_fish_size(mastery_bonus = 0):
-    size_number = random.randint(min(mastery_bonus * 5, 100), 100)
+def gen_fish_size(mastery_bonus = 0, fish_size = None):
+
+    iterator = 0 #
+    choice = 0 #decides whether the fish is large or small, is useless for colossal variations
+    size_multiplier = 1 + mastery_bonus/30
+
+    fish_category = "average"
+
+    if random.randint(0, 1) == 1: #this loop could theoretically go on forever
+        while(iterator < 10000):
+            iterator = iterator + 1
+            limit = random.randint(1, 10)
+
+            if limit <= 3:
+                choice = 1
+                break
+            elif limit <= 6:
+                choice = 2
+                break
+
+    if fish_size is None:
+        if iterator == 0:
+            fish_category = ewcfg.fish_size_average
+        elif iterator == 1 and choice == 1:
+            fish_category = ewcfg.fish_size_big
+        elif iterator == 1 and choice == 2:
+            fish_category = ewcfg.fish_size_small
+        elif iterator == 2 and choice == 1:
+            fish_category = ewcfg.fish_size_miniscule
+        elif iterator == 2 and choice == 2:
+            fish_category = ewcfg.fish_size_huge
+        elif iterator > 2:
+            fish_category = ewcfg.fish_size_colossal
+    else:
+        fish_category = fish_size
+
+    size_minimum = ewcfg.fish_size_range.get(fish_category)[0]
+
+    size_maximum = ewcfg.fish_size_range.get(fish_category)[1]
+
+    if iterator > 2:
+        size_minimum += (iterator - 3) * 12
+        size_maximum += (iterator - 3) * 12
+
+    size_maximum *= size_multiplier
+
+    return round(random.uniform(size_minimum, size_maximum), 2)
+
+
+    """size_number = random.randint(min(mastery_bonus * 5, 100), 100)
 
     if size_number >= 0 and size_number < 6:  # 5%
         size = ewcfg.fish_size_miniscule
@@ -157,7 +207,16 @@ def gen_fish_size(mastery_bonus = 0):
     else:  # 1%
         size = ewcfg.fish_size_colossal
 
-    return size
+    return size"""
+
+def length_to_size(size_number):
+
+    for size in ewcfg.fish_size_range.keys():
+        if ewcfg.fish_size_range.get(size)[0] < size_number < ewcfg.fish_size_range.get(size)[1]:
+            return size
+
+    return ewcfg.fish_size_colossal
+
 
 
 # Determines bite text
@@ -300,7 +359,7 @@ async def award_fish(fisher, cmd, user_data):
             item_props={
                 'id_food': static_fish.fish_map[fisher.current_fish].id_fish,
                 'food_name': static_fish.fish_map[fisher.current_fish].str_name,
-                'food_desc': static_fish.fish_map[fisher.current_fish].str_desc,
+                'food_desc': "{}\nIt's {} inches long.".format(static_fish.fish_map[fisher.current_fish].str_desc, fisher.length),
                 'recover_hunger': 20,
                 'str_eat': ewcfg.str_eat_raw_material.format(static_fish.fish_map[fisher.current_fish].str_name),
                 'rarity': static_fish.fish_map[fisher.current_fish].rarity,
@@ -309,7 +368,8 @@ async def award_fish(fisher, cmd, user_data):
                 'time_fridged': 0,
                 'acquisition': ewcfg.acquisition_fishing,
                 'value': value,
-                'noslime': 'false'  # if not actual_fisherman_data.juviemode else 'true'
+                'noslime': 'false',  # if not actual_fisherman_data.juviemode else 'true'
+                'length': fisher.length
             }
         )
 

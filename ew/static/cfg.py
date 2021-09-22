@@ -3226,13 +3226,13 @@ fish_size_big = "big"
 fish_size_huge = "huge"
 fish_size_colossal = "colossal"
 
-fish_size_median = {
-	fish_size_miniscule:[5, 5],
-	fish_size_small:[15, 5],
-	fish_size_average:[25, 5],
-	fish_size_big: [40, 10],
-	fish_size_huge: [60, 10],
-	fish_size_colossal:[80, 20]
+fish_size_range = {
+	fish_size_miniscule:[0, 3],
+	fish_size_small:[3, 6],
+	fish_size_average:[6, 18],
+	fish_size_big: [18, 42],
+	fish_size_huge: [42, 66],
+	fish_size_colossal:[66, 90]
 }
 
 bully_responses = [

@@ -215,7 +215,6 @@ async def on_ready():
         neighbor_ids = []
         # if poi.coord != None:
         if len(poi.neighbors.keys()) > 0:
-            print(poi.id_poi)
             neighbors = move_utils.path_to(poi_start=poi.id_poi, user_data=fake_observer)
         # elif poi.id_poi == ewcfg.poi_id_thesewers:
         #	neighbors = poi_static.poi_list

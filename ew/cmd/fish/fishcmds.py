@@ -25,6 +25,7 @@ from .fishutils import cancel_rod_possession
 from .fishutils import gen_bite_text
 from .fishutils import gen_fish
 from .fishutils import gen_fish_size
+from .fishutils import length_to_size
 
 """ Casts a line into the Slime Sea """
 
@@ -167,7 +168,10 @@ async def cast(cmd):
                 if rod_possession:
                     mastery_bonus += 1
 
-                fisher.current_size = gen_fish_size(mastery_bonus)
+                mastery_bonus = max(0, mastery_bonus)
+
+                fisher.length = gen_fish_size(mastery_bonus)
+                fisher.current_size = length_to_size(fisher.length)
 
             if fisher.bait == False:
                 response = "You cast your fishing line into the "
@@ -763,6 +767,9 @@ async def embiggen(cmd):
         elif acquisition != ewcfg.acquisition_fishing:
             response = "You can only embiggen fishes, dummy. Otherwise everyone would be walking around with colossal nunchucks and huge chicken buckets. Actually, that gives me an idea..."
 
+        elif fish.item_props.get('embiggened') is not None:
+            response = "After several minutes long elevator descents, in the depths of some basement level far below the laboratory's lobby, you lay down your {} on a reclined medical chair. An NLACU med student finishes the novel length terms of service they were reciting and asks you if you have any questions. You weren’t listening so you just tell them to get on with it so you can go back to haggling prices with Captain Albert Alexander. They oblige.\nThey grab a butterfly needle and carefully stab your fish with it, avoiding the rumbling tumors it's grown from its previous embiggening. All of a sudden, before the surgeon can inject, the {}'s heart rate monitor starts going fucking nuts. The nurses begin to panic and duck behind equipment as the syringe flies out of the fish and sprays caustic rainbow goop over all the expensive machinery. Some of it lands on your pinky, and it expands into a second thumb. You are escorted out of the basement with a combination of fury and embarrassment.\n\nWelp, guess you can't embiggen the same fish twice. Too many...surgical complications.".format(
+                name, name)
         else:
             size = fish.item_props.get('size')
 
@@ -783,6 +790,9 @@ async def embiggen(cmd):
             if size == ewcfg.fish_size_huge:
                 poudrin_cost = 32
 
+            if size == ewcfg.fish_size_colossal:
+                poudrin_cost = 32
+
             poudrins_owned = itm_utils.find_item_all(item_search="slimepoudrin", id_user=user_data.id_user, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
             poudrin_amount = len(poudrins_owned)
 
@@ -793,20 +803,13 @@ async def embiggen(cmd):
                 response = "You need {} poudrins to embiggen your {}, but you only have {}!!".format(poudrin_cost, name, poudrin_amount)
 
             else:
-                if size == ewcfg.fish_size_miniscule:
-                    fish.item_props['size'] = ewcfg.fish_size_small
+                if fish.item_props.get('length') is None:
+                    fish.item_props['length'] = float((ewcfg.fish_size_range.get(fish.item_props.get('size'))[0] + ewcfg.fish_size_range.get(fish.item_props.get('size'))[1])/2)
 
-                if size == ewcfg.fish_size_small:
-                    fish.item_props['size'] = ewcfg.fish_size_average
+                fish.item_props['length'] =  float(fish.item_props['length']) + random.randint(5 + poudrin_cost, 15 + poudrin_cost)
 
-                if size == ewcfg.fish_size_average:
-                    fish.item_props['size'] = ewcfg.fish_size_big
-
-                if size == ewcfg.fish_size_big:
-                    fish.item_props['size'] = ewcfg.fish_size_huge
-
-                if size == ewcfg.fish_size_huge:
-                    fish.item_props['size'] = ewcfg.fish_size_colossal
+                fish.item_props['size'] = fishutils.length_to_size(size_number=float(fish.item_props['length']))
+                fish.item_props['embiggened'] = 'illegal'
 
                 fish.persist()
 
@@ -819,7 +822,7 @@ async def embiggen(cmd):
                 user_data.poudrin_donations += poudrin_cost
                 user_data.persist()
 
-                response = "After several minutes long elevator descents, in the depths of some basement level far below the laboratory's lobby, you lay down your {} on a reclined medical chair. A SlimeCorp employee finishes the novel length terms of service they were reciting and asks you if you have any questions. You weren’t listening so you just tell them to get on with it so you can go back to haggling prices with Captain Albert Alexander. They oblige.\nThey grab a butterfly needle and carefully stab your fish with it, injecting filled with some bizarre, multi-colored serum you’ve never seen before. Sick, it’s bigger now!!".format(
+                response = "After several minutes long elevator descents, in the depths of some basement level far below the laboratory's lobby, you lay down your {} on a reclined medical chair. An NLACU med student finishes the novel length terms of service they were reciting and asks you if you have any questions. You weren’t listening so you just tell them to get on with it so you can go back to haggling prices with Captain Albert Alexander. They oblige.\nThey grab a butterfly needle and carefully stab your fish with it, injecting filled with some bizarre, multi-colored serum you’ve never seen before. Sick, it’s bigger now!!".format(
                     name)
 
     else:
@@ -1038,3 +1041,12 @@ async def debug_create_random_fish(cmd):
             'value': value
         }
     )
+
+
+async def fish_length_diagnostic(cmd):
+    iter = int(cmd.tokens[1])
+    f = open("diagnostic_length.txt", "w")
+    for x in range(iter):
+        size = gen_fish_size(mastery_bonus=0)
+        f.write("{}\n".format(size))
+    f.close()

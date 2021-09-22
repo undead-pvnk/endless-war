@@ -40,5 +40,7 @@ cmd_map = {
     ewcfg.cmd_canceltrade: marketcmds.cancel_trade,
     ewcfg.cmd_bazaar_refresh: marketcmds.bazaar_refresh,
 
+    ewcfg.cmd_addart:marketcmds.populate_image,
+
 
 }

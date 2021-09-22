@@ -112,7 +112,7 @@ class EwRecord:
     id_post = ""
 
     #an associated image with the work
-    id_image = "*--*"
+    id_image = "-...-"
 
     def __init__(
             self,

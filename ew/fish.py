@@ -1438,3 +1438,5 @@ def cancel_rod_possession(fisher, user_data):
 			response += "Are you two even trying?"
 		response += ' Your contract is dissolved.'
 	return response
+
+
