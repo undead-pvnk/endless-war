@@ -999,6 +999,15 @@ food_list = [
         time_expir = 172800,
     ),
     EwFood(
+        id_food = "partypoppeppers",
+        recover_hunger = 60,
+        str_name = "Party Poppeppers",
+        vendors = ['Farm'],
+        str_eat = "You chomp into the raw Party Poppeppers. It isn't terrible, but you feel like there is a more constructive use for it.",
+        str_desc = "[DESCRIPTION BASED ON SMEARG'S DESIGN]",
+        time_expir = 172800,
+    ),
+    EwFood(
         id_food = "pinkrowdatouille",
         recover_hunger = 1200,
         price = 2400,
@@ -1698,6 +1707,8 @@ food_list = [
         id_food = "seaweedjoint",
         alias = ['joint', 'weed', 'blunt', 'doobie'],
         str_name = "Seaweed Joint",
+        price = 30,
+        vendors = ['Atomic Forest Stockpile Party Redemption Cart'],
         str_eat = "You light up your Seaweed and begin to smoke it. Congratulations! You're now high. You catch fish twice as often, but food is half as effective. This lasts for 30 minutes.",
         str_desc = "A joint made up of dankwheat and seaweed bartered with Captain Albert Alexander. Wait a minute, does that make the good Captain your drug dealer? Hell yeah.",
         time_expir = 43200,
@@ -1993,6 +2004,7 @@ vegetable_list = []
 vegetable_to_cosmetic_material = {}
 
 # seperate the crops from the normal foods
+# TODO: remove party poppeppers after party event
 for v in food_list:
 
     if ewcfg.vendor_farm not in v.vendors:
@@ -2002,7 +2014,7 @@ for v in food_list:
             vegetable_to_cosmetic_material[v.id_food] = ewcfg.item_id_cool_material
         elif v.id_food in [ewcfg.item_id_pinkrowddishes, ewcfg.item_id_joybeans, ewcfg.item_id_purplekilliflower, ewcfg.item_id_suganmanuts]:
             vegetable_to_cosmetic_material[v.id_food] = ewcfg.item_id_cute_material
-        elif v.id_food in [ewcfg.item_id_poketubers, ewcfg.item_id_dankwheat, ewcfg.item_id_blacklimes, ewcfg.item_id_aushucks]:
+        elif v.id_food in [ewcfg.item_id_poketubers, ewcfg.item_id_dankwheat, ewcfg.item_id_blacklimes, ewcfg.item_id_aushucks, ewcfg.item_id_partypoppeppers]:
             vegetable_to_cosmetic_material[v.id_food] = ewcfg.item_id_beautiful_material
         elif v.id_food in [ewcfg.item_id_phosphorpoppies, ewcfg.item_id_pawpaw, ewcfg.item_id_sludgeberries, ewcfg.item_id_rustealeaves]:
             vegetable_to_cosmetic_material[v.id_food] = ewcfg.item_id_smart_material

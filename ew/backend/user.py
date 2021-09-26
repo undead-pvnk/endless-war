@@ -86,6 +86,10 @@ class EwUserBase:
     # twitter
     verified = False
 
+    # Ganker Party Event
+    party_points = 0
+    cumulative_party_points = 0
+
     move_speed = 1  # not a database column
 
     """ fix data in this object if it's out of acceptable ranges """
@@ -143,7 +147,7 @@ class EwUserBase:
                 # Retrieve object
 
                 cursor.execute(
-                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
                         ewcfg.col_slimes,
                         ewcfg.col_slimelevel,
@@ -204,7 +208,9 @@ class EwUserBase:
                         ewcfg.col_rand_seed,
                         ewcfg.col_time_lasthit,
                         ewcfg.col_verified,
-                        ewcfg.col_gender
+                        ewcfg.col_gender,
+                        ewcfg.col_party_points,
+                        ewcfg.col_cumulative_party_points
                     ), (
                         id_user,
                         id_server
@@ -273,6 +279,8 @@ class EwUserBase:
                     self.time_lasthit = result[55]
                     self.verified = result[56]
                     self.gender = result[57]
+                    self.party_points = result[58]
+                    self.cumulative_party_points = result[59]
 
                 else:
                     self.poi = ewcfg.poi_id_downtown
@@ -314,7 +322,7 @@ class EwUserBase:
             # Save the object.
 
             cursor.execute(
-                "REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+                "REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
                     ewcfg.col_id_user,
                     ewcfg.col_id_server,
                     ewcfg.col_slimes,
@@ -376,7 +384,9 @@ class EwUserBase:
                     ewcfg.col_rand_seed,
                     ewcfg.col_time_lasthit,
                     ewcfg.col_verified,
-                    ewcfg.col_gender
+                    ewcfg.col_gender,
+                    ewcfg.col_party_points,
+                    ewcfg.col_cumulative_party_points
                 ), (
                     self.id_user,
                     self.id_server,
@@ -439,7 +449,9 @@ class EwUserBase:
                     self.rand_seed,
                     self.time_lasthit,
                     self.verified,
-                    self.gender
+                    self.gender,
+                    self.party_points,
+                    self.cumulative_party_points
                     
                 ))
 

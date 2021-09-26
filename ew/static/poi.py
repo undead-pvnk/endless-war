@@ -1,3 +1,4 @@
+from ew.static import vendors
 import json
 import os
 
@@ -2831,6 +2832,7 @@ poi_list = [
         minor_role = "nullminorrole",
         permissions = {'arsonbrook-farms': ['read', 'send', 'connect']},
         pvp = False,
+        vendors = ['Atomic Forest Stockpile Party Redemption Cart'], # remove after event
         is_subzone = True,
         mother_districts = ['arsonbrook'],
         neighbors = {'arsonbrook': 20},

@@ -219,6 +219,10 @@ cmd_map = {
     # Verify that the cache is functional
     ewcfg.cmd_verify_cache: cmdcmds.verify_cache,
 
+    # Ganker Party Event TODO: remove after event
+    ewcfg.cmd_partypoints: cmdcmds.partypoints,
+    ewcfg.cmd_turnin: cmdcmds.shartonhortisolis
+
 }
 
 dm_cmd_map = {

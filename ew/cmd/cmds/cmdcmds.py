@@ -3873,3 +3873,65 @@ async def verify_cache(cmd):
             ewutils.logMsg("Item {}'s name failed flattening. Data: \n{}".format(item_data.get("id_item"), item_data))
 
     return
+
+""" Ganker Event Commands """
+#TODO: remove after event
+
+async def partypoints(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    market_data = EwMarket(id_server = user_data.id_server)
+    party_points = user_data.party_points
+    cumulative_party_points = user_data.cumulative_party_points
+    total_party_points = market_data.total_party_points
+
+    if user_data.poi != ewcfg.poi_id_ab_farms:
+        response = "You check the Gankers' website on your gellphone. Looking past the mid-90's web design, you see that you have {} points available out of {} dried party poppeppers donated, as well that the city's total is {} dried party poppeppers.".format(party_points, cumulative_party_points, total_party_points)
+    else:
+        response = "You ask about your points, and [???] gleefully informs you that you have {} points out of {} dried party poppeppers donated, and that the Gankers' total stash is {} dried party poppeppers. '[DIALOGUE]', [???] adds.".format(party_points, cumulative_party_points, total_party_points)        
+    
+    return await fe_utils.send_response(response, cmd)
+
+
+async def shartonhortisolis(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    market_data = EwMarket(id_server = user_data.id_server)
+    if user_data.poi != ewcfg.poi_id_ab_farms:
+        response = "You try turning in your dried party poppeppers, but [CORN OSTRITCH] is nowhere in sight! You've gotta go to Arsonbrook Farms to turn in dried party poppeppers, dumbass."
+    elif user_data.life_state == ewcfg.life_state_corpse: 
+        response = "[CORN OSTRITCH] seems entirely unaware of your existence. It seems you need to be alive to give them dried party poppeppers."
+    elif user_data.race == ewcfg.race_shambler:
+        response = "[CORN OSTRITCH] starts violently attacking you before you back away. It seems the Gankers are still highly shamblerphobic."
+    elif user_data.life_state == ewcfg.life_state_kingpin:
+        response = "[CORN OSTRITCH] starts pecking and hissing at you. What the fuck! It seems like the Gankers aren't privy to Kingpins."
+    else:
+        point_gain = 0
+        peppers_to_remove = []
+
+        # Search for dried party poppeppers in inventory. OPTIMIZE THIS FOR THE LOVE OF JESUS CHRIST ALMIGHTY IN HEAVEN
+        inv_items = bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
+
+        for item in inv_items:
+            item_data = EwItem(id_item = item.get('id_item'))
+            if item_data.item_props.get("id_item") == ewcfg.item_id_driedpartypoppeppers:
+                peppers_to_remove.append(item_data.id_item)
+                point_gain += 1
+        
+        # Add points to user and to the market total.
+        if point_gain > 0:
+            user_data.party_points += point_gain
+            user_data.cumulative_party_points += point_gain
+            market_data.total_party_points += point_gain
+
+            # Snag their peppers lol
+            for id in peppers_to_remove:
+                bknd_item.item_delete(id_item=id)
+
+            user_data.persist()
+            market_data.persist()
+
+            # Tell user how many points they got
+            response = "[CORN OSTRITCH] carefully takes the dried party poppeppers out of your hands and into a satchel by their side. Rosalita scrawls that you gained **{} Party Points** on a clipboard.".format(point_gain)
+        else:
+            response = "You reach into your pockets to grab dried party poppeppers, but you don't have any! What an idiotic mistake!"
+
+    return await fe_utils.send_response(response, cmd)

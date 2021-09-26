@@ -1503,6 +1503,10 @@ cmd_verify_cache = cmd_prefix + 'verifycache'
 # SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
+# Party Event TODO: remove after event
+cmd_partypoints = cmd_prefix + 'partypoints'
+cmd_turnin = cmd_prefix + "turnin"
+
 cmd_scrawl = cmd_prefix + 'scrawl'
 cmd_strip = cmd_prefix + 'strip'
 
@@ -2262,6 +2266,9 @@ col_time_racialability = 'time_racialability'
 col_time_lastpremiumpurchase = 'time_lastpremiumpurchase'
 col_verified = 'verified'
 col_gender = 'gender'
+col_party_points = 'party_points'
+col_cumulative_party_points = 'cumulative_party_points'
+
 
 col_attack = 'attack'
 col_speed = 'speed'
@@ -2289,6 +2296,10 @@ col_juviemode = 'juviemode'
 # Double Halloween
 col_horseman_deaths = 'horseman_deaths'
 col_horseman_timeofdeath = 'horseman_timeofdeath'
+
+# Party Event Stuff - remove after event
+col_total_party_points = 'total_party_points'
+col_current_event_boss = 'current_event_boss'
 
 # Database columns for bartering
 col_offer_give = 'offer_give'
@@ -2745,6 +2756,9 @@ vendor_downpourlaboratory = "Downpour Armament Vending Machines"  # Store for sh
 vendor_breakroom = "The Breakroom"  # Security officers can order items here for free.
 vendor_rpcity = "RP City"  # Double halloween costume store
 
+# Temporary Party Point vendor for Party Event
+vendor_atomicforestpp = "Atomic Forest Stockpile Party Redemption Cart"
+
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
 item_id_monstersoup = 'monstersoup'
@@ -2797,6 +2811,7 @@ item_id_tincan = "tincan"
 item_id_oldboot = "oldboot"
 item_id_leather = "leather"
 item_id_feather = "feather"
+item_id_partypoppepperseeds = "partypoppepperseeds"
 item_id_ironingot = "ironingot"
 item_id_bloodstone = "bloodstone"
 item_id_tanningknife = "tanningknife"
@@ -2972,6 +2987,7 @@ item_id_rustealeaves = "rustealeaves"
 item_id_metallicaps = "metallicaps"
 item_id_steelbeans = "steelbeans"
 item_id_aushucks = "aushucks"
+item_id_partypoppeppers = "partypoppeppers"
 
 # vegetable materials
 item_id_poketubereyes = "poketubereyes"
@@ -2994,6 +3010,7 @@ item_id_rustealeafblades = "rustealeafblades"
 item_id_metallicapheads = "metallicapheads"
 item_id_steelbeanpods = "steelbeanpods"
 item_id_aushuckstalks = "aushuckstalks"
+item_id_driedpartypoppeppers = "driedpartypoppeppers"
 
 # dye ids
 item_id_dye_black = "blackdye"

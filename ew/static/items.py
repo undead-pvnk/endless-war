@@ -1554,6 +1554,13 @@ item_list = [
         ingredients=[ewcfg.item_id_aushucks],
     ),
     EwGeneralItem(
+        id_item=ewcfg.item_id_driedpartypoppeppers,
+        str_name="Dried Party Poppeppers",
+        str_desc="The brightly-colored dried bodies of Party Poppeppers.",
+        acquisition=ewcfg.acquisition_milling,
+        ingredients=[ewcfg.item_id_partypoppeppers],
+    ),
+    EwGeneralItem(
         id_item=ewcfg.item_id_civilianscalp,
         str_name="civilian's scalp",
         str_desc="It's the discarded scalp of an innocent NLACakaNM resident. You always wanted to kill one of these guys."
@@ -1768,6 +1775,13 @@ item_list = [
         str_name="Regular Feather",
         str_desc="A perfectly normal feather. Nothing suspicious about this, nossir.",
         acquisition=ewcfg.acquisition_huntingtrophy
+    ),
+    EwGeneralItem(
+        id_item=ewcfg.item_id_partypoppepperseeds,
+        str_name="Party Poppeppers Seed Packet",
+        str_desc="A colorful packet containing specially-bred seeds that grow into Party Poppeppers. Using this, you can !sow party poppeppers in any farming plot.",
+        price=5000,
+        vendors=[ewcfg.vendor_atomicforest]
     ),
     # EwSeedPacket(
     # 	id_item=ewcfg.item_id_gaiaseedpack_pulpgourds,
