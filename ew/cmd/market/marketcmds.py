@@ -394,7 +394,7 @@ async def museum_donate(cmd):
 
             response = await art_donate(item_obj.id_item, cmd)
         else:
-            response = "The curator turns her nose at your offering. Guess the prick only takes relics, fish, and framed pictures."
+            response = "The curator looks confused on why you brought *that*. He only takes relics, framed art, and fish."
     else:
         response = "You don't have that item."
 
@@ -416,11 +416,11 @@ async def fish_donate(id_item, cmd):
         length = float(length)
     current_record = EwRecord(id_server=cmd.guild.id, record_type=id_fish)
     if current_record.record_amount > length:
-        response = "\"That's a...rather small specimen, wouldn't you say? We only store the largest aquatic fauna in our exhibit.\""
+        response = "\"SORRY, CHAP, YOUR FISH IS TOO SMALL. THERE'S A DICK JOKE IN THERE SOMEWHERE BUT I'M TWICE YOUR AGE. TOO CREEPY, I SAY.\""
     elif id_fish in user_data.get_bans():
-        response = "\"Sorry. We can't let you contribute that type of fish anymore. You went against Angler's Guild regulation.\""
+        response = "\"I'M ON TO YOU, YOU {}! TRY AND CHEAT FISH WITH ME AGAIN, SEE WHAT HAPPENS!\"".format(random.choice(ewcfg.curator_insults))
     elif item_obj.item_props.get('embiggened') == 'illegal' and random.choice([0, 1]) == 0:
-        response = "\"H-hey! You can't donate that! It's been artificially embiggened! I'm afraid we'll have to ban you from setting records with this fish. Angler's guild stuff, as you might guess.\""
+        response = "\"YOU THINK I WAS BORN YESTERDAY, YOU FISH-ROIDING {}? THE BLOODY {}'S BEEN EMBIGGENED TO HELL AND BACK! BELLENDS LIKE YOU LOSE THEIR {} PRIVILEGES. QUITE SO.\"".format(random.choice(ewcfg.curator_insults), item_obj.item_props.get('food_name').upper(), item_obj.item_props.get('food_name').upper())
         user_data.ban(faction=id_fish)
     else:
         aquarium = fe_utils.get_channel(server = cmd.guild, channel_name='aquarium')
@@ -443,17 +443,17 @@ async def fish_donate(id_item, cmd):
         current_record.id_post = sent_message.id
         current_record.persist()
 
-        slimes_awarded = 100000
+        slimes_awarded = 330000
 
         if length > 78:
-            slimes_awarded *= 5
+            slimes_awarded *= 3
 
         user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
         user_data.change_slimes(n=100000)
         user_data.persist()
 
 
-        response = "The curator is taken aback by the sheer girth of your {}! But, without missing a beat she swipes your fish from you and runs behind the tanks to drop it right in with the rest of them. After a few minutes, he returns with the old record-setting fish impaled through the gills by harpoon gun.\"They can't all be winners, eh? Oh yeah, here's your tip.\"\n\nYou got {} slime!".format(item_obj.item_props.get('food_name'), slimes_awarded)
+        response = "The curator is taken aback by the sheer girth of your {}! But, without missing a beat he swipes your fish from you and runs behind the tanks to drop it right in with the rest of them. After a few minutes, he returns with the old record-setting fish impaled through the gills by harpoon gun.\"THEY CAN'T ALL BE WINNERS, EH? OH YEAH, HERE'S YOUR TIP.\"\n\nYou got {} slime!".format(item_obj.item_props.get('food_name'), slimes_awarded)
         bknd_item.item_delete(id_item = id_item)
 
     return response
@@ -462,7 +462,7 @@ async def fish_donate(id_item, cmd):
 async def relic_donate(id_item, cmd):
     item_obj = EwItem(id_item=id_item)
     if item_obj.item_props.get('donated') is not None and item_obj.item_props.get('donated') != 0:
-        response = "\"You already had me appraise this. Eheheh, I can't give you slime for this again. Sorry!\""
+        response = "\"WHAT ARE YOU DOING WITH THAT SHODDY REPLICA? I HAVE THE REAL ONE HERE IN MY MUSEUM.\""
     else:
         item_obj.item_props['donated'] = 1
         item_obj.persist()
@@ -491,7 +491,7 @@ async def relic_donate(id_item, cmd):
         user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
         user_data.change_slimes(n=payout)
         user_data.persist()
-        response = "The curator takes the {} and excitedly jaunts into his backroom. Just when you suspect he's about to steal it, he bursts out the door with your relic in hand and gives it right back, along with {:,} slime.\n\n\"I made a replica for the museum. Don't tell anybody, but you can have this one back. A promise is a promise, haha.\"".format(relic_obj.str_name, payout)
+        response = "The curator takes the {} and excitedly jaunts into his backroom, casually tossing {:,} slime your way. You wait for him to carefully examine it, write up a plaque, and get all the fanboying out of his system, before he comes back to set up the museum display. He also hands you a meticulously constructed replica for your trouble.\n\n While he isn't looking, you swap the copied relic with the original. This guy's such a goddamn idiot.\"".format(relic_obj.str_name, payout)
 
     return response
 
@@ -501,7 +501,7 @@ async def art_donate(id_item, cmd):
     item_obj = EwItem(id_item=id_item)
 
     if item_obj.item_props.get('furniture_desc') == 'https://cdn11.bigcommerce.com/s-cece8/images/stencil/1280x1280/products/305/1506/010420__10394.1343058001.jpg?c=2&imbypass=on':
-        response = "\"Suuuuuuure. Pictures of spoons. That's nice... Uh...How about you go play outside? I don't think you belong here.\""
+        response = "\"MORE SPOONS? HEY AMY, PUT THIS ONE WITH THE OTHER SPOON PICTURES. YEAH, OVER THERE IN THE FURNACE. ANYWAY, THANKS FOR DONATING.\""
 
     else:
         #gamestate = EwGamestate(id_server=item_obj.id_server, id_state='artplayer')
@@ -510,9 +510,9 @@ async def art_donate(id_item, cmd):
             if item_obj.item_props.get('title') is not None:
                 new_record = EwRecord(id_server=cmd.guild.id, record_type = item_obj.item_props.get('title'))
                 if new_record.id_user != -1:
-                    return "\"Sorry, it looks like that title is already taken. I'll assume that isn't a forgery and just uh...look the other way.\""
+                    return "\"YOU THINK YOU CAN RIP OFF SOMEONE ELSE\'S WORK? DON'T BE A {} AND NAME IT SOMETHING ELSE.\"".format(random.choice(ewcfg.curator_insults))
                 elif "::" in item_obj.item_props.get('title'):
-                    return "\"Are you trying to commit fraud? Don't put so many colons in the title.\""
+                    return "\"THE LAST TIME I SAW THIS MANY COLONS WAS WHEN I PUT UP FLYERS UP NEAR THE GAY BAR IN GREENLIGHT. TAKE OUT THE \"::\" OR IT'S NOT GETTING IN.\""
                 else:
                     new_record.id_user = item_obj.id_owner
                     new_record.legality  = 1
@@ -521,7 +521,7 @@ async def art_donate(id_item, cmd):
 
 
 
-                response = '"OK, thank you for your donation. We\'ll probably maybe add it to our collection once our appraisers get to it. Go along now."'
+                response = '"IT\'S UP ON DEVIANT SPLAAART. GET ENOUGH LIKES AND THEN WE\'LL TALK. HOPE YOU LIKE PAYMENTS IN EXPOSURE, MY FRIEND!"'
 
 
                 player_obj = EwPlayer(id_user=item_obj.id_owner, id_server=cmd.guild.id)
@@ -531,7 +531,7 @@ async def art_donate(id_item, cmd):
                 bknd_item.item_delete(id_item)
 
             else:
-                response = "\"It doesn't have a title! Get one and I'll add it after that.\" "
+                response = "\"GIVE ME A TITLE FOR THIS, LAD! MY EXHIBITS ARE MORE THAN A GLORIFIED KITCHEN FRIDGE!\" "
         else:
             response = '\"Sorry, we\'re not collecting donations from your kind at this time. Please refrain from stinking up the general vicinity.\"'
     return response

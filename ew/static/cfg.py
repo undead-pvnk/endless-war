@@ -5384,6 +5384,29 @@ pray_responses_list = [
     "ENDLESS WAR is a free text-based MMORPG playable entirely within a Discord server. But, you probably already knew that, didn't you?",
 ]
 
+curator_insults = [
+    "LOPSIDED FISHWAGON",
+    "AUSTRIAN BREADMAGGOT",
+    "SNIPE",
+    "DENTED BINT",
+    "RATDROWNED GOON",
+    "DPICO WANNABE",
+    "FRENCHMAN",
+    "GUMBLETHROATED BITCH",
+    "YELLOW FEVER DESERVING CUM WAFER",
+    "FLESHLIGHT HAVER",
+    "VILLAGE IDIOT",
+    "PRAM BASED TOYTHROWER",
+    "DAMN DIRTY PINKO",
+    "LOVECRAFTIAN BONER",
+    "FRESHLY HARVESTED CUNTCORPSE",
+    "LIFELESS BRAINLESS VACUUM OF A HUMAN BEING",
+    "TODDLING SWADDLING MONGOLOID",
+    "ANCIENT GEAR SWALLOW'EM IN FELLATE POSITION"
+
+]
+
+
 dance_responses = [
     "{} busts a move. Wow, look at 'em go!",
     "{} gets down and boogies! Groovy!",
