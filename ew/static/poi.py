@@ -4800,7 +4800,7 @@ poi_list = [
             "splatifyjazzclub"
         ],
         str_name="\"Splatify\"",
-        str_desc="Welcome to the premier jazz hotspot this side of the Grand Canyon. That gangsters are still allowed in. The owners keep the place dim and smoky, and happily abide the suicide by decibel that is the bar band. Some of these horn players are known to play so loud they blow their guts out through the bell. And that's just the way you like it. Better yet? They take requests. Splatify exits into Crookline.",
+        str_desc="Welcome to the premier jazz hotspot this side of the Grand Canyon. That gangsters are still allowed in. The owners keep the place dim and smoky, and happily abide the suicide by decibel that is the bar band. Some of these horn players are known to play so loud they blow their guts out through their instruments. And that's just the way you like it. Better yet? They take requests. Splatify exits into Crookline.",
         channel="splatify",
         major_role="crookline_major",
         minor_role="nullminorrole",
