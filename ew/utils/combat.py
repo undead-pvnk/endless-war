@@ -2420,6 +2420,7 @@ class EwUser(EwUserBase):
                 rigor = False
 
             self.busted = False  # reset busted state on normal death; potentially move this to ewspooky.revive
+            self.weaponmarried = False  # sure hope this works right
             self.slimes = 0
             self.slimelevel = 1
             self.clear_mutations()

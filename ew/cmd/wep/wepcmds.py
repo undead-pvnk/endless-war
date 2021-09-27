@@ -171,7 +171,7 @@ async def attack(cmd, n1_die = None):
         slimes_damage = int(5 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier)  # ten times slime spent, multiplied by both multipliers
 
         # Tool damage is maximized at level 35 but proportional cost remains the same
-        slimes_spent = int(ewutils.slime_bylevel(capped_level) / 30)
+        slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 30)
 
         if user_data.weaponskill < 5:
             hit_chance_mod -= (5 - user_data.weaponskill) / 10
@@ -293,8 +293,13 @@ async def attack(cmd, n1_die = None):
                     resp_cont.add_channel_response(cmd.message.channel.name, response)
                     resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
                     await resp_cont.post()
-                    msg = await cmd.client.wait_for('message', timeout=5, check=lambda message: message.author == member)
 
+                    try:
+                        msg = await cmd.client.wait_for('message', timeout=5,
+                                                        check=lambda message: message.author == member)
+                    except asyncio.exceptions.TimeoutError:
+                        msg = None
+                        
                     user_data = EwUser(member=cmd.message.author, data_level=1)
                     shootee_data = EwUser(member=member, data_level=1)
 
