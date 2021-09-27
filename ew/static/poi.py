@@ -562,7 +562,7 @@ poi_list = [
         id_poi = "crookline",
         alias = ['crook', 'line', 'cl'],
         str_name = "Crookline",
-        str_desc = "Most of this district is shrouded in total darkness, the unregulated construction of skyscrapers obstructing sunlight from ever reaching the streets far below them. Streetlights and the dense arrays of neon signs advertising speakeasy after speakeasy are the only illumination you're provided with while traveling the narrow, twisting streets of this district. You'll have to keep your wits about you if you want to leave here with your wallet, as Crookline is perhaps most known for its hordes of petty thieves who specialise in stealing from clueless juveniles from the posher districts. Despite these hurdles, or possibly because of them, Crookline has a bustling nightlife heavily featuring those aforementioned speakeasies. No matter where you are in this district, you're not more than a block or two from a jazz club. You sort of feel like you're on the set of a film noir movie when you traverse these dark alleyways.\nCrookline was a historically rebellious settlement on the edge of New Los Angeles City aka Neo Milwaukee, resisting full annexation for years until it was fully culturally and economically dominated by the city. Because of this, the residents have always kept an independent streak, and remain vehemently opposed most aspects of slime past its purely utilitarian purposes. You get the feeling the denizens of this district would have been happier if there was gold discovered in the area rather than the green, morality-obliterating substance they're stuck with.\n\nThis area contains the Crookline Pier and the NLACakaNM Clinic of Slimoplasty. To the North is Jaywalker Plain. To the Northeast is North Sleezeborough. To the East is South Sleezeborough. To the West is Dreadford. To the South is Southwest Outskirts Edge.",
+        str_desc = "Most of this district is shrouded in total darkness, the unregulated construction of skyscrapers obstructing sunlight from ever reaching the streets far below them. Streetlights and the dense arrays of neon signs advertising speakeasy after speakeasy are the only illumination you're provided with while traveling the narrow, twisting streets of this district. You'll have to keep your wits about you if you want to leave here with your wallet, as Crookline is perhaps most known for its hordes of petty thieves who specialise in stealing from clueless juveniles from the posher districts. Despite these hurdles, or possibly because of them, Crookline has a bustling nightlife heavily featuring those aforementioned speakeasies. No matter where you are in this district, you're not more than a block or two from a jazz club. You sort of feel like you're on the set of a film noir movie when you traverse these dark alleyways.\nCrookline was a historically rebellious settlement on the edge of New Los Angeles City aka Neo Milwaukee, resisting full annexation for years until it was fully culturally and economically dominated by the city. Because of this, the residents have always kept an independent streak, and remain vehemently opposed most aspects of slime past its purely utilitarian purposes. You get the feeling the denizens of this district would have been happier if there was gold discovered in the area rather than the green, morality-obliterating substance they're stuck with.\n\nThis area contains the Crookline Pier, the Splatify Jazz Club, and the NLACakaNM Clinic of Slimoplasty. To the North is Jaywalker Plain. To the Northeast is North Sleezeborough. To the East is South Sleezeborough. To the West is Dreadford. To the South is Southwest Outskirts Edge.",
         coord = [14, 26],
         channel = "crookline",
         role = "Crookline",
@@ -572,7 +572,7 @@ poi_list = [
         property_class = "b",
         is_district = True,
         is_capturable = True,
-        neighbors = {'dreadford': 60, 'jaywalkerplain': 60, 'northsleezeborough': 60, 'southsleezeborough': 60, 'crooklinepier': 20, 'clinicofslimoplasty': 20, 'southwestoutskirtsedge': 120},
+        neighbors = {'dreadford': 60, 'jaywalkerplain': 60, 'northsleezeborough': 60, 'southsleezeborough': 60, 'crooklinepier': 20, 'clinicofslimoplasty': 20, 'southwestoutskirtsedge': 120, 'splatify':20},
         topic = "A rebellious district on the far reaches of the city. Rich in culture and literal wealth, just hope that you don't get pickpocketed while there.",
         wikipage = "https://rfck.miraheze.org/wiki/Crookline",
     ),
@@ -4789,6 +4789,28 @@ poi_list = [
         mother_districts = [ "littlechernobyl" ],
         neighbors = { "littlechernobyl": 20},
         wikipage = "https://rfck.miraheze.org/wiki/Little_Chernobyl#RP_City"
+    ),
+    EwPoi(
+        id_poi="splatify",
+        alias=[
+            "jazzclub",
+            "cljazz",
+            "splatshack",
+            "spf",
+            "splatifyjazzclub"
+        ],
+        str_name="\"Splatify\"",
+        str_desc="Welcome to the premier jazz hotspot this side of the Grand Canyon. That gangsters are still allowed in. The owners keep the place dim and smoky, and happily abide the suicide by decibel that is the bar band. Some of these horn players are known to play so loud they blow their guts out through the bell. And that's just the way you like it. Better yet? They take requests. Splatify exits into Crookline.",
+        channel="splatify",
+        major_role="crookline_major",
+        minor_role="nullminorrole",
+        permissions={"splatify": ["read", "send", "connect"]},
+        pvp=False,
+        vendors=['bar'],
+        is_subzone=True,
+        mother_districts=["crookline"],
+        neighbors={"crookline": 20},
+        wikipage="https://rfck.miraheze.org/wiki/Crookline#Splatify"
     ),
 ]
 
