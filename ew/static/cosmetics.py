@@ -756,6 +756,14 @@ cosmetic_items_list = [
         acquisition = "smelting",
     ),
     EwCosmeticItem(
+        id_cosmetic = "partyhat",
+        str_name = "Party Hat",
+        str_desc = "A colorful party hat, shimmering from the copious amounts of glitter applied to it. Wearing makes you feel like PARTYING!!!",
+        durability = 5000000,
+        style = "beautiful",
+        acquisition = "smelting",
+    ),
+    EwCosmeticItem(
         id_cosmetic = "raincoat",
         str_name = "Raincoat",
         str_desc = "A specially engineered piece of personal armor, that protects you from the deadly threat from above.",

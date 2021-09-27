@@ -1208,6 +1208,16 @@ food_list = [
         acquisition = "smelting",
     ),
     EwFood(
+        id_food = "stuffedpoppepper",
+        recover_hunger = 800,
+        price = 1600,
+        str_name = "Stuffed Poppepper",
+        str_eat = "You gnash through the Stuffed Poppepper. It's a smorgasbord of flavors, all exploding in your mouth! It fucking hurts to eat, but JESUS, it tastes good.",
+        str_desc = "A pepper stuffed with meat, cheese, and all sorts of seasoning. It pops every now and then, sending out small chunks of debris.",
+        time_expir = 1209600,
+        acquisition = "smelting",
+    ),
+    EwFood(
         id_food = "khaotickilliflowerfuckenergy",
         alias = ['kkfu'],
         recover_hunger = 1200,

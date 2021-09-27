@@ -1556,7 +1556,7 @@ item_list = [
     EwGeneralItem(
         id_item=ewcfg.item_id_driedpartypoppeppers,
         str_name="Dried Party Poppeppers",
-        str_desc="The brightly-colored dried bodies of Party Poppeppers.",
+        str_desc="The crinkly dried husks of a Party Poppepper plant.",
         acquisition=ewcfg.acquisition_milling,
         ingredients=[ewcfg.item_id_partypoppeppers],
     ),

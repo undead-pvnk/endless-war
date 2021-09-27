@@ -1262,6 +1262,19 @@ smelting_recipe_list = [
         products=['moltenpopcorn']
     ),
     EwSmeltingRecipe(
+        id_recipe="stuffedpoppepper",
+        str_name="a Stuffed Poppepper",
+        alias=[
+            'stuffedpepper',
+            'stuffedpartypoppepper'
+        ],
+        ingredients={
+            ewcfg.item_id_foodbase: 1,
+            ewcfg.item_id_driedpartypoppeppers: 1
+        },
+        products=['stuffedpoppepper']
+    ),
+    EwSmeltingRecipe(
         id_recipe="captainshat",
         str_name="a Captain's Hat",
         alias=[
@@ -1509,6 +1522,19 @@ smelting_recipe_list = [
             ewcfg.item_id_aushuckstalks: 1,
         },
         products=['resplendentcoronet']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="partyhat",
+        str_name="a Party Hat",
+        alias=[
+            'party',
+            'celebrationhat'
+        ],
+        ingredients={
+            ewcfg.item_id_textiles: 1,
+            ewcfg.item_id_driedpartypoppeppers: 1,
+        },
+        products=['partyhat']
     ),
     EwSmeltingRecipe(
         id_recipe="stick",
