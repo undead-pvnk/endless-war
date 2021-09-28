@@ -155,6 +155,8 @@ item_list = [
         context="poudrin",
         str_name="Slime Poudrin",
         str_desc="A dense, crystalized chunk of precious slime.",
+        price=15,
+        vendors=[ewcfg.vendor_atomicforestpp],
         acquisition=ewcfg.acquisition_mining,
     ),
     EwGeneralItem(
@@ -311,6 +313,8 @@ item_list = [
         id_item=ewcfg.item_id_negapoudrin,
         str_name="negapoudrin",
         str_desc="A dense, crystalized slab of unholy negaslime.",
+        price=150,
+        vendors=[ewcfg.vendor_atomicforestpp]
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_tradingcardpack,
@@ -328,6 +332,22 @@ item_list = [
         context= "cardpack",
         vendors=[ewcfg.vendor_bazaar, ewcfg.vendor_glocksburycomics],
     ),
+    # EwGeneralItem(
+    #     id_item=ewcfg.item_id_promotradingcardpack,
+    #     alias=[
+    #         "promotcp",
+    #         "tcppromo",
+    #         "raretcp",
+    #         "rarepack",
+    #         "rarecardpack",
+    #         "rarecards"
+    #     ],
+    #     str_name="Promo Trading Cards",
+    #     str_desc="A limited-edition promo pack of Secreatures TCG trading cards. Signed by Maximpostion Megasus himself, these generally contain rarer cards.",
+    #     price=100000,
+    #     context= "promocardpack",
+    #     vendors=[ewcfg.vendor_bazaar]
+    # ),
     EwGeneralItem(
         id_item=ewcfg.item_id_promotradingcardpack,
         alias=[
@@ -340,9 +360,9 @@ item_list = [
         ],
         str_name="Promo Trading Cards",
         str_desc="A limited-edition promo pack of Secreatures TCG trading cards. Signed by Maximpostion Megasus himself, these generally contain rarer cards.",
-        price=100000,
+        price=18,
         context= "promocardpack",
-        vendors=[ewcfg.vendor_bazaar]
+        vendors=[ewcfg.vendor_atomicforestpp]
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_tcgboosterbox,
@@ -410,6 +430,8 @@ item_list = [
         id_item=ewcfg.item_id_stick,
         str_name="stick",
         str_desc="It’s just some useless, dumb stick.",
+        price=3,
+        vendors=[ewcfg.vendor_atomicforestpp],
         acquisition=ewcfg.acquisition_smelting,
     ),
     EwGeneralItem(
@@ -481,7 +503,9 @@ item_list = [
         str_name="blood stone",
         str_desc="Formed from the cracking of monster bones, it glistens in your palm with the screams of those whos bones comprise it. Perhaps it will be of use one day.",
         context='blood stone',
-        acquisition=ewcfg.acquisition_smelting
+        acquisition=ewcfg.acquisition_smelting,
+        price = 120,
+        vendors=[ewcfg.vendor_atomicforestpp]
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_tanningknife,
@@ -960,6 +984,8 @@ item_list = [
         prank_type=ewcfg.prank_type_instantuse,
         prank_desc="{} blasts an Air Horn and ruptures your eardrums! What an asshole!",
         rarity=ewcfg.prank_rarity_heinous,
+        price=3,
+        vendors=[ewcfg.vendor_atomicforestpp],
         gambit=20,
     ),
     EwPrankItem(
@@ -1200,6 +1226,8 @@ item_list = [
         prank_desc="You slip and slide on a Banana Peel and land right on your tailbone! Oof, ouch, your bones!!",
         trap_chance=35,
         rarity=ewcfg.prank_rarity_heinous,
+        price=1,
+        vendors=[ewcfg.vendor_atomicforestpp],
         gambit=15,
     ),
     EwPrankItem(
@@ -3548,6 +3576,17 @@ furniture_list = [
         acquisition = "smelting",
         furniture_place_desc = "You chuck the pillow on your bedding of choice. You're going to sleep *damn* well tonight.",
         furniture_look_desc = "A pillow stuffed with red glowing feathers magnificently rests upon their bed.",
+    ),
+    EwFurniture(
+        id_furniture = "honeycombcouch",
+        str_name = "Honeycomb Couch",
+        str_desc = "A hexagonal couch made entirely from honeycombs. It's sticky, and covered bees, and, uh... not couch-shaped.",
+        rarity = "Patrician",
+        acquisition = "bartering",
+        price=60,
+        vendors=[ewcfg.vendor_atomicforestpp],
+        furniture_place_desc = "You set the honeycombs on the floor, crushing a few bees in the process. Honey slowly starts dripping off of it.",
+        furniture_look_desc = "You pick up the honeycombs from the floor, angering a few bees. Better hope you're not allergic to them!",
     ),
 ]
 

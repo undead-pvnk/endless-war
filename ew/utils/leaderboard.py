@@ -54,6 +54,10 @@ async def post_leaderboards(client = None, server = None):
     topzines = make_zines_top_board(server=server.id)
     resp_cont.add_channel_response(leaderboard_channel, topzines)
 
+    #remove after event - lol more like leaderboard omg lots
+    toppp = make_userdata_board(server=server.id, category=ewcfg.col_cumulative_party_points, title=ewcfg.leaderboard_party) # haha pp get it
+    resp_cont.add_channel_response(leaderboard_channel, toppp)
+    
     await resp_cont.post()
 
     ewutils.logMsg("...finished leaderboard calcs.")
@@ -589,6 +593,11 @@ def board_header(title):
 
     elif title == ewcfg.leaderboard_fashion:
         emote = ewcfg.emote_111
+        bar += " "
+
+    # remove after event - party lol PARTY PARTY PARTY PARTY PARTY
+    elif title == ewcfg.leaderboard_party:
+        emote = ":tada:"
         bar += " "
 
     if emote == None and emote2 == None:

@@ -3896,13 +3896,13 @@ async def shartonhortisolis(cmd):
     user_data = EwUser(member=cmd.message.author)
     market_data = EwMarket(id_server = user_data.id_server)
     if user_data.poi != ewcfg.poi_id_ab_farms:
-        response = "You try turning in your dried party poppeppers, but [CORN OSTRITCH] is nowhere in sight! You've gotta go to Arsonbrook Farms to turn in dried party poppeppers, dumbass."
+        response = "You try turning in your dried party poppeppers, but Zeamaize is nowhere in sight! You've gotta go to Arsonbrook Farms to turn in dried party poppeppers, dumbass."
     elif user_data.life_state == ewcfg.life_state_corpse: 
-        response = "[CORN OSTRITCH] seems entirely unaware of your existence. It seems you need to be alive to give them dried party poppeppers."
+        response = "Aloe gets off of Zeamaize and waves you away before you can approach. It seems you need to be alive to give them dried party poppeppers."
     elif user_data.race == ewcfg.race_shambler:
-        response = "[CORN OSTRITCH] starts violently attacking you before you back away. It seems the Gankers are still highly shamblerphobic."
+        response = "Zeamaize starts violently attacking you before you back away. It seems the Gankers are still highly shamblerphobic."
     elif user_data.life_state == ewcfg.life_state_kingpin:
-        response = "[CORN OSTRITCH] starts pecking and hissing at you. What the fuck! It seems like the Gankers aren't privy to Kingpins."
+        response = "Zeamaize starts pecking and hissing at you. What the fuck! It seems like the Gankers aren't privy to Kingpins."
     else:
         point_gain = 0
         peppers_to_remove = []
@@ -3930,7 +3930,7 @@ async def shartonhortisolis(cmd):
             market_data.persist()
 
             # Tell user how many points they got
-            response = "[CORN OSTRITCH] carefully takes the dried party poppeppers out of your hands and into a satchel by their side. Rosalita scrawls that you gained **{} Party Points** on a clipboard.".format(point_gain)
+            response = "Zeamaize carefully takes the dried party poppeppers out of your hands and into a satchel by her side. Aloe scrawls that you gained **{} Party Points** on a clipboard.".format(point_gain)
         else:
             response = "You reach into your pockets to grab dried party poppeppers, but you don't have any! What an idiotic mistake!"
 

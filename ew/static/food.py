@@ -1004,7 +1004,7 @@ food_list = [
         str_name = "Party Poppeppers",
         vendors = ['Farm'],
         str_eat = "You chomp into the raw Party Poppeppers. It isn't terrible, but you feel like there is a more constructive use for it.",
-        str_desc = "[DESCRIPTION BASED ON SMEARG'S DESIGN]",
+        str_desc = "Filled with an explosive spice, these peppers could be used to kill someone. But, like, why would you do that?",
         time_expir = 172800,
     ),
     EwFood(
