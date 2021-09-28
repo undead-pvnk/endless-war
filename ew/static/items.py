@@ -984,8 +984,6 @@ item_list = [
         prank_type=ewcfg.prank_type_instantuse,
         prank_desc="{} blasts an Air Horn and ruptures your eardrums! What an asshole!",
         rarity=ewcfg.prank_rarity_heinous,
-        price=3,
-        vendors=[ewcfg.vendor_atomicforestpp],
         gambit=20,
     ),
     EwPrankItem(
@@ -1226,8 +1224,6 @@ item_list = [
         prank_desc="You slip and slide on a Banana Peel and land right on your tailbone! Oof, ouch, your bones!!",
         trap_chance=35,
         rarity=ewcfg.prank_rarity_heinous,
-        price=1,
-        vendors=[ewcfg.vendor_atomicforestpp],
         gambit=15,
     ),
     EwPrankItem(
@@ -1391,8 +1387,10 @@ item_list = [
         ],
         str_name="Prank Capsule",
         str_desc="A small little plastic capsule, which holds a devious prank item on the inside.",
-        price=20000,
-        vendors=[ewcfg.vendor_vendingmachine],
+        price=3,
+        vendors=[ewcfg.vendor_atomicforestpp],
+        # price=20000,
+        # vendors=[ewcfg.vendor_vendingmachine],
         context="prankcapsule"
     ),
     EwGeneralItem(

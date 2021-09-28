@@ -1509,6 +1509,7 @@ cmd_festivity = cmd_prefix + 'festivity'
 # Party Event TODO: remove after event
 cmd_partypoints = cmd_prefix + 'partypoints'
 cmd_turnin = cmd_prefix + "turnin"
+cmd_turnin_alt_1 = cmd_prefix + "handin"
 
 cmd_scrawl = cmd_prefix + 'scrawl'
 cmd_strip = cmd_prefix + 'strip'

@@ -221,7 +221,8 @@ cmd_map = {
 
     # Ganker Party Event TODO: remove after event
     ewcfg.cmd_partypoints: cmdcmds.partypoints,
-    ewcfg.cmd_turnin: cmdcmds.shartonhortisolis
+    ewcfg.cmd_turnin: cmdcmds.shartonhortisolis,
+    ewcfg.cmd_turnin_alt_1: cmdcmds.shartonhortisolis
 
 }
 
