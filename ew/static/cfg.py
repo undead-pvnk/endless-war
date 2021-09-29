@@ -1,7 +1,7 @@
 # Global configuration options.
 
 
-version = "v4.009 I AM SPEED."
+version = "v4.010 Trophy Weapons"
 
 dir_msgqueue = 'msgqueue'
 
@@ -2618,10 +2618,12 @@ stat_nunchucks_kills = 'nunchucks_kills'
 stat_scythe_kills = 'scythe_kills'
 stat_yoyo_kills = 'yoyo_kills'
 stat_knives_kills = 'knives_kills'
+stat_monowhip_kills = 'monowhip_kills'
 stat_molotov_kills = 'molotov_kills'
 stat_grenade_kills = 'grenade_kills'
 stat_garrote_kills = 'garrote_kills'
 stat_pickaxe_kills = 'pickaxe_kills'
+stat_diamond_pickaxe_kills = 'diamond_pickaxe_kills'
 stat_fishingrod_kills = 'fishingrod_kills'
 stat_bass_kills = 'bass_kills'
 stat_bow_kills = 'bow_kills'
@@ -2645,6 +2647,8 @@ stat_megachainsaw_kills = 'megachainsaw_kills'
 stat_huntingrifle_kills = 'huntingrifle_kills'
 stat_whistle_kills = 'whistle_kills'
 stat_harpoon_kills = 'harpoon_kills'
+stat_sniper_kills = 'sniper_kills'
+
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -2758,6 +2762,7 @@ item_id_forbiddenstuffedcrust = "theforbiddenstuffedcrust"
 item_id_forbidden111 = "theforbiddenoneoneone"
 item_id_tradingcardpack = "tradingcardpack"
 item_id_promotradingcardpack = "promotradingcardpack"
+item_id_monofilamentcore = "monofilamentfragment"
 item_id_tcgboosterbox = "tcgboosterbox"
 item_id_stick = "stick"
 item_id_gameguide = "gameguide"
@@ -4400,6 +4405,7 @@ enemy_drop_tables = {
         {item_id_slimepoudrin: [100, 1, 2]},
         {rarity_plebeian: [50, 1, 1]},
         {"crop": [50, 3, 6]},
+        {weapon_id_awp: [1, 1, 1]}
     ],
     enemy_type_mammoslime: [
         {item_id_slimepoudrin: [75, 5, 6]},
@@ -4440,6 +4446,7 @@ enemy_drop_tables = {
         {"crop": [100, 1, 1]},
         {item_id_dinoslimemeat: [100, 1, 1]},
         {item_id_tradingcardpack: [100, 1, 1]},
+        {item_id_monofilamentfragment: [100, 1, 1]},
     ],
     enemy_type_civilian: [
         {item_id_slimepoudrin: [20, 1, 1]},
@@ -4594,7 +4601,7 @@ enemy_data_table = {
         "attacktype": enemy_attacktype_armcannon,
         "displayname": "Unnerving Fighting Operator",
         "raredisplayname": "Unyielding Fierce Operator",
-        "aliases": ["ufo", "alien", "unnervingfightingoperator", "unnvering"]
+        "aliases": ["ufo", "alien", "unnervingfightingoperator", "unnerving"]
     },
     enemy_type_titanoslime: {
         "slimerange": [5000000, 7000000],

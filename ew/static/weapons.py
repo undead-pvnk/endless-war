@@ -59,8 +59,8 @@ def get_weapon_type_stats(weapon_type):
             "shots": 3
         },
         "minigun": {
-            "damage_multiplier": 0.3,
-            "cost_multiplier": 3,
+            "damage_multiplier": 0.35,
+            "cost_multiplier": 2.5,
             "crit_chance": 0.1,
             "crit_multiplier": 2,
             "hit_chance": 0.5,
@@ -358,10 +358,10 @@ weapon_list = [
     EwWeapon(  # 3
         id_weapon=ewcfg.weapon_id_shotgun,
         alias=[
-            "boomstick",
             "remington",
             "scattergun",
-            "r870"
+            "r870",
+            "pumpaction"
         ],
         str_crit="**Critical Hit!** {name_player} has landed a thick, meaty shot into {name_target}'s chest!",
         str_miss="**You missed!** Your pellets inexplicably dodge {name_target}. Fucking random bullet spread, this game will never be competitive.",
@@ -377,11 +377,11 @@ weapon_list = [
         str_damage="{name_target} takes a shotgun blast to the {hitzone}!!",
         str_duel="**BOOM.** {name_player} and {name_target} stand about five feet away from a wall, pumping it full of lead over and over to study it's bullet spread.",
         str_description="It's a shotgun.",
-        str_reload="You tilt your shotgun and pop shell after shell into its chamber before cocking the forend back. Groovy.",
+        str_reload="You tilt your shotgun and perform a double quad load into the shell tube.",
         str_reload_warning="**chk--** *...* **SHIT!!** {name_player}’s shotgun has ejected the last shell in its chamber, it’s out of ammo!!",
         str_scalp=" It has a gaping hole in the center.",
         fn_effect=get_normal_attack(cost_multiplier=2.5, weapon_type='heavy'),
-        clip_size=2,
+        clip_size=8,
         price=10000,
         vendors=[ewcfg.vendor_dojo, ewcfg.vendor_breakroom],
         classes=[ewcfg.weapon_class_ammo],
@@ -1435,7 +1435,6 @@ weapon_list = [
         vendors=[ewcfg.vendor_basedhardware],
         classes=[],
         stat=ewcfg.stat_chainsaw_kills,
-        captcha_length=4
     ),
     EwWeapon(  # 38
         id_weapon=ewcfg.weapon_id_huntingrifle,
@@ -1466,7 +1465,7 @@ weapon_list = [
         acquisition=ewcfg.acquisition_smelting,
         captcha_length=4
     ),
-    EwWeapon(  # 38
+    EwWeapon(  # 39 Unused, untested afaik -K1P 
         id_weapon=ewcfg.weapon_id_harpoon,
         alias=[
             "harpoon",
@@ -1494,7 +1493,7 @@ weapon_list = [
         # YOU EITHER KILL 'EM OR YOU DON'T, BROTHERRRR
         clip_size=1
     ),
-    EwWeapon(  # 38
+    EwWeapon(  # 40
         id_weapon=ewcfg.weapon_id_model397,
         alias=[
             "anomalousrifle",
@@ -1506,8 +1505,8 @@ weapon_list = [
         str_equip="You equip the model 397 hunting rifle.",
         str_name="model 397 hunting rifle",
         str_weapon="a model 397 hunting rifle",
-        str_weaponmaster_self="You are a rank {rank} gentleman of the model 397 hunting rifle.",
-        str_weaponmaster="They are a rank {rank} gentleman of the model 397  hunting rifle.",
+        str_weaponmaster_self="You are a rank {rank} {title} of the model 1397 hunting rifle.",
+        str_weaponmaster="They are a rank {rank} gentleman of the model 1397  hunting rifle.",
         str_kill="**360 NOSCOPED!!** {name_player} spins and fires! {name_target}'s head subsequently explodes! Get wr3ck3d, my good sir! {emote_skull}",
         str_killdescriptor="d3s7r0y3d",
         str_damage="{name_player} sneaks a few shots into {name_target}’s {hitzone}!!",
@@ -1516,12 +1515,12 @@ weapon_list = [
         str_reload="Oh. Fuck. You didn't think you'd even need to reload this. You detatch the two cylinders from the gun, making sure not to drop the massive weight on your toes. In goes the ammo! It's about 4x over capacity, but you somehow manage to get everything put back together in pretty good time.",
         str_reload_warning="**OH, BOTHER!** {name_player}’s hunting rifle just ran out bullets!!",
         str_scalp="A single, clean hole pierces the scalp. Ahhh, the thrill of the hunt...",
-        fn_effect=get_normal_attack(cost_multiplier=0.7, weapon_type='burst_fire'),
+        fn_effect=get_normal_attack(weapon_type='burst_fire'),
         classes=[ewcfg.weapon_class_ammo],
         stat=ewcfg.stat_rifle_kills,
         clip_size=1000
     ),
-    EwWeapon(  # 39
+    EwWeapon(  # 41
         id_weapon=ewcfg.weapon_id_slimeoidwhistle,
         alias=[
             "slimeoidwhistle",
@@ -1546,7 +1545,88 @@ weapon_list = [
         stat=ewcfg.stat_whistle_kills,
         acquisition=ewcfg.acquisition_smelting
     ),
-
+    EwWeapon(  # 42 AWP
+        id_weapon=ewcfg.weapon_id_awp, #need to make
+        alias=[
+            "l96",
+            "sniperrifle",
+            "awp",
+            "awm"
+        ],
+        str_crit="**Critical hit!!** {name_target}'s skull goes ***Kachunk!***",
+        str_miss="**You missed!!** {name_player} misses {name_target}'s torso by a few inches.",
+        str_equip="You equip the sniper rifle.",
+        str_name="sniper rifle",
+        str_weapon="a sniper rifle",
+        str_weaponmaster_self="You are a rank {rank} {title}  of the sniper rifle.",
+        str_weaponmaster="They are a rank {rank} {title} gentleman of the sniper rifle.",
+        str_kill="As soon as {name_player} rounds the corner, the damage is done. {name_target}'s lifeless body ragdolls to the floor. {emote_skull}",
+        str_killdescriptor="fragged",
+        str_damage="{name_player} lands a shot on {name_target}’s {hitzone}!",
+        str_duel="**...** {name_player} and {name_target} begin time trials on pictures of long dead terrorists",
+        str_description="It's a sniper rifle, a well oiled machine.",
+        str_reload="You carefully insert bullets into the chamber one by one until it can hold no more.",
+        str_reload_warning="***Ping!*** {name_player}’s sniper rifle ran out of bullets!!",
+        str_scalp="A large hole is found in what was once someones scalp",
+        fn_effect=get_normal_attack(cost_multiplier=1.2, weapon_type='precision'),
+        classes=[ewcfg.weapon_class_ammo, ewcfg.weapon_class_captcha],
+        stat=ewcfg.stat_sniper_kills,, 
+        clip_size=6,
+        captcha_length=4
+    ),
+    EwWeapon(  # 43 DPick
+        id_weapon=ewcfg.weapon_id_diamondpickaxe,
+        alias=[
+            "dpick",
+            "diamondpickaxe",
+            "diamondpick"
+        ],
+        str_crit="**Critical hit!!** X x X x X x X {name_player} jumps and lands a solid smack on {name_target}’s {hitzone}.",
+        str_miss="**MISS!!** {name_player} swings their diamond pickaxe and does no damage!",
+        str_equip="You equip the diamond pickaxe.",
+        str_name="a Diamond Pickaxe",
+        str_weapon="a diamond pickaxe",
+        str_weaponmaster_self="You are a rank {rank} {title}of the diamond pickaxe.",
+        str_weaponmaster="They are a rank {rank} {title} of the diamond pickaxe.",
+        # str_trauma_self = "There is a deep, precise indent in the crown of your skull. How embarrassing!",
+        # str_trauma = "There is a deep, precise indent in the crown of their skull. How embarrassing!",
+        str_kill="**THWACK!!** {name_player} uses their block game skills to !mine {name_target} to death. How embarrassing! {emote_skull}",
+        str_killdescriptor="!mined",
+        str_damage="{name_target} is lightly tapped on the {hitzone}!!",
+        str_duel="**THWACK, THWACK** {name_player} and {name_target} spend some quality time together, catching up and the latest minecraft manhunt episode.",
+        str_scalp="Its speckled with bits of a sky blue",
+        fn_effect=get_normal_attack(weapon_type='tool'),
+        str_description="It's a diamond pickaxe.",
+        acquisition=ewcfg.acquisition_smelting,
+        stat=ewcfg.stat_diamond_pickaxe_kills,
+        is_tool=1
+    ),
+    EwWeapon(  # 44
+        id_weapon=ewcfg.weapon_id_monofilamentwhip,
+        alias=[
+            "monowhip",
+            "monofilamentwhip",
+            "whip"
+        ],
+        str_crit="**Critical hit!!** The tip {name_player}'s whip swiftly cricles around {name_target}'s {hitzone} and removes it!",
+        str_miss="**MISS!!** as {name_player}'s whip missed its target they scurry to avoid it's whiplash",
+        str_equip="You equip the monowhip.",
+        str_name="monofilament twhip",
+        str_weapon="monofilament whip",
+        str_weaponmaster_self="You are a rank {rank} {title} of the monowhip.",
+        str_weaponmaster="They are a rank {rank} {title} of the monowhip.",
+        # str_trauma_self = "You are covered in scarred-over lacerations and puncture wounds.",
+        # str_trauma = "They are covered in scarred-over lacerations and puncture wounds.",
+        str_kill="A flash of neon hangs in the air!! {name_target}'s torso seperates from the rest of their body, as limbs fall to the floor.{name_player}'s monowhip retracts into its handle. {emote_skull}",
+        str_killdescriptor="flayed",
+        str_damage="{name_target} is flayed by the monowhip!!",
+        str_duel="{name_player} and {name_target} avoid disaster and study Indiana Jones films",
+        str_description="It's a monofilament whip",
+        str_scalp=" It feels as if it was cut off with a razorbladde.",
+        fn_effect=get_normal_attack(weapon_type='small_game'),
+        acquisition=ewcfg.acquisition_smelting,
+        stat=ewcfg.stat_monowhip_kills,
+    ),
 ]
 
 
@@ -1590,6 +1670,10 @@ slimeoid_weapon_type_convert = {
     8:  get_normal_attack(weapon_type='heavy'),
     9:  get_normal_attack(weapon_type='heavy'),
     10: get_normal_attack(weapon_type='burst_fire'),
+    11: get_normal_attack(weapon_type='burst_fire'),
+    12: get_normal_attack(weapon_type='burst_fire'),
+    13: get_normal_attack(weapon_type='burst_fire'),
+
 }
 
 slimeoid_dmg_text = {

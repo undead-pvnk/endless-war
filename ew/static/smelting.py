@@ -212,6 +212,21 @@ smelting_recipe_list = [
         products=[ewcfg.weapon_id_pickaxe]
     ),
     EwSmeltingRecipe(
+        id_recipe="diamondpickaxe",
+        str_name="a Diamond Pickaxe",
+        alias=[
+            "dpick",
+            "diamondpickaxe",
+            "diamondpick",
+            "dp"
+        ],
+        ingredients={
+            ewcfg.item_id_slimepoudrin: 10000, #100 megaslime worth
+            ewcfg.item_id_stick: 2
+        },
+        products=[ewcfg.weapon_id_diamondpickaxe]
+    ),
+    EwSmeltingRecipe(
         id_recipe="faggot",
         str_name="a Faggot",
         alias=[
@@ -336,7 +351,8 @@ smelting_recipe_list = [
         ],
         ingredients={
             ewcfg.item_id_monsterbones: 100,
-            ewcfg.item_id_faggot: 1
+            'scalp':100,
+            'soul':1,
         },
         products=[ewcfg.item_id_bloodstone]
     ),
@@ -355,6 +371,20 @@ smelting_recipe_list = [
             ewcfg.item_id_leather: 1
         },
         products=[ewcfg.weapon_id_dclaw]
+    ),
+        EwSmeltingRecipe(
+        id_recipe="monowhip",
+        str_name="a monofilamentwhip",
+        alias=[
+            "monowhip",
+            "monofilamentwhip",
+            "whip"
+        ],
+        ingredients={
+            ewcfg.item_id_monofilamentfragment: 25,
+            ewcfg.item_id_ironingot: 1,
+        },
+        products=[weapon_id_monofilamentwhip]
     ),
     EwSmeltingRecipe(
         id_recipe=ewcfg.weapon_id_staff,

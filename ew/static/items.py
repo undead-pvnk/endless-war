@@ -479,9 +479,15 @@ item_list = [
     EwGeneralItem(
         id_item=ewcfg.item_id_bloodstone,
         str_name="blood stone",
-        str_desc="Formed from the cracking of monster bones, it glistens in your palm with the screams of those whos bones comprise it. Perhaps it will be of use one day.",
+        str_desc="Formed from the cracking of monster bones, the flesh of your fellow gangster, and a soul, it glistens in your palm with the screams of those whos bones comprise it.",
         context='blood stone',
         acquisition=ewcfg.acquisition_smelting
+    ),
+    EwGeneralItem(
+        id_item=item_id_monofilamentfragment,
+        str_name="monofilament fragment",
+        str_desc="A fragment of a UFO's Monofillament defense system. Luckily it's unoperational in this state, otherwise you would be toast",
+        context='monofilament fragment',
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_tanningknife,
