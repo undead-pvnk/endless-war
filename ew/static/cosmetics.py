@@ -1225,6 +1225,36 @@ cosmetic_items_list = [
         freshness = 10,
         price = 50000,
     ),
+    EwCosmeticItem(
+        id_cosmetic = "beekeepinghat",
+        str_name = "Beekeeping Hat",
+        str_desc = "A wide-brimmed hat with mesh veil, allowing absolutely 0 bees through. It's essential to anyone pursuing the NLACakaNM honey trade.",
+        durability = 2500000,
+        style = "smart",
+        freshness = 7,
+        price = 20,
+        vendors = ['Atomic Forest Stockpile Party Redemption Cart'],
+    ),
+    EwCosmeticItem(
+        id_cosmetic = "gardengankerpin",
+        str_name = "Garden Ganker Pin",
+        str_desc = "An enamel pin of the Garden Ganker logo, a badge of love towards your farming brethren. It's cheaply crafted, but it's the love that counts.",
+        durability = 2500000,
+        style = "tough",
+        freshness = 3,
+        price = 1,
+        vendors = ['Atomic Forest Stockpile Party Redemption Cart'],
+    ),
+    EwCosmeticItem(
+        id_cosmetic = "rosehairclip",
+        str_name = "Rose Hairclip",
+        str_desc = "A hairclip that looks and smells exactly like a rose. It's both subtle and gorgeous, perfect for your head!",
+        durability = 2500000,
+        style = "beautiful",
+        freshness = 5,
+        price = 12,
+        vendors = ['Atomic Forest Stockpile Party Redemption Cart'],
+    ),
 ]
 
 

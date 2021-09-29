@@ -155,7 +155,7 @@ item_list = [
         context="poudrin",
         str_name="Slime Poudrin",
         str_desc="A dense, crystalized chunk of precious slime.",
-        price=15,
+        price=4,
         vendors=[ewcfg.vendor_atomicforestpp],
         acquisition=ewcfg.acquisition_mining,
     ),
@@ -313,7 +313,7 @@ item_list = [
         id_item=ewcfg.item_id_negapoudrin,
         str_name="negapoudrin",
         str_desc="A dense, crystalized slab of unholy negaslime.",
-        price=150,
+        price=100,
         vendors=[ewcfg.vendor_atomicforestpp]
     ),
     EwGeneralItem(
@@ -430,7 +430,7 @@ item_list = [
         id_item=ewcfg.item_id_stick,
         str_name="stick",
         str_desc="It’s just some useless, dumb stick.",
-        price=3,
+        price=9,
         vendors=[ewcfg.vendor_atomicforestpp],
         acquisition=ewcfg.acquisition_smelting,
     ),
@@ -467,6 +467,8 @@ item_list = [
         str_name="Tin Can",
         str_desc="OH GOD IT'S A FUCKING TIN CAN!",
         acquisition=ewcfg.acquisition_bartering,
+        price=4,
+        vendors=[ewcfg.vendor_atomicforestpp],
         ingredients="generic",
         context=10,
     ),
@@ -1804,6 +1806,13 @@ item_list = [
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_partypoppepperseeds,
+        alias=[
+            "party",
+            "partypoppepperseeds",
+            "partypoppepperseedpacket",
+            "partypoppeppersseedpacket"
+            "partypoppeppers"
+        ],
         str_name="Party Poppeppers Seed Packet",
         str_desc="A colorful packet containing specially-bred seeds that grow into Party Poppeppers. Using this, you can !sow party poppeppers in any farming plot.",
         price=5000,
@@ -3581,10 +3590,21 @@ furniture_list = [
         str_desc = "A hexagonal couch made entirely from honeycombs. It's sticky, and covered bees, and, uh... not couch-shaped.",
         rarity = "Patrician",
         acquisition = "bartering",
-        price=60,
+        price=45,
         vendors=[ewcfg.vendor_atomicforestpp],
         furniture_place_desc = "You set the honeycombs on the floor, crushing a few bees in the process. Honey slowly starts dripping off of it.",
         furniture_look_desc = "You pick up the honeycombs from the floor, angering a few bees. Better hope you're not allergic to them!",
+    ),
+    EwFurniture(
+        id_furniture = "entiregarden",
+        str_name = "an Entire Garden",
+        str_desc = "An entire garden, dirt plots and all. It's... fucking massive. You have no clue how this is portable.",
+        rarity = "Patrician",
+        acquisition = "bartering",
+        price=85,
+        vendors=[ewcfg.vendor_atomicforestpp],
+        furniture_place_desc = "You set up an entire garden, taking up half of the room. It's filled with joybeans, pawpaws, aushucks!",
+        furniture_look_desc = "You pick up the entire garden, freeing up an insane amount of space in your room. Despite the added room, it feels... empty. You're missing the flora.",
     ),
 ]
 

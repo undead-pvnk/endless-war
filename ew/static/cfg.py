@@ -4328,8 +4328,8 @@ enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_gre
 party_bosses = [enemy_type_carrottop, enemy_type_partymystery]
 
 party_day_one = datetime.date(2021, 9, 28)
-party_day_two = datetime.date(2021, 5, 21)
-party_day_three = datetime.date(2021, 5, 22)
+party_day_two = datetime.date(2021, 9, 29)
+party_day_three = datetime.date(2021, 9, 30)
 party_day_four = datetime.date(2021, 5, 23)
 party_day_five = datetime.date(2021, 5, 24)
 party_day_six = datetime.date(2021, 5, 25)

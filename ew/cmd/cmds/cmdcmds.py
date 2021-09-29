@@ -3885,9 +3885,9 @@ async def partypoints(cmd):
     total_party_points = market_data.total_party_points
 
     if user_data.poi != ewcfg.poi_id_ab_farms:
-        response = "You check the Gankers' website on your gellphone. Looking past the mid-90's web design, you see that you have {} points available out of {} dried party poppeppers donated, as well that the city's total is {} dried party poppeppers.".format(party_points, cumulative_party_points, total_party_points)
+        response = "You check the Gankers' website on your gellphone. Looking past the mid-90's web design, you see that you have {} points available out of {} party poppeppers donated, as well that the Gankers' total is {} party poppeppers.".format(party_points, cumulative_party_points, total_party_points)
     else:
-        response = "You ask about your points, and [???] gleefully informs you that you have {} points out of {} dried party poppeppers donated, and that the Gankers' total stash is {} dried party poppeppers. '[DIALOGUE]', [???] adds.".format(party_points, cumulative_party_points, total_party_points)        
+        response = "You ask about your points, and Aloe gleefully informs you that you have {} points out of {} party poppeppers donated, and that the Gankers' total stash is {} party poppeppers. 'Thank you so much!!!', Aloe adds.".format(party_points, cumulative_party_points, total_party_points)        
     
     return await fe_utils.send_response(response, cmd)
 
@@ -3896,9 +3896,9 @@ async def shartonhortisolis(cmd):
     user_data = EwUser(member=cmd.message.author)
     market_data = EwMarket(id_server = user_data.id_server)
     if user_data.poi != ewcfg.poi_id_ab_farms:
-        response = "You try turning in your dried party poppeppers, but Zeamaize is nowhere in sight! You've gotta go to Arsonbrook Farms to turn in dried party poppeppers, dumbass."
+        response = "You try turning in your party poppeppers, but Zeamaize is nowhere in sight! You've gotta go to Arsonbrook Farms to turn in party poppeppers, dumbass."
     elif user_data.life_state == ewcfg.life_state_corpse: 
-        response = "Aloe gets off of Zeamaize and waves you away before you can approach. It seems you need to be alive to give them dried party poppeppers."
+        response = "Aloe gets off of Zeamaize and waves you away before you can approach. It seems you need to be alive to give them party poppeppers."
     elif user_data.race == ewcfg.race_shambler:
         response = "Zeamaize starts violently attacking you before you back away. It seems the Gankers are still highly shamblerphobic."
     elif user_data.life_state == ewcfg.life_state_kingpin:
@@ -3908,11 +3908,12 @@ async def shartonhortisolis(cmd):
         peppers_to_remove = []
 
         # Search for dried party poppeppers in inventory. OPTIMIZE THIS FOR THE LOVE OF JESUS CHRIST ALMIGHTY IN HEAVEN
-        inv_items = bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
+        inv_items = bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server) # , item_type_filter = ewcfg.it_item) THIS IS SO BAD IM SO SORRY OH GOD
 
         for item in inv_items:
             item_data = EwItem(id_item = item.get('id_item'))
-            if item_data.item_props.get("id_item") == ewcfg.item_id_driedpartypoppeppers:
+            print(item_data)
+            if item_data.item_props.get("id_item") == ewcfg.item_id_driedpartypoppeppers or item_data.item_props.get("id_food") == 'partypoppeppers':
                 peppers_to_remove.append(item_data.id_item)
                 point_gain += 1
         
@@ -3930,8 +3931,8 @@ async def shartonhortisolis(cmd):
             market_data.persist()
 
             # Tell user how many points they got
-            response = "Zeamaize carefully takes the dried party poppeppers out of your hands and into a satchel by her side. Aloe scrawls that you gained **{} Party Points** on a clipboard.".format(point_gain)
+            response = "Zeamaize carefully takes the party poppeppers out of your hands and into a satchel by her side. Aloe scrawls that you gained **{} Party Points** on a clipboard.".format(point_gain)
         else:
-            response = "You reach into your pockets to grab dried party poppeppers, but you don't have any! What an idiotic mistake!"
+            response = "You reach into your pockets to grab party poppeppers, but you don't have any! What an idiotic mistake!"
 
     return await fe_utils.send_response(response, cmd)

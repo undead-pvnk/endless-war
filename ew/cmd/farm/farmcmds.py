@@ -146,10 +146,12 @@ async def sow(cmd):
                 farm.action_required = ewcfg.farm_action_none
                 farm.sow_life_state = user_data.life_state
                 if ewcfg.mutation_id_greenfingers in mutations:
-                    if user_data.life_state == ewcfg.life_state_juvenile:
-                        farm.sow_life_state = ewcfg.farm_life_state_juviethumb
-                    else:
-                        farm.sow_life_state = ewcfg.farm_life_state_thumb
+                    farm.sow_life_state = ewcfg.farm_life_state_juviethumb
+                    # remove after event - all gangsters getting this.
+                    # if user_data.life_state == ewcfg.life_state_juvenile:
+                    #     farm.sow_life_state = ewcfg.farm_life_state_juviethumb
+                    # else:
+                    #     farm.sow_life_state = ewcfg.farm_life_state_thumb
 
                 bknd_item.item_delete(id_item=item_sought.get('id_item'))  # Remove Poudrins
 
