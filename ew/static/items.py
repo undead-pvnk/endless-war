@@ -506,8 +506,6 @@ item_list = [
         str_desc="Formed from the cracking of monster bones, it glistens in your palm with the screams of those whos bones comprise it. Perhaps it will be of use one day.",
         context='blood stone',
         acquisition=ewcfg.acquisition_smelting,
-        price = 120,
-        vendors=[ewcfg.vendor_atomicforestpp]
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_tanningknife,
@@ -1817,6 +1815,15 @@ item_list = [
         str_desc="A colorful packet containing specially-bred seeds that grow into Party Poppeppers. Using this, you can !sow party poppeppers in any farming plot.",
         price=5000,
         vendors=[ewcfg.vendor_atomicforest]
+    ),
+    EwGeneralItem(
+        id_item=ewcfg.item_id_partypopper,
+        str_name="Party Popper",
+        str_desc="A party popper! Hell yeah!",
+        price=1,
+        vendors=[ewcfg.vendor_atomicforestpp],
+        context='partypopper',
+        acquisition=ewcfg.acquisition_smelting
     ),
     # EwSeedPacket(
     # 	id_item=ewcfg.item_id_gaiaseedpack_pulpgourds,

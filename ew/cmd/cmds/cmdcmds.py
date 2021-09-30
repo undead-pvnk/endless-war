@@ -3908,7 +3908,7 @@ async def shartonhortisolis(cmd):
         peppers_to_remove = []
 
         # Search for dried party poppeppers in inventory. OPTIMIZE THIS FOR THE LOVE OF JESUS CHRIST ALMIGHTY IN HEAVEN
-        inv_items = bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server) # , item_type_filter = ewcfg.it_item) THIS IS SO BAD IM SO SORRY OH GOD
+        inv_items = bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item) + bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_food)# THIS IS SO BAD IM SO SORRY OH GOD
 
         for item in inv_items:
             item_data = EwItem(id_item = item.get('id_item'))

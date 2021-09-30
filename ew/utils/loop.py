@@ -1377,7 +1377,7 @@ async def party_tick_loop(id_server):
     # interval = 10
 
     while not ewutils.TERMINATE:
-        interval = 450 - 1    # Crank said to do this every sept minute plus trente seconde moins un seconde soooo... oui???
+        interval = 600 - 1    # controls carrot top spawn rate lol lol lol
         await asyncio.sleep(interval)
         await party_checkboss(id_server)
         await party_spawnboss(id_server)

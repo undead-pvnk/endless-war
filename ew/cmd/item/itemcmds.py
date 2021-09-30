@@ -806,6 +806,9 @@ async def item_use(cmd):
             elif context == "prankcapsule":
                 response = itm_utils.popcapsule(id_user=author, id_server=server, item=item)
 
+            elif context == 'partypopper':
+                response = "***:tada:POP!!!:tada:*** Confetti flies all through the air, filling the area with a sense of celebration! :confetti_ball::confetti_ball::confetti_ball:"
+
             elif context == ewcfg.item_id_modelovaccine:
 
                 if user_data.life_state == ewcfg.life_state_shambler:

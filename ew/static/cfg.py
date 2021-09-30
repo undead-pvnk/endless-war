@@ -2819,6 +2819,7 @@ item_id_oldboot = "oldboot"
 item_id_leather = "leather"
 item_id_feather = "feather"
 item_id_partypoppepperseeds = "partypoppepperseeds"
+item_id_partypopper = "partypopper"
 item_id_ironingot = "ironingot"
 item_id_bloodstone = "bloodstone"
 item_id_tanningknife = "tanningknife"
@@ -4533,22 +4534,23 @@ enemy_drop_tables = {
     ],
     enemy_type_carrottop: [
         {'carrottopsmohawk': [100, 1, 1]},
-        {item_id_slimepoudrin: [50, 1, 4]},
-        {item_id_driedpartypoppeppers: [100, 5, 15]},
-        {'quesarito': [30, 1, 15]},
-        {'partyhat': [55, 1, 1]}
+        {item_id_slimepoudrin: [50, 1, 3]},
+        {item_id_driedpartypoppeppers: [100, 1, 9]},
+        {'quesarito': [15, 1, 9]},
+        {'partyhat': [45, 1, 1]}
     ],
     enemy_type_partymystery: [
         {'dionaeashawl': [100, 1, 1]},
-        {item_id_driedpartypoppeppers: [100, 15, 35]},
+        {item_id_driedpartypoppeppers: [100, 1, 18]},
         {'strawhat': [50, 1, 1]},
-        {'overalls': [50, 1, 1]}
+        {'overalls': [50, 1, 1]},
+        {"crop": [100, 1, 4]}
     ]
 }
 for enemy in gvs_enemies:
     enemy_drop_tables[enemy] = [{item_id_slimepoudrin: [100, 1, 1]}]
 for enemy in slimeoid_trainers:
-    enemy_drop_tables[enemy] = [{item_id_slimepoudrin: [100, 1, 1]}]
+    enemy_drop_tables[enemy] = [{item_id_slimepoudrin: [100, 1, 1]}, {rarity_plebeian: [20, 1, 1]}]
 
 # When making a new enemy, make sure to fill out slimerange, ai, attacktype, displayname, raredisplayname, and aliases.
 # Enemy data tables. Slime is stored as a range from min to max possible slime upon spawning.
@@ -5293,12 +5295,12 @@ carrottop_responses_hurt = [
 ]
 
 carrottop_responses = [
-    "Carrot Top talks to you: *Hey, wassup cool dude. Or, uh, dudette. I actually can't see that well.*",
-    "Carrot Top talks to you: *Ignore me, sickington. I'm busy as the Beekeeper gettin' these party peps to arsonbrook farms.*",
-    "Carrot Top talks to you: *You look strong, heck! Ignore me, I haven't been allowed to use weapons since I accidentally ganked Rosalita with a Roomba.*",
-    "Carrot Top talks to himself: *ARGH!!! UGHH!!!!!!! I'm getting bullied on slime twitter!!!*",
-    "Carrot Top yells at you: *HECK!!!!!*",
-    "Carrot Top angrily stomps his foot, for no real reason.",
+    "talks to you: *Hey, wassup cool dude. Or, uh, dudette. I actually can't see that well.*",
+    "talks to you: *Ignore me, sickington. I'm busy as the Beekeeper gettin' these party peps to arsonbrook farms.*",
+    "talks to you: *You look strong, heck! Ignore me, I haven't been allowed to use weapons since I accidentally ganked Rosalita with a Roomba.*",
+    "talks to himself: *ARGH!!! UGHH!!!!!!! I'm getting bullied on slime twitter!!!*",
+    "yells at you: *HECK!!!!!*",
+    "angrily stomps his foot, for no real reason.",
 ]
 
 # Letters that an enemy can identify themselves with
