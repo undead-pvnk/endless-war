@@ -155,7 +155,7 @@ item_list = [
         context="poudrin",
         str_name="Slime Poudrin",
         str_desc="A dense, crystalized chunk of precious slime.",
-        price=4,
+        price=6,
         vendors=[ewcfg.vendor_atomicforestpp],
         acquisition=ewcfg.acquisition_mining,
     ),
@@ -332,22 +332,6 @@ item_list = [
         context= "cardpack",
         vendors=[ewcfg.vendor_bazaar, ewcfg.vendor_glocksburycomics],
     ),
-    # EwGeneralItem(
-    #     id_item=ewcfg.item_id_promotradingcardpack,
-    #     alias=[
-    #         "promotcp",
-    #         "tcppromo",
-    #         "raretcp",
-    #         "rarepack",
-    #         "rarecardpack",
-    #         "rarecards"
-    #     ],
-    #     str_name="Promo Trading Cards",
-    #     str_desc="A limited-edition promo pack of Secreatures TCG trading cards. Signed by Maximpostion Megasus himself, these generally contain rarer cards.",
-    #     price=100000,
-    #     context= "promocardpack",
-    #     vendors=[ewcfg.vendor_bazaar]
-    # ),
     EwGeneralItem(
         id_item=ewcfg.item_id_promotradingcardpack,
         alias=[
@@ -360,9 +344,9 @@ item_list = [
         ],
         str_name="Promo Trading Cards",
         str_desc="A limited-edition promo pack of Secreatures TCG trading cards. Signed by Maximpostion Megasus himself, these generally contain rarer cards.",
-        price=18,
+        price=100000,
         context= "promocardpack",
-        vendors=[ewcfg.vendor_atomicforestpp]
+        vendors=[ewcfg.vendor_bazaar]
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_tcgboosterbox,
@@ -467,8 +451,6 @@ item_list = [
         str_name="Tin Can",
         str_desc="OH GOD IT'S A FUCKING TIN CAN!",
         acquisition=ewcfg.acquisition_bartering,
-        price=4,
-        vendors=[ewcfg.vendor_atomicforestpp],
         ingredients="generic",
         context=10,
     ),
