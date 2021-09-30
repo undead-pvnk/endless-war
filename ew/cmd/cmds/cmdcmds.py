@@ -3892,7 +3892,7 @@ async def partypoints(cmd):
     return await fe_utils.send_response(response, cmd)
 
 
-async def shartonhortisolis(cmd):
+async def turnin(cmd):
     user_data = EwUser(member=cmd.message.author)
     market_data = EwMarket(id_server = user_data.id_server)
     if user_data.poi != ewcfg.poi_id_ab_farms:

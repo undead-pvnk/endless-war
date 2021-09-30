@@ -4328,13 +4328,13 @@ enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_gre
 # remove after event - this thing, copied from crank-kun
 party_bosses = [enemy_type_carrottop, enemy_type_partymystery]
 
-party_day_one = datetime.date(2021, 9, 28)
-party_day_two = datetime.date(2021, 9, 29)
-party_day_three = datetime.date(2021, 9, 30)
-party_day_four = datetime.date(2021, 5, 23)
-party_day_five = datetime.date(2021, 5, 24)
-party_day_six = datetime.date(2021, 5, 25)
-party_day_seven = datetime.date(2021, 5, 26)
+party_day_one = datetime.date(2021, 10, 1)
+party_day_two = datetime.date(2021, 10, 2)
+party_day_three = datetime.date(2021, 10, 3)
+party_day_four = datetime.date(2021, 10, 4)
+party_day_five = datetime.date(2021, 10, 5)
+party_day_six = datetime.date(2021, 10, 6)
+party_day_seven = datetime.date(2021, 10, 7)
 
 party_boss_date_map = {
 	party_day_one : enemy_type_carrottop,
