@@ -30,6 +30,7 @@ import ew.cmd.item as ewitem
 
 import ew.utils.apt as apt_utils
 import ew.utils.cmd as cmd_utils
+import ew.utils.combat as combat_utils
 import ew.utils.cosmeticitem as cosmetic_utils
 import ew.utils.dungeons as dungeon_utils
 import ew.utils.frontend as fe_utils
@@ -275,6 +276,11 @@ async def on_ready():
                     channels_slimetwitter[server.id] = channel
                     ewutils.logMsg("• found channel for slime twitter: {}".format(channel.name))
         ewdebug.initialize_gamestate(id_server=server.id)
+
+        # get or make the weapon items for fists and fingernails
+        combat_utils.set_unarmed_items(server.id)
+        #ewutils.logMsg("Global fists are {}\nGlobal fingernails are {}".format(combat_utils.fist_item, combat_utils.fingernails_item))
+
         # create all the districts in the database
         for poi_object in poi_static.poi_list:
             poi = poi_object.id_poi

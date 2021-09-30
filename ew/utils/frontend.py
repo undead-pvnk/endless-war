@@ -409,9 +409,8 @@ def create_death_report(cause = None, user_data = None):
             killer_data = EwUser(id_user=user_data.id_killer, id_server=user_data.id_server)
             player_data = EwPlayer(id_user=user_data.id_killer)
 
-            # Get killer weapon
-            weapon_item = EwItem(id_item=killer_data.weapon)
-            weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+            # Get the weapon that killed you
+            weapon = static_weapons.weapon_map.get(user_data.trauma, None)
 
             killer_nick = player_data.display_name
 

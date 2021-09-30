@@ -96,6 +96,13 @@ def get_weapon_type_stats(weapon_type):
             "crit_chance": 0,
             "crit_multiplier": 1,
             "hit_chance": 1,
+        },
+        "unarmed": {
+            "damage_multiplier": 0.5,
+            "cost_multiplier": 1,
+            "crit_chance": 0,
+            "crit_multiplier": 1,
+            "hit_chance": 0.9
         }
     }
 
@@ -129,11 +136,14 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_mul
 
         ignore_hitchance = weapon_stats["hit_chance"] == -1
 
+        # Adds the base chance to hit and the chance from modifiers. Hits if the roll is lower
         if (hit_roll < (weapon_stats["hit_chance"] + ctn.hit_chance_mod)) or ignore_hitchance:
+            # Sets multiplier to the default, then adds a random 0 < x < 1 multiple of the variable damage mod
             effective_multiplier = weapon_stats["damage_multiplier"]
             if "variable_damage_multiplier" in weapon_stats:
                 effective_multiplier += random.random() * weapon_stats["variable_damage_multiplier"]
 
+            # Multiplies the damage by the effective multiplier
             hit_damage = base_damage * effective_multiplier
             if guarantee_crit or random.random() < (weapon_stats["crit_chance"] + ctn.crit_mod):
                 hit_damage *= weapon_stats["crit_multiplier"]
@@ -1546,7 +1556,26 @@ weapon_list = [
         stat=ewcfg.stat_whistle_kills,
         acquisition=ewcfg.acquisition_smelting
     ),
-
+    EwWeapon(  # 40
+        id_weapon=ewcfg.weapon_id_fists,
+        alias=[],
+        str_crit="",
+        str_miss="{name_target} dodges your strike.",
+        str_equip="",
+        str_name="fists",
+        str_weapon="their fists",
+        str_weaponmaster_self="",
+        str_weaponmaster="",
+        str_kill="{name_target} is hit!!\n\n{name_target} has died.",
+        str_killdescriptor="pummeled",
+        str_damage="{name_target} is hit!!",
+        str_duel="",
+        str_description="",
+        str_scalp=" It looks like it was torn off by hand.",
+        fn_effect=get_normal_attack(weapon_type='unarmed'),
+        price=0,
+        stat=ewcfg.stat_unarmed_kills,
+    ),
 ]
 
 

@@ -1885,6 +1885,9 @@ max_enemies = 5
 # response string used to let attack function in ewwep know that an enemy is being attacked
 enemy_targeted_string = "ENEMY-TARGETED"
 
+# Response string used to signal ghostbusting
+ghost_busting_string = "BUSTING-MAKES-ME-FEEL-GOOD"
+
 # Wiki link base url
 wiki_baseurl = "https://rfck.miraheze.org/wiki/"
 
@@ -2639,6 +2642,7 @@ stat_pitchfork_kills = 'pitchfork_kills'
 stat_shovel_kills = 'shovel_kills'
 stat_slimeringcan_kills = 'slimeringcan_kills'
 stat_fingernails_kills = 'fingernails_kills'
+stat_unarmed_kills = 'unarmed_kills'
 stat_roomba_kills = 'roomba_kills'
 stat_chainsaw_kills = 'chainsaw_kills'
 stat_megachainsaw_kills = 'megachainsaw_kills'
@@ -3074,6 +3078,7 @@ weapon_id_huntingrifle = 'huntingrifle'
 weapon_id_harpoon = 'harpoon'
 weapon_id_model397 = 'model397'
 weapon_id_slimeoidwhistle = 'whistle'
+weapon_id_fists = "fists"
 
 
 weapon_id_spraycan = 'spraycan'

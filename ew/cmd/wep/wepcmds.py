@@ -53,7 +53,7 @@ async def attack(cmd, n1_die = None):
     user_mutations = user_data.get_mutations()
     killfeed = 0
     slimeoid = None
-
+    """
     if user_data.weapon >= 0:
         weapon_item = EwItem(id_item=user_data.weapon)
         weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
@@ -79,14 +79,16 @@ async def attack(cmd, n1_die = None):
         weapon = static_weapons.weapon_map.get(ewcfg.weapon_id_fingernails)
         ewutils.weaponskills_set(member=cmd.message.author, weapon=ewcfg.weapon_id_fingernails, weaponskill=10)
         user_data.weaponskill = 10
-
+    """
+    weapon_item = user_data.get_weapon_item()
+    weapon = static_weapons.weapon_map.get(weapon_item.template)
     # todo Created a weapon object to cover my bases, check if this is necessary. Also see if you can move this somewhere else
 
     if weapon and weapon.id_weapon == ewcfg.weapon_id_slimeoidwhistle:
         slimeoid = EwSlimeoid(member=cmd.message.author)
 
     if n1_die is None:
-        response = canAttack(cmd=cmd, amb_switch=amb_switch)
+        response = canAttack(cmd=cmd)
 
     if response == "":
         # Get shooting player's info

@@ -398,7 +398,7 @@ def fulfill_ghost_weapon_contract(possession_data, market_data, user_data, user_
     return "\n\n {} winces in pain as their slime is corrupted into negaslime. {}'s contract has been fulfilled.".format(user_name, ghost_name)
 
 
-def canAttack(cmd, amb_switch = 0):
+def canAttack(cmd):
     response = ""
     time_now_float = time.time()
     time_now = int(time_now_float)
@@ -406,9 +406,9 @@ def canAttack(cmd, amb_switch = 0):
     mutations = user_data.get_mutations()
     poi = poi_static.id_to_poi.get(user_data.poi)
     district_data = EwDistrict(id_server=user_data.id_server, district=user_data.poi)
-    weapon_item = None
-    weapon = None
-    captcha = None
+    weapon_item = user_data.get_weapon_item()
+    weapon = static_weapons.weapon_map.get(weapon_item.template)
+    captcha = weapon_item.item_props.get('captcha')
     hacked = EwGamestate(id_server=user_data.id_server, id_state="n13door")
     tokens_lower = []
     for token in cmd.tokens:
@@ -418,15 +418,6 @@ def canAttack(cmd, amb_switch = 0):
     for code in tokens_lower:
         if code.upper() in ewcfg.captcha_dict:
             code_count += 1
-
-    if amb_switch == 1:
-        weapon_item = EwItem(id_item=user_data.sidearm)
-        weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-        captcha = weapon_item.item_props.get('captcha')
-    elif user_data.weapon >= 0:
-        weapon_item = EwItem(id_item=user_data.weapon)
-        weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-        captcha = weapon_item.item_props.get('captcha')
 
     channel_poi = poi_static.chname_to_poi.get(cmd.message.channel.name)
     """
@@ -450,11 +441,11 @@ def canAttack(cmd, amb_switch = 0):
         response = "One shot at a time!"
     elif user_data.hunger >= user_data.get_hunger_max():
         response = "You are too exhausted for gang violence right now. Go get some grub!"
-    elif weapon != None and ewcfg.weapon_class_ammo in weapon.classes and int(weapon_item.item_props.get('ammo')) == 0:
+    elif ewcfg.weapon_class_ammo in weapon.classes and int(weapon_item.item_props.get('ammo')) == 0:
         response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
-    elif weapon != None and weapon.cooldown + (float(weapon_item.item_props.get("time_lastattack")) if weapon_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
+    elif weapon.cooldown + (float(weapon_item.item_props.get("time_lastattack")) if weapon_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
         response = "Your {weapon_name} isn't ready for another attack yet!".format(weapon_name=weapon.id_weapon)
-    elif weapon != None and (ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower) or code_count > 1:
+    elif (ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower) or code_count > 1:
         if (ewcfg.weapon_class_burning in weapon.classes or ewcfg.weapon_class_exploding in weapon.classes):
             slime_backfired = int(user_data.slimes * (0.1 + random.random() / 20))
             user_data.change_slimes(n=-slime_backfired, source=ewcfg.source_self_damage)
@@ -475,10 +466,10 @@ def canAttack(cmd, amb_switch = 0):
         else:
             response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
 
-    elif user_data.weapon == -1 and user_data.life_state != ewcfg.life_state_shambler and ewcfg.mutation_id_lethalfingernails not in mutations and ewcfg.mutation_id_ambidextrous not in mutations:
-        response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
-    elif ewcfg.mutation_id_ambidextrous in mutations and user_data.weapon == -1 and user_data.sidearm == -1 and user_data.life_state != ewcfg.life_state_shambler and ewcfg.mutation_id_lethalfingernails not in mutations:
-        response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
+    #elif user_data.weapon == -1 and user_data.life_state != ewcfg.life_state_shambler and ewcfg.mutation_id_lethalfingernails not in mutations and ewcfg.mutation_id_ambidextrous not in mutations:
+    #    response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
+    #elif ewcfg.mutation_id_ambidextrous in mutations and user_data.weapon == -1 and user_data.sidearm == -1 and user_data.life_state != ewcfg.life_state_shambler and ewcfg.mutation_id_lethalfingernails not in mutations:
+    #    response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
 
     elif cmd.mentions_count <= 0:
         # user is going after enemies rather than players
@@ -578,6 +569,16 @@ def canAttack(cmd, amb_switch = 0):
         elif not poi.pvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.get_inhabitee() == user_data.id_user or user_isshambler):  # or (shootee_data.life_state == ewcfg.life_state_juvenile and shootee_data.slimelevel <= ewcfg.max_safe_level):
             # Target is neither flagged for PvP, nor a shambler, nor a ghost inhabiting the player, nor a juvie above a certain threshold slime. Player is not a shambler.
             response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
+
+        elif user_data.id_user == shootee_data.id_user:
+            # User is targeting themselves
+            response = "Try {}.".format(ewcfg.cmd_suicide)
+
+        elif shootee_data.life_state not in [ewcfg.life_state_shambler, ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
+            if shootee_data.life_state == ewcfg.life_state_corpse and (ewcfg.status_ghostbust_id in user_data.getStatusEffects() or ewcfg.mutation_id_coleblooded in mutations):
+                response = ewcfg.ghost_busting_string
+            else:
+                response = "You are unable to attack {}".format(member.display_name)
 
     # Identify if the shooter and the shootee are on the same team.
     # same_faction = False
