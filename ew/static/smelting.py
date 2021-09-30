@@ -1625,7 +1625,7 @@ smelting_recipe_list = [
             'party popper'
         ],
         ingredients={
-            'partypoppepper': 1,
+            'partypoppeppers': 1,
         },
         products=['partypopper']
     )
