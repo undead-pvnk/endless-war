@@ -221,10 +221,23 @@ smelting_recipe_list = [
             "dp"
         ],
         ingredients={
-            ewcfg.item_id_slimepoudrin: 10000, #100 megaslime worth
+            ewcfg.item_id_minecraftdiamond: 10, #100 megaslime worth
             ewcfg.item_id_stick: 2
         },
         products=[ewcfg.weapon_id_diamondpickaxe]
+    EwSmeltingRecipe(
+        id_recipe="minecraftdiamond",
+        str_name="a minecraft diamond",
+        alias=[
+            "diamond",
+            "mcd",
+            "mcdiamond",
+            "minecraftdiamond"
+        ],
+        ingredients={
+            ewcfg.item_id_slimepoudrin: 1000, #100 megaslime worth
+        },
+        products=[ewcfg.item_id_minecraftdiamond]
     ),
     EwSmeltingRecipe(
         id_recipe="faggot",

@@ -490,6 +490,13 @@ item_list = [
         context='monofilament fragment',
     ),
     EwGeneralItem(
+        id_item=ewcfg.item_id_minecraftdiamond,
+        str_name="minecraftdiamond",
+        str_desc="Formed from the essence of 1000 poudrins, somehow the crushing process only made it look lower resolution. And blue. WTF???",
+        context='minecraftdiamond',
+        acquisition=ewcfg.acquisition_smelting
+    ),
+    EwGeneralItem(
         id_item=ewcfg.item_id_tanningknife,
         context="tool",
         str_name="Tanning Knife",
