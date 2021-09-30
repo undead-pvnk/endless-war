@@ -384,7 +384,7 @@ smelting_recipe_list = [
             ewcfg.item_id_monofilamentfragment: 25,
             ewcfg.item_id_ironingot: 1,
         },
-        products=[weapon_id_monofilamentwhip]
+        products=[ewcfg.weapon_id_monofilamentwhip]
     ),
     EwSmeltingRecipe(
         id_recipe=ewcfg.weapon_id_staff,
