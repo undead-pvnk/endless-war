@@ -4,7 +4,7 @@ import datetime
 # Global configuration options.
 
 
-version = "v4.009 I AM SPEED."
+version = "v4.01 GANKER PARTY 🥳"
 
 dir_msgqueue = 'msgqueue'
 
