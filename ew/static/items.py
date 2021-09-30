@@ -484,7 +484,7 @@ item_list = [
         acquisition=ewcfg.acquisition_smelting
     ),
     EwGeneralItem(
-        id_item=item_id_monofilamentfragment,
+        id_item=ewcfg.item_id_monofilamentfragment,
         str_name="monofilament fragment",
         str_desc="A fragment of a UFO's Monofillament defense system. Luckily it's unoperational in this state, otherwise you would be toast",
         context='monofilament fragment',
