@@ -225,6 +225,7 @@ smelting_recipe_list = [
             ewcfg.item_id_stick: 2
         },
         products=[ewcfg.weapon_id_diamondpickaxe]
+    ),
     EwSmeltingRecipe(
         id_recipe="minecraftdiamond",
         str_name="a minecraft diamond",
