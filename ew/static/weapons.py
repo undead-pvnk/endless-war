@@ -1570,7 +1570,7 @@ weapon_list = [
         str_scalp="A large hole is found in what was once someones scalp",
         fn_effect=get_normal_attack(cost_multiplier=1.2, weapon_type='precision'),
         classes=[ewcfg.weapon_class_ammo, ewcfg.weapon_class_captcha],
-        stat=ewcfg.stat_sniper_kills,, 
+        stat=ewcfg.stat_sniper_kills,
         clip_size=6,
         captcha_length=4
     ),

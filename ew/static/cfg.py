@@ -2762,7 +2762,7 @@ item_id_forbiddenstuffedcrust = "theforbiddenstuffedcrust"
 item_id_forbidden111 = "theforbiddenoneoneone"
 item_id_tradingcardpack = "tradingcardpack"
 item_id_promotradingcardpack = "promotradingcardpack"
-item_id_monofilamentcore = "monofilamentfragment"
+item_id_monofilamentfragment = "monofilamentfragment"
 item_id_tcgboosterbox = "tcgboosterbox"
 item_id_stick = "stick"
 item_id_gameguide = "gameguide"
@@ -3079,6 +3079,9 @@ weapon_id_huntingrifle = 'huntingrifle'
 weapon_id_harpoon = 'harpoon'
 weapon_id_model397 = 'model397'
 weapon_id_slimeoidwhistle = 'whistle'
+weapon_id_awp = 'awp'
+weapon_id_diamondpickaxe = 'dpick'
+weapon_id_monofilamentwhip = 'monowhip'
 
 
 weapon_id_spraycan = 'spraycan'
