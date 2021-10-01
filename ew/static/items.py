@@ -3582,7 +3582,7 @@ furniture_list = [
         price=45,
         vendors=[ewcfg.vendor_atomicforestpp],
         furniture_place_desc = "You set the honeycombs on the floor, crushing a few bees in the process. Honey slowly starts dripping off of it.",
-        furniture_look_desc = "You pick up the honeycombs from the floor, angering a few bees. Better hope you're not allergic to them!",
+        furniture_look_desc = "A pile of honeycombs is set up on the floor.",
     ),
     EwFurniture(
         id_furniture = "entiregarden",
@@ -3593,7 +3593,7 @@ furniture_list = [
         price=85,
         vendors=[ewcfg.vendor_atomicforestpp],
         furniture_place_desc = "You set up an entire garden, taking up half of the room. It's filled with joybeans, pawpaws, aushucks!",
-        furniture_look_desc = "You pick up the entire garden, freeing up an insane amount of space in your room. Despite the added room, it feels... empty. You're missing the flora.",
+        furniture_look_desc = "Half of their apartment is literally just a garden.",
     ),
 ]
 
