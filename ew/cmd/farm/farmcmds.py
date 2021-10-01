@@ -38,7 +38,8 @@ async def sow(cmd):
             has_tool = True
 
     # Checking availability of sow action
-    if user_data.life_state != ewcfg.life_state_juvenile:
+    # remove after event - make gangsters unable to farm
+    if user_data.life_state == ewcfg.life_state_corpse: # if user_data.life_state != ewcfg.life_state_juvenile:
         response = "Only Juveniles of pure heart and with nothing better to do can farm."
 
     elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
@@ -70,7 +71,8 @@ async def sow(cmd):
             it_type_filter = None
 
             # gangsters can only plant poudrins
-            if cmd.tokens_count > 1 and user_data.life_state == ewcfg.life_state_juvenile:
+            # Remove after event - gangsters being able to !sow crops
+            if cmd.tokens_count > 1: # and user_data.life_state == ewcfg.life_state_juvenile:
                 item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
                 # if the item selected was a vegetable, use a food only filter in find_item
@@ -98,6 +100,9 @@ async def sow(cmd):
 
                         slimeoid_data = EwSlimeoid(id_slimeoid=item_data.item_props.get("subcontext"))
                         slimeoid_data.delete()
+                    # remove after event - this elif
+                    elif item_data.item_props.get("id_item") == ewcfg.item_id_partypoppepperseeds:
+                        vegetable = static_food.food_map.get("partypoppeppers")
 
                     else:
                         response = "The soil has enough toxins without you burying your trash here."
@@ -108,9 +113,10 @@ async def sow(cmd):
                     if ewcfg.vendor_farm not in vegetable.vendors:
                         response = "It sure would be nice if {}s grew on trees, but alas they do not. Idiot.".format(item_sought.get("name"))
                         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-                    elif user_data.life_state != ewcfg.life_state_juvenile:
-                        response = "You lack the knowledge required to grow {}.".format(item_sought.get("name"))
-                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    # Remove after event - uncomment out this bit, dummy
+                    # elif user_data.life_state != ewcfg.life_state_juvenile:
+                    #     response = "You lack the knowledge required to grow {}.".format(item_sought.get("name"))
+                    #     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
                 else:
                     response = "The soil has enough toxins without you burying your trash here."
@@ -118,8 +124,9 @@ async def sow(cmd):
 
                 mutations = user_data.get_mutations()
                 growth_time = ewcfg.crops_time_to_grow
-                if user_data.life_state == ewcfg.life_state_juvenile:
-                    growth_time /= 2
+                # remove after event - make gangsters and juvies farm at different rates
+                # if user_data.life_state == ewcfg.life_state_juvenile: 
+                growth_time /= 2
                 if ewcfg.mutation_id_greenfingers in mutations:
                     growth_time /= 1.5
 
@@ -139,10 +146,12 @@ async def sow(cmd):
                 farm.action_required = ewcfg.farm_action_none
                 farm.sow_life_state = user_data.life_state
                 if ewcfg.mutation_id_greenfingers in mutations:
-                    if user_data.life_state == ewcfg.life_state_juvenile:
-                        farm.sow_life_state = ewcfg.farm_life_state_juviethumb
-                    else:
-                        farm.sow_life_state = ewcfg.farm_life_state_thumb
+                    farm.sow_life_state = ewcfg.farm_life_state_juviethumb
+                    # remove after event - all gangsters getting this.
+                    # if user_data.life_state == ewcfg.life_state_juvenile:
+                    #     farm.sow_life_state = ewcfg.farm_life_state_juviethumb
+                    # else:
+                    #     farm.sow_life_state = ewcfg.farm_life_state_thumb
 
                 bknd_item.item_delete(id_item=item_sought.get('id_item'))  # Remove Poudrins
 
@@ -182,7 +191,8 @@ async def reap(cmd):
             has_tool = True
 
     # Checking availability of reap action
-    if user_data.life_state != ewcfg.life_state_juvenile:
+    # Remove after event - make gangsters unable to !reap
+    if user_data.life_state == ewcfg.life_state_corpse: # if user_data.life_state != ewcfg.life_state_juvenile:
         response = "Only Juveniles of pure heart and with nothing better to do can farm."
     elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
         response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
@@ -373,7 +383,8 @@ async def check_farm(cmd):
     mutations = user_data.get_mutations()
 
     # Checking availability of check farm action
-    if user_data.life_state != ewcfg.life_state_juvenile:
+    # Remove after event - make gangsters unable to !check_farm
+    if user_data.life_state == ewcfg.life_state_corpse: # if user_data.life_state != ewcfg.life_state_juvenile:
         response = "Only Juveniles of pure heart and with nothing better to do can farm."
     elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
         response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
@@ -450,7 +461,9 @@ async def cultivate(cmd):
         response += " BRO!"
         if rand1 > 80:
             response += "**"
-    elif user_data.life_state != ewcfg.life_state_juvenile:
+
+    # Remove after event - make gangsters unable to !reap
+    elif user_data.life_state == ewcfg.life_state_corpse: # elif user_data.life_state != ewcfg.life_state_juvenile:
         response = "Only Juveniles of pure heart and with nothing better to do can tend to their crops."
     elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
         response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
@@ -504,7 +517,8 @@ async def mill(cmd):
     item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter=ewcfg.it_food)
 
     # Checking availability of milling
-    if user_data.life_state != ewcfg.life_state_juvenile:
+    #TODO: remove the ability for gangsters to !mill
+    if user_data.life_state == ewcfg.life_state_corpse: # if user_data.life_state != ewcfg.life_state_juvenile:
         response = "Only Juveniles of pure heart and with nothing better to do can mill their vegetables."
     elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
         response = "Alas, there doesn’t seem to be an official SlimeCorp milling station anywhere around here. Probably because you’re in the middle of the fucking city. Try looking where you reaped your vegetable in the first place, dumbass."

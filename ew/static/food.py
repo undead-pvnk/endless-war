@@ -999,6 +999,15 @@ food_list = [
         time_expir = 172800,
     ),
     EwFood(
+        id_food = "partypoppeppers",
+        recover_hunger = 60,
+        str_name = "Party Poppeppers",
+        vendors = ['Farm'],
+        str_eat = "You chomp into the raw Party Poppeppers. It isn't terrible, but you feel like there is a more constructive use for it.",
+        str_desc = "Filled with an explosive spice, these peppers could be used to kill someone. But, like, why would you do that?",
+        time_expir = 172800,
+    ),
+    EwFood(
         id_food = "pinkrowdatouille",
         recover_hunger = 1200,
         price = 2400,
@@ -1195,6 +1204,16 @@ food_list = [
         str_name = "Molten Popcorn",
         str_eat = "You chew through the Molten Popcorn. The melt-in-your-mouth flavor is to die for! Literally! You are fucking dying as you continue to ingest this terrible, terrible food item. What the fuck were you thinking?",
         str_desc = "A piping-hot bag of popcorn. A melting gold ingot is propped up where the butter normally goes, dripping down into the rest of the popcorn puffs.",
+        time_expir = 1209600,
+        acquisition = "smelting",
+    ),
+    EwFood(
+        id_food = "stuffedpoppepper",
+        recover_hunger = 800,
+        price = 1600,
+        str_name = "Stuffed Poppepper",
+        str_eat = "You gnash through the Stuffed Poppepper. It's a smorgasbord of flavors, all exploding in your mouth! It fucking hurts to eat, but JESUS, it tastes good.",
+        str_desc = "A pepper stuffed with meat, cheese, and all sorts of seasoning. It pops every now and then, sending out small chunks of debris.",
         time_expir = 1209600,
         acquisition = "smelting",
     ),
@@ -1698,6 +1717,8 @@ food_list = [
         id_food = "seaweedjoint",
         alias = ['joint', 'weed', 'blunt', 'doobie'],
         str_name = "Seaweed Joint",
+        price = 30,
+        vendors = ['Atomic Forest Stockpile Party Redemption Cart'],
         str_eat = "You light up your Seaweed and begin to smoke it. Congratulations! You're now high. You catch fish twice as often, but food is half as effective. This lasts for 30 minutes.",
         str_desc = "A joint made up of dankwheat and seaweed bartered with Captain Albert Alexander. Wait a minute, does that make the good Captain your drug dealer? Hell yeah.",
         time_expir = 43200,
@@ -1962,7 +1983,8 @@ food_list = [
         id_food = "ferroslimeoid",
         alias = ['ferro', 'magnet'],
         recover_hunger = 1,
-        price = 10000000,
+        price = 20, #10000000
+        vendors = ['Atomic Forest Stockpile Party Redemption Cart'],
         str_name = "Ferroslimeoid",
         str_eat = "The ferroslimeoid screams in terror as it nears your mouth. As you chew you feel its little limbs squirming. Its cries die down as it slides down your throat. You shudder as it hits your stomach. Tasty",
         str_desc = "A small magnetic slimeoid created with illegal means, usually used as live bait. DO NOT EAT",
@@ -1993,6 +2015,7 @@ vegetable_list = []
 vegetable_to_cosmetic_material = {}
 
 # seperate the crops from the normal foods
+# TODO: remove party poppeppers after party event
 for v in food_list:
 
     if ewcfg.vendor_farm not in v.vendors:
@@ -2002,7 +2025,7 @@ for v in food_list:
             vegetable_to_cosmetic_material[v.id_food] = ewcfg.item_id_cool_material
         elif v.id_food in [ewcfg.item_id_pinkrowddishes, ewcfg.item_id_joybeans, ewcfg.item_id_purplekilliflower, ewcfg.item_id_suganmanuts]:
             vegetable_to_cosmetic_material[v.id_food] = ewcfg.item_id_cute_material
-        elif v.id_food in [ewcfg.item_id_poketubers, ewcfg.item_id_dankwheat, ewcfg.item_id_blacklimes, ewcfg.item_id_aushucks]:
+        elif v.id_food in [ewcfg.item_id_poketubers, ewcfg.item_id_dankwheat, ewcfg.item_id_blacklimes, ewcfg.item_id_aushucks, ewcfg.item_id_partypoppeppers]:
             vegetable_to_cosmetic_material[v.id_food] = ewcfg.item_id_beautiful_material
         elif v.id_food in [ewcfg.item_id_phosphorpoppies, ewcfg.item_id_pawpaw, ewcfg.item_id_sludgeberries, ewcfg.item_id_rustealeaves]:
             vegetable_to_cosmetic_material[v.id_food] = ewcfg.item_id_smart_material
