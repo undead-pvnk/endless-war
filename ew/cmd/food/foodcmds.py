@@ -126,7 +126,7 @@ async def menu(cmd):
                 value *= shambler_multiplier
 
                 if mother_district_data != None:
-                    if controlling_faction != "":
+                    if controlling_faction != "" and vendor != ewcfg.vendor_atomicforestpp:
                         # prices are halved for the controlling gang
                         if controlling_faction == user_data.faction:
                             value /= 2
