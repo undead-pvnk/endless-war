@@ -2534,7 +2534,7 @@ leaderboard_gambit_high = "HIGHEST GAMBIT"
 leaderboard_gambit_low = "LOWEST GAMBIT"
 
 # remove after event - PARTY WOOOOOOOO
-leaderboard_party = "PARTIEST"
+leaderboard_party = "PARTY ROCKERS"
 
 # leaderboard entry types
 entry_type_player = "player"
