@@ -1,4 +1,5 @@
 import asyncio
+from ew.cmd.cmds.cmdcmds import partypoints
 import random
 import time
 
@@ -125,7 +126,7 @@ async def menu(cmd):
                 value *= shambler_multiplier
 
                 if mother_district_data != None:
-                    if controlling_faction != "":
+                    if controlling_faction != "" and vendor != ewcfg.vendor_atomicforestpp:
                         # prices are halved for the controlling gang
                         if controlling_faction == user_data.faction:
                             value /= 2
@@ -331,7 +332,7 @@ async def order(cmd):
 
                 controlling_faction = poi_utils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 
-                if controlling_faction != "":
+                if controlling_faction != "" and current_vendor != ewcfg.vendor_atomicforestpp:
                     # prices are halved for the controlling gang
                     if controlling_faction == user_data.faction:
                         value /= 2
