@@ -539,6 +539,10 @@ role_donor = "terezigang"
 role_tutorial = "newintown"
 role_slimernalia = "kingpinofslimernalia"
 role_gellphone = "gellphone"
+role_brimstoneprog = "brimstoneprogrammer"
+role_bpadmin = "bpadmin"
+role_bdadmin = "bdadmin"
+role_brimstonedesperados = "brimstonedesperados"
 role_null_major_role = "nullmajorrole"
 role_null_minor_role = "nullminorrole"
 
@@ -1093,6 +1097,7 @@ cmd_booru = cmd_prefix + 'booru'
 cmd_bandcamp = cmd_prefix + 'bandcamp'
 cmd_tutorial = cmd_prefix + 'tutorial'
 cmd_pardon = cmd_prefix + 'pardon'
+cmd_defect = cmd_prefix + 'defect'
 cmd_banish = cmd_prefix + 'banish'
 cmd_vouch = cmd_prefix + 'vouch'
 cmd_writhe = cmd_prefix + 'writhe'
@@ -1118,6 +1123,8 @@ cmd_accept = cmd_prefix + 'accept'
 cmd_refuse = cmd_prefix + 'refuse'
 cmd_sign = cmd_prefix + 'sign'
 cmd_rip = cmd_prefix + 'rip'
+cmd_yes = cmd_prefix + 'yes'
+cmd_no = cmd_prefix + 'no'
 cmd_reap = cmd_prefix + 'reap'
 cmd_reap_alt = cmd_prefix + 'forcereap'
 cmd_sow = cmd_prefix + 'sow'
@@ -2272,7 +2279,7 @@ col_verified = 'verified'
 col_gender = 'gender'
 col_party_points = 'party_points'
 col_cumulative_party_points = 'cumulative_party_points'
-
+col_hogtied = 'hogtied'
 
 col_attack = 'attack'
 col_speed = 'speed'

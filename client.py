@@ -551,7 +551,7 @@ async def on_message(message):
             response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
             return await fe_utils.send_message(client, message.channel, response)
         if str(message.channel) in ["nurses-office", "suggestion-box", "detention-center", "community-service", "playground", "graffiti-wall", "post-slime-drip", "outside-the-lunchroom", "outside-the-lunchrooom"]:
-            if ewcfg.status_hogtied_id in statuses:
+            if user_data.hogtied == 1:
                 response = random.choice(["MMMPH!", "MBBBBB", "HMMHM", "MMMMMHMMF!"])
                 await fe_utils.send_message(client, message.channel, response)
                 await message.delete()

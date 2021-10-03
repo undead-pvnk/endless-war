@@ -76,6 +76,8 @@ cmd_map = {
     # Used in russianroulette and slimeoidbattle.
     ewcfg.cmd_accept: cmdcmds.accept,
     ewcfg.cmd_refuse: cmdcmds.refuse,
+    ewcfg.cmd_yes: cmdcmds.confirm,
+    ewcfg.cmd_no: cmdcmds.cancel,
 
     # More confirmation cmds, but for ads
     ewcfg.cmd_confirm: cmdcmds.confirm,

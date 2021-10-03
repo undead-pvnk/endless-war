@@ -1164,7 +1164,7 @@ async def negaslimeoidbattle(cmd):
         if result == 1:
             # Losing in a nega battle means death
             district_data = EwDistrict(district=challenger.poi, id_server=cmd.guild.id)
-            slimes = int(2 * 10 ** (challengee_slimeoid.level - 2))
+            slimes = min(int(2 * 10 ** (challengee_slimeoid.level - 2)), 1000000)
             district_data.change_slimes(n=slimes)
             district_data.persist()
             challengee_slimeoid.delete()
