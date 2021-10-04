@@ -1403,7 +1403,9 @@ def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = Non
     mods = {
         'dmg': 0,
         'crit': 0,
-        'hit_chance': 0
+        'hit_chance': 0,
+        'no_cost': False,
+        'vax': False
     }
 
     user_statuses = user_data.getStatusEffects()
@@ -1446,6 +1448,13 @@ def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = Non
 
             mods['dmg'] += status_flavor.dmg_mod_self
 
+    # Checks if any status mod in the nocost list is in the user's statuses
+    if len(set(ewcfg.nocost).intersection(set(user_statuses))) > 0:
+        mods['no_cost'] = True
+
+    # Signals presence of vaccine
+    mods['vax'] = True if ewcfg.status_modelovaccine_id in user_statuses else False
+
     return mods
 
 
@@ -1454,7 +1463,8 @@ def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = Non
     mods = {
         'dmg': 0,
         'crit': 0,
-        'hit_chance': 0
+        'hit_chance': 0,
+        'untouchable': False
     }
 
     user_statuses = user_data.getStatusEffects()
@@ -1476,6 +1486,9 @@ def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = Non
             mods['hit_chance'] += status_flavor.hit_chance_mod
             mods['crit'] += status_flavor.crit_mod
             mods['dmg'] += status_flavor.dmg_mod
+
+    if ewcfg.status_n4 in user_statuses:
+        mods['untouchable'] = True
 
     # apply trauma mods
     # if user_data.combatant_type == 'player':
@@ -3114,6 +3127,7 @@ class EwUser(EwUserBase):
             returned_weapon = fingernails_item
         else:
             returned_weapon = fist_item
+            self.weaponskill = 5
 
         return returned_weapon
 

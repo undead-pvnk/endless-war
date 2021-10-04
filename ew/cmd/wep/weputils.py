@@ -21,6 +21,7 @@ from ew.utils.combat import EwEnemy
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
+from ew.utils.slimeoid import EwSlimeoid
 
 """ A data-moving class which holds references to objects we want to modify with weapon effects. """
 
@@ -40,8 +41,10 @@ class EwEffectContainer:
     crit_mod = 0
 
     explode = False
-    apply_status = None
+    apply_status = {}
     mass_apply_status = None
+
+    vax = False
     # sap_damage = 0
     # sap_ignored = 0
 
@@ -288,8 +291,9 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
                 if user_data.faction != target_data.faction and user_data.faction != ewcfg.faction_slimecorp and user_data.life_state != ewcfg.life_state_juvenile:
                     # Give slimes to the boss if possible.
                     kingpin = fe_utils.find_kingpin(id_server=server.id, kingpin_role=role_boss)
-                    kingpin = EwUser(id_server=server.id, id_user=kingpin.id_user)
+
                     if kingpin:
+                        kingpin = EwUser(id_server=server.id, id_user=kingpin.id_user)
                         kingpin.change_slimes(n=boss_slimes)
                         kingpin.persist()
 
@@ -374,6 +378,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
                     response += "{} was caught in an explosion during your fight with {} and lost {:,} slime!".format(target_enemy_data.display_name, shootee_player.display_name, damage)
                     resp_cont.add_channel_response(channel, response)
                     target_enemy_data.persist()
+        district_data.persist()
         user_data.persist()
         return resp_cont
 
@@ -462,7 +467,7 @@ def canAttack(cmd):
                     "You're thrown to the pavement by the blast of your bomb, with each finger bent and broken. Looks like some bone's sticking out, too!",
                     "Why don't these explosives have proper training manuals? You'll never get to know, as you're splattered across the concrete."
                 ])
-            response += "\nYou lose {} slime. Learn to type, you fucking idiot.".format(slime_backfired)
+            response += "\nYou lose {:,} slime. Learn to type, you fucking idiot.".format(slime_backfired)
         else:
             response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
 
@@ -592,7 +597,15 @@ def canAttack(cmd):
     return response
 
 
-async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, market_data, time_now_float):
+async def attackEnemy(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    weapon_item = user_data.get_weapon_item()
+    weapon = static_weapons.weapon_map.get(weapon_item.template)
+    resp_cont = EwResponseContainer(id_server=cmd.guild.id)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
+    market_data = EwMarket(id_server=cmd.guild.id)
+    time_now_float = time.time()
+
     time_now = int(time_now_float)
     # Get shooting player's info
     if user_data.slimelevel <= 0:
@@ -1138,6 +1151,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
         await resp_cont.post()
 
+    return
+
 
 def canCap(cmd, capture_type, roomba_loop = 0):
     response = ""
@@ -1219,3 +1234,56 @@ def canCap(cmd, capture_type, roomba_loop = 0):
     #	response = 'Your SlimeCorp headset chatters in your ear...\n"SlimeCorp protocol only allows sanitization during hours where federal sanitizers are not at work. Please cease and desist."'
 
     return response
+
+
+def apply_attack_modifiers(ctn, hitzone, attacker_mutations, target_mutations, target_weapon, district_data):
+    attacker_status_mods = cmbt_utils.get_shooter_status_mods(ctn.user_data, ctn.shootee_data, hitzone)
+    target_status_mods = cmbt_utils.get_shootee_status_mods(ctn.shootee_data, ctn.user_data, hitzone)
+    misc_atk_mod = cmbt_utils.damage_mod_attack(
+        user_data=ctn.user_data,
+        user_mutations=attacker_mutations,
+        market_data=ctn.market_data,
+        district_data=district_data
+    )
+    misc_def_mod = cmbt_utils.damage_mod_defend(
+        shootee_data=ctn.shootee_data,
+        shootee_mutations=target_mutations,
+        market_data=ctn.market_data,
+        shootee_weapon=target_weapon
+    )
+
+    # Apply Damage Modifiers
+    ctn.slimes_damage *= (1 + round(attacker_status_mods['dmg'] + target_status_mods['dmg'], 2)) * \
+        misc_atk_mod * \
+        misc_def_mod
+
+    # apply hit chance modifiers
+    ctn.hit_chance_mod += round(attacker_status_mods['hit_chance'] + target_status_mods['hit_chance'], 2) - \
+                          (5-ctn.user_data.weaponskill)/10 if ctn.user_data.weaponskill < 5 else 0
+
+    # lucky lucky lucy, oh and also n4 lol
+    if ctn.shootee_data.life_state == ewcfg.life_state_lucky or target_status_mods['untouchable']:
+        ctn.miss = True
+
+    # apply crit chance modifiers
+    ctn.crit_mod += round(attacker_status_mods['crit'] + target_status_mods['crit'], 2) + \
+        0.1 if (ewcfg.mutation_id_airlock in attacker_mutations) and (ctn.market_data.weather == ewcfg.weather_foggy) else 0
+
+    if ewcfg.mutation_id_threesashroud in attacker_mutations:
+        allies_in_district = district_data.get_players_in_district(
+            min_level=math.ceil((1 / 10) ** 0.25 * ctn.user_data.slimelevel),
+            life_states=[ctn.user_data.life_state],
+            factions=[ctn.user_data.faction]
+        )
+        if len(allies_in_district) > 3:
+            ctn.crit_mod *= 2
+
+    # Apply any cost modifiers. NO_COST CHECK IS ALWAYS LAST
+    ctn.slimes_spent = 0 if attacker_status_mods['no_cost'] else ctn.slimes_spent
+
+    # Note in the container whether or not to apply burn for NapalmSnot
+    if (ewcfg.mutation_id_napalmsnot in attacker_mutations and ewcfg.mutation_id_napalmsnot not in target_mutations) and not (ewcfg.mutation_id_airlock in target_mutations and ctn.market_data.weather != ewcfg.weather_rainy):
+        ctn.apply_status.update({ewcfg.status_burning_id: ewcfg.mutation_id_napalmsnot})
+
+    # Tell the rest of the function to vaccinate if it needs to, this was status effects dont need to be grabbed elsewhere
+    ctn.vax = attacker_status_mods['vax']

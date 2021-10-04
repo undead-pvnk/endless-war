@@ -19,7 +19,7 @@ def get_weapon_type_stats(weapon_type):
             "cost_multiplier": 1.3,
             "crit_chance": 0,
             "crit_multiplier": 2,
-            "hit_chance": 1,
+            "hit_chance": -1,
         },
         "small_game": {
             "damage_multiplier": 0.5,
@@ -98,7 +98,7 @@ def get_weapon_type_stats(weapon_type):
             "hit_chance": 1,
         },
         "unarmed": {
-            "damage_multiplier": 0.5,
+            "damage_multiplier": 0.25,
             "cost_multiplier": 1,
             "crit_chance": 0,
             "crit_multiplier": 1,
@@ -150,8 +150,10 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_mul
                 if not ("shots" in weapon_stats):
                     ctn.crit = True
 
-            ctn.apply_status = weapon_stats.get("apply_status")
-            ctn.apply_bystander_status = weapon_stats.get("mass_apply_status")
+            if weapon_stats.get("apply_status") is not None:
+                ctn.apply_status.update(weapon_stats.get("apply_status"))
+            ctn.mass_apply_status = weapon_stats.get("mass_apply_status")
+            ctn.explode = True if weapon_type == "explosive" else False
 
         return hit_damage
 
@@ -167,11 +169,21 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_mul
                     ctn.crit = False
         else:
             damage = get_hit_damage(ctn)
+            # TODO: Move this to if damage so that multi-shot weapons can also deal bystander effects when needed
             if "bystander_damage" in weapon_stats:
                 ctn.bystander_damage = damage * weapon_stats["bystander_damage"]
 
         if damage:
             ctn.slimes_damage = int(damage)
+            # If any weapon is given a status to apply to the target that requires a damage based value, handle it here
+            for status, source in ctn.apply_status.items():
+                # This is here to make sure that the weapon modified damage gets used for NS damage
+                # If you add a weapon type that also applies burn to target, find a way to add it on top of this.
+                # Thats not my job right now though considering no weapons like that exist yet
+                # Maybe reverse as {source: type} when declaring, then update with {type: magnitude + apply_status.get(type, 0)}
+                # then remove the source key from the dict
+                if source == ewcfg.mutation_id_napalmsnot:
+                    ctn.apply_status.update({status: int(damage/2)})
         else:
             ctn.miss = True
 
@@ -1607,7 +1619,7 @@ weapon_type_convert = {
 }
 
 slimeoid_weapon_type_convert = {
-    -1: get_normal_attack(weapon_type='tool'),
+    -1: get_normal_attack(weapon_type='unarmed'),
     0:  get_normal_attack(weapon_type='tool'),
     1:  get_normal_attack(weapon_type='tool'),
     2:  get_normal_attack(weapon_type='small_game'),
