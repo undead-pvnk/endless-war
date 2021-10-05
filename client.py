@@ -1242,8 +1242,8 @@ async def on_raw_reaction_add(payload):
         message = await channels_deviantsplaart[payload.guild_id].fetch_message(payload.message_id)
         if str(payload.emoji) == ewcfg.emote_111 or str(payload.emoji) == ewcfg.emote_111_debug:
             for react in message.reactions:
-                if react.count >= 2 and react.emoji.id in [720412882143150241, 431547758181220377]:
-                    msgtext = "-------------------------------------------------\n" + message.content
+                if react.count >= 10 and react.emoji.id in [720412882143150241, 431547758181220377]:
+                    msgtext = "--------------------------------------------------------------------------------------------------\n" + message.content
                     title = msgtext.split('::', 1)
                     current_record = EwRecord(id_server=payload.guild_id, record_type=title[0])
                     current_record.legality = 0
