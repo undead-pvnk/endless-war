@@ -1647,7 +1647,7 @@ weapon_list = [
         str_scalp=" It feels as if it was cut off with a razorbladde.",
         fn_effect=get_normal_attack(weapon_type='small_game'),
         acquisition=ewcfg.acquisition_smelting,
-        stat=ewcfg.stat_monowhip_kills,
+        stat=ewcfg.stat_monowhip_kills),
     EwWeapon(  # 45
         id_weapon=ewcfg.weapon_id_fists,
         alias=[],
