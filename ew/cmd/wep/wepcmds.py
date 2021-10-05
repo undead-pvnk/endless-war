@@ -246,7 +246,9 @@ async def attack(cmd):
                 target.degradation = 0 if ctn.vax else target.degradation
                 target.id_killer = attacker.id_user
 
+
                 # Stat Updates
+                start = time.perf_counter()
                 ewstats.increment_stat(user=attacker, metric=ewcfg.stat_kills)
                 ewstats.track_maximum(user=attacker, metric=ewcfg.stat_biggest_kill, value=target.totaldamage + target.slimes)
                 ewstats.increment_stat(user=attacker, metric=attacker_weapon.stat)
@@ -256,7 +258,8 @@ async def attack(cmd):
                     ewstats.increment_stat(user=attacker, metric=ewcfg.stat_lifetime_takedowns)
                 if target.life_state == ewcfg.life_state_shambler:
                     ewstats.increment_stat(user=attacker, metric=ewcfg.stat_shamblers_killed)
-
+                end = time.perf_counter()
+                print("{} seconds to run attack ln 252 stat updates".format(end-start))
         """ Flavortext Generation """
 
         # Generate slimeoid based flavor for the whistle, and get possession status
