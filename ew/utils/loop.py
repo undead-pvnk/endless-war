@@ -2,6 +2,7 @@ import asyncio
 import math
 import random
 import time
+import datetime
 
 import discord
 
@@ -1369,3 +1370,48 @@ async def clock_tick_loop(id_server = None, force_active = False):
                 await asyncio.sleep(60)
     except:
         ewutils.logMsg('An error occurred in the scheduled slime market update task. Fix that.')
+
+# remove after event - literally just copying Crank's code lmao. Love you Crank <3
+async def party_tick_loop(id_server):
+    # DEBUG
+    # interval = 10
+
+    while not ewutils.TERMINATE:
+        interval = 600 - 1    # controls carrot top spawn rate lol lol lol
+        await asyncio.sleep(interval)
+        await party_checkboss(id_server)
+        await party_spawnboss(id_server)
+
+async def party_checkboss(id_server):
+    current_date = datetime.date.today()
+    market_data = EwMarket(id_server)
+    party_date_map = ewcfg.party_boss_date_map
+    # Check what the current date is, check if there is a safari boss for that date, and then update that to market_data
+    # We also do another check to see if we need to update it (or if the value is already correct) to save on .persist() calls
+    if current_date in party_date_map:
+        if market_data.current_event_boss != party_date_map[current_date]:
+            market_data.current_event_boss = party_date_map[current_date]
+            market_data.persist()
+        else:
+            return
+    else:
+        if market_data.current_event_boss != "":
+            market_data.current_event_boss = ""
+            market_data.persist()
+
+async def party_spawnboss(id_server):
+    market_data = EwMarket(id_server)
+    client = ewcfg.get_client()
+        # TODO remove after safari event - LOLLLLLLLLLLLLL its a party now
+    # Every 4 in-game hours the safari bosses will try to respawn
+    # They won't spawn if any safari bosses are still alive
+    party_district  = EwDistrict(id_server=id_server, district=ewcfg.poi_id_oozegardens)
+    # Check if any of the safari bosses are already active
+    if not (party_district.enemy_type_in_district(market_data.current_event_boss)):
+        spawn_times = [0, 4, 8, 12, 16, 20]
+        if market_data.clock in spawn_times:
+            sb_resp_cont = hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_type=market_data.current_event_boss, pre_chosen_poi=ewcfg.poi_id_oozegardens, manual_spawn=True)
+            announce_response = "**A partylicious smell is smought throughout the city...**" #smought isnt a word i just thought it sounded funny
+            for channel in ewcfg.hideout_channels:
+                sb_resp_cont.add_channel_response(channel, announce_response)
+            await sb_resp_cont.post()

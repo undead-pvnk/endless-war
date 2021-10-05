@@ -292,6 +292,11 @@ async def order(cmd):
                 currency_used = 'brainz'
                 current_currency_amount = user_data.gvs_currency
 
+            # remove after event - this vendor part
+            if current_vendor == ewcfg.vendor_atomicforestpp:
+                currency_used = 'Party Points'
+                current_currency_amount = user_data.party_points
+
             if current_vendor is None or len(current_vendor) < 1:
                 response = "Check the {} for a list of items you can {}.".format(ewcfg.cmd_menu, ewcfg.cmd_order)
 
@@ -429,6 +434,8 @@ async def order(cmd):
                         user_data.change_slimes(n=-value, source=ewcfg.source_spending)
                     elif currency_used == 'brainz':
                         user_data.gvs_currency -= value
+                    elif currency_used == 'Party Points': # remove after event
+                        user_data.party_points -= value
 
                     if company_data is not None:
                         company_data.recent_profits += value

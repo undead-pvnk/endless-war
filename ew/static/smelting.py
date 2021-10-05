@@ -1306,6 +1306,19 @@ smelting_recipe_list = [
         products=['moltenpopcorn']
     ),
     EwSmeltingRecipe(
+        id_recipe="stuffedpoppepper",
+        str_name="a Stuffed Poppepper",
+        alias=[
+            'stuffedpepper',
+            'stuffedpartypoppepper'
+        ],
+        ingredients={
+            ewcfg.item_id_foodbase: 1,
+            ewcfg.item_id_driedpartypoppeppers: 1
+        },
+        products=['stuffedpoppepper']
+    ),
+    EwSmeltingRecipe(
         id_recipe="captainshat",
         str_name="a Captain's Hat",
         alias=[
@@ -1555,6 +1568,19 @@ smelting_recipe_list = [
         products=['resplendentcoronet']
     ),
     EwSmeltingRecipe(
+        id_recipe="partyhat",
+        str_name="a Party Hat",
+        alias=[
+            'party',
+            'celebrationhat'
+        ],
+        ingredients={
+            ewcfg.item_id_textiles: 1,
+            ewcfg.item_id_driedpartypoppeppers: 1,
+        },
+        products=['partyhat']
+    ),
+    EwSmeltingRecipe(
         id_recipe="stick",
         str_name="a stick",
         alias=[
@@ -1633,6 +1659,19 @@ smelting_recipe_list = [
             ewcfg.item_id_phoenixdown: 5
         },
         products=['phoenixdownpillow']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="partypopper",
+        str_name="party popper",
+        alias=[
+            'ppopper',
+            'partyp',
+            'party popper'
+        ],
+        ingredients={
+            'partypoppeppers': 1,
+        },
+        products=['partypopper']
     )
     # TODO remove after double halloween
     # EwSmeltingRecipe(

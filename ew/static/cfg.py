@@ -1,7 +1,11 @@
+import datetime
+# remove after event - THIS IMPORT
+
 # Global configuration options.
 
 
-version = "v4.010 Trophy Weapons"
+
+version = "v4.01 GANKER PARTY 🥳"
 
 dir_msgqueue = 'msgqueue'
 
@@ -1503,6 +1507,11 @@ cmd_verify_cache = cmd_prefix + 'verifycache'
 # SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
+# Party Event TODO: remove after event
+cmd_partypoints = cmd_prefix + 'partypoints'
+cmd_turnin = cmd_prefix + "turnin"
+cmd_turnin_alt_1 = cmd_prefix + "handin"
+
 cmd_scrawl = cmd_prefix + 'scrawl'
 cmd_strip = cmd_prefix + 'strip'
 
@@ -2262,6 +2271,9 @@ col_time_racialability = 'time_racialability'
 col_time_lastpremiumpurchase = 'time_lastpremiumpurchase'
 col_verified = 'verified'
 col_gender = 'gender'
+col_party_points = 'party_points'
+col_cumulative_party_points = 'cumulative_party_points'
+
 
 col_attack = 'attack'
 col_speed = 'speed'
@@ -2289,6 +2301,10 @@ col_juviemode = 'juviemode'
 # Double Halloween
 col_horseman_deaths = 'horseman_deaths'
 col_horseman_timeofdeath = 'horseman_timeofdeath'
+
+# Party Event Stuff - remove after event
+col_total_party_points = 'total_party_points'
+col_current_event_boss = 'current_event_boss'
 
 # Database columns for bartering
 col_offer_give = 'offer_give'
@@ -2510,6 +2526,9 @@ leaderboard_shamblers_killed = "MOST SHAMBLER KILLS"
 # SWILLDERKMUK
 leaderboard_gambit_high = "HIGHEST GAMBIT"
 leaderboard_gambit_low = "LOWEST GAMBIT"
+
+# remove after event - PARTY WOOOOOOOO
+leaderboard_party = "PARTIEST"
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -2749,6 +2768,9 @@ vendor_downpourlaboratory = "Downpour Armament Vending Machines"  # Store for sh
 vendor_breakroom = "The Breakroom"  # Security officers can order items here for free.
 vendor_rpcity = "RP City"  # Double halloween costume store
 
+# Temporary Party Point vendor for Party Event
+vendor_atomicforestpp = "Atomic Forest Stockpile Party Redemption Cart"
+
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
 item_id_monstersoup = 'monstersoup'
@@ -2803,6 +2825,8 @@ item_id_tincan = "tincan"
 item_id_oldboot = "oldboot"
 item_id_leather = "leather"
 item_id_feather = "feather"
+item_id_partypoppepperseeds = "partypoppepperseeds"
+item_id_partypopper = "partypopper"
 item_id_ironingot = "ironingot"
 item_id_bloodstone = "bloodstone"
 item_id_tanningknife = "tanningknife"
@@ -2978,6 +3002,7 @@ item_id_rustealeaves = "rustealeaves"
 item_id_metallicaps = "metallicaps"
 item_id_steelbeans = "steelbeans"
 item_id_aushucks = "aushucks"
+item_id_partypoppeppers = "partypoppeppers"
 
 # vegetable materials
 item_id_poketubereyes = "poketubereyes"
@@ -3000,6 +3025,7 @@ item_id_rustealeafblades = "rustealeafblades"
 item_id_metallicapheads = "metallicapheads"
 item_id_steelbeanpods = "steelbeanpods"
 item_id_aushuckstalks = "aushuckstalks"
+item_id_driedpartypoppeppers = "driedpartypoppeppers"
 
 # dye ids
 item_id_dye_black = "blackdye"
@@ -4222,6 +4248,10 @@ enemy_type_slimeasaurusrex = 'slimeasaurusrex'
 enemy_type_greeneyesslimedragon = 'greeneyesslimedragon'
 enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
 
+#remove after event - THEEZ. If you're gooning the code, you won't be able to know what character ????? is - cuz it'll be an auditorium post! MWAHAHAHAH!!!!!
+enemy_type_carrottop = 'carrottop'
+enemy_type_partymystery = '?????'
+
 enemy_type_civilian = 'civilian'
 enemy_type_civilian_innocent = 'innocent'
 
@@ -4249,6 +4279,8 @@ enemy_type_gaia_rustealeaves = "rustealeaves"
 enemy_type_gaia_metallicaps = "metallicaps"
 enemy_type_gaia_steelbeans = "steelbeans"
 enemy_type_gaia_aushucks = "aushucks"
+# Smearg wanted this for flavor to keep the list complete UwU
+enemy_type_gaia_partypoppeppers = "partypoppeppers"
 
 enemy_type_defaultshambler = "defaultshambler"
 enemy_type_bucketshambler = "bucketshambler"
@@ -4286,6 +4318,8 @@ enemy_ai_attacker_b = 'Attacker-B'
 enemy_ai_defender = 'Defender'
 enemy_ai_gaiaslimeoid = 'Gaiaslimeoid'
 enemy_ai_shambler = 'Shambler'
+# remove after event - carrot top lol
+enemy_ai_carrottop = "Carrot-Top"
 
 # Enemy classes. For now this is only used for Gankers Vs. Shamblers
 enemy_class_normal = 'normal'
@@ -4299,6 +4333,28 @@ rare_enemies = [enemy_type_microslime, enemy_type_slimeofgreed, enemy_type_mammo
 raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator, enemy_type_titanoslime]
 
 enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator]
+
+""" SPOILERS """
+# remove after event - this thing, copied from crank-kun
+party_bosses = [enemy_type_carrottop, enemy_type_partymystery]
+
+party_day_one = datetime.date(2021, 10, 1)
+party_day_two = datetime.date(2021, 10, 2)
+party_day_three = datetime.date(2021, 10, 3)
+party_day_four = datetime.date(2021, 10, 4)
+party_day_five = datetime.date(2021, 10, 5)
+party_day_six = datetime.date(2021, 10, 6)
+party_day_seven = datetime.date(2021, 10, 7)
+
+party_boss_date_map = {
+	party_day_one : enemy_type_carrottop,
+	party_day_two : enemy_type_carrottop,
+	party_day_three : enemy_type_carrottop,
+	party_day_four : enemy_type_carrottop,
+	party_day_five : enemy_type_carrottop,
+	party_day_six : enemy_type_partymystery,
+	party_day_seven : enemy_type_partymystery
+} 
 
 # List of enemies that spawn in the Nuclear Beach
 pre_historic_enemies = [enemy_type_slimeasaurusrex, enemy_type_dinoslime, enemy_type_slimeadactyl, enemy_type_mammoslime]
@@ -4326,7 +4382,8 @@ gvs_enemies_gaiaslimeoids = [
     enemy_type_gaia_rustealeaves,
     enemy_type_gaia_metallicaps,
     enemy_type_gaia_steelbeans,
-    enemy_type_gaia_aushucks
+    enemy_type_gaia_aushucks,
+    enemy_type_gaia_partypoppeppers
 ]
 gvs_enemies_shamblers = [
     enemy_type_defaultshambler,
@@ -4486,12 +4543,26 @@ enemy_drop_tables = {
     ],
     enemy_type_microgullswarm: [
         {item_id_feather: [5, 1, 1]}
+    ],
+    enemy_type_carrottop: [
+        {'carrottopsmohawk': [100, 1, 1]},
+        {item_id_slimepoudrin: [50, 1, 3]},
+        {item_id_driedpartypoppeppers: [100, 1, 9]},
+        {'quesarito': [15, 1, 9]},
+        {'partyhat': [45, 1, 1]}
+    ],
+    enemy_type_partymystery: [
+        {'dionaeashawl': [100, 1, 1]},
+        {item_id_driedpartypoppeppers: [100, 1, 18]},
+        {'strawhat': [50, 1, 1]},
+        {'overalls': [50, 1, 1]},
+        {"crop": [100, 1, 4]}
     ]
 }
 for enemy in gvs_enemies:
     enemy_drop_tables[enemy] = [{item_id_slimepoudrin: [100, 1, 1]}]
 for enemy in slimeoid_trainers:
-    enemy_drop_tables[enemy] = [{item_id_slimepoudrin: [100, 1, 1]}]
+    enemy_drop_tables[enemy] = [{item_id_slimepoudrin: [100, 1, 1]}, {rarity_plebeian: [20, 1, 1]}]
 
 # When making a new enemy, make sure to fill out slimerange, ai, attacktype, displayname, raredisplayname, and aliases.
 # Enemy data tables. Slime is stored as a range from min to max possible slime upon spawning.
@@ -4654,6 +4725,22 @@ enemy_data_table = {
         "displayname": "Micro Gull Swarm",
         "raredisplayname": "Micro Gull Cloud",
         "aliases": ["microgull", "smallgull", "birdswarm", "gullcloud", "gullswarm"]
+    },
+    enemy_type_carrottop: {
+        "slimerange": [1000, 100000],
+        "ai": enemy_ai_carrottop,
+        "attacktype": enemy_attacktype_unarmed,
+        "displayname": "Carrot Top",
+        "raredisplayname": "Carrot Top (but extra angry)",
+        "aliases": ["carrot", "funnycarrotguylol"]
+    },
+    enemy_type_partymystery: {
+        "slimerange": [4000000, 5000000],
+        "ai": enemy_ai_attacker_a,
+        "attacktype": enemy_attacktype_body,
+        "displayname": "?????",
+        "raredisplayname": "Omega ?????",
+        "aliases": ["?", "mystery"]
     },
     enemy_type_civilian: {
         "slimerange": [100001, 100001],
@@ -5210,6 +5297,24 @@ coward_responses_hurt = [
     "\nThe {} cries out in pain!: *What the H-E-double-hockey-sticks is your problem?*",
 ]
 
+# Remove after event - carrot top lol
+carrottop_responses_hurt = [
+    "\nCarrot Top screams in pain!: *WHAT THE HECK!!! I'M TELLING THE GARDENER ABOUT THIS!!!*",
+    "\nCarrot Top screams in pain!: *AUUUGHGHHH!!!!*",
+    "\nCarrot Top screams in pain!: *EHHHHGHHH!!!!*",
+    "\nCarrot Top screams in pain!: *OWWUGUGHH...*",
+    "\nCarrot Top falls to the floor, his leg being sliced clean off.",
+]
+
+carrottop_responses = [
+    "talks to you: *Hey, wassup cool dude. Or, uh, dudette. I actually can't see that well.*",
+    "talks to you: *Ignore me, sickington. I'm busy as the Beekeeper gettin' these party peps to arsonbrook farms.*",
+    "talks to you: *You look strong, heck! Ignore me, I haven't been allowed to use weapons since I accidentally ganked Rosalita with a Roomba.*",
+    "talks to himself: *ARGH!!! UGHH!!!!!!! I'm getting bullied on slime twitter!!!*",
+    "yells at you: *HECK!!!!!*",
+    "angrily stomps his foot, for no real reason.",
+]
+
 # Letters that an enemy can identify themselves with
 identifier_letters = [
     'A', 'B', 'C', 'D', 'E',
@@ -5308,6 +5413,7 @@ gvs_almanac = {
     enemy_type_gaia_metallicaps: 'Metallicaps are a metallic upgrade Gaiaslimeoid, meaning that it can be planted on any tile, provided that a Steel Bean or Aushuck is not already occupying that tile. When planted on top of an attacking Gaiaslimeoid, it will provide a boost in damage, as well as an additional amount of damage in the form of a spores effect, which burns away the health of enemy shamblers. It cannot be given a Joybean. It is consumed upon use, much like a Joybean.\nMetallicap is a rebellious youth, and the youngest member of the Metal Crop Bros. His affinity for metal music drives his other brothers up the goddamn wall, given how often he will throw parties over at the house and blast his music through his custom-made boombox. "Rules? HA! There\'s only one rule in this house brah, and that is, *TO GET DOWN AND PARTY!!!*", he says.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241014118187059/metallicaps_seedpacket.png',
     enemy_type_gaia_steelbeans: 'Steel Beans are a metallic upgrade Gaiaslimeoid, meaning that it can be planted on any tile, provided that a Metallicap or Aushuck is not already occupying that tile. When planted on top of a gaiaslimeoid, it will act as an additional layer of health that a shambler must get rid of before it can attack the Gaiaslimeoid being protected. If a Steel Bean is damaged, you can !plant another one on top of it to repair it. It cannot be given a Joybean.\nSteel Bean is the middle child of the Metal Crop Bros. He has a deep fascination with conspiracy theories, to the point where his brothers seriously worry about his mental state at times. "We\'re all in a simulation man, they\'re pulling our strings with commands and we just have to follow what\'s in the program." When asked to clarify what he meant by this, Steel Bean replied "You wouldn\'t get it..."\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241056048644126/steelbeans_seedpacket.png',
     enemy_type_gaia_aushucks: 'Aushucks are a metallic upgrade Gaiaslimeoid, meaning that it can be planted on any tile, provided that a Metallicap or Steel Bean is not already occupying that tile. When planted on top of a Gaiaslimeoid, it will produce Gaiaslime at the same rate as a regular brightshade. It can be planted on top of any Gaiaslimeoid, including Brightshades. It cannot be given a Joybean. It is consumed upon use, much like a Joybean.\nAushuck is the eldest of the Metal Crop Bros. He got in on the ground floor with SlimeCoin after the last market crash and made a killing, and from then on he\'s been living the high life. His newfound wealth enables his smug personality, much to the ire of his younger brothers. Everything he owns is gold plated, including all his furniture and clothing. "Look at me, I fucking OWN this city", he says as he stands on the balcony of his luxury condo.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241000918450196/aushucks_seedpacket.png',
+    enemy_type_gaia_partypoppeppers: 'Party Poppeppers are a Gaiaslimeoid that were never used on the battlefield, as their seeds were not uncovered until long after the end of Garden Ops. \nParty Poppeppers are a real party animal, screaming through the night. When not being the life of the party, they\'re actually chillaxing and a pretty low energy, laid-back kind of dude. \nhttps://cdn.discordapp.com/attachments/875184852746514433/891796268706299925/gc_partypoppepper.png', # Love you Smearg UwU
 
     enemy_type_defaultshambler: 'The Default Shambler is exactly what it sounds like. It has low defenses and low attack, and will slowly move towards the edge of the field.\n"Ughhhhhhhh, criiiiiiiinnnnngggggeeeee. Baaaaaasssseeeddddddd. Duuuuuddee I loooooovvveeee braaiiiiiiinnnnnnnzzzzz", says Default Shambler, as he lurches toward an enemy Gaiaslimeoid. they\'re all like this. Copy and paste this for every single type of Shambler, you aren\'t missing much.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241123576807435/defaultshambler_gravestone.png',
     enemy_type_bucketshambler: 'The KFC Bucket shambler is exactly the same as a Default Shambler, it just has more HP.\nShamblers don\'t need to eat regular food, but they sometimes do, just for the enjoyment of chowing down on some nice fast food. They tend to go overboard, however, frequently placing the entire KFC bucket over their head just to get the last few crumbs down their gullet. This is how every KFC Bucket shambler is born, as they are too stupid to figure out how to take it off.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241141293416568/kfcbucket_shambler.png',
