@@ -688,3 +688,23 @@ async def remove_user_overwrites(cmd):
 
     response = "DEBUG: ALL USER OVERWRITES DELETED."
     return await fe_utils.send_message(client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+def checkClearance(member = None):
+    if member is None:
+        return -1
+
+
+    roles_map_user = ewutils.getRoleMap(member.roles)
+
+
+    if ewcfg.role_bpadmin in roles_map_user:
+        return 1 #currently in admin
+    elif ewcfg.role_brimstoneprog in roles_map_user:
+        return 2 #casual admin
+    elif ewcfg.role_bdadmin in roles_map_user:
+        return 3 #mod admin
+    elif ewcfg.role_brimstonedesperados in roles_map_user:
+        return 4 #casual mod admin
+    else:
+        return 10

@@ -93,6 +93,7 @@ async def pardon(cmd):
                 if member_data.life_state == ewcfg.life_state_enlisted:
                     member_data.life_state = ewcfg.life_state_juvenile
                     member_data.weapon = -1
+                    member_data.sidearm = -1
 
                 response = "{} has been released from their association with the {}.".format(member.display_name, faction_old)
 
@@ -101,6 +102,68 @@ async def pardon(cmd):
                 member_data.poi = ewcfg.poi_id_downtown
             member_data.persist()
             await ewrolemgr.updateRoles(client=cmd.client, member=member)
+
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def defect(cmd):
+    accepted = False
+
+    member = cmd.message.author
+
+    modauth = 0
+
+    response = "You feel...traitor-ish today. Hey mods, any takers? Let them free, !yes or !no?"
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    try:
+        message = await cmd.client.wait_for('message', timeout=30, check=lambda message: 0 < ewrolemgr.checkClearance(member=message.author) <= 4 and
+                                                                                         message.content.lower() in [ewcfg.cmd_yes, ewcfg.cmd_no])
+
+        if message != None:
+            if message.content.lower() == ewcfg.cmd_yes:
+                accepted = True
+                modauth = message.author
+            if message.content.lower() == ewcfg.cmd_no:
+                accepted = False
+
+    except Exception as e:
+        print(e)
+        accepted = False
+
+    if not accepted:
+        response = "Well if it isn't the boy who cried backstab. Guess you won't be going anywhere."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+    else:
+        member_data = EwUser(member=cmd.message.author)
+        mod_data = EwUser(member=modauth)
+        member_data.unban(faction=mod_data.faction)
+
+
+        if member_data.faction == "":
+            response = "{} has been allowed to join the {} again.".format(member.display_name, mod_data.faction)
+        else:
+            faction_old = member_data.faction
+            member_data.faction = ""
+
+            if member_data.life_state == ewcfg.life_state_enlisted:
+                member_data.life_state = ewcfg.life_state_juvenile
+                member_data.weapon = -1
+                member_data.sidearm = -1
+
+            response = "{} has been released from their association with the {}.".format(member.display_name, faction_old)
+
+        member_poi = poi_static.id_to_poi.get(member_data.poi)
+        if move_utils.inaccessible(user_data=member_data, poi=member_poi):
+            member_data.poi = ewcfg.poi_id_downtown
+        member_data.persist()
+        await ewrolemgr.updateRoles(client=cmd.client, member=member)
+
+        leak_channel = fe_utils.get_channel(server=cmd.guild, channel_name='squickyleaks')
+        await fe_utils.send_message(cmd.client, leak_channel,  "{}: Let {} defect.".format(modauth.display_name, member.display_name))
+
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
@@ -289,17 +352,26 @@ async def exalt(cmd):
 
 
 async def hogtie(cmd):
-    if not cmd.message.author.guild_permissions.administrator:
+
+    if not 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
         return await cmd_utils.fake_failed_command(cmd)
     else:
         if cmd.mentions_count == 1:
             target_data = EwUser(member=cmd.mentions[0])
-            target_status = target_data.getStatusEffects()
-            if ewcfg.status_hogtied_id in target_status:
-                target_data.clear_status(id_status=ewcfg.status_hogtied_id)
+            member = cmd.mentions[0]
+            if target_data.hogtied == 1:
+                target_data.hogtied = 0
+                target_data.persist()
                 response = "Whew-whee! She's buckin' so we gotta let 'er go."
                 await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+                leak_channel = fe_utils.get_channel(server=cmd.guild, channel_name='squickyleaks')
+                await fe_utils.send_message(cmd.client, leak_channel, "{}:Released {} from eternal bondage.".format(cmd.message.author.display_name, member.display_name))
             else:
-                target_data.applyStatus(ewcfg.status_hogtied_id)
+                target_data.hogtied = 1
+                target_data.persist()
                 response = "Boy howdy! Looks like we lasso'd up a real heifer there! A dang ol' big'un."
                 await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+                leak_channel = fe_utils.get_channel(server=cmd.guild, channel_name='squickyleaks')
+                await fe_utils.send_message(cmd.client, leak_channel, "{}: Hogtied {}.".format(cmd.message.author.display_name, member.display_name))

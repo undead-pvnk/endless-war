@@ -1,4 +1,5 @@
 import asyncio
+from ew.cmd.cmds.cmdcmds import partypoints
 import random
 import time
 
@@ -135,7 +136,7 @@ async def menu(cmd):
                 value *= shambler_multiplier
 
                 if mother_district_data != None:
-                    if controlling_faction != "":
+                    if controlling_faction != "" and vendor != ewcfg.vendor_atomicforestpp:
                         # prices are halved for the controlling gang
                         if controlling_faction == user_data.faction:
                             value /= 2
@@ -312,6 +313,11 @@ async def order(cmd):
                 currency_used = 'brainz'
                 current_currency_amount = user_data.gvs_currency
 
+            # remove after event - this vendor part
+            if current_vendor == ewcfg.vendor_atomicforestpp:
+                currency_used = 'Party Points'
+                current_currency_amount = user_data.party_points
+
             if current_vendor is None or len(current_vendor) < 1:
                 response = "Check the {} for a list of items you can {}.".format(ewcfg.cmd_menu, ewcfg.cmd_order)
 
@@ -346,7 +352,7 @@ async def order(cmd):
 
                 controlling_faction = poi_utils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 
-                if controlling_faction != "":
+                if controlling_faction != "" and current_vendor != ewcfg.vendor_atomicforestpp:
                     # prices are halved for the controlling gang
                     if controlling_faction == user_data.faction:
                         value /= 2
@@ -449,6 +455,8 @@ async def order(cmd):
                         user_data.change_slimes(n=-value, source=ewcfg.source_spending)
                     elif currency_used == 'brainz':
                         user_data.gvs_currency -= value
+                    elif currency_used == 'Party Points': # remove after event
+                        user_data.party_points -= value
 
                     if company_data is not None:
                         company_data.recent_profits += value

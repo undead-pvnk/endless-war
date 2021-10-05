@@ -23,6 +23,6 @@ cmd_map = {
     # ewcfg.cmd_exalt: cmds.exalt,
 
     # Stop a player from speaking out of game
-    ewcfg.cmd_hogtie: kingpincmds.hogtie
-
+    ewcfg.cmd_hogtie: kingpincmds.hogtie,
+    ewcfg.cmd_defect: kingpincmds.defect
 }

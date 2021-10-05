@@ -76,6 +76,8 @@ cmd_map = {
     # Used in russianroulette and slimeoidbattle.
     ewcfg.cmd_accept: cmdcmds.accept,
     ewcfg.cmd_refuse: cmdcmds.refuse,
+    ewcfg.cmd_yes: cmdcmds.confirm,
+    ewcfg.cmd_no: cmdcmds.cancel,
 
     # More confirmation cmds, but for ads
     ewcfg.cmd_confirm: cmdcmds.confirm,
@@ -217,6 +219,11 @@ cmd_map = {
 
     # Verify that the cache is functional
     ewcfg.cmd_verify_cache: cmdcmds.verify_cache,
+
+    # Ganker Party Event TODO: remove after event
+    ewcfg.cmd_partypoints: cmdcmds.partypoints,
+    ewcfg.cmd_turnin: cmdcmds.turnin,
+    ewcfg.cmd_turnin_alt_1: cmdcmds.turnin
 
 }
 

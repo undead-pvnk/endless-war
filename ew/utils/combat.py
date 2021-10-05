@@ -84,6 +84,27 @@ class EwEnemy(EwEnemyBase):
                     resp_cont.add_channel_response(ch_name, response)
                     resp_cont.format_channel_response(ch_name, enemy_data)
                     return resp_cont
+                    
+        if enemy_data.ai == ewcfg.enemy_ai_carrottop:
+            users = bknd_core.execute_sql_query(
+                "SELECT {id_user}, {life_state} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin})".format(
+                    id_user=ewcfg.col_id_user,
+                    life_state=ewcfg.col_life_state,
+                    poi=ewcfg.col_poi,
+                    id_server=ewcfg.col_id_server,
+                    life_state_corpse=ewcfg.life_state_corpse,
+                    life_state_kingpin=ewcfg.life_state_kingpin,
+                ), (
+                    enemy_data.poi,
+                    enemy_data.id_server
+                ))
+            if len(users) > 0:
+                if random.randrange(100) > 95:
+                    response = random.choice(ewcfg.carrottop_responses)
+                    response = response.format(enemy_data.display_name, enemy_data.display_name)
+                    resp_cont.add_channel_response(ch_name, response)
+                    resp_cont.format_channel_response(ch_name, enemy_data)
+                    return resp_cont
 
         if enemy_data.ai == ewcfg.enemy_ai_sandbag:
             target_data = None
@@ -1134,7 +1155,7 @@ class EwEnemy(EwEnemyBase):
 
         # Get target's info based on its AI.
 
-        if enemy_data.ai == ewcfg.enemy_ai_coward:
+        if enemy_data.ai == ewcfg.enemy_ai_coward or enemy_data.ai == ewcfg.enemy_ai_carrottop:
             users = bknd_core.execute_sql_query(
                 "SELECT {id_user}, {life_state} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin})".format(
                     id_user=ewcfg.col_id_user,
@@ -1180,7 +1201,7 @@ class EwEnemy(EwEnemyBase):
 
         # Get target's info based on its AI.
 
-        if enemy_data.ai == ewcfg.enemy_ai_coward:
+        if enemy_data.ai == ewcfg.enemy_ai_coward or enemy_data.ai == ewcfg.enemy_ai_carrottop:
             return
         elif enemy_data.ai == ewcfg.enemy_ai_defender:
             if enemy_data.id_target != -1:
@@ -1215,7 +1236,7 @@ class EwEnemy(EwEnemyBase):
 
         # Get target's info based on its AI.
 
-        if enemy_data.ai == ewcfg.enemy_ai_coward:
+        if enemy_data.ai == ewcfg.enemy_ai_coward or enemy_data.ai == ewcfg.enemy_ai_carrottop:
             return
         elif enemy_data.ai == ewcfg.enemy_ai_defender:
             if enemy_data.id_target != -1:
@@ -1403,7 +1424,9 @@ def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = Non
     mods = {
         'dmg': 0,
         'crit': 0,
-        'hit_chance': 0
+        'hit_chance': 0,
+        'no_cost': False,
+        'vax': False
     }
 
     user_statuses = user_data.getStatusEffects()
@@ -1446,6 +1469,13 @@ def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = Non
 
             mods['dmg'] += status_flavor.dmg_mod_self
 
+    # Checks if any status mod in the nocost list is in the user's statuses
+    if len(set(ewcfg.nocost).intersection(set(user_statuses))) > 0:
+        mods['no_cost'] = True
+
+    # Signals presence of vaccine
+    mods['vax'] = True if ewcfg.status_modelovaccine_id in user_statuses else False
+
     return mods
 
 
@@ -1454,7 +1484,8 @@ def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = Non
     mods = {
         'dmg': 0,
         'crit': 0,
-        'hit_chance': 0
+        'hit_chance': 0,
+        'untouchable': False
     }
 
     user_statuses = user_data.getStatusEffects()
@@ -1476,6 +1507,9 @@ def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = Non
             mods['hit_chance'] += status_flavor.hit_chance_mod
             mods['crit'] += status_flavor.crit_mod
             mods['dmg'] += status_flavor.dmg_mod
+
+    if ewcfg.status_n4 in user_statuses:
+        mods['untouchable'] = True
 
     # apply trauma mods
     # if user_data.combatant_type == 'player':
@@ -2420,6 +2454,7 @@ class EwUser(EwUserBase):
                 rigor = False
 
             self.busted = False  # reset busted state on normal death; potentially move this to ewspooky.revive
+            self.weaponmarried = False  # sure hope this works right
             self.slimes = 0
             self.slimelevel = 1
             self.clear_mutations()
@@ -3093,3 +3128,82 @@ class EwUser(EwUserBase):
             res = row[0]
 
         return res
+
+    # Returns EwItem of the weapon they would use in combat
+    def get_weapon_item(self):
+        mutations = self.get_mutations()
+        ambi = ewcfg.mutation_id_ambidextrous in mutations
+        if self.weapon > 0:
+            wep_item = EwItem(id_item=self.weapon)
+            wep_def = static_weapons.weapon_map.get(wep_item.template)
+            returned_weapon = wep_item
+            if wep_def.is_tool and ambi and self.sidearm > 0:
+                sa_item = EwItem(id_item=self.sidearm)
+                sa_def = static_weapons.weapon_map.get(sa_item.template)
+                returned_weapon = sa_item if not sa_def.is_tool else returned_weapon
+        elif ambi and self.sidearm > 0:
+            sa_item = EwItem(id_item=self.sidearm)
+            returned_weapon = sa_item
+        elif ewcfg.mutation_id_lethalfingernails in mutations:
+            ewutils.weaponskills_set(id_server=self.id_server, id_user=self.id_user, weapon=ewcfg.weapon_id_fingernails, weaponskill=10)
+            self.weaponskill = 10
+            returned_weapon = fingernails_item
+        else:
+            returned_weapon = fist_item
+            self.weaponskill = 5
+
+        return returned_weapon
+
+
+# Storage variables for items that arent meant for player use
+fist_item = None
+fingernails_item = None
+
+
+# Find and set, or create, fists and fingernails.
+def set_unarmed_items(id_server):
+    # get storage variables
+    global fist_item
+    global fingernails_item
+
+    # get all weapons in the designated storage area
+    reserve_weapons = bknd_item.inventory(id_user="attack_fn", id_server=id_server, item_type_filter=ewcfg.it_weapon)
+
+    # iterate through all found items and set the first found for each type
+    for data in reserve_weapons:
+        if data.get("template") == ewcfg.weapon_id_fingernails:
+            ewutils.logMsg("Assigning {} as global fingernails".format(data.get("id_item")))
+            fingernails_item = EwItem(id_item=data.get("id_item"))
+        elif data.get("template") == ewcfg.weapon_id_fists:
+            ewutils.logMsg("Assigning {} as global fists".format(data.get("id_item")))
+            fist_item = EwItem(id_item=data.get("id_item"))
+
+    # Create the items if they weren't already present
+    if fingernails_item is None:
+        item = static_weapons.weapon_map.get(ewcfg.weapon_id_fingernails)
+        item_props = itm_utils.gen_item_props(item)
+        id_item = bknd_item.item_create(
+            item_type=ewcfg.it_weapon,
+            id_user="attack_fn",
+            id_server=id_server,
+            stack_max=-1,
+            stack_size=0,
+            item_props=item_props
+        )
+        ewutils.logMsg("Creating new global fingernails {}".format(id_item))
+        fingernails_item = EwItem(id_item=id_item)
+    if fist_item is None:
+        item = static_weapons.weapon_map.get(ewcfg.weapon_id_fists)
+        item_props = itm_utils.gen_item_props(item)
+        id_item = bknd_item.item_create(
+            item_type=ewcfg.it_weapon,
+            id_user="attack_fn",
+            id_server=id_server,
+            stack_max=-1,
+            stack_size=0,
+            item_props=item_props
+        )
+        ewutils.logMsg("Creating new global fists {}".format(id_item))
+        fist_item = EwItem(id_item=id_item)
+
+    return

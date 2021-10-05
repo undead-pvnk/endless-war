@@ -619,6 +619,30 @@ trauma_list = [
         str_trauma="Their body is melting and mishhapen, like their skin was made of drenched paper mache.",
         trauma_class=ewcfg.trauma_class_accuracy,
     ),
+    EwTrauma(  # 18
+        id_trauma=ewcfg.weapon_id_diamondpickaxe,
+        str_trauma_self="There is a deep, precise indent in the crown of your skull. How embarrassing!",
+        str_trauma="There is a deep, precise indent in the crown of their skull. How embarrassing!",
+        trauma_class=ewcfg.trauma_class_hunger,
+    ),
+            EwTrauma(  # 17
+        id_trauma=ewcfg.weapon_id_awp,
+        str_trauma_self="Your head contains a hole where there should be an eye, removed with surgical precision.",
+        str_trauma="Their head contains a hole where there should be an eye, removed with surgical precision.",
+        trauma_class=ewcfg.trauma_class_accuracy,
+    ),
+            EwTrauma(  # 17
+        id_trauma=ewcfg.weapon_id_huntingrifle,
+        str_trauma_self="Your head contains a hole where there should be an eye, removed with surgical precision.",
+        str_trauma="Their head contains a hole where there should be an eye, removed with surgical precision.",
+        trauma_class=ewcfg.trauma_class_accuracy,
+    ),
+                EwTrauma(  # 17
+        id_trauma=ewcfg.weapon_id_monofilamentwhip,
+        str_trauma_self="Your body is riddled with scars, circled arround limbs which dont seem to be reattached correctly.",
+        str_trauma="Their body is riddled with scars, circled arround limbs which dont seem to be reattached correctly.",
+        trauma_class=ewcfg.trauma_class_accuracy,
+    ),
     EwTrauma(  # 17
         id_trauma='amateur',
         str_trauma_self="You can still feel the circular scar inside your throat. Embarrassing...",
@@ -631,7 +655,12 @@ trauma_list = [
         str_trauma="They hesitate to even acknowledge their own slimeoid.",
         trauma_class=ewcfg.trauma_class_accuracy,
     ),
-
+    EwTrauma(  # 40
+        id_trauma=ewcfg.weapon_id_fists,
+        str_trauma_self="You've still got a black eye from that pummeling.",
+        str_trauma="They've still got a black eye from that pummeling.",
+        trauma_class=ewcfg.trauma_class_hunger,
+    ),
 
 ]
 
