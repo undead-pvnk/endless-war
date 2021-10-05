@@ -93,6 +93,7 @@ async def pardon(cmd):
                 if member_data.life_state == ewcfg.life_state_enlisted:
                     member_data.life_state = ewcfg.life_state_juvenile
                     member_data.weapon = -1
+                    member_data.sidearm = -1
 
                 response = "{} has been released from their association with the {}.".format(member.display_name, faction_old)
 
@@ -150,6 +151,7 @@ async def defect(cmd):
             if member_data.life_state == ewcfg.life_state_enlisted:
                 member_data.life_state = ewcfg.life_state_juvenile
                 member_data.weapon = -1
+                member_data.sidearm = -1
 
             response = "{} has been released from their association with the {}.".format(member.display_name, faction_old)
 
