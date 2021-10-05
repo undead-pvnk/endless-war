@@ -366,7 +366,7 @@ smelting_recipe_list = [
         ingredients={
             ewcfg.item_id_monsterbones: 100,
             'scalp':100,
-            'soul':1,
+            #'soul':1,
         },
         products=[ewcfg.item_id_bloodstone]
     ),
