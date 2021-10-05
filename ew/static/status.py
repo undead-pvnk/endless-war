@@ -655,7 +655,12 @@ trauma_list = [
         str_trauma="They hesitate to even acknowledge their own slimeoid.",
         trauma_class=ewcfg.trauma_class_accuracy,
     ),
-
+    EwTrauma(  # 40
+        id_trauma=ewcfg.weapon_id_fists,
+        str_trauma_self="You've still got a black eye from that pummeling.",
+        str_trauma="They've still got a black eye from that pummeling.",
+        trauma_class=ewcfg.trauma_class_hunger,
+    ),
 
 ]
 

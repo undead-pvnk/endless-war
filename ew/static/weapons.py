@@ -19,7 +19,7 @@ def get_weapon_type_stats(weapon_type):
             "cost_multiplier": 1.3,
             "crit_chance": 0,
             "crit_multiplier": 2,
-            "hit_chance": 1,
+            "hit_chance": -1,
         },
         "small_game": {
             "damage_multiplier": 0.5,
@@ -96,6 +96,13 @@ def get_weapon_type_stats(weapon_type):
             "crit_chance": 0,
             "crit_multiplier": 1,
             "hit_chance": 1,
+        },
+        "unarmed": {
+            "damage_multiplier": 0.25,
+            "cost_multiplier": 1,
+            "crit_chance": 0,
+            "crit_multiplier": 1,
+            "hit_chance": 0.9
         }
     }
 
@@ -129,19 +136,24 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_mul
 
         ignore_hitchance = weapon_stats["hit_chance"] == -1
 
+        # Adds the base chance to hit and the chance from modifiers. Hits if the roll is lower
         if (hit_roll < (weapon_stats["hit_chance"] + ctn.hit_chance_mod)) or ignore_hitchance:
+            # Sets multiplier to the default, then adds a random 0 < x < 1 multiple of the variable damage mod
             effective_multiplier = weapon_stats["damage_multiplier"]
             if "variable_damage_multiplier" in weapon_stats:
                 effective_multiplier += random.random() * weapon_stats["variable_damage_multiplier"]
 
+            # Multiplies the damage by the effective multiplier
             hit_damage = base_damage * effective_multiplier
             if guarantee_crit or random.random() < (weapon_stats["crit_chance"] + ctn.crit_mod):
                 hit_damage *= weapon_stats["crit_multiplier"]
                 if not ("shots" in weapon_stats):
                     ctn.crit = True
 
-            ctn.apply_status = weapon_stats.get("apply_status")
-            ctn.apply_bystander_status = weapon_stats.get("mass_apply_status")
+            if weapon_stats.get("apply_status") is not None:
+                ctn.apply_status.update(weapon_stats.get("apply_status"))
+            ctn.mass_apply_status = weapon_stats.get("mass_apply_status")
+            ctn.explode = True if weapon_type == "explosive" else False
 
         return hit_damage
 
@@ -157,11 +169,21 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_mul
                     ctn.crit = False
         else:
             damage = get_hit_damage(ctn)
+            # TODO: Move this to if damage so that multi-shot weapons can also deal bystander effects when needed
             if "bystander_damage" in weapon_stats:
                 ctn.bystander_damage = damage * weapon_stats["bystander_damage"]
 
         if damage:
             ctn.slimes_damage = int(damage)
+            # If any weapon is given a status to apply to the target that requires a damage based value, handle it here
+            for status, source in ctn.apply_status.items():
+                # This is here to make sure that the weapon modified damage gets used for NS damage
+                # If you add a weapon type that also applies burn to target, find a way to add it on top of this.
+                # Thats not my job right now though considering no weapons like that exist yet
+                # Maybe reverse as {source: type} when declaring, then update with {type: magnitude + apply_status.get(type, 0)}
+                # then remove the source key from the dict
+                if source == ewcfg.mutation_id_napalmsnot:
+                    ctn.apply_status.update({status: int(damage/2)})
         else:
             ctn.miss = True
 
@@ -1248,7 +1270,7 @@ weapon_list = [
         str_miss="**MISS!!** {name_player}'s pitchfork is planted firmly into the ground.",
         str_damage="{name_player} stabs {name_target}'s {hitzone} with their pitchfork!",
         str_crit="**CRITICAL HIT!!** {name_player} pokes several holes in {name_target}!",
-        str_kill="{name_player} plants their pitchfork firmly into {name_target} and lifts them high into the air. After {name_target} loses consciousness, {name_target} throws them to the ground.",
+        str_kill="{name_player} plants their pitchfork firmly into {name_target} and lifts them high into the air. After {name_target} loses consciousness, {name_player} throws them to the ground and stabs them again for good measure.",
         str_equip="You pick up your pitchfork and give the ground a light tap with the handle's end.",
         str_name="pitchfork",
         str_weapon="a pitchfork",
@@ -1626,6 +1648,25 @@ weapon_list = [
         fn_effect=get_normal_attack(weapon_type='small_game'),
         acquisition=ewcfg.acquisition_smelting,
         stat=ewcfg.stat_monowhip_kills,
+    EwWeapon(  # 45
+        id_weapon=ewcfg.weapon_id_fists,
+        alias=[],
+        str_crit="",
+        str_miss="{name_target} dodges your strike.",
+        str_equip="",
+        str_name="fists",
+        str_weapon="their fists",
+        str_weaponmaster_self="",
+        str_weaponmaster="",
+        str_kill="{name_target} is hit!!\n\n{name_target} has died.",
+        str_killdescriptor="pummeled",
+        str_damage="{name_target} is hit!!",
+        str_duel="",
+        str_description="",
+        str_scalp=" It looks like it was torn off by hand.",
+        fn_effect=get_normal_attack(weapon_type='unarmed'),
+        price=0,
+        stat=ewcfg.stat_unarmed_kills,
     ),
 ]
 
@@ -1658,7 +1699,7 @@ weapon_type_convert = {
 }
 
 slimeoid_weapon_type_convert = {
-    -1: get_normal_attack(weapon_type='tool'),
+    -1: get_normal_attack(weapon_type='unarmed'),
     0:  get_normal_attack(weapon_type='tool'),
     1:  get_normal_attack(weapon_type='tool'),
     2:  get_normal_attack(weapon_type='small_game'),

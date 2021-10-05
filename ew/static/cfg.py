@@ -540,6 +540,10 @@ role_donor = "terezigang"
 role_tutorial = "newintown"
 role_slimernalia = "kingpinofslimernalia"
 role_gellphone = "gellphone"
+role_brimstoneprog = "brimstoneprogrammer"
+role_bpadmin = "bpadmin"
+role_bdadmin = "bdadmin"
+role_brimstonedesperados = "brimstonedesperados"
 role_null_major_role = "nullmajorrole"
 role_null_minor_role = "nullminorrole"
 
@@ -1094,6 +1098,7 @@ cmd_booru = cmd_prefix + 'booru'
 cmd_bandcamp = cmd_prefix + 'bandcamp'
 cmd_tutorial = cmd_prefix + 'tutorial'
 cmd_pardon = cmd_prefix + 'pardon'
+cmd_defect = cmd_prefix + 'defect'
 cmd_banish = cmd_prefix + 'banish'
 cmd_vouch = cmd_prefix + 'vouch'
 cmd_writhe = cmd_prefix + 'writhe'
@@ -1119,6 +1124,8 @@ cmd_accept = cmd_prefix + 'accept'
 cmd_refuse = cmd_prefix + 'refuse'
 cmd_sign = cmd_prefix + 'sign'
 cmd_rip = cmd_prefix + 'rip'
+cmd_yes = cmd_prefix + 'yes'
+cmd_no = cmd_prefix + 'no'
 cmd_reap = cmd_prefix + 'reap'
 cmd_reap_alt = cmd_prefix + 'forcereap'
 cmd_sow = cmd_prefix + 'sow'
@@ -1894,6 +1901,9 @@ max_enemies = 5
 # response string used to let attack function in ewwep know that an enemy is being attacked
 enemy_targeted_string = "ENEMY-TARGETED"
 
+# Response string used to signal ghostbusting
+ghost_busting_string = "BUSTING-MAKES-ME-FEEL-GOOD"
+
 # Wiki link base url
 wiki_baseurl = "https://rfck.miraheze.org/wiki/"
 
@@ -2273,7 +2283,7 @@ col_verified = 'verified'
 col_gender = 'gender'
 col_party_points = 'party_points'
 col_cumulative_party_points = 'cumulative_party_points'
-
+col_hogtied = 'hogtied'
 
 col_attack = 'attack'
 col_speed = 'speed'
@@ -2528,7 +2538,7 @@ leaderboard_gambit_high = "HIGHEST GAMBIT"
 leaderboard_gambit_low = "LOWEST GAMBIT"
 
 # remove after event - PARTY WOOOOOOOO
-leaderboard_party = "PARTIEST"
+leaderboard_party = "PARTY ROCKERS"
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -2660,6 +2670,7 @@ stat_pitchfork_kills = 'pitchfork_kills'
 stat_shovel_kills = 'shovel_kills'
 stat_slimeringcan_kills = 'slimeringcan_kills'
 stat_fingernails_kills = 'fingernails_kills'
+stat_unarmed_kills = 'unarmed_kills'
 stat_roomba_kills = 'roomba_kills'
 stat_chainsaw_kills = 'chainsaw_kills'
 stat_megachainsaw_kills = 'megachainsaw_kills'
@@ -3109,6 +3120,7 @@ weapon_id_slimeoidwhistle = 'whistle'
 weapon_id_awp = 'awp'
 weapon_id_diamondpickaxe = 'dpick'
 weapon_id_monofilamentwhip = 'monowhip'
+weapon_id_fists = 'fists'
 
 
 weapon_id_spraycan = 'spraycan'
