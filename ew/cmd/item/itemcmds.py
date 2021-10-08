@@ -1898,3 +1898,4 @@ async def manual_transfer(cmd):
         response = "Can't move that. It's !moveitem <item id> <destination>"
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
