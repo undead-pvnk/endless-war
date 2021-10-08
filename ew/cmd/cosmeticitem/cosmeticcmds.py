@@ -33,6 +33,7 @@ async def smoke(cmd):
             if int(item.item_props.get('size')) > 0:
                 space_adorned += int(item.item_props.get('size'))
 
+            usermodel.change_crime(n=ewcfg.cr_underage_smoking_points)
             response = "You light a cig and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
             item.item_props['cosmetic_desc'] = "A single lit cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool."
             if space_adorned < ewutils.max_adornspace_bylevel(usermodel.slimelevel):
@@ -52,12 +53,13 @@ async def smoke(cmd):
             item.item_props['cosmetic_name'] = "cigarette butt"
             item.persist()
 
-            usermodel.persist()
+
 
         elif item_sought.get('item_type') == ewcfg.it_cosmetic and item.item_props.get('id_cosmetic') == "cigar":
             if int(item.item_props['size']) > 0:
                 space_adorned += int(item.item_props['size'])
 
+            usermodel.change_crime(n=ewcfg.cr_underage_smoking_points)
             response = "You light up your stogie and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
             item.item_props['cosmetic_desc'] = "A single lit cigar sticking out of your mouth. These thing take their time to kick in, but it's all worth it to look like a supreme gentleman."
             if space_adorned < ewutils.max_adornspace_bylevel(usermodel.slimelevel):
@@ -79,7 +81,7 @@ async def smoke(cmd):
             item.item_props['cosmetic_name'] = "cigar stump"
             item.persist()
 
-            usermodel.persist()
+
         else:
             response = "You can't smoke that."
     else:

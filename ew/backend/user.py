@@ -92,6 +92,8 @@ class EwUserBase:
 
     hogtied = 0
 
+    crime = 0
+
     move_speed = 1  # not a database column
 
     """ fix data in this object if it's out of acceptable ranges """
@@ -152,7 +154,7 @@ class EwUserBase:
                 # Retrieve object
 
                 cursor.execute(
-                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
                         ewcfg.col_slimes,
                         ewcfg.col_slimelevel,
@@ -216,7 +218,8 @@ class EwUserBase:
                         ewcfg.col_gender,
                         ewcfg.col_party_points,
                         ewcfg.col_cumulative_party_points,
-                        ewcfg.col_hogtied
+                        ewcfg.col_hogtied,
+                        ewcfg.col_crime
                     ), (
                         id_user,
                         id_server
@@ -288,6 +291,7 @@ class EwUserBase:
                     self.party_points = result[58]
                     self.cumulative_party_points = result[59]
                     self.hogtied = result[60]
+                    self.crime = result[61]
 
                 else:
                     self.poi = ewcfg.poi_id_downtown
@@ -329,7 +333,7 @@ class EwUserBase:
             # Save the object.
 
             cursor.execute(
-                "REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+                "REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
                     ewcfg.col_id_user,
                     ewcfg.col_id_server,
                     ewcfg.col_slimes,
@@ -394,7 +398,8 @@ class EwUserBase:
                     ewcfg.col_gender,
                     ewcfg.col_party_points,
                     ewcfg.col_cumulative_party_points,
-                    ewcfg.col_hogtied
+                    ewcfg.col_hogtied,
+                    ewcfg.col_crime
                 ), (
                     self.id_user,
                     self.id_server,
@@ -460,7 +465,8 @@ class EwUserBase:
                     self.gender,
                     self.party_points,
                     self.cumulative_party_points,
-                    self.hogtied
+                    self.hogtied,
+                    self.crime
                     
                 ))
 

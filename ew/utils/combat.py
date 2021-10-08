@@ -2674,6 +2674,9 @@ class EwUser(EwUserBase):
             if self.inebriation > 20:
                 self.inebriation = 20
 
+            if int(item_props['inebriation']) > 0:
+                self.change_crime(n=ewcfg.cr_underage_drinking_points)
+
             try:
                 if item_props['id_food'] in ["coleslaw", "bloodcabbagecoleslaw"]:
                     self.clear_status(id_status=ewcfg.status_ghostbust_id)
@@ -2683,6 +2686,7 @@ class EwUser(EwUserBase):
                         self.die(cause=ewcfg.cause_busted)
                 if item_props['id_food'] == ewcfg.item_id_seaweedjoint:
                     self.applyStatus(id_status=ewcfg.status_high_id)
+                    self.change_crime(n=ewcfg.cr_posession_points)
 
             except:
                 # An exception will occur if there's no id_food prop in the database. We don't care.
@@ -3153,6 +3157,9 @@ class EwUser(EwUserBase):
             self.weaponskill = 5
 
         return returned_weapon
+
+    def change_crime(self, n=0):
+        self.crime += n
 
 
 # Storage variables for items that arent meant for player use

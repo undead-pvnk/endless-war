@@ -682,6 +682,8 @@ async def toss_off_cliff(cmd):
                     item.id_owner = str(cmd.mentions[0].id) + ewcfg.compartment_id_decorate
                     item.persist()
                     response = "You throw a brick through {}'s window. Oh shit! Quick, scatter before they see you!".format(cmd.mentions[0].display_name)
+                    user_data.change_crime(n=1)
+                    user_data.persist()
                     if poi_static.id_to_poi.get(target.poi).is_apartment and target.visiting == ewcfg.location_id_empty:
                         try:
                             await fe_utils.send_message(cmd.client, cmd.mentions[0], fe_utils.formatMessage(cmd.mentions[0], "SMAAASH! A brick flies through your window!"))
@@ -704,6 +706,8 @@ async def toss_off_cliff(cmd):
                         response = ":bricks::boom: BONK! The brick slams against {}'s head!".format(cmd.mentions[0].display_name)
                         item.id_owner = target.poi
                         item.persist()
+                        user_data.change_crime(n=1)
+                        user_data.persist()
                         try:
                             await fe_utils.send_message(cmd.client, cmd.mentions[0], fe_utils.formatMessage(cmd.mentions[0], random.choice(["!!!!!!", "BRICK!", "FUCK", "SHIT", "?!?!?!?!?", "BONK!", "F'TAAAAANG!", "SPLAT!", "SPLAPP!", "WHACK"])))
                         except:
@@ -730,9 +734,13 @@ async def toss_off_cliff(cmd):
 
             else:
                 response = item_off(item_sought.get('id_item'), user_data.id_server, item_sought.get('name'))
+                user_data.change_crime(n=ewcfg.cr_littering_points)
+                user_data.persist()
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         else:
             response = item_off(item_sought.get('id_item'), user_data.id_server, item_sought.get('name'))
+            user_data.change_crime(n=ewcfg.cr_littering_points)
+            user_data.persist()
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     else:

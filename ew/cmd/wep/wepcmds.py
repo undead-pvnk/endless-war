@@ -155,7 +155,7 @@ async def attack(cmd):
 
             # Determine how slime will be distributed
             if target_killed:
-                # attacker gets half slime and half is drained on teamkill, otherwise attacker gets all
+                # attacker gets half s75lime and half is drained on teamkill, otherwise attacker gets all
                 if target.life_state == ewcfg.life_state_enlisted and target.faction == attacker.faction:
                     to_sewer = target.slimes/2
                     to_attacker += target.slimes/2
@@ -234,6 +234,11 @@ async def attack(cmd):
             if target_killed:
                 # Value Changes
                 attacker.hunger = 0 if ewcfg.mutation_id_fungalfeaster in attacker_mutations else attacker.hunger
+                if attacker_weapon_item.item_type == ewcfg.weapon_id_molotov:
+                    attacker.change_crime(n=ewcfg.cr_arson_points)
+                else:
+                    attacker.change_crime(n=ewcfg.cr_murder_points)
+
                 attacker_weapon_item.item_props["kills"] = 1 + int(attacker_weapon_item.item_props.get("kills", 0))
                 attacker_weapon_item.item_props["totalkills"] = 1 + int(attacker_weapon_item.item_props.get("totalkills", 0))
                 attacker.add_bounty(n=(target.bounty/2) + (target.totaldamage + target.slimes)/4)
@@ -260,6 +265,8 @@ async def attack(cmd):
                     ewstats.increment_stat(user=attacker, metric=ewcfg.stat_shamblers_killed)
                 end = time.perf_counter()
                 print("{} seconds to run attack ln 252 stat updates".format(end-start))
+            else:
+                attacker.change_crime(n=ewcfg.cr_assault_points)
         """ Flavortext Generation """
 
         # Generate slimeoid based flavor for the whistle, and get possession status
@@ -771,6 +778,10 @@ async def spar(cmd):
                     # hunger drain for both players
                     user_data.hunger += ewcfg.hunger_perspar * ewutils.hunger_cost_mod(user_data.slimelevel)
                     sparred_data.hunger += ewcfg.hunger_perspar * ewutils.hunger_cost_mod(sparred_data.slimelevel)
+
+                    if weapon.id_weapon in [ewcfg.weapon_id_bat, ewcfg.weapon_id_spraycan, ewcfg.weapon_id_paintroller]:
+                        weaker_player.change_crime(n=ewcfg.cr_dojo_crime_points)
+                        stronger_player.change_crime(n=ewcfg.cr_dojo_crime_points)
 
                     # Bonus 50% slime to both players in a duel.
                     if duel:

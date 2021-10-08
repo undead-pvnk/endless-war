@@ -1793,15 +1793,16 @@ scavenge_item_rarity = 1000
 invuln_onrevive = 0
 
 #crime rates, lol
-murder_points = 500
-vandalism_points = 100
-arson_points = 600
-larceny_points = 1
-underage_drinking_points = 1
-littering_points = 1
-posession_points = 5
-underage_smoking_points = 1
-dojo_crime_points = 20
+cr_murder_points = 500
+cr_assault_points = 75
+cr_vandalism_points = 75
+cr_arson_points = 600
+cr_larceny_points = 1
+cr_underage_drinking_points = 1
+cr_littering_points = 1
+cr_posession_points = 5
+cr_underage_smoking_points = 1
+cr_dojo_crime_points = 20
 
 
 # how often to apply weather effects
@@ -2305,6 +2306,7 @@ col_gender = 'gender'
 col_party_points = 'party_points'
 col_cumulative_party_points = 'cumulative_party_points'
 col_hogtied = 'hogtied'
+col_crime = 'crime'
 
 col_attack = 'attack'
 col_speed = 'speed'

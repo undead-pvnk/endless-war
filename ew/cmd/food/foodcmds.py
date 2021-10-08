@@ -387,6 +387,7 @@ async def order(cmd):
                     mutations = user_data.get_mutations()
                     if random.randrange(5) == 0 and ewcfg.mutation_id_stickyfingers in mutations:
                         value = 0
+                        user_data.change_crime(n=ewcfg.cr_larceny_points)
                     if item_type == ewcfg.it_food:
                         food_ordered = True
 
