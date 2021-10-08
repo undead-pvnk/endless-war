@@ -322,9 +322,6 @@ async def on_ready():
         # asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
         # asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
 
-        # remove after event - copied from crank lol
-        asyncio.ensure_future(loop_utils.party_tick_loop(id_server = server.id))
-
         if ewcfg.gvs_active:
             asyncio.ensure_future(loop_utils.gvs_gamestate_tick_loop(id_server=server.id))
         else:

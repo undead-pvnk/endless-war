@@ -85,27 +85,6 @@ class EwEnemy(EwEnemyBase):
                     resp_cont.format_channel_response(ch_name, enemy_data)
                     return resp_cont
                     
-        if enemy_data.ai == ewcfg.enemy_ai_carrottop:
-            users = bknd_core.execute_sql_query(
-                "SELECT {id_user}, {life_state} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin})".format(
-                    id_user=ewcfg.col_id_user,
-                    life_state=ewcfg.col_life_state,
-                    poi=ewcfg.col_poi,
-                    id_server=ewcfg.col_id_server,
-                    life_state_corpse=ewcfg.life_state_corpse,
-                    life_state_kingpin=ewcfg.life_state_kingpin,
-                ), (
-                    enemy_data.poi,
-                    enemy_data.id_server
-                ))
-            if len(users) > 0:
-                if random.randrange(100) > 95:
-                    response = random.choice(ewcfg.carrottop_responses)
-                    response = response.format(enemy_data.display_name, enemy_data.display_name)
-                    resp_cont.add_channel_response(ch_name, response)
-                    resp_cont.format_channel_response(ch_name, enemy_data)
-                    return resp_cont
-
         if enemy_data.ai == ewcfg.enemy_ai_sandbag:
             target_data = None
         else:
@@ -1155,7 +1134,7 @@ class EwEnemy(EwEnemyBase):
 
         # Get target's info based on its AI.
 
-        if enemy_data.ai == ewcfg.enemy_ai_coward or enemy_data.ai == ewcfg.enemy_ai_carrottop:
+        if enemy_data.ai == ewcfg.enemy_ai_coward:
             users = bknd_core.execute_sql_query(
                 "SELECT {id_user}, {life_state} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin})".format(
                     id_user=ewcfg.col_id_user,
@@ -1201,7 +1180,7 @@ class EwEnemy(EwEnemyBase):
 
         # Get target's info based on its AI.
 
-        if enemy_data.ai == ewcfg.enemy_ai_coward or enemy_data.ai == ewcfg.enemy_ai_carrottop:
+        if enemy_data.ai == ewcfg.enemy_ai_coward:
             return
         elif enemy_data.ai == ewcfg.enemy_ai_defender:
             if enemy_data.id_target != -1:
@@ -1236,7 +1215,7 @@ class EwEnemy(EwEnemyBase):
 
         # Get target's info based on its AI.
 
-        if enemy_data.ai == ewcfg.enemy_ai_coward or enemy_data.ai == ewcfg.enemy_ai_carrottop:
+        if enemy_data.ai == ewcfg.enemy_ai_coward:
             return
         elif enemy_data.ai == ewcfg.enemy_ai_defender:
             if enemy_data.id_target != -1:
