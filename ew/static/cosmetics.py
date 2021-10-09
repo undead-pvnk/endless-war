@@ -1232,8 +1232,6 @@ cosmetic_items_list = [
         durability = 2500000,
         style = "smart",
         freshness = 7,
-        price = 20,
-        vendors = ['Atomic Forest Stockpile Party Redemption Cart'],
     ),
     EwCosmeticItem(
         id_cosmetic = "gardengankerpin",
@@ -1242,8 +1240,6 @@ cosmetic_items_list = [
         durability = 2500000,
         style = "tough",
         freshness = 3,
-        price = 1,
-        vendors = ['Atomic Forest Stockpile Party Redemption Cart'],
     ),
     EwCosmeticItem(
         id_cosmetic = "rosehairclip",
@@ -1252,9 +1248,18 @@ cosmetic_items_list = [
         durability = 2500000,
         style = "beautiful",
         freshness = 5,
-        price = 12,
-        vendors = ['Atomic Forest Stockpile Party Redemption Cart'],
     ),
+    EwCosmeticItem(
+        id_cosmetic = "cornearrings",
+        str_name = "Corn Earrings",
+        str_desc = "A pair of corn-shaped yellow and green jewel earrings, given to you by the Garden Gankers for getting far too many party points. They look absolutely fabulous on you, just gorgeous.",
+        str_onadorn = "You adorn the Corn Earrings. They're **way** heavier than you imagined, but that's fine. Your ears can suffer.",
+        str_unadorn = "You remove Corn Earrings, making you feel much less corntificated. Your ears are much happier, though.",
+        str_onbreak = "Whaaaa-? Your Corn Earrings shatter on your ears! Shards of jewels get scattered into your ear, causing you to bleed profusely.",
+        durability = 2500000,
+        style = "beautiful",
+        freshness = 10,
+    )
 ]
 
 
