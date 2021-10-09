@@ -1802,7 +1802,23 @@ cr_underage_drinking_points = 1
 cr_littering_points = 1
 cr_posession_points = 5
 cr_underage_smoking_points = 1
-cr_dojo_crime_points = 20
+cr_dojo_crime_points = 50
+
+crime_status = {
+0:"{their} record is spotless.",
+1:"{they} have stepped over the line to vaguely uncouth behavior, but they're still the pussy they've always been.",
+5:"{they} appear to be trying to appear \"hard\". Oh, how they have failed.",
+20:"{they}'re still a civilian, basically, {they}'ve just tried a few things once.",
+100:"Most gangsters would eat {you} for breakfast.",
+1000:"You're a hardended criminal by anywhere else's standards, but you decided to squat down here. You're still in diapers, honestly.",
+5000:"You've ravaged the streets hard enough to be called a rookie.",
+10000:"Your bloodlust and debauchery have caused the police to view you as a wild and dangerous threat.",
+25000:"Your boundlesss malice has risen above the average gangster, which has placed you on many watchlists.",
+50000:"The remnants of the police lose sleep over you every night.",
+250000:"You're a veteran of war, and all those around you see the undying chaos in your eyes and in your soul",
+500000: "The civilians who see your face believe you to be a plague incarnate. Maybe they're right.",
+1000000:"Not even your fellow gangsters can tolerate the sight of you now. Your stares are spun of poison and your footseps leave destruction in their wake. Fucking goons."
+}
 
 
 # how often to apply weather effects

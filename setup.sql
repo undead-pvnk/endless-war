@@ -63,8 +63,10 @@ CREATE TABLE users (
 	rand_seed bigint NOT NULL DEFAULT '0',
 	verified boolean NOT NULL DEFAULT '0',	
 	gender varchar(16) NOT NULL DEFAULT 'boi',
-	party_points int NOT NULL DEFAULT '0'
-    cumulative_party_points int NOT NULL DEFAULT '0'
+	party_points int NOT NULL DEFAULT '0',
+    cumulative_party_points int NOT NULL DEFAULT '0',
+    hogtied smallint NOT NULL DEFAULT '0'
+    crime bigint NOT NULL DEFAULT '0'
 
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
