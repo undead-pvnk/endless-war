@@ -395,7 +395,7 @@ smelting_recipe_list = [
             "whip"
         ],
         ingredients={
-            ewcfg.item_id_monofilamentfragment: 25,
+            ewcfg.item_id_monofilamentfragment: 300, 
             ewcfg.item_id_ironingot: 1,
         },
         products=[ewcfg.weapon_id_monofilamentwhip]
