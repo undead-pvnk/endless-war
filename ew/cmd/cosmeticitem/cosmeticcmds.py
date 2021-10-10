@@ -52,7 +52,7 @@ async def smoke(cmd):
             item.item_props['cosmetic_name'] = "cigarette butt"
             item.persist()
 
-            usermodel.persist()
+
 
         elif item_sought.get('item_type') == ewcfg.it_cosmetic and item.item_props.get('id_cosmetic') == "cigar":
             if int(item.item_props['size']) > 0:
@@ -79,7 +79,7 @@ async def smoke(cmd):
             item.item_props['cosmetic_name'] = "cigar stump"
             item.persist()
 
-            usermodel.persist()
+
         else:
             response = "You can't smoke that."
     else:
