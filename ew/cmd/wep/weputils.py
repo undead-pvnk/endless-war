@@ -155,11 +155,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
             # Don't damage the shooter or the shootee a second time
 
             # If an enemy is being targeted, check id_enemy instead of id_user when going through bystander_users
-            checked_id = None
-            if target_enemy:
-                checked_id = shootee_data.id_enemy
-            else:
-                checked_id = shootee_data.id_user
+            checked_id = shootee_data.id_enemy if target_enemy else shootee_data.id_user
 
             if bystander != user_data.id_user and bystander != checked_id:
                 response = ""
@@ -888,12 +884,12 @@ async def attackEnemy(cmd):
 
     damage = slimes_damage
 
-    slimes_tobleed = int((slimes_damage - slimes_drained) / 2)
+    slimes_tobleed = int((slimes_damage - slimes_drained) / 2)  # 1/8
     # if ewcfg.mutation_id_nosferatu in user_mutations and (market_data.clock < 6 or market_data.clock >= 20):
     #	slimes_tobleed = 0
 
-    slimes_directdamage = slimes_damage - slimes_tobleed
-    slimes_splatter = slimes_damage - slimes_tobleed - slimes_drained
+    slimes_directdamage = slimes_damage - slimes_tobleed  # 7/8
+    slimes_splatter = slimes_damage - slimes_tobleed - slimes_drained  # 1/8
 
     if sandbag_mode:
         slimes_drained = 0
@@ -905,9 +901,9 @@ async def attackEnemy(cmd):
         user_data.change_slimes(n=slimes_splatter * 0.6, source=ewcfg.source_killing)
         slimes_splatter *= .4
 
-    district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
-    enemy_data.bleed_storage += slimes_tobleed
-    enemy_data.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
+    district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)  # district gains 1/8 damage as slime
+    enemy_data.bleed_storage += slimes_tobleed  # target gains 1/8 damage as bleed
+    enemy_data.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)  #
     # enemy_data.hardened_sap -= sap_damage
     enemy_data.persist()
     sewer_data.change_slimes(n=slimes_drained)
