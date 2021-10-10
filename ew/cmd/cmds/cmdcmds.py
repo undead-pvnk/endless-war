@@ -43,6 +43,7 @@ from .cmdsutils import item_commands
 from .cmdsutils import item_off
 from .cmdsutils import location_commands
 from .cmdsutils import mutation_commands
+from .cmdsutils import get_crime_level
 from .. import item as ewitem
 from ..apt import aptcmds as apt_cmds
 from ..faction import factioncmds as faction_cmds
@@ -249,6 +250,8 @@ async def data(cmd):
 
         user_kills = ewstats.get_stat(user=user_data, metric=ewcfg.stat_kills)
         enemy_kills = ewstats.get_stat(user=user_data, metric=ewcfg.stat_pve_kills)
+
+        response_block += "{}{}".format(get_crime_level(num=user_data.crime, forYou=1), ' ')
 
         if user_kills > 0 and enemy_kills > 0:
             response_block += "You have {:,} confirmed kills, and {:,} confirmed hunts. ".format(user_kills,
@@ -997,6 +1000,23 @@ async def store_item(cmd):
     else:
         response = "There is no storage here, public or private."
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def crime(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    forYou = 1
+    if cmd.mentions_count > 0:
+        forYou = 0
+        target_data = EwUser(member = cmd.mentions[0])
+        crimestring = get_crime_level(num=target_data.crime, forYou=forYou)
+        response = "{} has commited {} crime. {}".format(cmd.mentions[0].display_name, target_data.crime, crimestring)
+    else:
+        crimestring = get_crime_level(num=user_data.crime, forYou=forYou)
+        response = "You have commited {} crime. {}".format(user_data.crime, crimestring)
+
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
 
 
 async def remove_item(cmd):

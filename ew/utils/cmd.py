@@ -14,6 +14,7 @@ from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import stats as ewstats
 from ew.utils.combat import EwUser
+from ew.cmd.cmds.cmdsutils import get_crime_level
 from ew.utils.slimeoid import EwSlimeoid
 
 """ wrapper for discord members """  # Doesn't really sound like a cmd related class
@@ -182,6 +183,8 @@ def gen_data_text(
         user_kills = ewstats.get_stat(user=user_data, metric=ewcfg.stat_kills)
 
         enemy_kills = ewstats.get_stat(user=user_data, metric=ewcfg.stat_pve_kills)
+
+        response_block += "{}{}".format(get_crime_level(num=user_data.crime, forYou=0), " ")
 
         if user_kills > 0 and enemy_kills > 0:
             response_block += "They have {:,} confirmed kills, and {:,} confirmed hunts. ".format(user_kills,

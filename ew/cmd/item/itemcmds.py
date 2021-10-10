@@ -1558,6 +1558,9 @@ async def add_message(cmd):
 async def strip_message(cmd):
     if cmd.tokens_count == 1:
         response = "You heard 'em. *Strip.*"
+        user_data = EwUser(member=cmd.message.author)
+        user_data.change_crime(n=1) #indecent exposure
+        user_data.persist()
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])

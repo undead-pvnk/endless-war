@@ -168,3 +168,19 @@ def get_user_shares_str(id_server = None, stock = None, id_user = None):
         #	response += "."
 
     return response
+
+def get_crime_level(num, forYou = 1):
+    if forYou == 0:
+        pronounThey = 'they'
+        pronounThem = 'them'
+        pronounTheir = 'their'
+    else:
+        pronounThey = 'you'
+        pronounThem = 'you'
+        pronounTheir = 'your'
+
+    for level in ewcfg.crime_status.keys():
+        if num <= level:
+            response = ewcfg.crime_status.get(level).format(they=pronounThey, them=pronounThem, their=pronounTheir)
+            return response.capitalize()
+    return ewcfg.crime_status.get(1000000)

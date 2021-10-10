@@ -1025,6 +1025,7 @@ cmd_slimecoin = cmd_prefix + 'slimecoin'
 cmd_slimecoin_alt1 = cmd_prefix + 'slimecredit'
 cmd_slimecoin_alt2 = cmd_prefix + 'coin'
 cmd_slimecoin_alt3 = cmd_prefix + 'sc'
+cmd_crime = cmd_prefix + 'crime'
 cmd_invest = cmd_prefix + 'invest'
 cmd_withdraw = cmd_prefix + 'withdraw'
 cmd_exchangerate = cmd_prefix + 'exchangerate'
@@ -1806,18 +1807,18 @@ cr_dojo_crime_points = 50
 
 crime_status = {
 0:"{their} record is spotless.",
-1:"{they} have stepped over the line to vaguely uncouth behavior, but they're still the pussy they've always been.",
-5:"{they} appear to be trying to appear \"hard\". Oh, how they have failed.",
+1:"{they} have stepped over the line to vaguely uncouth behavior, but {they}'re still the pussy {they}'ve always been.",
+5:"{they} appear to be trying to appear \"hard\". Oh, how {they} have failed.",
 20:"{they}'re still a civilian, basically, {they}'ve just tried a few things once.",
-100:"Most gangsters would eat {you} for breakfast.",
-1000:"You're a hardended criminal by anywhere else's standards, but you decided to squat down here. You're still in diapers, honestly.",
-5000:"You've ravaged the streets hard enough to be called a rookie.",
-10000:"Your bloodlust and debauchery have caused the police to view you as a wild and dangerous threat.",
-25000:"Your boundlesss malice has risen above the average gangster, which has placed you on many watchlists.",
-50000:"The remnants of the police lose sleep over you every night.",
-250000:"You're a veteran of war, and all those around you see the undying chaos in your eyes and in your soul",
-500000: "The civilians who see your face believe you to be a plague incarnate. Maybe they're right.",
-1000000:"Not even your fellow gangsters can tolerate the sight of you now. Your stares are spun of poison and your footseps leave destruction in their wake. Fucking goons."
+100:"Most gangsters would eat {them} for breakfast.",
+1000:"{they}'re a hardended criminal by anywhere else's standards, but {they} decided to squat down here. {they}'re still in diapers, honestly.",
+5000:"{they}'ve ravaged the streets hard enough to be called a rookie.",
+10000:"{their} bloodlust and debauchery have caused the police to view {them} as a wild and dangerous threat.",
+25000:"{their} boundlesss malice has risen above the average gangster, which has placed {them} on many watchlists.",
+50000:"The remnants of the police lose sleep over {them} every night.",
+250000:"{they}'re a veteran of war, and all those around {them} see the undying chaos in {their} eyes and in {their} soul",
+500000: "The civilians who see {their} face believe {them} to be a plague incarnate. Maybe they're right.",
+1000000:"Not even {their} fellow gangsters can tolerate the sight of {them} now. {their} voice is spun of poison and {their} footseps leave destruction in {their} wake. Fucking goons."
 }
 
 
@@ -2272,6 +2273,7 @@ col_weapon = 'weapon'
 col_weaponskill = 'weaponskill'
 col_trauma = 'trauma'
 col_slimecoin = 'slimecoin'
+col_crime = 'crime'
 col_time_lastkill = 'time_lastkill'
 col_time_lastrevive = 'time_lastrevive'
 col_id_killer = 'id_killer'
@@ -2322,7 +2324,6 @@ col_gender = 'gender'
 col_party_points = 'party_points'
 col_cumulative_party_points = 'cumulative_party_points'
 col_hogtied = 'hogtied'
-col_crime = 'crime'
 
 col_attack = 'attack'
 col_speed = 'speed'

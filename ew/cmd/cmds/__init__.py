@@ -136,7 +136,7 @@ cmd_map = {
     ewcfg.cmd_tutorial: cmdcmds.tutorial,
     ewcfg.cmd_leaderboard: cmdcmds.leaderboard,
     ewcfg.cmd_leaderboard_alt1: cmdcmds.leaderboard,
-
+    ewcfg.cmd_crime:cmdcmds.crime,
     # LOL
     ewcfg.cmd_lol: cmdcmds.lol,
 
