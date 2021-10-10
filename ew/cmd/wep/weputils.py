@@ -326,20 +326,21 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 
                 damage = slimes_damage
 
-                slimes_tobleed = int((slimes_damage - slimes_drained) / 2)
+                slimes_tobleed = int((slimes_damage - slimes_drained) / 2)  # 1/8
 
-                slimes_directdamage = slimes_damage - slimes_tobleed
-                slimes_splatter = slimes_damage - slimes_tobleed - slimes_drained
+                slimes_directdamage = slimes_damage - slimes_tobleed  # 7/8
+                slimes_splatter = slimes_damage - slimes_tobleed - slimes_drained  # 1/8
 
                 if ewcfg.mutation_id_nosferatu in user_mutations and (market_data.clock < 6 or market_data.clock >= 20):
                     user_data.change_slimes(n=slimes_splatter * 0.6, source=ewcfg.source_killing)
                     slimes_splatter *= .4
 
-                district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
-                target_enemy_data.bleed_storage += slimes_tobleed
-                target_enemy_data.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
-                sewer_data.change_slimes(n=slimes_drained)
-                sewer_data.persist()
+                if not was_killed:
+                    district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)  # district gets 1/8 damage
+                    target_enemy_data.bleed_storage += slimes_tobleed  # enemy bleeds 1/8 damage
+                    target_enemy_data.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)  # enemy has 7/8 of damage removed
+                    sewer_data.change_slimes(n=slimes_drained)  # sewer is given 3/4 of the damage
+                    sewer_data.persist()
 
                 # sap_damage_target = min(sap_damage, target_enemy_data.hardened_sap)
                 # target_enemy_data.hardened_sap -= sap_damage_target
@@ -357,8 +358,8 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
                     if target_enemy_data.level >= user_data.slimelevel:
                         user_data.add_weaponskill(n=1, weapon_type=weapon.id_weapon)
 
-                    district_data.change_slimes(n=target_enemy_data.slimes / 2, source=ewcfg.source_killing)
-                    levelup_resp = user_data.change_slimes(n=target_enemy_data.slimes / 2, source=ewcfg.source_killing)
+                    district_data.change_slimes(n=int(target_enemy_data.slimes / 2), source=ewcfg.source_killing)  # give district 1/2 of target's remaining slime
+                    levelup_resp = user_data.change_slimes(n=int(target_enemy_data.slimes / 2), source=ewcfg.source_killing)  # give attacker 1/2 of target's remaining slime
 
                     bknd_hunt.delete_enemy(target_enemy_data)
 
