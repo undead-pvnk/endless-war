@@ -1717,8 +1717,6 @@ food_list = [
         id_food = "seaweedjoint",
         alias = ['joint', 'weed', 'blunt', 'doobie'],
         str_name = "Seaweed Joint",
-        price = 30,
-        vendors = ['Atomic Forest Stockpile Party Redemption Cart'],
         str_eat = "You light up your Seaweed and begin to smoke it. Congratulations! You're now high. You catch fish twice as often, but food is half as effective. This lasts for 30 minutes.",
         str_desc = "A joint made up of dankwheat and seaweed bartered with Captain Albert Alexander. Wait a minute, does that make the good Captain your drug dealer? Hell yeah.",
         time_expir = 43200,
@@ -1983,8 +1981,7 @@ food_list = [
         id_food = "ferroslimeoid",
         alias = ['ferro', 'magnet'],
         recover_hunger = 1,
-        price = 20, #10000000
-        vendors = ['Atomic Forest Stockpile Party Redemption Cart'],
+        price = 10000000,
         str_name = "Ferroslimeoid",
         str_eat = "The ferroslimeoid screams in terror as it nears your mouth. As you chew you feel its little limbs squirming. Its cries die down as it slides down your throat. You shudder as it hits your stomach. Tasty",
         str_desc = "A small magnetic slimeoid created with illegal means, usually used as live bait. DO NOT EAT",
@@ -2015,7 +2012,6 @@ vegetable_list = []
 vegetable_to_cosmetic_material = {}
 
 # seperate the crops from the normal foods
-# TODO: remove party poppeppers after party event
 for v in food_list:
 
     if ewcfg.vendor_farm not in v.vendors:

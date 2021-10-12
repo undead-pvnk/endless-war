@@ -639,8 +639,8 @@ trauma_list = [
     ),
                 EwTrauma(  # 17
         id_trauma=ewcfg.weapon_id_monofilamentwhip,
-        str_trauma_self="Your body is riddled with scars, circled arround limbs which dont seem to be reattached correctly.",
-        str_trauma="Their body is riddled with scars, circled arround limbs which dont seem to be reattached correctly.",
+        str_trauma_self="Your body is riddled with scars, circled around limbs which don't seem to be reattached correctly.",
+        str_trauma="Their body is riddled with scars, circled around limbs which don't seem to be reattached correctly.",
         trauma_class=ewcfg.trauma_class_accuracy,
     ),
     EwTrauma(  # 17

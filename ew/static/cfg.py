@@ -1,11 +1,9 @@
-import datetime
-# remove after event - THIS IMPORT
 
 # Global configuration options.
 
 
 
-version = "v4.01 GANKER PARTY 🥳"
+version = "v4.011 afterparty 😜"
 
 dir_msgqueue = 'msgqueue'
 
@@ -1523,11 +1521,6 @@ cmd_verify_cache = cmd_prefix + 'verifycache'
 # SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
-# Party Event TODO: remove after event
-cmd_partypoints = cmd_prefix + 'partypoints'
-cmd_turnin = cmd_prefix + "turnin"
-cmd_turnin_alt_1 = cmd_prefix + "handin"
-
 cmd_scrawl = cmd_prefix + 'scrawl'
 cmd_strip = cmd_prefix + 'strip'
 
@@ -2321,8 +2314,6 @@ col_time_racialability = 'time_racialability'
 col_time_lastpremiumpurchase = 'time_lastpremiumpurchase'
 col_verified = 'verified'
 col_gender = 'gender'
-col_party_points = 'party_points'
-col_cumulative_party_points = 'cumulative_party_points'
 col_hogtied = 'hogtied'
 
 col_attack = 'attack'
@@ -2358,10 +2349,6 @@ col_juviemode = 'juviemode'
 # Double Halloween
 col_horseman_deaths = 'horseman_deaths'
 col_horseman_timeofdeath = 'horseman_timeofdeath'
-
-# Party Event Stuff - remove after event
-col_total_party_points = 'total_party_points'
-col_current_event_boss = 'current_event_boss'
 
 # Database columns for bartering
 col_offer_give = 'offer_give'
@@ -2585,9 +2572,6 @@ leaderboard_shamblers_killed = "MOST SHAMBLER KILLS"
 # SWILLDERKMUK
 leaderboard_gambit_high = "HIGHEST GAMBIT"
 leaderboard_gambit_low = "LOWEST GAMBIT"
-
-# remove after event - PARTY WOOOOOOOO
-leaderboard_party = "PARTY ROCKERS"
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -2827,9 +2811,6 @@ vendor_atomicforest = "Atomic Forest Stockpile"  # Storage of atomic forest
 vendor_downpourlaboratory = "Downpour Armament Vending Machines"  # Store for shamblers to get stuff
 vendor_breakroom = "The Breakroom"  # Security officers can order items here for free.
 vendor_rpcity = "RP City"  # Double halloween costume store
-
-# Temporary Party Point vendor for Party Event
-vendor_atomicforestpp = "Atomic Forest Stockpile Party Redemption Cart"
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
@@ -4318,9 +4299,6 @@ enemy_type_slimeasaurusrex = 'slimeasaurusrex'
 enemy_type_greeneyesslimedragon = 'greeneyesslimedragon'
 enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
 
-#remove after event - THEEZ. If you're gooning the code, you won't be able to know what character ????? is - cuz it'll be an auditorium post! MWAHAHAHAH!!!!!
-enemy_type_carrottop = 'carrottop'
-enemy_type_partymystery = '?????'
 
 enemy_type_civilian = 'civilian'
 enemy_type_civilian_innocent = 'innocent'
@@ -4388,8 +4366,6 @@ enemy_ai_attacker_b = 'Attacker-B'
 enemy_ai_defender = 'Defender'
 enemy_ai_gaiaslimeoid = 'Gaiaslimeoid'
 enemy_ai_shambler = 'Shambler'
-# remove after event - carrot top lol
-enemy_ai_carrottop = "Carrot-Top"
 
 # Enemy classes. For now this is only used for Gankers Vs. Shamblers
 enemy_class_normal = 'normal'
@@ -4403,28 +4379,6 @@ rare_enemies = [enemy_type_microslime, enemy_type_slimeofgreed, enemy_type_mammo
 raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator, enemy_type_titanoslime]
 
 enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator]
-
-""" SPOILERS """
-# remove after event - this thing, copied from crank-kun
-party_bosses = [enemy_type_carrottop, enemy_type_partymystery]
-
-party_day_one = datetime.date(2021, 10, 1)
-party_day_two = datetime.date(2021, 10, 2)
-party_day_three = datetime.date(2021, 10, 3)
-party_day_four = datetime.date(2021, 10, 4)
-party_day_five = datetime.date(2021, 10, 5)
-party_day_six = datetime.date(2021, 10, 6)
-party_day_seven = datetime.date(2021, 10, 7)
-
-party_boss_date_map = {
-	party_day_one : enemy_type_carrottop,
-	party_day_two : enemy_type_carrottop,
-	party_day_three : enemy_type_carrottop,
-	party_day_four : enemy_type_carrottop,
-	party_day_five : enemy_type_carrottop,
-	party_day_six : enemy_type_partymystery,
-	party_day_seven : enemy_type_partymystery
-} 
 
 # List of enemies that spawn in the Nuclear Beach
 pre_historic_enemies = [enemy_type_slimeasaurusrex, enemy_type_dinoslime, enemy_type_slimeadactyl, enemy_type_mammoslime]
@@ -4613,20 +4567,6 @@ enemy_drop_tables = {
     ],
     enemy_type_microgullswarm: [
         {item_id_feather: [5, 1, 1]}
-    ],
-    enemy_type_carrottop: [
-        {'carrottopsmohawk': [100, 1, 1]},
-        {item_id_slimepoudrin: [50, 1, 3]},
-        {item_id_driedpartypoppeppers: [100, 1, 9]},
-        {'quesarito': [15, 1, 9]},
-        {'partyhat': [45, 1, 1]}
-    ],
-    enemy_type_partymystery: [
-        {'dionaeashawl': [100, 1, 1]},
-        {item_id_driedpartypoppeppers: [100, 1, 18]},
-        {'strawhat': [50, 1, 1]},
-        {'overalls': [50, 1, 1]},
-        {"crop": [100, 1, 4]}
     ]
 }
 for enemy in gvs_enemies:
@@ -4795,22 +4735,6 @@ enemy_data_table = {
         "displayname": "Micro Gull Swarm",
         "raredisplayname": "Micro Gull Cloud",
         "aliases": ["microgull", "smallgull", "birdswarm", "gullcloud", "gullswarm"]
-    },
-    enemy_type_carrottop: {
-        "slimerange": [1000, 100000],
-        "ai": enemy_ai_carrottop,
-        "attacktype": enemy_attacktype_unarmed,
-        "displayname": "Carrot Top",
-        "raredisplayname": "Carrot Top (but extra angry)",
-        "aliases": ["carrot", "funnycarrotguylol"]
-    },
-    enemy_type_partymystery: {
-        "slimerange": [4000000, 5000000],
-        "ai": enemy_ai_attacker_a,
-        "attacktype": enemy_attacktype_body,
-        "displayname": "?????",
-        "raredisplayname": "Omega ?????",
-        "aliases": ["?", "mystery"]
     },
     enemy_type_civilian: {
         "slimerange": [100001, 100001],
@@ -5365,24 +5289,6 @@ coward_responses_hurt = [
     "\nThe {} cries out in pain!: *Just wait until the Juvenile Enrichment Center hears about this!!*",
     "\nThe {} cries out in pain!: *You MONSTER!*",
     "\nThe {} cries out in pain!: *What the H-E-double-hockey-sticks is your problem?*",
-]
-
-# Remove after event - carrot top lol
-carrottop_responses_hurt = [
-    "\nCarrot Top screams in pain!: *WHAT THE HECK!!! I'M TELLING THE GARDENER ABOUT THIS!!!*",
-    "\nCarrot Top screams in pain!: *AUUUGHGHHH!!!!*",
-    "\nCarrot Top screams in pain!: *EHHHHGHHH!!!!*",
-    "\nCarrot Top screams in pain!: *OWWUGUGHH...*",
-    "\nCarrot Top falls to the floor, his leg being sliced clean off.",
-]
-
-carrottop_responses = [
-    "talks to you: *Hey, wassup cool dude. Or, uh, dudette. I actually can't see that well.*",
-    "talks to you: *Ignore me, sickington. I'm busy as the Beekeeper gettin' these party peps to arsonbrook farms.*",
-    "talks to you: *You look strong, heck! Ignore me, I haven't been allowed to use weapons since I accidentally ganked Rosalita with a Roomba.*",
-    "talks to himself: *ARGH!!! UGHH!!!!!!! I'm getting bullied on slime twitter!!!*",
-    "yells at you: *HECK!!!!!*",
-    "angrily stomps his foot, for no real reason.",
 ]
 
 # Letters that an enemy can identify themselves with

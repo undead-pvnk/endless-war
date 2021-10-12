@@ -3,7 +3,6 @@ import time
 from ew.static import cfg as ewcfg
 from ew.utils import frontend as fe_utils
 from ew.utils import stats as ewstats
-from ew.utils import cmd as cmd_utils
 from ew.utils.combat import EwUser
 from .slimetwitterutils import get_tweet_color
 

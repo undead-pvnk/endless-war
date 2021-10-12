@@ -164,8 +164,6 @@ item_list = [
         context="poudrin",
         str_name="Slime Poudrin",
         str_desc="A dense, crystalized chunk of precious slime.",
-        price=6,
-        vendors=[ewcfg.vendor_atomicforestpp],
         acquisition=ewcfg.acquisition_mining,
     ),
     EwGeneralItem(
@@ -322,8 +320,6 @@ item_list = [
         id_item=ewcfg.item_id_negapoudrin,
         str_name="negapoudrin",
         str_desc="A dense, crystalized slab of unholy negaslime.",
-        price=100,
-        vendors=[ewcfg.vendor_atomicforestpp]
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_tradingcardpack,
@@ -423,8 +419,6 @@ item_list = [
         id_item=ewcfg.item_id_stick,
         str_name="stick",
         str_desc="It’s just some useless, dumb stick.",
-        price=9,
-        vendors=[ewcfg.vendor_atomicforestpp],
         acquisition=ewcfg.acquisition_smelting,
     ),
     EwGeneralItem(
@@ -494,14 +488,14 @@ item_list = [
     EwGeneralItem(
         id_item=ewcfg.item_id_bloodstone,
         str_name="blood stone",
-        str_desc="Formed from the cracking of monster bones and the flesh of your fellow gangster, it glistens in your palm with the screams of those whos bones comprise it.",
+        str_desc="Formed from the cracking of monster bones and the flesh of your fellow gangster, it glistens in your palm with the screams of those whose bones comprise it.",
         context='blood stone',
         acquisition=ewcfg.acquisition_smelting,
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_monofilamentfragment,
         str_name="monofilament fragment",
-        str_desc="A fragment of a UFO's Monofillament defense system. Luckily it's unoperational in this state, otherwise you would be toast",
+        str_desc="A fragment of a UFO's Monofilament defense system. Luckily it's unoperational in this state, otherwise you would be toast",
         context='monofilament fragment',
     ),
     EwGeneralItem(
@@ -1391,10 +1385,8 @@ item_list = [
         ],
         str_name="Prank Capsule",
         str_desc="A small little plastic capsule, which holds a devious prank item on the inside.",
-        price=3,
-        vendors=[ewcfg.vendor_atomicforestpp],
-        # price=20000,
-        # vendors=[ewcfg.vendor_vendingmachine],
+        price=20000,
+        vendors=[ewcfg.vendor_vendingmachine],
         context="prankcapsule"
     ),
     EwGeneralItem(
@@ -1816,16 +1808,12 @@ item_list = [
             "partypoppeppers"
         ],
         str_name="Party Poppeppers Seed Packet",
-        str_desc="A colorful packet containing specially-bred seeds that grow into Party Poppeppers. Using this, you can !sow party poppeppers in any farming plot.",
-        price=5000,
-        vendors=[ewcfg.vendor_atomicforest]
+        str_desc="A colorful packet containing specially-bred seeds that grow into Party Poppeppers. Using this, you can !sow party poppeppers in any farming plot."
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_partypopper,
         str_name="Party Popper",
         str_desc="A party popper! Hell yeah!",
-        price=0,
-        vendors=[ewcfg.vendor_atomicforestpp],
         context='partypopper',
         acquisition=ewcfg.acquisition_smelting
     ),
@@ -3601,8 +3589,6 @@ furniture_list = [
         str_desc = "A hexagonal couch made entirely from honeycombs. It's sticky, and covered bees, and, uh... not couch-shaped.",
         rarity = "Patrician",
         acquisition = "bartering",
-        price=45,
-        vendors=[ewcfg.vendor_atomicforestpp],
         furniture_place_desc = "You set the honeycombs on the floor, crushing a few bees in the process. Honey slowly starts dripping off of it.",
         furniture_look_desc = "A pile of honeycombs is set up on the floor.",
     ),
@@ -3611,11 +3597,16 @@ furniture_list = [
         str_name = "an Entire Garden",
         str_desc = "An entire garden, dirt plots and all. It's... fucking massive. You have no clue how this is portable.",
         rarity = "Patrician",
-        acquisition = "bartering",
-        price=85,
-        vendors=[ewcfg.vendor_atomicforestpp],
         furniture_place_desc = "You set up an entire garden, taking up half of the room. It's filled with joybeans, pawpaws, aushucks!",
         furniture_look_desc = "Half of their apartment is literally just a garden.",
+    ),
+    EwFurniture(
+        id_furniture = "partypoppeppertrophy",
+        str_name = "a party poppepper trophy",
+        str_desc = "A trophy, awarded to you by the Garden Gankers for accumulating the most party points during their week-long bash. It's organic, covered with lichen and vines.",
+        rarity = "Patrician",
+        furniture_place_desc = "You set the organic trophy in the middle of your room, a shining centerpiece of your stunning success.",
+        furniture_look_desc = "A trophy covered with vines and lichen is posed as the centerpiece of the room.",
     ),
 ]
 
