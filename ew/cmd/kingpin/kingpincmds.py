@@ -230,12 +230,24 @@ async def create(cmd):
     else:
         response = 'You need to specify a recipient. Usage: !create "<item_name>" "<item_desc>" <recipient>'
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
+    # princeps stopped assigning durability and stuff for... reasons (idk!!!! something with the caching update???? As far as I can tell????) so I just assigned them here lol
     item_props = {
+        "id_cosmetic": "princep",
         "cosmetic_name": item_name,
         "cosmetic_desc": item_desc,
-        "adorned": "false",
+        "str_onadorn": ewcfg.str_generic_onadorn,
+        "str_unadorn": ewcfg.str_generic_unadorn,
+        "str_onbreak": ewcfg.str_generic_onbreak,
         "rarity": rarity,
+        "attack": 3,
+        "defense": 3,
+        "speed": 3,
+        "ability": None,
+        "durability": ewcfg.base_durability * 100,
+        "size": 1,
+        "fashion_style": ewcfg.style_cool,
+        "freshness": 100,
+        "adorned": "false",
         "context": context
     }
 
