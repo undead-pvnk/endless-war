@@ -86,6 +86,7 @@ cmd_map = {
     # link to the world maps
     ewcfg.cmd_map: cmdcmds.map,
     ewcfg.cmd_transportmap: cmdcmds.transportmap,
+    ewcfg.cmd_transportmap_alt1: cmdcmds.transportmap,
 
     # Check your fashion ratings
     ewcfg.cmd_fashion: cmdcmds.fashion,
