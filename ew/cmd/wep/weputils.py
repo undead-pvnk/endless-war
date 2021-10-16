@@ -412,6 +412,7 @@ def canAttack(cmd):
     weapon = static_weapons.weapon_map.get(weapon_item.template)
     captcha = weapon_item.item_props.get('captcha')
     hacked = EwGamestate(id_server=user_data.id_server, id_state="n13door")
+    market = EwMarket(id_server=user_data.id_server)
     tokens_lower = []
     for token in cmd.tokens:
         tokens_lower.append(token.lower())
@@ -465,6 +466,8 @@ def canAttack(cmd):
                     "Why don't these explosives have proper training manuals? You'll never get to know, as you're splattered across the concrete."
                 ])
             response += "\nYou lose {:,} slime. Learn to type, you fucking idiot.".format(slime_backfired)
+        elif poi.id_poi == 'hangemsquare' and market.clock != 12:
+            response = "It's not noon yet. Everything in its own time."
         else:
             response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
 

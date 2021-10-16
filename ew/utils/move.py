@@ -524,6 +524,8 @@ async def send_gangbase_messages(server_id, clock):
     casino_response = "**Lucky Lucy has arrived!** Now's the time to make your fortune!"
     casino_end = "Aww, Lucy left."
 
+    highnoon = 0
+
     response = ""
     if clock == 3:
         response = "The police are probably asleep, the lazy fucks. It's a good time for painting the town!"
@@ -532,10 +534,17 @@ async def send_gangbase_messages(server_id, clock):
     if random.randint(1, 50) == 2:
         lucky_lucy = 1
 
+    if clock == 11:
+        highnoon = 1
+    if clock == 12:
+        highnoon = 2
+
     client = ewutils.get_client()
     server = client.get_guild(server_id)
     channels = ewcfg.hideout_channels
     casino_channel = fe_utils.get_channel(server=server, channel_name=ewcfg.channel_casino)
+    dueling_channel = fe_utils.get_channel(server=server, channel_name='hang-em-square')
+
 
     if response != "":
         for channel in channels:
@@ -546,6 +555,14 @@ async def send_gangbase_messages(server_id, clock):
         await asyncio.sleep(300)
         await fe_utils.send_message(client, casino_channel, casino_end)
 
+    if highnoon != 0:
+        district = EwDistrict(district='hangemsquare', id_server=server_id)
+        if district.get_players_in_district(min_slimes=0, life_states=[ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_shambler, ewcfg.life_state_corpse], ignore_offline=True) > 0:
+            if highnoon == 1:
+                response = "It's almost high noon..."
+            else:
+                response = "**DRAW!!!!**"
+            await fe_utils.send_message(client, dueling_channel, response)
 
 """
     Find the cost to move through ortho-adjacent cells.
