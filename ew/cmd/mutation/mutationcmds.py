@@ -507,6 +507,18 @@ async def piss(cmd):
     mutations = user_data.get_mutations()
 
     if ewcfg.mutation_id_enlargedbladder in mutations:
+        cosmetics = bknd_item.inventory(id_user=user_data.id_user, id_server=cmd.guild.id,
+                                        item_type_filter=ewcfg.it_cosmetic)
+        protected = False
+        for cosmetic in cosmetics:
+            cosmetic_data = EwItem(id_item=cosmetic.get('id_item'))
+            if cosmetic_data.item_props.get('id_cosmetic') == 'chastitybelt':
+                if cosmetic_data.item_props.get('adorned') == 'true':
+                    protected = True
+
+        if protected == True:
+            response = "Reaching for your weewee, you instead hear the desolate metal clank of your hand against a steel groincage. Damn you, chastity belt. DAMN YOU TO HELL!!! "
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         if cmd.mentions_count == 0:
             response = "You unzip your dick and just start pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment, and it’s just as perfect as you could have possibly imagined. You love pissing so much."
             if random.randint(1, 100) < 2:

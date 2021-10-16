@@ -1471,6 +1471,8 @@ cmd_offer = cmd_prefix + 'offer'
 cmd_remove_offer = cmd_prefix + 'removeoffer'
 cmd_completetrade = cmd_prefix + 'completetrade'
 cmd_canceltrade = cmd_prefix + 'canceltrade'
+cmd_cockdraw = cmd_prefix + 'cockdraw'
+cmd_measurecock = cmd_prefix + 'measurecock'
 
 # race
 cmd_set_race = cmd_prefix + 'setrace'
