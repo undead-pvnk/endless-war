@@ -896,9 +896,9 @@ async def add_key(cmd):
     elif apartment_data.apt_class == ewcfg.property_class_c:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You're practically homeless yourself with that slumhouse you've leased out. Upgrade your house to get a roommate!"))
     elif (apartment_data.apt_class == ewcfg.property_class_b or apartment_data.apt_class == ewcfg.property_class_a) and apartment_data.num_keys >= 1:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You already have a roommate. If we let you guys create hippie communes like you're tyring we'd go out of business."))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You already have a roommate. If we let you guys create hippie communes like you're trying we'd go out of business."))
     elif apartment_data.apt_class == ewcfg.property_class_s and apartment_data.num_keys >= 2:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "2 roommates is enough. You upgraded the apartment, and we upgraded its fragile load bearing capcity. But not by much."))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "2 roommates is enough. You upgraded the apartment, and we upgraded its fragile load bearing capacity. But not by much."))
     elif user_data.slimecoin < apartment_data.rent:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You need to pay base rent in order to receive a new housekey. It sadly appears as though you can't even afford a new friend."))
     else:
@@ -914,12 +914,14 @@ async def add_key(cmd):
         try:
             accepted = False
             message = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and
-                                                                                             message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
+                                                                                             message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse, ewcfg.cmd_addkey])
 
             if message != None:
                 if message.content.lower() == ewcfg.cmd_accept:
                     accepted = True
                 if message.content.lower() == ewcfg.cmd_refuse:
+                    accepted = False
+                if message.content.lower() == ewcfg.cmd_addkey: # If this isn't here, !addkey can spammed to get past 2 keys. No multiple keys, posers.
                     accepted = False
         except:
             accepted = False
