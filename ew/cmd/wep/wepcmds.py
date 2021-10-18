@@ -1485,7 +1485,7 @@ async def spray(cmd):
                             response += "\nNext target is {}.".format(new_captcha_gun)
                         weapon_item.persist()
 
-                    if district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) >= ewcfg.limit_influence[poi.property_class]:
+                    if district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) >= ewcfg.max_capture_points[poi.property_class]:
                         if user_data.faction == ewcfg.faction_rowdys:
                             color = "pink"
                         elif user_data.faction == "slimecorp":
@@ -1493,10 +1493,10 @@ async def spray(cmd):
                         else:
                             color = "purple"
                         response += "\nThe street is awash in a sea of {}. It's hard to imagine where else you could spray down.".format(color)
-                    elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > (ewcfg.min_influence[poi.property_class] + ewcfg.limit_influence[poi.property_class]) / 2:
-                        response += "\nThe {} have developed a decent grip on this district.".format(user_data.faction)
-                    elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.min_influence[poi.property_class]:
-                        response += "\nThe {} have developed a loose grip on this district.".format(user_data.faction)
+                    elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) >= (ewcfg.max_capture_points[poi.property_class] / 2):
+                        response += "\nThe {} are developing a decent grip on this district.".format(user_data.faction)
+                    #elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.min_influence[poi.property_class]:
+                        #response += "\nThe {} have developed a loose grip on this district.".format(user_data.faction)
             else:
                 if miss:
                     response = "You spray something so obscure nobody notices."

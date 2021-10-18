@@ -1219,8 +1219,7 @@ async def capture_tick(id_server):
 
                     dist.persist()
 
-
-# await resp_cont_capture_tick.post()
+    return await resp_cont_capture_tick.post()
 
 
 """

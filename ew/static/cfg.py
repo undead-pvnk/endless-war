@@ -1638,10 +1638,10 @@ property_class_c = "c"
 
 # district capturing
 capture_tick_length = 10  # in seconds; also affects how much progress is made per tick
-max_capture_points_s = 500000  # 500k
-max_capture_points_a = 300000  # 300k
-max_capture_points_b = 200000  # 200k
-max_capture_points_c = 100000  # 100k
+max_capture_points_s = 13105  # 4 hours
+max_capture_points_a = 6553  # 2 hours
+max_capture_points_b = 3277  # 1 hour
+max_capture_points_c = 100  # 30 minutes
 
 limit_influence_s = 133200000
 limit_influence_a = 66600000

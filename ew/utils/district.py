@@ -199,7 +199,7 @@ class EwDistrict(EwDistrictBase):
             neighbors = poi_static.poi_neighbors[self.name]
             all_neighbors_friendly = self.all_neighbors_friendly()
 
-            decay = -math.ceil(ewcfg.limit_influence_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier))
+            decay = -math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier))
             # decay = -math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier))
 
             slimeoids = ewutils.get_slimeoids_in_poi(poi=self.name, id_server=self.id_server, sltype=ewcfg.sltype_nega)
@@ -210,10 +210,10 @@ class EwDistrict(EwDistrictBase):
 
             if nega_present:
                 decay *= 1.5
-            if self.capture_points + (decay * 3) > (ewcfg.limit_influence[poi.property_class]):
+            if self.capture_points + (decay * 3) > (ewcfg.max_capture_points[poi.property_class]):
                 decay *= 3
 
-            if self.controlling_faction == "" or (not self.all_neighbors_friendly() and self.capture_points > ewcfg.limit_influence[poi.property_class]) or nega_present:  # don't decay if the district is completely surrounded by districts controlled by the same faction
+            if self.controlling_faction == "" or (not self.all_neighbors_friendly() and self.capture_points > ewcfg.max_capture_points[poi.property_class]) or nega_present:  # don't decay if the district is completely surrounded by districts controlled by the same faction
                 # reduces the capture progress at a rate with which it arrives at 0 after 1 in-game day
                 # if (self.capture_points + int(decay) < ewcfg.min_influence[self.property_class] and self.capture_points >= ewcfg.min_influence[self.property_class]) and not nega_present and self.controlling_faction != "":
                 #	responses = self.change_capture_points(self.capture_points - ewcfg.min_influence[self.property_class], ewcfg.actor_decay)
@@ -293,7 +293,7 @@ class EwDistrict(EwDistrictBase):
     def change_capture_points(self, progress, actor, num_lock = 0):  # actor can either be a faction or "decay"
         district_poi = poi_static.id_to_poi.get(self.name)
         invasion_response = ""
-        max_capture = ewcfg.limit_influence[district_poi.property_class]
+        max_capture = ewcfg.max_capture_points[district_poi.property_class]
         progress_percent_before = int(self.capture_points / max_capture * 100)
 
         if actor == 'slimecorp':
@@ -333,7 +333,7 @@ class EwDistrict(EwDistrictBase):
         if actor != ewcfg.actor_decay:
             self.capturing_faction = actor
 
-        if self.controlling_faction == "" and progress > 0 and self.cap_side == actor and self.capture_points + progress > (ewcfg.min_influence[district_poi.property_class]):
+        if self.controlling_faction == "" and progress > 0 and self.cap_side == actor and self.capture_points + progress > (ewcfg.max_capture_points[district_poi.property_class]):
             self.controlling_faction = actor
             invasion_response = "{} just captured {}.".format(self.capturing_faction.capitalize(), district_poi.str_name)
 

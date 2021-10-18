@@ -1325,7 +1325,7 @@ async def surveil(cmd):
 
     for district in districts:
         dist_obj = EwDistrict(id_server=cmd.guild.id, district=district.id_poi)
-        if dist_obj.capture_points >= ewcfg.limit_influence[dist_obj.property_class] and dist_obj.cap_side == 'slimecorp':
+        if dist_obj.capture_points >= ewcfg.max_capture_points[dist_obj.property_class] and dist_obj.cap_side == 'slimecorp':
             players.extend(dist_obj.get_players_in_district(life_states=[ewcfg.life_state_enlisted]))
 
     if len(players) > 0:

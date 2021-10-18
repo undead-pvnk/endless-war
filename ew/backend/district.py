@@ -54,7 +54,7 @@ class EwDistrictBase:
                     self.property_class = poi.property_class.lower()
 
             if len(self.property_class) > 0:
-                self.max_capture_points = ewcfg.limit_influence[self.property_class]
+                self.max_capture_points = ewcfg.max_capture_points[self.property_class]
             else:
                 self.max_capture_points = 0
 
