@@ -436,14 +436,14 @@ class EwDistrict(EwDistrictBase):
             self.capturing_faction = ""
 
         # if capture_points is at its maximum value (or above), assign the district to the capturing faction
-        # if self.capture_points > max_capture:
-        #	responses = self.change_ownership(self.capturing_faction, actor)
-        #	resp_cont_change_cp.add_response_container(responses)
+        if self.capture_points > max_capture:
+            responses = self.change_ownership(self.capturing_faction, actor)
+            resp_cont_change_cp.add_response_container(responses)
 
         # if the district has decayed or been de-captured and it wasn't neutral anyway, make it neutral
-        # elif self.capture_points == 0 and self.controlling_faction != "":
-        #	responses = self.change_ownership("", actor)
-        #	resp_cont_change_cp.add_response_container(responses)
+        elif self.capture_points == 0 and self.controlling_faction != "":
+            responses = self.change_ownership("", actor)
+            resp_cont_change_cp.add_response_container(responses)
         # return
         return resp_cont_change_cp
 

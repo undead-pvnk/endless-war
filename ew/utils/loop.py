@@ -1115,9 +1115,6 @@ async def capture_tick(id_server):
             if dist.time_unlock > 0:
                 continue
 
-            # no more automatic capping
-            continue
-
             controlling_faction = dist.controlling_faction
 
             gangsters_in_district = dist.get_players_in_district(min_slimes=ewcfg.min_slime_to_cap, life_states=[ewcfg.life_state_enlisted], ignore_offline=True)
@@ -1177,6 +1174,7 @@ async def capture_tick(id_server):
 
             if faction_capture not in ['both', None]:  # if only members of one faction is present
                 if district_name in poi_static.capturable_districts:
+                    # 10% extra/less speed per adjacent district under same faction if being reinforced/taken
                     friendly_neighbors = dist.get_number_of_friendly_neighbors()
                     if dist.all_neighbors_friendly():
                         capture_speed = 0
@@ -1185,13 +1183,16 @@ async def capture_tick(id_server):
                     else:
                         capture_speed /= 1 + 0.1 * friendly_neighbors
 
+                    # get current capping progress and set negative if being taken by a different faction
                     capture_progress = dist.capture_points
 
                     if faction_capture != dist.capturing_faction:
                         capture_progress *= -1
 
+                    # properly scale the speed to the scale of points needed
                     capture_speed *= ewcfg.baseline_capture_speed
 
+                    # Track capturer stats as long as they arent overcapping
                     if dist.capture_points < dist.max_capture_points:
                         for stat_recipient in dc_stat_increase_list:
                             ewstats.change_stat(
