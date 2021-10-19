@@ -1113,7 +1113,7 @@ async def capture_tick(id_server):
                 resp_cont_capture_tick.add_response_container(responses)
                 dist.persist()
 
-            # If a lock is active, skip this district for capping calculations
+            # If a lock is active, or if it is surrounded, skip this district for capping calculations
             if dist.time_unlock > 0:
                 continue
 
@@ -1168,8 +1168,11 @@ async def capture_tick(id_server):
                         if ewcfg.mutation_id_lonewolf in mutations and len(gangsters_in_district) == 1:
                             player_capture_speed *= 2
                         if ewcfg.mutation_id_patriot in mutations:
-                            player_capture_speed *= 2
+                            player_capture_speed *= 1.5
+                        if ewcfg.mutation_id_unnaturalcharisma in mutations:
+                            player_capture_speed += 1
 
+                        #ewutils.logMsg("Adding {} to Capture Speed of {} for player {}".format(player_capture_speed, capture_speed, player_id))
                         capture_speed += player_capture_speed
                         num_capturers += 1
                         dc_stat_increase_list.append(player_id)
@@ -1180,7 +1183,7 @@ async def capture_tick(id_server):
                     friendly_neighbors = dist.get_number_of_friendly_neighbors()
                     if dist.all_neighbors_friendly():
                         capture_speed = 0
-                    elif dist.controlling_faction == faction_capture:
+                    if dist.controlling_faction == faction_capture:
                         capture_speed *= 1 + 0.1 * friendly_neighbors
                     else:
                         capture_speed /= 1 + 0.1 * friendly_neighbors
@@ -1279,10 +1282,11 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
     for id_district in poi_static.capturable_districts:
         district = EwDistrict(id_server=id_server, district=id_district)
 
-        district.decay_capture_points()
-        # resp_cont_decay_loop.add_response_container(responses)
+        responses = district.decay_capture_points()
+        resp_cont_decay_loop.add_response_container(responses)
         district.persist()
-# await resp_cont_decay_loop.post()
+
+    return await resp_cont_decay_loop.post()
 
 """ Good ol' Clock Tick Loop. Handles everything that has to occur on an in-game hour. (15 minutes)"""
 
