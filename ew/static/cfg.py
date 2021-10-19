@@ -25,7 +25,7 @@ territory_time_gain = 10
 
 # A variable which is used to determine how certain functions of enemies are to perform
 gvs_active = False
-
+dh_active = True
 # The max amount of degradation a district can have before it is shambled completely
 district_max_degradation = 10000
 
@@ -1114,7 +1114,7 @@ cmd_dance_alt = cmd_prefix + 'vance'
 cmd_propaganda = cmd_prefix + 'propaganda'
 cmd_coinflip = cmd_prefix + 'co1nfl1p'
 cmd_spook = cmd_prefix + 'spook'
-# cmd_makecostume = cmd_prefix + 'makecostume'
+cmd_makecostume = cmd_prefix + 'makecostume'
 cmd_trick = cmd_prefix + 'trick'
 cmd_treat = cmd_prefix + 'treat'
 cmd_russian = cmd_prefix + 'russianroulette'
@@ -4095,7 +4095,7 @@ item_unique_commands = {
 holidaycommands = {
     "swildermuk": "",
     "slimernalia": "",
-    "doublehalloween": "",
+    "doublehalloween": "DOUBLE HALLOWEEN:\n!makecostume \"<Name>\" \"<<Description\" Create a Double Halloween costume using a costume kit.\n!crush <candy> Crush candy to get Double Halloween Grist.\n!trickortreat <player> Get candy in a district, or from a player's apartment if you @ them.",
 }
 
 district_unique_commands = {

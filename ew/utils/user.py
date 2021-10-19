@@ -40,8 +40,8 @@ def get_move_speed(user_data):
         move_speed *= 1.33
 
     # TODO remove after double halloween
-    # if user_data.life_state == ewcfg.life_state_corpse:
-    #	move_speed *= 2
+    if user_data.life_state == ewcfg.life_state_corpse and ewcfg.dh_active:
+        move_speed *= 2
 
     move_speed = max(0.1, move_speed)
 

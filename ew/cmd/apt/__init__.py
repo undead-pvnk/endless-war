@@ -28,8 +28,7 @@ cmd_map = {
     # !knock
     ewcfg.cmd_knock: aptcmds.knock,
 
-    # !trickortreat
-    ewcfg.cmd_trickortreat: aptcmds.trickortreat,
+
 
     # !breaklease
     ewcfg.cmd_breaklease: aptcmds.cancel,
@@ -81,6 +80,10 @@ cmd_map = {
     ewcfg.cmd_bootall: aptcmds.bootall,
 
 }
+
+if ewcfg.dh_active:
+    # !trickortreat
+    cmd_map[ewcfg.cmd_trickortreat] = aptcmds.trickortreat
 
 apt_dm_cmd_map = {
 
@@ -136,9 +139,6 @@ apt_dm_cmd_map = {
     # !knock
     ewcfg.cmd_knock: aptcmds.knock,
 
-    # !trickortreat
-    ewcfg.cmd_trickortreat: aptcmds.trickortreat,
-
     # !apartment
     ewcfg.cmd_apartment: aptcmds.apartment,
 
@@ -146,3 +146,6 @@ apt_dm_cmd_map = {
     ewcfg.cmd_setalarm: aptcmds.set_alarm,
 
 }
+if ewcfg.dh_active:
+    # !trickortreat
+    apt_dm_cmd_map[ewcfg.cmd_trickortreat] = aptcmds.trickortreat

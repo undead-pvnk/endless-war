@@ -1023,19 +1023,19 @@ async def attackEnemy(cmd):
         resp_cont.add_channel_response(cmd.message.channel.name, response)
 
         # TODO remove after double halloween
-        # if enemy_data.enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman:
-        #	horseman_deaths = market_data.horseman_deaths
-        #
-        #			if horseman_deaths == 0:
-        #				defeat_response = "***AHA... AHAHAHAHA...***\n*COUGH*... *HACK*...\nYOU HAVE ALL TRULY PUT ON A SPLENDID PERFORMANCE.\nI KNOW WHEN I AM DEFEATED. PLEASE, TAKE THESE GIFTS OFF OF MY CORPSE...\nTHEY ARE OF NO USE TO ME ANYMORE.\nFOR NOW THOUGH, THIS IS WHERE I GET OFF.\nSAVE A SEAT FOR ME, WON'T YOU, PHOEBUS?\n"
-        #			else:
-        #				defeat_response = "***GAHAHAH... AHAHA...***\n*WHEEZE*... *PUKE*...\nBESTED A SECOND TIME...\nIF I WEREN'T GONE FOR GOOD... THIS WOULD FEEL LIKE AN INSULT.\nNOW, HOWEVER, I HAVE REACHED MY LIMIT.\nTHE GREAT BEYOND CALLS TO ME ONCE AGAIN, AND I ANSWER.\nI JUST HOPE I HAVE THE HEART TO TELL HIM HOW I FEEL...\nUNTIL WE MEET AGAIN AT NEXT DOUBLE HOLLOW'S EVE, ***MORTALS!!!***\n"
+        if enemy_data.enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman and ewcfg.dh_active:
+            horseman_deaths = market_data.horseman_deaths
 
-        #			market_data.horseman_deaths += 1
-        #			market_data.horseman_timeofdeath = int(time_now)
-        #			market_data.persist()
+            if horseman_deaths == 0:
+                defeat_response = "***AHA... AHAHAHAHA...***\n*COUGH*... *HACK*...\nVERY GOOD. YOUR BLADES HAVEN'T DULLED OVER THE YEARS.\nMY CORPSE IS STILL BOUNTIFUL. TAKE FROM IT YOUR SPOILS AND STAIN YOUR HANDS WITH MY BLOOD. \nAND {}. FOR DEALING THE FINAL BLOW YOU SHALL FIND A REWARD MUCH MORE GREAT WHEN I RETURN. ENJOY YOUR ANTICIPATION.\n".format(cmd.message.author.display_name)
+            else:
+                defeat_response = "***GAHAHAH... AHAHA...***\n*WHEEZE*... *PUKE*...\nLIKE CLOCKWORK...\nA HARBINGER OF DEATH... REDUCED TO THIS.\nTO THOSE WHO HAVE SLAIN ME, YOU HAVE TRULY REAPED A DARK REWARD, ONE WELL EARNED.\nWATCH ENDLESS WAR. THE ALTARS WILL COME.\nNOW IF YOU'LL EXCUSE ME, I HAVE A DATE WITH OBLIVION.\nUNTIL WE MEET AGAIN AT NEXT DOUBLE HOLLOW'S EVE, ***MORTALS!!!***\n"
 
-        #			resp_cont.add_channel_response(cmd.message.channel.name, defeat_response)
+            market_data.horseman_deaths += 1
+            market_data.horseman_timeofdeath = int(time_now)
+            market_data.persist()
+
+            resp_cont.add_channel_response(cmd.message.channel.name, defeat_response)
 
         user_data = EwUser(member=cmd.message.author)
     else:

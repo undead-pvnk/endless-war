@@ -211,7 +211,7 @@ async def decaySlimes(id_server = None):
 
 
 """
-	Kills users who have left the server while the bot was offline
+    Kills users who have left the server while the bot was offline
 """
 
 
@@ -290,7 +290,7 @@ async def flag_outskirts(id_server = None):
 
 
 """
-	Flag all users in vulnerable territory, defined as capturable territory (streets) and outskirts.
+    Flag all users in vulnerable territory, defined as capturable territory (streets) and outskirts.
 """
 
 
@@ -331,7 +331,7 @@ async def flag_vulnerable_districts(id_server = None):
 
 
 """
-	Coroutine that continually calls bleedSlimes; is called once per server, and not just once globally
+    Coroutine that continually calls bleedSlimes; is called once per server, and not just once globally
 """
 
 
@@ -523,7 +523,7 @@ async def pushdownServerInebriation(id_server = None):
             ewutils.logMsg("Failed to pushdown server inebriation.")     
 
 """
-	Coroutine that continually calls burnSlimes; is called once per server, and not just once globally
+    Coroutine that continually calls burnSlimes; is called once per server, and not just once globally
 """
 
 
@@ -821,14 +821,15 @@ async def spawn_enemies(id_server = None):
 
 
 # TODO remove after double halloween
-# market_data = EwMarket(id_server=id_server)
-# underworld_district = EwDistrict(district=ewcfg.poi_id_underworld, id_server=id_server)
-# enemies_count = len(underworld_district.get_enemies_in_district())
+    if ewcfg.dh_active:
+        market_data = EwMarket(id_server=id_server)
+        underworld_district = EwDistrict(district=ewcfg.poi_id_underworld, id_server=id_server)
+        enemies_count = len(underworld_district.get_enemies_in_district())
 
-# if enemies_count == 0 and int(time.time()) > (market_data.horseman_timeofdeath + ewcfg.horseman_death_cooldown):
-#	dh_resp_cont = ewhunting.spawn_enemy(id_server=id_server, pre_chosen_type=ewcfg.enemy_type_doubleheadlessdoublehorseman, pre_chosen_poi=ewcfg.poi_id_underworld, manual_spawn=True)
+        if enemies_count == 0 and int(time.time()) > (market_data.horseman_timeofdeath + ewcfg.horseman_death_cooldown):
+            dh_resp_cont = hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_type=ewcfg.enemy_type_doubleheadlessdoublehorseman, pre_chosen_poi=ewcfg.poi_id_underworld, manual_spawn=True)
 
-#	await dh_resp_cont.post()
+            await dh_resp_cont.post()
 
 async def spawn_enemies_tick_loop(id_server):
     interval = ewcfg.enemy_spawn_tick_length
@@ -1086,7 +1087,7 @@ async def pay_salary(id_server = None):
 
 
 """
-	Updates/Increments the capture_points values of all districts every time it's called
+    Updates/Increments the capture_points values of all districts every time it's called
 """
 
 
@@ -1223,7 +1224,7 @@ async def capture_tick(id_server):
 
 
 """
-	Coroutine that continually calls capture_tick; is called once per server, and not just once globally
+    Coroutine that continually calls capture_tick; is called once per server, and not just once globally
 """
 
 
@@ -1238,7 +1239,7 @@ async def capture_tick_loop(id_server):
 
 
 """
-	Gives both kingpins the appropriate amount of slime for how many districts they own and lowers the capture_points property of each district by a certain amount, turning them neutral after a while
+    Gives both kingpins the appropriate amount of slime for how many districts they own and lowers the capture_points property of each district by a certain amount, turning them neutral after a while
 """
 
 

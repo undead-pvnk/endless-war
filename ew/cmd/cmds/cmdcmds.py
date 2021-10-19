@@ -43,6 +43,7 @@ from .cmdsutils import item_commands
 from .cmdsutils import item_off
 from .cmdsutils import location_commands
 from .cmdsutils import mutation_commands
+from .cmdsutils import holiday_commands
 from .. import item as ewitem
 from ..apt import aptcmds as apt_cmds
 from ..faction import factioncmds as faction_cmds
@@ -1534,12 +1535,13 @@ async def commands(cmd):
         response += location_commands(cmd)
         response += mutation_commands(cmd)
         response += item_commands(cmd)
+        response += holiday_commands()
         if response != "":
             response += "\n\nLook up basic commands with !commands basic, \nor a full list with !commands categories."
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if "categories" in category:
-        response += "Categories are: \nbasic: basic info.\nmyitems: Commands for items you have.\nmylocation: Commands based in this area.\nmymutations: Commands for the mutations you currently have.\nmyfaction: Commands for the faction you're in.\nmyrace: The command for your current race.\ncombat: Combat-based commands.\ncapping: Capping-based commands.\nplayerinfo: Commands that tell you some of your statistics.\noutsidelinks: These display links to outside the server.\nitems: Show item-related commands.\ncosmeticsanddyes: Display information on cosmetics and dyes.\nsmelting: Smelting related commands.\ntrading: Trading related commands.\nquadrants: Quadrant related commands.\nslimeoids: Slimeoid-related commands.\njuvies: Commands for juvies.\nenlisted: Commands for enlisted players.\ncorpses:Commands for corpses.\nmisc: Miscellaneous commands.\nflavor: Other shitposty type commands.\nallitem: All item-specific commands.\nallmutation: All mutation specific commands.\nYou can also check the commands of a specific location using !commands location <district>."
+        response += "Categories are: \nbasic: basic info.\nmyitems: Commands for items you have.\nmylocation: Commands based in this area.\nmymutations: Commands for the mutations you currently have.\nmyfaction: Commands for the faction you're in.\nmyrace: The command for your current race.\ncombat: Combat-based commands.\ncapping: Capping-based commands.\nplayerinfo: Commands that tell you some of your statistics.\noutsidelinks: These display links to outside the server.\nitems: Show item-related commands.\ncosmeticsanddyes: Display information on cosmetics and dyes.\nsmelting: Smelting related commands.\ntrading: Trading related commands.\nquadrants: Quadrant related commands.\nslimeoids: Slimeoid-related commands.\njuvies: Commands for juvies.\nenlisted: Commands for enlisted players.\ncorpses:Commands for corpses.\nmisc: Miscellaneous commands.\nflavor: Other shitposty type commands.\nallitem: All item-specific commands.\nallmutation: All mutation specific commands.\nholiday: If an event is going on, display the commands for it.\nYou can also check the commands of a specific location using !commands location <district>."
 
     if cmd.tokens_count == 1 or "basic" in category:
         response += "\n\n" + ewcfg.basic_commands
@@ -1586,6 +1588,10 @@ async def commands(cmd):
             response += "\n\n" + ewcfg.race_unique_commands.get(race)
         else:
             response += "\n\nNo racial commands found."
+    if "doublehalloween" in category:
+        response += "\n\n" + ewcfg.holidaycommands.get("doublehalloween")
+    if "holiday" in category:
+        response += "\n\n" + holiday_commands(header = False)
     if "combat" in category:
         response += "\n\n" + ewcfg.combat_commands
     if "capping" in category:

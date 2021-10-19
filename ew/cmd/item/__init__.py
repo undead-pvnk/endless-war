@@ -55,7 +55,6 @@ cmd_map = {
     ewcfg.cmd_strip: itemcmds.strip_message,
 
     # Make a costume for Double Halloween
-    # ewcfg.cmd_makecostume: ewitem.makecostume,
 
     # Admin/Debug cmds
     ewcfg.cmd_forgemasterpoudrin: itemcmds.forge_master_poudrin,
@@ -69,6 +68,9 @@ cmd_map = {
     ewcfg.cmd_unwrap: itemcmds.unwrap,
 
 }
+
+if ewcfg.dh_active:
+    cmd_map[ewcfg.cmd_makecostume]= itemcmds.makecostume
 
 dm_cmd_map = {
 

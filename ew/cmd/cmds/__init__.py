@@ -31,8 +31,7 @@ cmd_map = {
     # Ghosts can BOO
     ewcfg.cmd_boo: cmdcmds.boo,
 
-    # TODO remove after double halloween
-    # ewcfg.cmd_spook: cmds.spook,
+
 
     # Juvies can dance
     ewcfg.cmd_dance: cmdcmds.dance,
@@ -223,6 +222,9 @@ cmd_map = {
     ewcfg.cmd_verify_cache: cmdcmds.verify_cache,
 
 }
+# TODO remove after double halloween
+if ewcfg.dh_active:
+    cmd_map[ewcfg.cmd_spook] = cmdcmds.spook
 
 dm_cmd_map = {
 

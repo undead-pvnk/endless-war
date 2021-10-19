@@ -1673,19 +1673,24 @@ smelting_recipe_list = [
         },
         products=['partypopper']
     )
-    # TODO remove after double halloween
-    # EwSmeltingRecipe(
-    #    id_recipe = "ticket",
-    #    str_name = "Ticket to the White Line",
-    #    alias = [
-    #        "tickettohell",
-    #    ],
-    #    ingredients = {
-    #        ewcfg.item_id_doublehalloweengrist: 100,
-    #    },
-    #    products = ['ticket']
-    # )
 ]
+
+# TODO remove after double halloween
+if ewcfg.dh_active:
+    smelting_recipe_list.append(EwSmeltingRecipe(
+            id_recipe = "ticket",
+            str_name = "Ticket to the White Line",
+            alias = [
+                "tickettohell",
+            ],
+            ingredients = {
+                ewcfg.item_id_doublehalloweengrist: 100,
+            },
+            products = ['ticket']
+         ))
+
+
+
 # smelting_recipe_list += ewdebug.debugrecipes
 
 # A map of id_recipe to EwSmeltingRecipe objects.
