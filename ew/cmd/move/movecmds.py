@@ -497,6 +497,7 @@ async def look(cmd):
                                                                                                    )
                                                                                                    ))
 
+    capped_resp = "This district is controlled by the {}.\n\n".format(district_data.controlling_faction.capitalize() if district_data.controlling_faction != "" else "no one")
     slimes_resp = get_slimes_resp(district_data)
     players_resp = get_players_look_resp(user_data, district_data)
     enemies_resp = get_enemies_look_resp(user_data, district_data)
@@ -544,7 +545,8 @@ async def look(cmd):
 
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(
             cmd.message.author,
-            "{}{}{}{}{}{}{}".format(
+            "{}{}{}{}{}{}{}{}".format(
+                capped_resp,
                 slimes_resp,
                 players_resp,
                 slimeoids_resp,
@@ -569,6 +571,7 @@ async def survey(cmd):
     market_data = EwMarket(id_server=user_data.id_server)
     poi = poi_static.id_to_poi.get(user_data.poi)
 
+    capped_resp = "This district is controlled by the {}.\n\n".format(district_data.controlling_faction.capitalize() if district_data.controlling_faction != "" else "no one")
     slimes_resp = get_slimes_resp(district_data)
     players_resp = get_players_look_resp(user_data, district_data)
     enemies_resp = get_enemies_look_resp(user_data, district_data)
@@ -588,6 +591,7 @@ async def survey(cmd):
             "You stand {} {}.\n\n{}{}{}{}{}".format(
                 poi.str_in,
                 poi.str_name,
+                capped_resp,
                 slimes_resp,
                 players_resp,
                 slimeoids_resp,
