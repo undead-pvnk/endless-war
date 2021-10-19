@@ -1107,15 +1107,15 @@ async def capture_tick(id_server):
             district_name = district
             dist = EwDistrict(id_server=id_server, district=district_name)
 
+            # if it has a lock and isnt surrounded by friendly districts, degrade the lock
             if dist.time_unlock > 0 and not dist.all_neighbors_friendly():
                 responses = dist.change_capture_lock(progress=-ewcfg.capture_tick_length)
                 resp_cont_capture_tick.add_response_container(responses)
                 dist.persist()
 
+            # If a lock is active, skip this district for capping calculations
             if dist.time_unlock > 0:
                 continue
-
-            controlling_faction = dist.controlling_faction
 
             gangsters_in_district = dist.get_players_in_district(min_slimes=ewcfg.min_slime_to_cap, life_states=[ewcfg.life_state_enlisted], ignore_offline=True)
 
@@ -1136,6 +1136,7 @@ async def capture_tick(id_server):
             # number of players actively capturing
             num_capturers = 0
 
+            # list of players contributing to capping, who need stats tracked
             dc_stat_increase_list = []
 
             # checks if any players are in the district and if there are only players of the same faction, i.e. progress can happen
@@ -1146,6 +1147,7 @@ async def capture_tick(id_server):
 
                 mutations = user_data.get_mutations()
 
+                # dont count offline players
                 try:
                     player_online = server.get_member(player_id).status != discord.Status.offline
                 except:
@@ -1183,9 +1185,10 @@ async def capture_tick(id_server):
                     else:
                         capture_speed /= 1 + 0.1 * friendly_neighbors
 
-                    # get current capping progress and set negative if being taken by a different faction
+                    # get current capping progress
                     capture_progress = dist.capture_points
 
+                    # set calculated progress negative if it was being captured by the other gang
                     if faction_capture != dist.capturing_faction:
                         capture_progress *= -1
 
@@ -1202,10 +1205,12 @@ async def capture_tick(id_server):
                                 n=ewcfg.capture_tick_length * capture_speed
                             )
 
+                    # if it was already being captured by the currently capturing faction
                     if faction_capture == dist.capturing_faction:  # if the faction is already in the process of capturing, continue
                         responses = dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture, num_capturers)
                         resp_cont_capture_tick.add_response_container(responses)
 
+                    # otherwise, if it has zero points and is uncontrolled
                     elif dist.capture_points == 0 and dist.controlling_faction == "":  # if it's neutral, start the capture
                         responses = dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture, num_capturers)
                         resp_cont_capture_tick.add_response_container(responses)

@@ -291,6 +291,22 @@ class EwDistrict(EwDistrictBase):
         return resp_cont
 
     def change_capture_points(self, progress, actor, num_lock = 0):  # actor can either be a faction or "decay"
+        """
+            Adds given progress to current (1/3 given if slimecorp)
+            Sets cap_side to the given actor when not decay
+            if points are negative, sets to zero
+            if points are zero, clears cap_side and controlling faction
+            if points are over max, sets points to max
+            sets capturing faction to actor if not decay
+            if
+                controlling faction is blank
+                progress is positive
+                cap side is actor
+                points + progress > max points
+                    set controlling faction to actor
+                    create invasion response (__ just captured __)
+
+        """
         district_poi = poi_static.id_to_poi.get(self.name)
         invasion_response = ""
         max_capture = ewcfg.max_capture_points[district_poi.property_class]
@@ -330,6 +346,7 @@ class EwDistrict(EwDistrictBase):
         #	responses = self.change_capture_lock(base_time_unlock + (num_lock - 1) * ewcfg.capture_lock_per_gangster)
         #	resp_cont_change_cp.add_response_container(responses)
 
+        # set the currently capturing faction
         if actor != ewcfg.actor_decay:
             self.capturing_faction = actor
 
@@ -436,7 +453,8 @@ class EwDistrict(EwDistrictBase):
             self.capturing_faction = ""
 
         # if capture_points is at its maximum value (or above), assign the district to the capturing faction
-        if self.capture_points > max_capture:
+        if self.capture_points >= max_capture:
+            ewutils.logMsg("Changing ownership of {} from {} to {}".format(self.name, self.controlling_faction, self.capturing_faction))
             responses = self.change_ownership(self.capturing_faction, actor)
             resp_cont_change_cp.add_response_container(responses)
 

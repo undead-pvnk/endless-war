@@ -1641,7 +1641,7 @@ capture_tick_length = 10  # in seconds; also affects how much progress is made p
 max_capture_points_s = 13105  # 4 hours
 max_capture_points_a = 6553  # 2 hours
 max_capture_points_b = 3277  # 1 hour
-max_capture_points_c = 100  # 30 minutes
+max_capture_points_c = 1000  # 30 minutes
 
 limit_influence_s = 133200000
 limit_influence_a = 66600000
