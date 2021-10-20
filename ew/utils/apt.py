@@ -189,7 +189,7 @@ async def toss_squatters(user_id = None, server_id = None, keepKeys = False):
                 else:
                     server = ewcfg.server_list[sqt_data.id_server]
                     member_object = server.get_member(squatter[0])
-                    sqt_data.poi = sqt_data.poi[3:]
+                    sqt_data.poi = sqt_data.poi[3:] if sqt_data.poi[3:] in poi_static.id_to_poi.keys() else sqt_data.poi
                     sqt_data.visiting = ewcfg.location_id_empty
                     sqt_data.persist()
                     await ewrolemgr.updateRoles(client=client, member=member_object)
