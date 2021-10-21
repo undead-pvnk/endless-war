@@ -3335,7 +3335,7 @@ poi_list = [
         id_poi = "underworldsubwaystation",
         alias = ['uws', 'us'],
         str_name = "The Underworld Subway Station",
-        str_desc = "A grimy subway station.\n\nExits into The Underworld.",
+        str_desc = "A grimy subway station, decrepit from a year of dormancy. There's a few corpses strewn around, presumably from juvies who refused to heed warnings and ventured through the White Line tunnels. Intense screeching from the White Line Subway echoes behind you.\n\nExits into The Underworld.",
         channel = "underworld-subway-station",
         role = "Underworld Subway Station",
         major_role = "assaultflatsbeach_major",
@@ -3615,16 +3615,34 @@ poi_list = [
     EwPoi(
         id_poi = "subwaywhite01",
         str_name = "A White Line Subway Train",
-        str_desc = "A grimy subway train.",
+        str_desc = "A grimy subway train. Its musty interior is dimly-lit, with only a few of the flourescent lights functioning. The seats are covered with an anomalous mold, the origins of which you can't discern. In fact, you can't discern where this subway even CAME from. It disappeared off the face of NLACakaNM for a year with no trace, suddenly reappearing when the moon beckons double.",
         channel = "subway-train-white-01",
         role = "Subway Train WHITE-01",
         major_role = "nullmajorrole",
         minor_role = "nullminorrole",
         permissions = {'subway-train-white-01': ['read', 'send', 'connect']},
-        pvp = False,
+        is_transport = True,
+        pvp = False, # friendship only
         transport_type = "subway",
         default_line = "subwaywhiteeast",
-        default_stop = "downtownsubwaystation",
+        default_stop = "underworldsubwaystation",
+        neighbors = {},
+        wikipage = "https://rfck.miraheze.org/wiki/Public_Transportation#The_White_Line",
+    ),
+    EwPoi(
+        id_poi = "subwaywhite02",
+        str_name = "A White Line Subway Train",
+        str_desc = "A grimy subway train. Its musty interior is dimly-lit, with only a few of the flourescent lights functioning. The seats are covered with an anomalous mold, the origins of which you can't discern. In fact, you can't discern where this subway even CAME from. It disappeared off the face of NLACakaNM for a year with no trace, suddenly reappearing when the moon beckons double.",
+        channel = "subway-train-white-02",
+        role = "Subway Train WHITE-02",
+        major_role = "nullmajorrole",
+        minor_role = "nullminorrole",
+        permissions = {'subway-train-white-02': ['read', 'send', 'connect']},
+        is_transport = True,
+        pvp = False, # friendship only
+        transport_type = "subway",
+        default_line = "subwaywhitewest",
+        default_stop = "juviesrowsubwaystation",
         neighbors = {},
         wikipage = "https://rfck.miraheze.org/wiki/Public_Transportation#The_White_Line",
     ),
@@ -5236,45 +5254,45 @@ transport_lines = [
         }
 
     ),
-    #	EwTransportLine( # white subway line from downtown to juvies row
-    #	 	id_line = ewcfg.transport_line_subway_white_eastbound,
-    #	 	alias = [
-    #	 		"whiteeastline",
-    #			"whiteeast",
-    #	 		"eastwhite",
-    #	 		"whitetojuviesrow",
-    #	 		"whitetojuvies",
-    #	 		"whitetojr"
-    #	 	    ],
-    #	 	first_stop = ewcfg.poi_id_underworld_subway_station,
-    #	 	last_stop = ewcfg.poi_id_jr_subway_station,
-    #	 	next_line = ewcfg.transport_line_subway_white_westbound,
-    #	 	str_name = "The white subway line towards Juvie's Row",
-    #	 	schedule = {
-    #	 		ewcfg.poi_id_underworld_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_dt_subway_station],
-    #	 		ewcfg.poi_id_dt_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_rr_subway_station],
-    #	 		ewcfg.poi_id_rr_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_jr_subway_station]
-    #	 	    }
-    #	 	),
-    #	EwTransportLine( # white subway line from juvies row to downtown
-    #	 	id_line = ewcfg.transport_line_subway_white_westbound,
-    #	 	alias = [
-    #	 		"whitewestline",
-    #	 		"whitewest",
-    #	 		"westwhite",
-    #	 		"whitetounderworld",
-    #	 		"whitetouw"
-    #	 	    ],
-    #	 	first_stop = ewcfg.poi_id_jr_subway_station,
-    #	 	last_stop = ewcfg.poi_id_underworld_subway_station,
-    #	 	next_line = ewcfg.transport_line_subway_white_eastbound,
-    #	 	str_name = "The white subway line towards The Underworld",
-    #	 	schedule = {
-    #	 		ewcfg.poi_id_jr_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_rr_subway_station],
-    #	 		ewcfg.poi_id_rr_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_dt_subway_station],
-    #	 		ewcfg.poi_id_dt_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_underworld_subway_station],
-    #	 	    }
-    #	 	),
+    EwTransportLine( # white subway line from downtown to juvies row
+        id_line = ewcfg.transport_line_subway_white_eastbound,
+        alias = [
+            "whiteeastline",
+            "whiteeast",
+            "eastwhite",
+            "whitetojuviesrow",
+            "whitetojuvies",
+            "whitetojr"
+        ],
+        first_stop = ewcfg.poi_id_underworld_subway_station,
+        last_stop = ewcfg.poi_id_jr_subway_station,
+        next_line = ewcfg.transport_line_subway_white_westbound,
+        str_name = "The white subway line towards Juvie's Row",
+        schedule ={
+            ewcfg.poi_id_underworld_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_dt_subway_station],
+            ewcfg.poi_id_dt_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_rr_subway_station],
+            ewcfg.poi_id_rr_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_jr_subway_station]
+        }
+    ),
+    EwTransportLine( # white subway line from juvies row to downtown
+        id_line = ewcfg.transport_line_subway_white_westbound,
+        alias = [
+            "whitewestline",
+            "whitewest",
+            "westwhite",
+            "whitetounderworld",
+            "whitetouw"
+        ],
+        first_stop = ewcfg.poi_id_jr_subway_station,
+        last_stop = ewcfg.poi_id_underworld_subway_station,
+        next_line = ewcfg.transport_line_subway_white_eastbound,
+        str_name = "The white subway line towards The Underworld",
+        schedule ={
+            ewcfg.poi_id_jr_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_rr_subway_station],
+            ewcfg.poi_id_rr_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_dt_subway_station],
+            ewcfg.poi_id_dt_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_underworld_subway_station],
+        }
+    ),
     EwTransportLine(  # blimp line from dreadford to assault flats beach
         id_line=ewcfg.transport_line_blimp_df_to_afb,
         alias=[
