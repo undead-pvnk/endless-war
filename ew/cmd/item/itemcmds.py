@@ -1127,6 +1127,16 @@ async def makecostume(cmd):
         "adorned": "false",
         "rarity": "Plebeian",
         "context": "costume",
+        'attack': 6,
+        'defense': 6,
+        'speed': 6,
+        'durability': ewcfg.soul_durability,
+        'fashion_style': ewcfg.style_cool,
+        'freshness': 10,
+        'ability': None,
+        'str_onadorn': ewcfg.str_generic_onadorn,
+        'str_unadorn': ewcfg.str_generic_unadorn,
+        'str_onbreak': ewcfg.str_generic_onbreak
     }
 
     new_item_id = bknd_item.item_create(
