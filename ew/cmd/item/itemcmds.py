@@ -1122,6 +1122,7 @@ async def makecostume(cmd):
     item_desc = cmd.tokens[2]
 
     item_props = {
+        "id_cosmetic" : 'costume',
         "cosmetic_name": item_name,
         "cosmetic_desc": item_desc,
         "adorned": "false",
@@ -1130,6 +1131,7 @@ async def makecostume(cmd):
         'attack': 6,
         'defense': 6,
         'speed': 6,
+        'size': 3,
         'durability': ewcfg.soul_durability,
         'fashion_style': ewcfg.style_cool,
         'freshness': 10,
