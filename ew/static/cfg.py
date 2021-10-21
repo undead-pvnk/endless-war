@@ -3,7 +3,7 @@
 
 
 
-version = "v4.011 afterparty 😜"
+version = "v4.012 doubledoublehalloween"
 
 dir_msgqueue = 'msgqueue'
 
