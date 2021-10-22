@@ -514,7 +514,7 @@ async def trickortreat(cmd = None):
         i = EwItem(it.get('id_item'))
         id_cosmetic = i.item_props.get('id_cosmetic')
         adorned = i.item_props.get('adorned')
-        if id_cosmetic == 'dhcostume' and adorned == 'true':
+        if (id_cosmetic == 'dhcostume' or id_cosmetic == 'costume') and adorned == 'true':
             costumes += 1
 
     if costumes == 0:
