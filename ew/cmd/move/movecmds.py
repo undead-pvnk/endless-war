@@ -497,7 +497,14 @@ async def look(cmd):
                                                                                                    )
                                                                                                    ))
 
-    capped_resp = "This district is controlled by the {}.\n\n".format(district_data.controlling_faction.capitalize() if district_data.controlling_faction != "" else "no one")
+    # if it's a subzone, check who owns the actual district
+    if poi.is_subzone:
+        controlled_poi = poi_static.id_to_poi.get(poi.mother_districts[0])
+        controlled_data = EwDistrict(district=controlled_poi.id_poi, id_server=user_data.id_server)
+    else:
+        controlled_data = district_data
+
+    capped_resp = "This district is controlled by {}.\n\n".format("the " + controlled_data.controlling_faction.capitalize() if controlled_data.controlling_faction != "" else "no one")
     slimes_resp = get_slimes_resp(district_data)
     players_resp = get_players_look_resp(user_data, district_data)
     enemies_resp = get_enemies_look_resp(user_data, district_data)
@@ -571,7 +578,14 @@ async def survey(cmd):
     market_data = EwMarket(id_server=user_data.id_server)
     poi = poi_static.id_to_poi.get(user_data.poi)
 
-    capped_resp = "This district is controlled by the {}.\n\n".format(district_data.controlling_faction.capitalize() if district_data.controlling_faction != "" else "no one")
+    # if it's a subzone, check who owns the actual district
+    if poi.is_subzone:
+        controlled_poi = poi_static.id_to_poi.get(poi.mother_districts[0])
+        controlled_data = EwDistrict(district=controlled_poi.id_poi, id_server=user_data.id_server)
+    else:
+        controlled_data = district_data
+
+    capped_resp = "This district is controlled by {}.\n\n".format("the " + controlled_data.controlling_faction.capitalize() if controlled_data.controlling_faction != "" else "no one")
     slimes_resp = get_slimes_resp(district_data)
     players_resp = get_players_look_resp(user_data, district_data)
     enemies_resp = get_enemies_look_resp(user_data, district_data)
