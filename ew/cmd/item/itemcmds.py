@@ -1122,7 +1122,7 @@ async def makecostume(cmd):
     item_desc = cmd.tokens[2]
 
     item_props = {
-        "id_cosmetic" : 'costume',
+        "id_cosmetic" : 'dhcostume',
         "cosmetic_name": item_name,
         "cosmetic_desc": item_desc,
         "adorned": "false",

@@ -1313,8 +1313,8 @@ async def clock_tick_loop(id_server = None, force_active = False):
                     ewutils.logMsg("Handling weather cycle...")
                     await weather_utils.weather_cycle(id_server)
 
-                    if not ewutils.check_fursuit_active(market_data):
-                        await cosmetic_utils.dedorn_all_costumes()
+                    # if not ewutils.check_fursuit_active(market_data): # I don't see why costumes should be dedorned automatically so, like, just removing this. It's dumb.
+                    #     await cosmetic_utils.dedorn_all_costumes()
 
                     await apt_utils.setOffAlarms(id_server)
 
