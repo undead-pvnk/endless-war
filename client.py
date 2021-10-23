@@ -519,7 +519,8 @@ async def on_message(message):
 
     re_awoo = re.compile('.*![a]+[w]+o[o]+.*')
     re_moan = re.compile('.*![b]+[r]+[a]+[i]+[n]+[z]+.*')
-
+    re_measure = re.compile('!measure.*')
+    
     # update the player's time_last_action which is used for kicking AFK players out of subzones
     if message.guild != None:
 
@@ -1038,6 +1039,8 @@ async def on_message(message):
             return await ewcmd.cmdcmds.cmd_howl(cmd_obj)
         elif re_moan.match(cmd):
             return await ewcmd.cmdcmds.cmd_moan(cmd_obj)
+        elif re_measure.match(cmd):
+            return await ewcmd.cmdcmds.cockdraw(cmd_obj)
 
         # Debug command to override the role of a user
         elif debug == True and cmd == (ewcfg.cmd_prefix + 'setrole'):

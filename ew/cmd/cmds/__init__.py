@@ -220,7 +220,8 @@ cmd_map = {
 
     # Verify that the cache is functional
     ewcfg.cmd_verify_cache: cmdcmds.verify_cache,
-
+    ewcfg.cmd_cockdraw: cmdcmds.cockdraw,
+    ewcfg.cmd_measurecock: cmdcmds.cockdraw
 }
 # TODO remove after double halloween
 if ewcfg.dh_active:

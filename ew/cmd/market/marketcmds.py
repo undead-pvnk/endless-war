@@ -977,42 +977,4 @@ async def cancel_trade(cmd):
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-async def cockdraw(cmd):
-    user_data = EwUser(member=cmd.message.author)
-
-    cosmetics = bknd_item.inventory(id_user=user_data.id_user, id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
-    protected = False
-    for cosmetic in cosmetics:
-        cosmetic_data = EwItem(id_item=cosmetic.get('id_item'))
-        if cosmetic_data.item_props.get('id_cosmetic') == 'chastitybelt':
-            if cosmetic_data.item_props.get('adorned') == 'true':
-                protected = True
-
-    if protected:
-        response = "You reach for your pants, only to be blocked by your chastity belt. The Lord has once again thwarted your degeneracy."
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-    size = float(user_data.rand_seed % 110)/10
-
-    if size >= 10:
-        size = user_data.rand_seed % 1000
-
-    if cmd.tokens[0] == '!cockdraw':
-        response = "You slowly stick your hand in your pants..."
-        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        await asyncio.sleep(1)
-        response = "**3!**"
-        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        await asyncio.sleep(1)
-        response = "**2!**"
-        await fe_utils.send_message(cmd.client, cmd.message.channel,fe_utils.formatMessage(cmd.message.author, response))
-        await asyncio.sleep(1)
-        response = "**1!**"
-        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        await asyncio.sleep(1)
-
-    response = "You whip out your dick! It's {} inches long!".format(size)
-    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-
 
