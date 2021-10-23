@@ -155,9 +155,9 @@ mutations = [
         alias=['lw', 'lone', 'wolf'],
         str_describe_self="You stand out from the crowd, mostly because you stay far away from them due to **Lone Wolf**.",
         str_describe_other="They stand out from the crowd, mostly because they stay far away from them due to **Lone Wolf**.",
-        str_acquire="Your eyes squint and a growl escapes your mouth. You begin fostering an unfounded resentment against your fellow juveniles, letting it bubble into a burning hatred in your chest. You snarl and grimace as people pass beside you on the street. All you want to do is be alone, no one understands you anyway. You have developed the mutation **Lone Wolf**. 50% damage buff when in a district alone.",
+        str_acquire="Your eyes squint and a growl escapes your mouth. You begin fostering an unfounded resentment against your fellow juveniles, letting it bubble into a burning hatred in your chest. You snarl and grimace as people pass beside you on the street. All you want to do is be alone, no one understands you anyway. You have developed the mutation **Lone Wolf**. 50% damage buff and 2x capping speed when in a district with no allied gangsters.",
         tier=7,
-        str_transplant="After a long time under the knife, you wake up to find your genes spliced with the DNA of Dr. Wolf. You are both unwilling and unable to engage in conversation with anybody, and deep within your soul, you develop the uncontrollable urge to pout.\n\nYou have developed the mutation **Lone Wolf**. 50% damage buff when in a district alone."),
+        str_transplant="After a long time under the knife, you wake up to find your genes spliced with the DNA of Dr. Wolf. You are both unwilling and unable to engage in conversation with anybody, and deep within your soul, you develop the uncontrollable urge to pout.\n\nYou have developed the mutation **Lone Wolf**. 50% damage buff and 2x capping speed when in a district with no allied gangsters."),
     EwMutationFlavor(
         id_mutation=ewcfg.mutation_id_quantumlegs,
         str_name="Quantum Legs",
@@ -185,9 +185,9 @@ mutations = [
         alias=['pt'],
         str_describe_self="You beam with intense pride over your faction’s sophisticated culture and history due to **Patriot**.",
         str_describe_other="They beam with intense pride over their faction’s sophisticated culture and history due to **Patriot**.",
-        str_acquire="Your brain’s wrinkles begin to smooth themselves out, and you are suddenly susceptible to being swayed by propaganda. Suddenly, your faction’s achievements flash before your eyes. All of the glorious victories it has won, all of its sophisticated culture and history compels you to action. You have developed the mutation **Patriot**. 20% capture discount.",
+        str_acquire="Your brain’s wrinkles begin to smooth themselves out, and you are suddenly susceptible to being swayed by propaganda. Suddenly, your faction’s achievements flash before your eyes. All of the glorious victories it has won, all of its sophisticated culture and history compels you to action. You have developed the mutation **Patriot**. You capture districts 1.5x faster.",
         tier=6,
-        str_transplant="You are led into a room with a projector and told to sit down. Each slide has a different gang's propaganda on it. Every time your gang's propaganda shows up, you get a glob of slime. For your enemy gang, you get tased. The process continues until Pavlov has made you his bitch. Allegiance is all you understand.\n\nYou have developed the mutation **Patriot**. 20% capture discount.",
+        str_transplant="You are led into a room with a projector and told to sit down. Each slide has a different gang's propaganda on it. Every time your gang's propaganda shows up, you get a glob of slime. For your enemy gang, you get tased. The process continues until Pavlov has made you his bitch. Allegiance is all you understand.\n\nYou have developed the mutation **Patriot**. You capture districts 1.5x faster.",
 
     ),
     EwMutationFlavor(
@@ -349,9 +349,9 @@ mutations = [
         alias=['nos', 'nerves', 'nerve'],
         str_describe_self="You are absolutely fearless due to **Nerves of Steel**.",
         str_describe_other="They are absolutely fearless due to **Nerves of Steel**.",
-        str_acquire="You feel a sudden coldness sinking into the back of your head. Parts of your brain rapidly shut down, but you have no idea which ones are going because you can no longer access them. Without thinking, you run a knife down your hand, and although it's painful, you're completely detatched from the sensation. A gun to your head? No fear. If you die, you die. You have developed the mutation **Nerves of Steel**. As a gangster, you can cap ally surrounded districts. As a juvie, you can play russian roulette and commit suicide.",
+        str_acquire="You feel a sudden coldness sinking into the back of your head. Parts of your brain rapidly shut down, but you have no idea which ones are going because you can no longer access them. Without thinking, you run a knife down your hand, and although it's painful, you're completely detatched from the sensation. A gun to your head? No fear. If you die, you die. You have developed the mutation **Nerves of Steel**. As a juvie, you can play russian roulette and commit suicide.",
         tier=6,
-        str_transplant="Dr. Dusttrap decides to take what she calls \"a traditional approach\". She takes out a syringe full of neurotoxin and pokes it right into your noggin. She tells you she's going to disable the part of your brain that processes fear, but the fact she's constantly referencing her brain anatomy chart is concerning. She manages to make you fearless, but sadly at the expense of a few precious childhood memories.\n\nYou have developed the mutation **Nerves of Steel**. As a gangster, you can cap ally surrounded districts. As a juvie, you can play russian roulette and commit suicide.",
+        str_transplant="Dr. Dusttrap decides to take what she calls \"a traditional approach\". She takes out a syringe full of neurotoxin and pokes it right into your noggin. She tells you she's going to disable the part of your brain that processes fear, but the fact she's constantly referencing her brain anatomy chart is concerning. She manages to make you fearless, but sadly at the expense of a few precious childhood memories.\n\nYou have developed the mutation **Nerves of Steel**. As a juvie, you can play russian roulette and commit suicide.",
     ),
     EwMutationFlavor(
         id_mutation=ewcfg.mutation_id_packrat,
@@ -443,9 +443,9 @@ mutations = [
         alias=['uc', 'charisma'],
         str_describe_self="Your unbridled charm can manipulate the unwashed masses due to **Unnatural Charisma**.",
         str_describe_other="Their unbridled charm can manipulate the unwashed masses due to **Unnatural Charisma**.",
-        str_acquire="You hear rubbery squeaking sounds stirring throughout your body. You hair starts to condense and slick back, and the grime and sugar start to evaporate from your teeth. You attempt to gasp in shock, but it comes out a seductive purr. You don't just make women swoon, you have no choice but to do so. You have developed the mutation **Unnatural Charisma**. 20% capping increase and +500 freshness.",
+        str_acquire="You hear rubbery squeaking sounds stirring throughout your body. You hair starts to condense and slick back, and the grime and sugar start to evaporate from your teeth. You attempt to gasp in shock, but it comes out a seductive purr. You don't just make women swoon, you have no choice but to do so. You have developed the mutation **Unnatural Charisma**. +1 capping speed and +500 freshness.",
         tier=4,
-        str_transplant="You notice the \"Make Me Pretty, I'm Begging You\" option on the menu and decide to go for broke. You are filled with experimental pheromones, and your undergo intense botoxing and head rearrangement. Coming out of the procedure, your face is completely unrecognizable, but you nonetheless have an urge to literally go fuck yourself. Just to top things off, the doctor uses your jawline to cut a pane of glass clean in half.\n\nYou have developed the mutation **Unnatural Charisma**. 20% capping increase and +500 freshness.",
+        str_transplant="You notice the \"Make Me Pretty, I'm Begging You\" option on the menu and decide to go for broke. You are filled with experimental pheromones, and your undergo intense botoxing and head rearrangement. Coming out of the procedure, your face is completely unrecognizable, but you nonetheless have an urge to literally go fuck yourself. Just to top things off, the doctor uses your jawline to cut a pane of glass clean in half.\n\nYou have developed the mutation **Unnatural Charisma**. +1 capping speed and +500 freshness.",
     ),
     EwMutationFlavor(
         id_mutation=ewcfg.mutation_id_ditchslap,
