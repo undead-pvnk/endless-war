@@ -1108,18 +1108,15 @@ async def capture_tick(id_server):
             district_name = district
             dist = EwDistrict(id_server=id_server, district=district_name)
 
+            # if it has a lock and isnt surrounded by friendly districts, degrade the lock
             if dist.time_unlock > 0 and not dist.all_neighbors_friendly():
                 responses = dist.change_capture_lock(progress=-ewcfg.capture_tick_length)
                 resp_cont_capture_tick.add_response_container(responses)
                 dist.persist()
 
+            # If a lock is active, or if it is surrounded, skip this district for capping calculations
             if dist.time_unlock > 0:
                 continue
-
-            # no more automatic capping
-            continue
-
-            controlling_faction = dist.controlling_faction
 
             gangsters_in_district = dist.get_players_in_district(min_slimes=ewcfg.min_slime_to_cap, life_states=[ewcfg.life_state_enlisted], ignore_offline=True)
 
@@ -1140,6 +1137,7 @@ async def capture_tick(id_server):
             # number of players actively capturing
             num_capturers = 0
 
+            # list of players contributing to capping, who need stats tracked
             dc_stat_increase_list = []
 
             # checks if any players are in the district and if there are only players of the same faction, i.e. progress can happen
@@ -1150,6 +1148,7 @@ async def capture_tick(id_server):
 
                 mutations = user_data.get_mutations()
 
+                # dont count offline players
                 try:
                     player_online = server.get_member(player_id).status != discord.Status.offline
                 except:
@@ -1170,29 +1169,37 @@ async def capture_tick(id_server):
                         if ewcfg.mutation_id_lonewolf in mutations and len(gangsters_in_district) == 1:
                             player_capture_speed *= 2
                         if ewcfg.mutation_id_patriot in mutations:
-                            player_capture_speed *= 2
+                            player_capture_speed *= 1.5
+                        if ewcfg.mutation_id_unnaturalcharisma in mutations:
+                            player_capture_speed += 1
 
+                        #ewutils.logMsg("Adding {} to Capture Speed of {} for player {}".format(player_capture_speed, capture_speed, player_id))
                         capture_speed += player_capture_speed
                         num_capturers += 1
                         dc_stat_increase_list.append(player_id)
 
             if faction_capture not in ['both', None]:  # if only members of one faction is present
                 if district_name in poi_static.capturable_districts:
+                    # 10% extra/less speed per adjacent district under same faction if being reinforced/taken
                     friendly_neighbors = dist.get_number_of_friendly_neighbors()
                     if dist.all_neighbors_friendly():
                         capture_speed = 0
-                    elif dist.controlling_faction == faction_capture:
+                    if dist.controlling_faction == faction_capture:
                         capture_speed *= 1 + 0.1 * friendly_neighbors
                     else:
                         capture_speed /= 1 + 0.1 * friendly_neighbors
 
+                    # get current capping progress
                     capture_progress = dist.capture_points
 
+                    # set calculated progress negative if it was being captured by the other gang
                     if faction_capture != dist.capturing_faction:
                         capture_progress *= -1
 
+                    # properly scale the speed to the scale of points needed
                     capture_speed *= ewcfg.baseline_capture_speed
 
+                    # Track capturer stats as long as they arent overcapping
                     if dist.capture_points < dist.max_capture_points:
                         for stat_recipient in dc_stat_increase_list:
                             ewstats.change_stat(
@@ -1202,10 +1209,12 @@ async def capture_tick(id_server):
                                 n=ewcfg.capture_tick_length * capture_speed
                             )
 
+                    # if it was already being captured by the currently capturing faction
                     if faction_capture == dist.capturing_faction:  # if the faction is already in the process of capturing, continue
                         responses = dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture, num_capturers)
                         resp_cont_capture_tick.add_response_container(responses)
 
+                    # otherwise, if it has zero points and is uncontrolled
                     elif dist.capture_points == 0 and dist.controlling_faction == "":  # if it's neutral, start the capture
                         responses = dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture, num_capturers)
                         resp_cont_capture_tick.add_response_container(responses)
@@ -1219,8 +1228,7 @@ async def capture_tick(id_server):
 
                     dist.persist()
 
-
-# await resp_cont_capture_tick.post()
+    return await resp_cont_capture_tick.post()
 
 
 """
@@ -1275,10 +1283,11 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
     for id_district in poi_static.capturable_districts:
         district = EwDistrict(id_server=id_server, district=id_district)
 
-        district.decay_capture_points()
-        # resp_cont_decay_loop.add_response_container(responses)
+        responses = district.decay_capture_points()
+        resp_cont_decay_loop.add_response_container(responses)
         district.persist()
-# await resp_cont_decay_loop.post()
+
+    return await resp_cont_decay_loop.post()
 
 """ Good ol' Clock Tick Loop. Handles everything that has to occur on an in-game hour. (15 minutes)"""
 

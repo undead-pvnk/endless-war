@@ -497,6 +497,14 @@ async def look(cmd):
                                                                                                    )
                                                                                                    ))
 
+    # if it's a subzone, check who owns the actual district
+    if poi.is_subzone:
+        controlled_poi = poi_static.id_to_poi.get(poi.mother_districts[0])
+        controlled_data = EwDistrict(district=controlled_poi.id_poi, id_server=user_data.id_server)
+    else:
+        controlled_data = district_data
+
+    capped_resp = "This district is controlled by {}.\n\n".format("the " + controlled_data.controlling_faction.capitalize() if controlled_data.controlling_faction != "" else "no one")
     slimes_resp = get_slimes_resp(district_data)
     players_resp = get_players_look_resp(user_data, district_data)
     enemies_resp = get_enemies_look_resp(user_data, district_data)
@@ -544,7 +552,8 @@ async def look(cmd):
 
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(
             cmd.message.author,
-            "{}{}{}{}{}{}{}".format(
+            "{}{}{}{}{}{}{}{}".format(
+                capped_resp,
                 slimes_resp,
                 players_resp,
                 slimeoids_resp,
@@ -569,6 +578,14 @@ async def survey(cmd):
     market_data = EwMarket(id_server=user_data.id_server)
     poi = poi_static.id_to_poi.get(user_data.poi)
 
+    # if it's a subzone, check who owns the actual district
+    if poi.is_subzone:
+        controlled_poi = poi_static.id_to_poi.get(poi.mother_districts[0])
+        controlled_data = EwDistrict(district=controlled_poi.id_poi, id_server=user_data.id_server)
+    else:
+        controlled_data = district_data
+
+    capped_resp = "This district is controlled by {}.\n\n".format("the " + controlled_data.controlling_faction.capitalize() if controlled_data.controlling_faction != "" else "no one")
     slimes_resp = get_slimes_resp(district_data)
     players_resp = get_players_look_resp(user_data, district_data)
     enemies_resp = get_enemies_look_resp(user_data, district_data)
@@ -588,6 +605,7 @@ async def survey(cmd):
             "You stand {} {}.\n\n{}{}{}{}{}".format(
                 poi.str_in,
                 poi.str_name,
+                capped_resp,
                 slimes_resp,
                 players_resp,
                 slimeoids_resp,
@@ -1325,7 +1343,7 @@ async def surveil(cmd):
 
     for district in districts:
         dist_obj = EwDistrict(id_server=cmd.guild.id, district=district.id_poi)
-        if dist_obj.capture_points >= ewcfg.limit_influence[dist_obj.property_class] and dist_obj.cap_side == 'slimecorp':
+        if dist_obj.capture_points >= ewcfg.max_capture_points[dist_obj.property_class] and dist_obj.cap_side == 'slimecorp':
             players.extend(dist_obj.get_players_in_district(life_states=[ewcfg.life_state_enlisted]))
 
     if len(players) > 0:

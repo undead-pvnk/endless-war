@@ -4,7 +4,7 @@ from . import districtcmds
 cmd_map = {
 
     # Check your current POI capture progress
-    ewcfg.cmd_capture_progress: districtcmds.capture_progress,
+    #ewcfg.cmd_capture_progress: districtcmds.capture_progress,
 
     # Change your current POI capture progress
     # ewcfg.cmd_annex: cmds.annex,

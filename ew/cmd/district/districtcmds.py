@@ -35,8 +35,8 @@ async def capture_progress(cmd):
     else:
         response += "Nobody has staked a claim to this district yet."
 
-    response += "\n\n**Current influence: {:,}**\nMinimum influence: {:,}\nMaximum influence: {:,}\nPercentage to maximum influence: {:,}%".format(abs(district_data.capture_points), int(ewcfg.min_influence[district_data.property_class]), int(ewcfg.limit_influence[district_data.property_class]),
-                                                                                                                                                   round((abs(district_data.capture_points) * 100 / (ewcfg.limit_influence[district_data.property_class])), 1))
+    response += "\n\n**Current influence: {:,}**\nMaximum influence: {:,}\nPercentage to maximum influence: {:,}%".format(abs(district_data.capture_points), int(ewcfg.max_capture_points[district_data.property_class]),
+                                                                                                                                                   round((abs(district_data.capture_points) * 100 / (ewcfg.max_capture_points[district_data.property_class])), 1))
 
     # if district_data.time_unlock > 0:
 
