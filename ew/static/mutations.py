@@ -350,7 +350,7 @@ mutations = [
         str_describe_self="You are absolutely fearless due to **Nerves of Steel**.",
         str_describe_other="They are absolutely fearless due to **Nerves of Steel**.",
         str_acquire="You feel a sudden coldness sinking into the back of your head. Parts of your brain rapidly shut down, but you have no idea which ones are going because you can no longer access them. Without thinking, you run a knife down your hand, and although it's painful, you're completely detatched from the sensation. A gun to your head? No fear. If you die, you die. You have developed the mutation **Nerves of Steel**. As a juvie, you can play russian roulette and commit suicide.",
-        tier=6,
+        tier=1,
         str_transplant="Dr. Dusttrap decides to take what she calls \"a traditional approach\". She takes out a syringe full of neurotoxin and pokes it right into your noggin. She tells you she's going to disable the part of your brain that processes fear, but the fact she's constantly referencing her brain anatomy chart is concerning. She manages to make you fearless, but sadly at the expense of a few precious childhood memories.\n\nYou have developed the mutation **Nerves of Steel**. As a juvie, you can play russian roulette and commit suicide.",
     ),
     EwMutationFlavor(
