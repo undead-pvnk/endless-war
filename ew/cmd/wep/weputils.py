@@ -72,6 +72,8 @@ class EwEffectContainer:
             hit_chance_mod = 0,
             crit_mod = 0,
             market_data = None,
+            explode = False,
+            vax = False,
             # sap_damage = 0,
             # sap_ignored = 0,
     ):
@@ -87,6 +89,11 @@ class EwEffectContainer:
         self.hit_chance_mod = hit_chance_mod
         self.crit_mod = crit_mod
         self.market_data = market_data
+        self.explode = explode
+        # Find a way at some point to pass these in on initialization if you NEEEEEED to
+        self.apply_status = {}
+        self.mass_apply_status = None
+        self.vax = vax
 
 
 # self.sap_damage = sap_damage
@@ -1279,7 +1286,7 @@ def apply_attack_modifiers(ctn, hitzone, attacker_mutations, target_mutations, t
     ctn.slimes_spent = 0 if attacker_status_mods['no_cost'] else ctn.slimes_spent
 
     # Note in the container whether or not to apply burn for NapalmSnot
-    if (ewcfg.mutation_id_napalmsnot in attacker_mutations and ewcfg.mutation_id_napalmsnot not in target_mutations) and not (ewcfg.mutation_id_airlock in target_mutations and ctn.market_data.weather != ewcfg.weather_rainy):
+    if (ewcfg.mutation_id_napalmsnot in attacker_mutations and ewcfg.mutation_id_napalmsnot not in target_mutations) and not (ewcfg.mutation_id_airlock in target_mutations and ctn.market_data.weather == ewcfg.weather_rainy):
         ctn.apply_status.update({ewcfg.status_burning_id: ewcfg.mutation_id_napalmsnot})
 
     # Tell the rest of the function to vaccinate if it needs to, this was status effects dont need to be grabbed elsewhere
