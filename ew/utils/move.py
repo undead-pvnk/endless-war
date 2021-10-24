@@ -525,10 +525,10 @@ async def send_gangbase_messages(server_id, clock):
     casino_end = "Aww, Lucy left."
 
     response = ""
-    if clock == 3:
-        response = "The police are probably asleep, the lazy fucks. It's a good time for painting the town!"
-    elif clock == 11:
-        response = "Spray time's over, looks like the cops are back out. Fuck those guys."
+    #if clock == 3:
+    #    response = "The police are probably asleep, the lazy fucks. It's a good time for painting the town!"
+    #elif clock == 11:
+    #    response = "Spray time's over, looks like the cops are back out. Fuck those guys."
     if random.randint(1, 50) == 2:
         lucky_lucy = 1
 
