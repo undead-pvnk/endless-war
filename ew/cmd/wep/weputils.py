@@ -87,6 +87,8 @@ class EwEffectContainer:
         self.hit_chance_mod = hit_chance_mod
         self.crit_mod = crit_mod
         self.market_data = market_data
+        self.apply_status = {}
+        self.mass_apply_status = {}
 
 
 # self.sap_damage = sap_damage
@@ -107,7 +109,7 @@ def apply_status_bystanders(user_data = None, value = 0, life_states = None, fac
 
             if market_data.weather == ewcfg.weather_rainy and status == ewcfg.status_burning_id:
                 if ewcfg.mutation_id_napalmsnot in bystander_mutation or (ewcfg.mutation_id_airlock in bystander_mutation): 
-                    return
+                    continue
                 else:
                     value = value // 2
         
