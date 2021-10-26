@@ -645,3 +645,6 @@ def item_drop(
         bknd_item.give_item(id_user=dest, id_server=item_data.id_server, id_item=item_data.id_item)
     except:
         ewutils.logMsg("Failed to drop item {}.".format(id_item))
+
+
+
