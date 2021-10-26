@@ -5496,7 +5496,7 @@ sacrifice_rates = {
 'monsterbones':[30, "Animal sacrifice is good, but maybe a little too ethical for the eldritch horrors downstairs."],
 'dinoslimemeat':[25, "Animal sacrifice is good, but maybe a little too ethical for the eldritch horrors downstairs."],
 'bloodcabbages':[50, "Blood for the blood god."],
-'bloodstone':[12000, "We are eternally grateful for your generous donation. We shall feed for centuries on it."],
+'bloodstone':[1200, "We are eternally grateful for your generous donation. We shall feed for centuries on it."],
 'bloodcabbagecoleslaw':[-100, "You sacrifice cole slaw to the undead. Seriously, what the fuck were you thinking?"],
 'coleslaw': [-100, "You sacrifice cole slaw to the undead. Seriously, what the fuck were you thinking?"],
 'bloodtransfusion':[170, "Blood for the blood god."],
