@@ -227,6 +227,7 @@ cmd_map = {
 if ewcfg.dh_active:
     cmd_map[ewcfg.cmd_spook] = cmdcmds.spook
 
+
 dm_cmd_map = {
 
     # !help

@@ -1114,6 +1114,7 @@ cmd_dance_alt = cmd_prefix + 'vance'
 cmd_propaganda = cmd_prefix + 'propaganda'
 cmd_coinflip = cmd_prefix + 'co1nfl1p'
 cmd_spook = cmd_prefix + 'spook'
+cmd_sacrifice = cmd_prefix + 'sacrifice'
 cmd_makecostume = cmd_prefix + 'makecostume'
 cmd_trick = cmd_prefix + 'trick'
 cmd_treat = cmd_prefix + 'treat'
@@ -4095,7 +4096,7 @@ item_unique_commands = {
 holidaycommands = {
     "swildermuk": "",
     "slimernalia": "",
-    "doublehalloween": "DOUBLE HALLOWEEN:\n!makecostume \"<Name>\" \"<<Description\" Create a Double Halloween costume using a costume kit.\n!crush <candy> Crush candy to get Double Halloween Grist.\n!trickortreat <player> Get candy in a district, or from a player's apartment if you @ them.",
+    "doublehalloween": "DOUBLE HALLOWEEN:\n!makecostume \"<Name>\" \"<<Description\" Create a Double Halloween costume using a costume kit.\n!crush <candy> Crush candy to get Double Halloween Grist.\n!trickortreat <player> Get candy in a district, or from a player's apartment if you @ them.\n!sacrifice <item>: In ENDLESS WAR, sacrifice an item to appease...someone. Probably an elder god.",
 }
 
 district_unique_commands = {
@@ -5471,6 +5472,49 @@ rating_flavor = [
     "Brimming with respect",
     "Glowing with admiration",
 ]
+
+id_item_convert ={
+    it_furniture:'id_furniture',
+    it_cosmetic:'id_cosmetic',
+    it_weapon:'weapon_type',
+    it_food : 'id_food',
+    it_item: 'id_item',
+    it_questitem:'qitem_name'
+}
+
+sacrifice_rates = {
+'scalp':[30, "You make a little effigy out of the scalp and toss it on the altar."],
+'soul':[1000, "Literally without thinking at all, you decide to offer your soul to the devil in exchange for a chance at getting your soul. Your idiocy is rewarded with like a billion points."],
+'slimepoudrin':[5, "Sure, slime makes sense as a sacrifice."],
+'water':[-1, 'What the fuck kind of sacrifice is a glass of water? Not even slime, just kill me now.' ],
+'sord':[-1, 'https://cdn.discordapp.com/attachments/608051831775428648/902359140607885392/sweets-meme.jpg \n!spook'],
+'barbecuesauce':[-5, "The nameless dieties you're sacrificing to don't really like barbecue sauce."],
+'butler':[150, "Human sacrifice? Let's go."],
+'reanimatedcorpse':[300, "Human sacrifice? Let's go."],
+'humancorpse':[150, "Human sacrifice? Let's go."],
+'dragonsoul':[100, "Animal souls aren't as good as the real deal. You wouldn't fuck an animal, right? It's like that but with souls."],
+'monsterbones':[30, "Animal sacrifice is good, but maybe a little too ethical for the eldritch horrors downstairs."],
+'dinoslimemeat':[25, "Animal sacrifice is good, but maybe a little too ethical for the eldritch horrors downstairs."],
+'bloodcabbages':[50, "Blood for the blood god."],
+'bloodstone':[12000, "We are eternally grateful for your generous donation. We shall feed for centuries on it."],
+'bloodcabbagecoleslaw':[-100, "You sacrifice cole slaw to the undead. Seriously, what the fuck were you thinking?"],
+'coleslaw': [-100, "You sacrifice cole slaw to the undead. Seriously, what the fuck were you thinking?"],
+'bloodtransfusion':[170, "Blood for the blood god."],
+'normal':[1, "You toss your worldly posessions to the altar."],
+'brick': [-5, "Can't dodge a valuable gift with a brick."],
+'humanskeleton':[100, "Human sacrifice? Let's go."],
+'dinoslimeskeleton':[650, "You throw the priceless piece of history to be immolated on the stone slab."],
+'slimeadactylskeleton':[650, "You throw the priceless piece of history to be immolated on the stone slab."],
+'mammoslimeskeleton':[650, "You throw the priceless piece of history to be immolated on the stone slab."],
+'slimeasaurusskeleton':[650, "You throw the priceless piece of history to be immolated on the stone slab."],
+'slimedragonskeleton':[650, "You throw the priceless piece of history to be immolated on the stone slab."],
+'leatherchair':[153, "It's furniturized, but it oughta do the job well enough."],
+'leatherlamp':[120, "It's furniturized, but it oughta do the job well enough."],
+'leatherdesk':[150, "It's furniturized, but it oughta do the job well enough."],
+'leatherbed':[390, "It's furniturized, but it oughta do the job well enough."],
+'leathercouch':[350, "It's furniturized, but it oughta do the job well enough."],
+'civilianscalp':[50, "You make a little effigy out of the scalp and toss it on the altar."]
+}
 
 zine_cost = 10000
 minimum_pages = 5

@@ -18,6 +18,7 @@ from ew.utils import move as move_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils import stats as ewstats
 from ew.utils.combat import EwUser
+from ew.utils.item import EwItem
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
@@ -544,4 +545,57 @@ async def crystalize_negapoudrin(cmd):
         user_data.change_slimes(n=-ewcfg.slimes_to_crystalize_negapoudrin, source=ewcfg.source_spending)
         user_data.persist()
         response = "The cathedral's bells toll in the distance, and a rumbling {} can be heard echoing from deep within the sewers. A negapoudrin has formed.".format(ewcfg.cmd_boo)
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def sacrifice(cmd):
+    user_data = EwUser(member = cmd.message.author)
+
+    if len(cmd.tokens) == 1:
+        response = "Hey, don't hesitate now. You better cough up something to sacrifice."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id)
+    item_property = ''
+
+
+    if ewcfg.dh_active:
+        if user_data.poi != 'endlesswar':
+            response = 'The altars are next to ENDLESS WAR. Sacrifice your worldly possessions over there.'
+        elif not item_sought:
+            response = "Are you sure you have that item?"
+        else:
+            item = EwItem(item_sought.get('id_item'))
+            if item.soulbound == True:
+                response = "You try to unbind the {} from your soul to place it on the altar, but it refuses to let go of you. It's crazy that even inanimate objects are smarter than you."
+            else:
+                item.id_owner = '{}sacrificed'.format(user_data.id_user)
+                item.persist()
+                property_type = ewcfg.id_item_convert.get(item.item_type)
+                print('')
+                if item.item_props.get('context') == 'slimeoidheart':
+                    property_type = 'slimeoidheart'
+                elif property_type is None:
+                    property_type = 'normal'
+                else:
+                    pass
+
+                item_name = item.item_props.get(property_type)
+                if property_type == 'normal':
+                    item_name = 'normal'
+                print(item_name)
+                arr_sac = ewcfg.sacrifice_rates.get(item_name)
+                print(arr_sac)
+
+                if arr_sac == None and item.item_type == ewcfg.it_food:
+                    arr_sac = [3, "Tasty."]
+                if arr_sac == None:
+                    arr_sac = [1, "You toss your worldly posessions to the altar."]
+
+                response = "{} The {} bursts into flames, vanishing before your very eyes. Favor increased by {}.".format(arr_sac[1], item_sought.get('name'), arr_sac[0])
+                ewstats.change_stat(id_server=cmd.guild.id, id_user=cmd.message.author.id, metric = 'sacrificerate', n=arr_sac[0])
+    else:
+        response = "Now's a bad time for that."
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
