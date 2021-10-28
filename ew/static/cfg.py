@@ -2528,6 +2528,7 @@ leaderboard_shamblers_killed = "MOST SHAMBLER KILLS"
 # SWILLDERKMUK
 leaderboard_gambit_high = "HIGHEST GAMBIT"
 leaderboard_gambit_low = "LOWEST GAMBIT"
+leaderboard_sacrificial = "SACRIFICIAL LAMBS"
 
 # leaderboard entry types
 entry_type_player = "player"

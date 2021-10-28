@@ -54,7 +54,7 @@ async def post_leaderboards(client = None, server = None):
     topzines = make_zines_top_board(server=server.id)
     resp_cont.add_channel_response(leaderboard_channel, topzines)
 
-    topfavor = make_statdata_board(server=server.id, category='sacrificerate', title ='🗡 ▓▓▓▓▓ SACRIFICIAL LAMBS ▓▓▓▓▓ 🗡')
+    topfavor = make_statdata_board(server=server.id, category='sacrificerate', title =ewcfg.leaderboard_sacrificial)
     resp_cont.add_channel_response(leaderboard_channel, topfavor)
 
     await resp_cont.post()
@@ -629,6 +629,10 @@ def board_header(title):
 
     elif title == ewcfg.leaderboard_fashion:
         emote = ewcfg.emote_111
+        bar += " "
+
+    elif title == ewcfg.leaderboard_sacrificial:
+        emote = "🗡"
         bar += " "
 
     if emote == None and emote2 == None:

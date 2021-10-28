@@ -262,6 +262,17 @@ cosmetic_items_list = [
         is_hat = True,
     ),
     EwCosmeticItem(
+        id_cosmetic="eldritchsoul",
+        str_name="eldritch soul",
+        str_desc="The inside of this bottle is pitch black, and occasionally you see an insect-like appendage rap against the glass. If you listen to it closely you can hear it whispering tesseracts and imaginary numbers.",
+        rarity="Patrician",
+        durability=2500000,
+        style="cool",
+        acquisition="eldritchsoul",
+        price=50000,
+        vendors=[],
+    ),
+    EwCosmeticItem(
         id_cosmetic = "jestershat",
         str_name = "jester's hat",
         str_desc = "A ridiculous, multi-colored hat with four bells dangling from protruding sleeves.",
