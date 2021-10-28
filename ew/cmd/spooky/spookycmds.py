@@ -599,3 +599,9 @@ async def sacrifice(cmd):
     else:
         response = "Now's a bad time for that."
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+async def favor(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    favor = ewstats.get_stat(user=user_data, metric='sacrificerate')
+    response = "You have {} favor with the ancient eldritch gods.".format(favor)
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
