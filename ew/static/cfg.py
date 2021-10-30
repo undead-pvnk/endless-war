@@ -64,7 +64,7 @@ playerstats_list = [
     stat_speed,
 ]
 
-slimeoid_tick_length = 1  # 5 minutes
+slimeoid_tick_length = 5 * 60 # 5 minutes
 
 # slimeoid life states
 slimeoid_state_none = 0
