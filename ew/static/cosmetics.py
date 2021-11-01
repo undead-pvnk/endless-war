@@ -3,6 +3,8 @@ import os
 
 from ..model.item import EwCosmeticItem
 
+unique_smeltables = ['skinsuit', 'eldritchsoul']
+
 cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "propellerhat",

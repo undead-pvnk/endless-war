@@ -3499,7 +3499,7 @@ EwPoi(
         vendors=[],
         is_subzone=False,
         mother_districts=["westoutskirts"],
-        neighbors={"westoutskirts": 20},
+        neighbors={"westoutskirts": 60},
         wikipage=""
     ),
 ]

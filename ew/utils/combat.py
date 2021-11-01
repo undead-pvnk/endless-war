@@ -973,7 +973,7 @@ class EwEnemy(EwEnemyBase):
             for destination in all_destinations:
 
                 destination_poi_data = poi_static.id_to_poi.get(destination)
-                if destination_poi_data.is_subzone or destination_poi_data.is_gangbase:
+                if destination_poi_data.is_subzone or destination_poi_data.is_gangbase or not destination_poi_data.pvp:
                     destinations.remove(destination)
 
                 if self.poi in poi_static.outskirts_depths:

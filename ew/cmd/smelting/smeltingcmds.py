@@ -93,7 +93,7 @@ async def smelt(cmd):
                         style = ewcfg.style_cool
 
                     for result in static_cosmetics.cosmetic_items_list:
-                        if result.style == style and result.acquisition == ewcfg.acquisition_smelting:
+                        if result.style == style and result.acquisition == ewcfg.acquisition_smelting and result.id_cosmetic not in static_cosmetics.unique_smeltables:
                             cosmetics_list.append(result)
                         else:
                             pass
@@ -259,7 +259,8 @@ async def find_recipes_by_item(cmd):
                         or item.id_recipe == "smartcosmetic" and cosmetics.cosmetic_map[sought_item].style != ewcfg.style_smart
                         or item.id_recipe == "beautifulcosmetic" and cosmetics.cosmetic_map[sought_item].style != ewcfg.style_beautiful
                         or item.id_recipe == "cutecosmetic" and cosmetics.cosmetic_map[sought_item].style != ewcfg.style_cute
-                        or item.id_recipe == "coolcosmetic" and cosmetics.cosmetic_map[sought_item].style != ewcfg.style_cool):
+                        or item.id_recipe == "coolcosmetic" and cosmetics.cosmetic_map[sought_item].style != ewcfg.style_cool
+                        or (item.id_recipe in ["toughcosmetic", "smartcosmetic", "beautifulcosmetic", "cutecosmetic", "coolcosmetic"] and cosmetics.cosmetic_map[sought_item].id_cosmetic in cosmetics.unique_smeltables)):
                     list_length -= 1
                     continue
                 else:

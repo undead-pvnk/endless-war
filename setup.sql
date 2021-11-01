@@ -63,6 +63,7 @@ CREATE TABLE users (
 	rand_seed bigint NOT NULL DEFAULT '0',
 	verified boolean NOT NULL DEFAULT '0',	
 	gender varchar(16) NOT NULL DEFAULT 'boi',
+	hogtied smallint NOT NULL DEFAULT '0',
 
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
