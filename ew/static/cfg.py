@@ -26,6 +26,7 @@ territory_time_gain = 10
 # A variable which is used to determine how certain functions of enemies are to perform
 gvs_active = False
 dh_active = True
+dh_stage = 3
 # The max amount of degradation a district can have before it is shambled completely
 district_max_degradation = 10000
 
@@ -1182,6 +1183,11 @@ cmd_capture_progress = cmd_prefix + 'progress'
 cmd_changespray = cmd_prefix + 'changespray'
 cmd_changespray_alt1 = cmd_prefix + 'changetag'
 cmd_tag = cmd_prefix + 'tag'
+cmd_observe = cmd_prefix + 'observe'
+cmd_launch  =cmd_prefix + 'launch'
+cmd_land = cmd_prefix + 'land'
+cmd_beammeup = cmd_prefix + 'beammeup'
+cmd_abduct = cmd_prefix + 'abduct'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
 cmd_teleport_player = cmd_prefix + 'tpp'
@@ -4194,7 +4200,9 @@ enemy_attacktype_prairieking = 'prairieking'
 enemy_attacktype_tinyclaws = 'tinyclaws'
 enemy_attacktype_whale = 'whale'
 enemy_attacktype_phoenix = 'phoenix'
-
+enemy_attacktype_graspers = 'graspers'
+enemy_attacktype_raygun = 'raygun'
+enemy_attacktype_feed = 'feed'
 enemy_attacktype_amateur = 'amateur'
 
 enemy_attacktype_gvs_g_seeds = 'g_seeds'
@@ -4238,6 +4246,10 @@ enemy_type_mammoslime = 'mammoslime'
 enemy_type_rivalhunter = 'rivalhunter'
 # Rare enemies
 enemy_type_microslime = 'microslime'
+enemy_type_grey = 'grey'
+enemy_type_tangeloid = 'tangeloid'
+enemy_type_alienscum = 'alienscum'
+
 enemy_type_mammoslimebull = 'mammoslimebull'
 enemy_type_slimeofgreed = 'slimeofgreed'
 enemy_type_microgullswarm = 'microgullswarm'
@@ -4480,6 +4492,27 @@ enemy_drop_tables = {
         {item_id_dinoslimemeat: [100, 1, 1]},
         {item_id_tradingcardpack: [100, 1, 1]},
         {item_id_monofilamentfragment: [100, 1, 1]},
+        {"alienscalp": [100, 1, 1]},
+    ],
+    enemy_type_grey: [
+        {item_id_slimepoudrin: [100, 1, 1]},
+        {"taco": [33, 1, 1]},
+        {"chickenbucket": [33, 1, 1]},
+        {"pepperoni": [33, 1, 1]},
+        {"alienscalp": [100, 1, 1]},
+    ],
+    enemy_type_tangeloid: [
+        {item_id_slimepoudrin: [100, 1, 1]},
+        {"tangeloidraygun": [100, 1, 1]},
+        {'alienbattery': [20, 1, 1]},
+        {"alienscalp": [100, 1, 1]},
+    ],
+    enemy_type_alienscum: [
+        {item_id_slimepoudrin: [100, 1, 1]},
+        {"alienbattery": [20, 1, 1]},
+        {item_id_dinoslimemeat: [100, 1, 1]},
+        {item_id_civilianscalp: [50, 1, 1]},
+        {"alienscalp": [100, 1, 1]},
     ],
     enemy_type_civilian: [
         {item_id_slimepoudrin: [20, 1, 1]},
@@ -4579,6 +4612,30 @@ enemy_data_table = {
         "displayname": "Microslime",
         "raredisplayname": "Irridescent Microslime",
         "aliases": ["micro", "pinky"]
+    },
+    enemy_type_grey: {
+        "slimerange": [250000, 750000],
+        "ai": enemy_ai_attacker_b,
+        "attacktype": enemy_attacktype_graspers,
+        "displayname": "Grey Alien",
+        "raredisplayname": "Grey with a Burger King Crown On Its Head",
+        "aliases": ["greys", "galien", "unnervingfightingoperator", "unnerving"]
+    },
+    enemy_type_tangeloid: {
+        "slimerange": [250000, 500000],
+        "ai": enemy_ai_attacker_a,
+        "attacktype": enemy_attacktype_raygun,
+        "displayname": "Tangeloid",
+        "raredisplayname": "Squiggled Tangeloid",
+        "aliases": ["tangela", "tangle", "millite", "milly", "squiggle", "squig"]
+    },
+    enemy_type_alienscum: {
+        "slimerange": [500000, 750000],
+        "ai": enemy_ai_attacker_a,
+        "attacktype": enemy_attacktype_feed,
+        "displayname": "Alien Scum",
+        "raredisplayname": "Unhinged Alien Psycho",
+        "aliases": ["scum", "ascum", "psycho", "unhinged"]
     },
     enemy_type_slimeofgreed: {
         "slimerange": [20000, 100000],
@@ -5562,7 +5619,8 @@ lock_states = {
     "n9door": ["n9office", "n4office"],
     "n10door": ["n10office", "n4office"],
     "n11door": ["n11office", "n4office"],
-    "groundfloordoor": ["slimecorphq", "n10office"]
+    "groundfloordoor": ["slimecorphq", "n10office"],
+    "shipstate": ["ufoufo", "westoutskirts"]
 }
 
 region_lock_states = {

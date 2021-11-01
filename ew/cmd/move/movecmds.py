@@ -510,6 +510,7 @@ async def look(cmd):
     enemies_resp = get_enemies_look_resp(user_data, district_data)
     slimeoids_resp = get_slimeoids_resp(cmd.guild.id, poi)
     soul_resp = ""
+    extra_resp = ""
 
     if slimeoids_resp != "":
         slimeoids_resp = "\n" + slimeoids_resp
@@ -532,6 +533,14 @@ async def look(cmd):
             ad_resp = format_ad_response(ad_data)
             ad_formatting = "\n\n..."
 
+    if poi.id_poi in['westoutskirts', 'ufoufo'] and ewcfg.dh_active:
+        state = EwGamestate(id_server=user_data.id_server, id_state='shipstate')
+        if poi.id_poi == 'westoutskirts' and state.bit == 1:
+            extra_resp = '\nThere\'s a UFO landed here.'
+        if poi.id_poi == 'ufoufo' and state.bit == 1:
+            extra_resp = 'The UFO is currently landed.'
+
+
     # post result to channel
     if poi != None:
         wikichar = '<{}>'.format(poi.wikipage) if poi.wikipage != '' else ''
@@ -552,13 +561,14 @@ async def look(cmd):
 
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(
             cmd.message.author,
-            "{}{}{}{}{}{}{}{}".format(
+            "{}{}{}{}{}{}{}{}{}".format(
                 capped_resp,
                 slimes_resp,
                 players_resp,
                 slimeoids_resp,
                 enemies_resp,
                 soul_resp,
+                extra_resp,
                 ("\n\n{}".format(
                     ewutils.weather_txt(market_data)
                 ) if cmd.guild != None else ""),

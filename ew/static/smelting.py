@@ -1671,7 +1671,45 @@ smelting_recipe_list = [
         ingredients={
             'partypoppeppers': 1,
         },
-        products=['partypopper']
+        products=['partypopper']),
+    EwSmeltingRecipe(
+        id_recipe="skinsuit",
+        str_name="skinsuit",
+        alias=[
+            'alien skinsuit',
+            'alien costume',
+            'aliencostume'
+        ],
+        ingredients={
+            'alienscalp': 10,
+        },
+        products=['skinsuit']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="batterypack",
+        str_name="battery pack",
+        alias=[
+            'battery pack',
+            'battery string',
+            'bigbattery',
+            'big battery'
+        ],
+        ingredients={
+            'alienbattery': 5,
+        },
+        products=['batterypack']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="alienbattery",
+        str_name="alien battery",
+        alias=[
+            'battery',
+            'AA'
+        ],
+        ingredients={
+            'tangeloidraygun': 1,
+        },
+        products=['alienbattery']
     )
 ]
 
@@ -1688,6 +1726,7 @@ if ewcfg.dh_active:
             },
             products = ['ticket']
          ))
+
 
 
 

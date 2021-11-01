@@ -30,6 +30,7 @@ from ..backend import fish as bknd_fish
 from ..backend import ads as bknd_ads
 from ..backend.market import EwMarket
 from ..backend.player import EwPlayer
+from ..backend.dungeons import EwGamestate
 from ..backend.status import EwEnemyStatusEffect
 from ..backend.status import EwStatusEffect
 from ..backend.worldevent import EwWorldEvent
@@ -796,18 +797,26 @@ async def decrease_food_multiplier():
         await asyncio.sleep(5)
 
 
-async def spawn_enemies(id_server = None):
+async def spawn_enemies(id_server = None, debug = False):
     market_data = EwMarket(id_server=id_server)
     resp_list = []
+    chosen_type = None
+    chosen_POI = None
+
     # One in 3 chance of spawning a regular enemy in the outskirts
-    if random.randrange(3) == 0:
+
+    if random.randrange(3) == 0 or debug:
         weathertype = ewcfg.enemy_weathertype_normal
         # If it's raining, an enemy has  2/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
         if market_data.weather == ewcfg.weather_bicarbonaterain:
             if random.randrange(3) < 2:
                 weathertype = ewcfg.enemy_weathertype_rainresist
+        if ewcfg.dh_stage >=3 and ewcfg.dh_active:
+            chosen_type = random.choice([ewcfg.enemy_type_unnervingfightingoperator, ewcfg.enemy_type_grey, ewcfg.enemy_type_tangeloid, ewcfg.enemy_type_alienscum])
+            if chosen_type == ewcfg.enemy_type_unnervingfightingoperator:
+                chosen_POI = 'westoutskirts'
 
-        resp_list.append(hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_weather=weathertype))
+        resp_list.append(hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_weather=weathertype, pre_chosen_type=chosen_type, pre_chosen_poi=chosen_POI))
     # One in two chance of spawning a slimeoid trainer in either the Battle Arena or Subway
     # Why did I make this into incredibly hacky code? Because.
     if random.randrange(2) == 0:
@@ -822,14 +831,17 @@ async def spawn_enemies(id_server = None):
 
 # TODO remove after double halloween
     if ewcfg.dh_active:
-        market_data = EwMarket(id_server=id_server)
-        underworld_district = EwDistrict(district=ewcfg.poi_id_underworld, id_server=id_server)
-        enemies_count = len(underworld_district.get_enemies_in_district())
+        dhspawn = EwGamestate(id_server = id_server, id_state='dhorsemankills')
+        count = int(dhspawn.value)
+        if count < 2:
+            market_data = EwMarket(id_server=id_server)
+            underworld_district = EwDistrict(district=ewcfg.poi_id_underworld, id_server=id_server)
+            enemies_count = len(underworld_district.get_enemies_in_district())
 
-        if enemies_count == 0 and int(time.time()) > (market_data.horseman_timeofdeath + ewcfg.horseman_death_cooldown):
-            dh_resp_cont = hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_type=ewcfg.enemy_type_doubleheadlessdoublehorseman, pre_chosen_poi=ewcfg.poi_id_underworld, manual_spawn=True)
+            if enemies_count == 0 and int(time.time()) > (market_data.horseman_timeofdeath + ewcfg.horseman_death_cooldown):
+                dh_resp_cont = hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_type=ewcfg.enemy_type_doubleheadlessdoublehorseman, pre_chosen_poi=ewcfg.poi_id_underworld, manual_spawn=True)
 
-            await dh_resp_cont.post()
+                await dh_resp_cont.post()
 
 async def spawn_enemies_tick_loop(id_server):
     interval = ewcfg.enemy_spawn_tick_length
