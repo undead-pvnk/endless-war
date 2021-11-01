@@ -453,9 +453,10 @@ async def abduct(cmd):
             await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
             await fe_utils.send_message(cmd.client, target_channel, fe_utils.formatMessage(cmd.mentions[0], "You are being abducted by aliens. The ship is 20 seconds away."))
-            ewutils.active_restrictions[user_data.id_user] = 2
+            ewutils.active_restrictions[target_data.id_user] = 2
             await asyncio.sleep(20)
 
+            ewutils.active_restrictions[target_data.id_user] = 0
             ewutils.moves_active[cmd.message.author.id] = 0
             target_data.poi = 'ufoufo'
             user_data.persist()
@@ -501,6 +502,7 @@ async def beam_me_up(cmd):
         ewutils.active_restrictions[user_data.id_user] = 2
         await asyncio.sleep(20)
 
+        ewutils.active_restrictions[user_data.id_user] = 0
         ewutils.moves_active[cmd.message.author.id] = 0
         user_data.poi = 'ufoufo'
         user_data.persist()
