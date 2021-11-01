@@ -409,7 +409,7 @@ async def launch(cmd):
 
 async def abduct(cmd):
     user_data = EwUser(member=cmd.message.author)
-    item_sought = bknd_item.find_item(item_search='alienbattery', id_user=cmd.message.author.id, id_server=cmd.guild.id)
+    item_sought = bknd_item.find_item(item_search='batterypack', id_user=cmd.message.author.id, id_server=cmd.guild.id)
 
     protected = False
     cosmetics = bknd_item.inventory(id_user=user_data.id_user, id_server=cmd.guild.id,
