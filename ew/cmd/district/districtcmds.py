@@ -449,7 +449,7 @@ async def abduct(cmd):
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
             bknd_item.item_delete(id_item=item_sought.get('id_item'))
-            response = 'You plug in your battery pack and begin to abduct {} They\'re 20 seconds away.'
+            response = 'You plug in your battery pack and begin to abduct {} They\'re 20 seconds away.'.format(cmd.mentions[0].display_name)
             await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
             await fe_utils.send_message(cmd.client, target_channel, fe_utils.formatMessage(cmd.mentions[0], "You are being abducted by aliens. The ship is 20 seconds away."))
