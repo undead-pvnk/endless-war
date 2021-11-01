@@ -921,6 +921,7 @@ def spawn_enemy(
                 response = "A {} is looking for a challenge! They are accompanied by {}, a {}-foot tall {}Slimeoid.".format(
                     enemy.display_name, new_sl.name, new_sl.level, "" if new_sl.hue == "" else new_sl.hue + " ")
             else:
+                print('made it to response')
                 response = "**An enemy draws near!!** It's a level {} {}, and has {} slime.".format(enemy.level,
                                                                                                     enemy.display_name,
                                                                                                     enemy.slimes)

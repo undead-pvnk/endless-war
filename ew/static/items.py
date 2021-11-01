@@ -308,6 +308,22 @@ item_list = [
         context='player_bone',
     ),
     EwGeneralItem(
+      id_item="batterypack",
+      str_name="Battery Pack",
+      str_desc="A string of batteries taped together to fit inside a larger receptor. They're about the size of AAs, but they're labeled with some other gay alien letters.",
+      context = "batterypack"
+    ),
+    EwGeneralItem(
+        id_item="alienbattery",
+        str_name="Alien Battery",
+        str_desc="It's a battery taken out of a Tangeloid's ray gun. You think all these species use the same kind of models?"
+    ),
+    EwGeneralItem(
+        id_item="tangeloidraygun",
+        str_name="Tangeloid Ray Gun",
+        str_desc="It's a ray gun the damn dirty aliens like to use. It's ID tagged though, so you can only use the thing if you have the right nanomachines."
+    ),
+    EwGeneralItem(
         id_item=ewcfg.item_id_negapoudrin,
         str_name="negapoudrin",
         str_desc="A dense, crystalized slab of unholy negaslime.",

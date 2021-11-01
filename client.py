@@ -752,6 +752,8 @@ async def on_message(message):
 
         # FIXME debug
         # Test item creation
+        elif debug == True and cmd == (ewcfg.cmd_prefix + 'enemytick'):
+            await loop_utils.spawn_enemies(id_server=message.guild.id, debug = True)
         elif debug == True and cmd == (ewcfg.cmd_prefix + 'createtestitem'):
             item_id = bknd_item.item_create(
                 item_type='medal',
