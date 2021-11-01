@@ -3057,7 +3057,7 @@ poi_list = [
         minor_role = "nullminorrole",
         permissions = {'west-outskirts': ['read', 'send', 'connect']},
         is_outskirts = True,
-        neighbors = {'southwestoutskirts': 60, 'westoutskirtsdepths': 60, 'westoutskirtsedge': 60, 'northwestoutskirts': 60},
+        neighbors = {'southwestoutskirts': 60, 'westoutskirtsdepths': 60, 'westoutskirtsedge': 60, 'northwestoutskirts': 60, 'ufoufo':60},
         wikipage = "https://rfck.miraheze.org/wiki/Outskirts",
     ),
     EwPoi(
@@ -3135,7 +3135,7 @@ poi_list = [
         minor_role = "nullminorrole",
         permissions = {'west-outskirts-depths': ['read', 'send', 'connect']},
         is_outskirts = True,
-        neighbors = {'northwestoutskirtsdepths': 60, 'westoutskirts': 60, 'southwestoutskirtsdepths': 60, 'ufoufo':60},
+        neighbors = {'northwestoutskirtsdepths': 60, 'westoutskirts': 60, 'southwestoutskirtsdepths': 60},
         wikipage = "https://rfck.miraheze.org/wiki/Outskirts#Depths",
     ),
     EwPoi(
