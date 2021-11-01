@@ -805,7 +805,7 @@ async def spawn_enemies(id_server = None, debug = False):
 
     # One in 3 chance of spawning a regular enemy in the outskirts
 
-    if random.randrange(3) == 0 or debug:
+    if random.randrange(2) == 0 or debug:
         weathertype = ewcfg.enemy_weathertype_normal
         # If it's raining, an enemy has  2/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
         if market_data.weather == ewcfg.weather_bicarbonaterain:
@@ -814,7 +814,8 @@ async def spawn_enemies(id_server = None, debug = False):
         if ewcfg.dh_stage >=3 and ewcfg.dh_active:
             chosen_type = random.choice([ewcfg.enemy_type_unnervingfightingoperator, ewcfg.enemy_type_grey, ewcfg.enemy_type_tangeloid, ewcfg.enemy_type_alienscum])
             if chosen_type == ewcfg.enemy_type_unnervingfightingoperator:
-                chosen_POI = 'westoutskirts'
+                #chosen_POI = 'westoutskirts'
+                pass
 
         resp_list.append(hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_weather=weathertype, pre_chosen_type=chosen_type, pre_chosen_poi=chosen_POI))
     # One in two chance of spawning a slimeoid trainer in either the Battle Arena or Subway
