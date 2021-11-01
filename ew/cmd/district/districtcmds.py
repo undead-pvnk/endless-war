@@ -357,7 +357,7 @@ async def ufo_observe(cmd):
             return await ewdebug.scrutinize(cmd=cmd)
         elif poi_sought.is_street:
             response = "You try to zoom in on a specific street, but you're a little too high up to get that level of detail."
-        elif poi_sought.id_poi == 'blackpond' or (not poi_sought.is_district and not poi_sought.is_outskirts and not poi_sought.is_pier and poi_sought not in [ewcfg.poi_id_slimesendcliffs, ewcfg.poi_id_ferry, ewcfg.poi_id_sodafountain, ewcfg.poi_id_stockexchange, ewcfg.poi_id_ab_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_jr_farms]):
+        elif poi_sought.id_poi == 'blackpond' or (not poi_sought.is_district and not poi_sought.is_outskirts and not poi_sought.is_pier and poi_sought.id_poi not in [ewcfg.poi_id_slimesendcliffs, ewcfg.poi_id_ferry, ewcfg.poi_id_sodafountain, ewcfg.poi_id_stockexchange, ewcfg.poi_id_ab_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_jr_farms]):
             response = "The X-ray vision on this viewport sucks. You can't really see indoors."
         elif poi_sought.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown]:
             response = "Do you want to blow your cover, dumbass? Stop acting like a gangster. The gang bases are mostly indoors anyway."
@@ -434,11 +434,19 @@ async def abduct(cmd):
         response = "One victim at a time, please."
     elif shipstate.bit == 1:
         response = 'The ship\'s on the ground right now, it can\'t reach you.'
+
     else:
         if item_sought:
             target_data = EwUser(member = cmd.mentions[0])
             target_poi = poi_static.id_to_poi.get(target_data.poi)
             target_channel = fe_utils.get_channel(cmd.message.guild, target_poi.channel)
+
+            if target_poi.id_poi == 'blackpond' or (
+                        not target_poi.is_district and not target_poi.is_outskirts and not target_poi.is_pier and target_poi.id_poi not in [
+                    ewcfg.poi_id_slimesendcliffs, ewcfg.poi_id_ferry, ewcfg.poi_id_sodafountain,
+                    ewcfg.poi_id_stockexchange, ewcfg.poi_id_ab_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_jr_farms]):
+                response = "The tractor beam on this ship sucks. You can't really see indoors."
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
             bknd_item.item_delete(id_item=item_sought.get('id_item'))
             response = 'You plug in your battery pack and begin to abduct {} They\'re 20 seconds away.'
