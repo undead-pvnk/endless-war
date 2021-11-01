@@ -311,12 +311,14 @@ item_list = [
       id_item="batterypack",
       str_name="Battery Pack",
       str_desc="A string of batteries taped together to fit inside a larger receptor. They're about the size of AAs, but they're labeled with some other gay alien letters.",
-      context = "batterypack"
+      context = "batterypack",
+      acquisition=ewcfg.acquisition_smelting
     ),
     EwGeneralItem(
         id_item="alienbattery",
         str_name="Alien Battery",
-        str_desc="It's a battery taken out of a Tangeloid's ray gun. You think all these species use the same kind of models?"
+        str_desc="It's a battery taken out of a Tangeloid's ray gun. You think all these species use the same kind of models?",
+        acquisition=ewcfg.acquisition_smelting
     ),
     EwGeneralItem(
         id_item="tangeloidraygun",
