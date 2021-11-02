@@ -443,7 +443,7 @@ def inventory(
 	Dump out a player's inventory.
 """
 async def inventory_print(cmd):
-	resp = await cmd.client.send_message(cmd.message.author, '...')
+	resp = await ewutils.send_message(cmd.message.author, '...')
 	response = "You are holding:\n"
 
 	items = inventory(

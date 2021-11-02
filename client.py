@@ -265,7 +265,7 @@ async def on_ready():
 
 						# The stream has transitioned from offline to online. Make an announcement!
 						for channel in channels_announcement:
-							await client.send_message(
+							await ewutils.send_message(
 								channel,
 								"ATTENTION CITIZENS. THE **ROWDY FUCKER** AND THE **COP KILLER** ARE **STREAMING**. BEWARE OF INCREASED KILLER AND ROWDY ACTIVITY.\n\n@everyone\n{}".format(
 									"https://www.twitch.tv/rowdyfrickerscopkillers"
@@ -369,7 +369,7 @@ async def on_member_join(member):
 async def on_message_delete(message):
 	if message != None and message.guild != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
 		ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
-		await client.send_message(message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
+		await ewutils.send_message(message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
 
 @client.event
 async def on_message(message):
@@ -432,7 +432,7 @@ async def on_message(message):
 				# Only send the help doc once every thirty seconds. There's no need to spam it.
 				if (time_now - time_last) > 30:
 					last_helped_times[message.author.id] = time_now
-					await client.send_message(message.channel, 'Check out the guide for help: https://ew.krakissi.net/guide/')
+					await ewutils.send_message(message.channel, 'Check out the guide for help: https://ew.krakissi.net/guide/')
 
 			# Nothing else to do in a DM.
 			return
@@ -454,7 +454,7 @@ async def on_message(message):
 			if resp != None:
 				await client.edit_message(resp, ewutils.formatMessage(message.author, response))
 			else:
-				await client.send_message(message.channel, ewutils.formatMessage(message.author, response))
+				await ewutils.send_message(message.channel, ewutils.formatMessage(message.author, response))
 
 			return
 
@@ -486,7 +486,7 @@ async def on_message(message):
 
 			item = EwItem(id_item = item_id)
 
-			await client.send_message(message.channel, ewutils.formatMessage(message.author, ewitem.item_look(item)))
+			await ewutils.send_message(message.channel, ewutils.formatMessage(message.author, ewitem.item_look(item)))
 
 		# FIXME debug
 		# Test item deletion
@@ -501,7 +501,7 @@ async def on_message(message):
 					id_item = item.get('id_item')
 				)
 
-			await client.send_message(message.channel, ewutils.formatMessage(message.author, 'ok'))
+			await ewutils.send_message(message.channel, ewutils.formatMessage(message.author, 'ok'))
 
 		# AWOOOOO
 		elif re_awoo.match(cmd):

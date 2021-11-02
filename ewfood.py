@@ -62,7 +62,7 @@ async def menu(cmd):
 			response += "**{}**: *{}*\n".format(vendor, ewutils.formatNiceList(names = ewcfg.food_vendor_inv[vendor]))
 
 	# Send the response to the player.
-	await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """ players order food, for themselves or somebody else """
 async def order(cmd):

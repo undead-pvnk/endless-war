@@ -1,6 +1,7 @@
 import MySQLdb
 import datetime
 import time
+import discord
 
 import ewcfg
 
@@ -102,7 +103,7 @@ def databaseConnect():
 	if conn_info == None:
 		db_pool_id += 1
 		conn_info = {
-			'conn': MySQLdb.connect(host="localhost", user="rfck-bot", passwd="rfck", db="rfck"),
+			'conn': MySQLdb.connect(host="localhost", user="root", passwd="theapocolypse3", db="rfck"),
 			'created': int(time.time()),
 			'count': 1,
 			'closed': False
@@ -125,11 +126,11 @@ def databaseClose(conn_info):
 def getSlimesForPlayer(conn, cursor, member):
 	user_slimes = 0
 
-	cursor.execute("SELECT slimes FROM users WHERE id_user = %s AND id_server = %s", (member.id, member.server.id))
+	cursor.execute("SELECT slimes FROM users WHERE id_user = %s AND id_server = %s", (member.id, member.guild.id))
 	result = cursor.fetchone();
 
 	if result == None:
-		cursor.execute("REPLACE INTO users(id_user, id_server) VALUES(%s, %s)", (member.id, member.server.id))
+		cursor.execute("REPLACE INTO users(id_user, id_server) VALUES(%s, %s)", (member.id, member.guild.id))
 	else:
 		user_slimes = result[0]
 
@@ -366,7 +367,7 @@ def weaponskills_get(id_server=None, id_user=None, member=None, conn=None, curso
 	weaponskills = {}
 
 	if member != None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server != None and id_user != None:
@@ -414,7 +415,7 @@ def weaponskills_get(id_server=None, id_user=None, member=None, conn=None, curso
 """ Set an individual weapon skill value for a player. """
 def weaponskills_set(id_server=None, id_user=None, member=None, weapon=None, weaponskill=0, weaponname="", conn=None, cursor=None):
 	if member != None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server != None and id_user != None and weapon != None:
@@ -458,7 +459,7 @@ def weaponskills_set(id_server=None, id_user=None, member=None, weapon=None, wea
 """ Clear all weapon skills for a player (probably called on !revive). """
 def weaponskills_clear(id_server=None, id_user=None, member=None, conn=None, cursor=None):
 	if member != None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server != None and id_user != None:
@@ -510,3 +511,16 @@ async def add_pvp_role(cmd = None):
 		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_juvenile_pvp])
 	elif ewcfg.role_corpse in roles_map_user and ewcfg.role_corpse_pvp not in roles_map_user:
 		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_corpse_pvp])
+
+
+async def send_message(channel = None, text = None, filter_everyone = True):
+	if filter_everyone and text is not None:
+		text = text.replace("@everyone", "{at}everyone")
+	try:
+		if text is not None:
+			return await channel.send(content=text)
+	except discord.errors.Forbidden:
+		logMsg('Could not message user: {}\n{}'.format(channel, text))
+		raise
+	except:
+		logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))

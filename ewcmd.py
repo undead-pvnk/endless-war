@@ -46,13 +46,13 @@ async def start(cmd = None, message = '...', channel = None, client = None):
 		client = cmd.client
 
 	if client != None and channel != None:
-		return await client.send_message(channel, message)
+		return await ewutils.send_message(channel, message)
 
 	return None
 
 """ pure flavor command, howls """
 async def cmd_howl(cmd):
-	await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, ewcfg.howls[random.randrange(len(ewcfg.howls))]))
+	await ewutils.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, ewcfg.howls[random.randrange(len(ewcfg.howls))]))
 
 """ returns true if it's night time and the casino is open, else false. """
 def is_casino_open(time):
@@ -266,17 +266,17 @@ async def weather(cmd):
 	Harvest is not and has never been a command.
 """
 async def harvest(cmd):
-	await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, '**HARVEST IS NOT A COMMAND YOU FUCKING IDIOT**'))
+	await ewutils.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, '**HARVEST IS NOT A COMMAND YOU FUCKING IDIOT**'))
 
 """
 	advertise patch notes
 """
 async def patchnotes(cmd):
-	await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Look for the latest patchnotes on the news page: https://ew.krakissi.net/news/'))
+	await ewutils.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Look for the latest patchnotes on the news page: https://ew.krakissi.net/news/'))
 
 """
 	advertise help services
 """
 async def help(cmd):
-	await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Check out the guide for help: https://ew.krakissi.net/guide/'))
+	await ewutils.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Check out the guide for help: https://ew.krakissi.net/guide/'))
 
