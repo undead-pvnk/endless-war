@@ -1,3 +1,17 @@
 token
 __pycache__
 twitch_client_id
+.idea/endless-war.iml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+ew/cmd/debug/__init__.py
+ew/cmd/debug/debug.py
+ew/cmd/debugr/__init__.py
+ew/cmd/debugr/debugrelics.py
+ew/static/debugr.py
+ew/static/rstatic.py
+ew/utils/rutils.py
+ewdebug.py
