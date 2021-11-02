@@ -96,7 +96,7 @@ async def order(cmd):
 				cursor = conn.cursor()
 
 				user_data = EwUser(member = cmd.message.author, conn = conn, cursor = cursor)
-				market_data = EwMarket(id_server = cmd.message.server.id, conn = conn, cursor = cursor)
+				market_data = EwMarket(id_server = cmd.message.guild.id, conn = conn, cursor = cursor)
 
 				target_data = None
 				if member != None:

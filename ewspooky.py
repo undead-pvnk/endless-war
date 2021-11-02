@@ -28,7 +28,7 @@ async def revive(cmd):
 				cursor = conn.cursor()
 
 				player_data = EwUser(member = cmd.message.author, conn = conn, cursor = cursor)
-				market_data = EwMarket(id_server = cmd.message.server.id, conn = conn, cursor = cursor)
+				market_data = EwMarket(id_server = cmd.message.guild.id, conn = conn, cursor = cursor)
 
 				# Endless War collects his fee.
 				fee = (player_data.slimecredit / 10)
@@ -69,7 +69,7 @@ async def revive(cmd):
 				market_data.persist(conn = conn, cursor = cursor)
 
 				# Give some slimes to every living player (currently online)
-				for member in cmd.message.server.members:
+				for member in cmd.message.guild.members:
 					if member.id != cmd.message.author.id and member.id != cmd.client.user.id:
 						if ewcfg.role_corpse not in ewutils.getRoleMap(member.roles):
 							member_data = EwUser(member = member, conn = conn, cursor = cursor)
@@ -191,7 +191,7 @@ async def negaslime(cmd):
 		cursor.execute("SELECT sum({}) FROM users WHERE id_server = %s AND {} < 0".format(
 			ewcfg.col_slimes,
 			ewcfg.col_slimes
-		), (cmd.message.server.id, ))
+		), (cmd.message.guild.id, ))
 
 		result = cursor.fetchone();
 
@@ -202,7 +202,7 @@ async def negaslime(cmd):
 				negaslime = 0
 				
 		# Add persisted negative slime.
-		market_data = EwMarket(id_server = cmd.message.server.id, conn = conn, cursor = cursor)
+		market_data = EwMarket(id_server = cmd.message.guild.id, conn = conn, cursor = cursor)
 		negaslime += market_data.negaslime
 
 	finally:

@@ -68,7 +68,7 @@ async def enlist(cmd):
 
 """ mine for slime """
 async def mine(cmd):
-	market_data = EwMarket(id_server = cmd.message.author.server.id)
+	market_data = EwMarket(id_server = cmd.message.author.guild.id)
 	roles_map_user = ewutils.getRoleMap(cmd.message.author.roles)
 	time_now = int(time.time())
 

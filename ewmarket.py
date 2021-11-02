@@ -29,7 +29,7 @@ async def invest(cmd):
 		cursor = conn.cursor()
 
 		user_data = EwUser(member=cmd.message.author, conn=conn, cursor=cursor)
-		market_data = EwMarket(id_server=cmd.message.author.server.id, conn=conn, cursor=cursor)
+		market_data = EwMarket(id_server=cmd.message.author.guild.id, conn=conn, cursor=cursor)
 	finally:
 		cursor.close()
 		ewutils.databaseClose(conn_info)
@@ -108,7 +108,7 @@ async def withdraw(cmd):
 		cursor = conn.cursor()
 
 		user_data = EwUser(member=cmd.message.author, conn=conn, cursor=cursor)
-		market_data = EwMarket(id_server=cmd.message.author.server.id, conn=conn, cursor=cursor)
+		market_data = EwMarket(id_server=cmd.message.author.guild.id, conn=conn, cursor=cursor)
 	finally:
 		cursor.close()
 		ewutils.databaseClose(conn_info)
@@ -211,7 +211,7 @@ async def xfer(cmd):
 
 		target_data = EwUser(member=member, conn=conn, cursor=cursor)
 		user_data = EwUser(member=cmd.message.author, conn=conn, cursor=cursor)
-		market_data = EwMarket(id_server=cmd.message.author.server.id, conn=conn, cursor=cursor)
+		market_data = EwMarket(id_server=cmd.message.author.guild.id, conn=conn, cursor=cursor)
 	finally:
 		cursor.close()
 		ewutils.databaseClose(conn_info)
@@ -271,7 +271,7 @@ async def rate(cmd):
 	resp = await ewcmd.start(cmd = cmd)
 	response = ""
 
-	market_data = EwMarket(id_server=cmd.message.server.id)
+	market_data = EwMarket(id_server=cmd.message.guild.id)
 
 	response = "The current market value of SlimeCoin is {cred:,.3f} slime per 1,000 coin.".format(cred=(market_data.rate_exchange / 1000.0))
 
@@ -288,7 +288,7 @@ async def slimecoin(cmd):
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
-		market_data = EwMarket(id_server=cmd.message.server.id, conn=conn, cursor=cursor)
+		market_data = EwMarket(id_server=cmd.message.guild.id, conn=conn, cursor=cursor)
 		user_slimecredit = EwUser(member=cmd.message.author, conn=conn, cursor=cursor).slimecredit
 	finally:
 		cursor.close()

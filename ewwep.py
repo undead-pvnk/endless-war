@@ -285,7 +285,7 @@ async def attack(cmd):
 
 			if was_busted:
 				# Move around slime as a result of the shot.
-				market_data = EwMarket(id_server = cmd.message.server.id)
+				market_data = EwMarket(id_server = cmd.message.guild.id)
 				coinbounty = int(shootee_data.bounty / (market_data.rate_exchange / 1000000.0))
 				user_data.slimecredit += coinbounty
 
@@ -431,7 +431,7 @@ async def attack(cmd):
 							user_data.slimes += (slimes_dropped + shootee_data.slimes)
 							user_data.slimepoudrins += shootee_data.slimepoudrins
 						else:
-							market_data = EwMarket(id_server = cmd.message.server.id)
+							market_data = EwMarket(id_server = cmd.message.guild.id)
 							coinbounty = int(shootee_data.bounty / (market_data.rate_exchange / 1000000.0))
 							user_data.slimecredit += coinbounty
 							user_data.slimes += int(slimes_dropped / 2)
@@ -528,7 +528,7 @@ async def attack(cmd):
 			# Give slimes to the boss if possible.
 			boss_member = None
 			if boss_slimes > 0:
-				for member_search in cmd.message.server.members:
+				for member_search in cmd.message.guild.members:
 					if role_boss in ewutils.getRoleMap(member_search.roles):
 						boss_member = member_search
 						break

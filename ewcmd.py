@@ -36,8 +36,8 @@ class EwCmd:
 			self.tokens_count = len(tokens)
 			self.cmd = tokens[0]
 
-		if message.server != None:
-			self.roles_map = ewutils.getRoleMap(message.server.roles)
+		if message.guild != None:
+			self.roles_map = ewutils.getRoleMap(message.guild.roles)
 
 """ Send an initial message you intend to edit later while processing the command. Returns handle to the message. """
 async def start(cmd = None, message = '...', channel = None, client = None):
@@ -116,7 +116,7 @@ async def data(cmd):
 			cursor = conn.cursor()
 
 			user_data = EwUser(member = cmd.message.author, conn = conn, cursor = cursor)
-			market_data = EwMarket(id_server = cmd.message.server.id, conn = conn, cursor = cursor)
+			market_data = EwMarket(id_server = cmd.message.guild.id, conn = conn, cursor = cursor)
 
 			new_level = 0
 
@@ -169,7 +169,7 @@ async def data(cmd):
 			cursor = conn.cursor()
 
 			user_data = EwUser(member = member, conn = conn, cursor = cursor)
-			market_data = EwMarket(id_server = cmd.message.server.id, conn = conn, cursor = cursor)
+			market_data = EwMarket(id_server = cmd.message.guild.id, conn = conn, cursor = cursor)
 
 			new_level = 0
 			if ewcfg.role_corpse not in roles_map_target:
@@ -226,7 +226,7 @@ async def data(cmd):
 async def weather(cmd):
 	resp = await start(cmd = cmd)
 	response = ""
-	market_data = EwMarket(id_server = cmd.message.author.server.id)
+	market_data = EwMarket(id_server = cmd.message.author.guild.id)
 	time_current = market_data.clock
 	displaytime = str(time_current)
 	ampm = ''

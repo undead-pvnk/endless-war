@@ -165,7 +165,7 @@ class EwUser:
 	def __init__(self, member=None, conn=None, cursor=None, id_user=None, id_server=None):
 		if(id_user == None) and (id_server == None):
 			if(member != None):
-				id_server = member.server.id
+				id_server = member.guild.id
 				id_user = member.id
 
 		# Retrieve the object from the database if the user is provided.

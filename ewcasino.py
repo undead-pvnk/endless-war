@@ -46,7 +46,7 @@ async def pachinko(cmd):
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
-			market_data = EwMarket(id_server=cmd.message.server.id, conn=conn, cursor=cursor)
+			market_data = EwMarket(id_server=cmd.message.guild.id, conn=conn, cursor=cursor)
 			user_data = EwUser(member=cmd.message.author, conn=conn, cursor=cursor)
 		finally:
 			cursor.close()
@@ -150,7 +150,7 @@ async def craps(cmd):
 				cursor = conn.cursor()
 
 				user_data = EwUser(member=cmd.message.author, conn=conn, cursor=cursor)
-				market_data = EwMarket(id_server=cmd.message.author.server.id, conn=conn, cursor=cursor)
+				market_data = EwMarket(id_server=cmd.message.author.guild.id, conn=conn, cursor=cursor)
 			finally:
 				cursor.close()
 				ewutils.databaseClose(conn_info)
@@ -228,7 +228,7 @@ async def slots(cmd):
 			cursor = conn.cursor()
 
 			user_data = EwUser(member=cmd.message.author, conn=conn, cursor=cursor)
-			market_data = EwMarket(id_server=cmd.message.author.server.id, conn=conn, cursor=cursor)
+			market_data = EwMarket(id_server=cmd.message.author.guild.id, conn=conn, cursor=cursor)
 
 		finally:
 			cursor.close()

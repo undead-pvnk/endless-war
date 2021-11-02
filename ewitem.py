@@ -448,7 +448,7 @@ async def inventory_print(cmd):
 
 	items = inventory(
 		id_user = cmd.message.author.id,
-		id_server = (cmd.message.server.id if (cmd.message.server != None) else None)
+		id_server = (cmd.message.guild.id if (cmd.message.guild != None) else None)
 	)
 
 	for item in items:

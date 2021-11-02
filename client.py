@@ -34,7 +34,8 @@ from ew import EwUser, EwMarket
 
 ewutils.logMsg('Starting up...')
 
-client = discord.Client()
+intents = discord.Intents.all()
+client = discord.Client(intents=intents)
 
 # A map containing user IDs and the last time in UTC seconds since we sent them
 # the help doc via DM. This is to prevent spamming.
@@ -170,16 +171,21 @@ if debug == True:
 
 @client.event
 async def on_ready():
+
 	ewutils.logMsg('Logged in as {} ({}).'.format(client.user.name, client.user.id))
 	ewutils.logMsg('Ready.')
 
-	await client.change_presence(game=discord.Game(name=("dev. by @krak " + ewcfg.version)))
+
+	try:
+		await client.change_presence(activity=discord.Game(name="EW " + ewcfg.version))
+	except:
+		ewutils.logMsg("Failed to change_presence!")
 
 	# Look for a Twitch client_id on disk.
-	twitch_client_id = ewutils.getTwitchClientId()
+	twitch_client_id = None#ewutils.getTwitchClientId()
 
 	# If no twitch client ID is available, twitch integration will be disabled.
-	if twitch_client_id == None or len(twitch_client_id) == 0:
+	if twitch_client_id == None: #or len(twitch_client_id) == 0:
 		ewutils.logMsg('No twitch_client_id file found. Twitch integration disabled.')
 	else:
 		ewutils.logMsg("Enabled Twitch integration.")
@@ -190,7 +196,7 @@ async def on_ready():
 	# Channels in the connected discord servers to send stock market updates to. Map of server ID to channel.
 	channels_stockmarket = {}
 
-	for server in client.servers:
+	for server in client.guilds:
 		# Update server data in the database
 		ewserver.server_update(server = server)
 
@@ -274,7 +280,7 @@ async def on_ready():
 			time_last_pvp = time_now
 
 			try:
-				for server in client.servers:
+				for server in client.guilds:
 					roles_map = ewutils.getRoleMap(server.roles)
 
 					role_juvenile_pvp = roles_map[ewcfg.role_juvenile_pvp]
@@ -306,7 +312,7 @@ async def on_ready():
 
 		# Adjust the exchange rate of slime for the market.
 		try:
-			for server in client.servers:
+			for server in client.guilds:
 				# Load market data from the database.
 				market_data = EwMarket(id_server = server.id)
 				credit_totals = ewutils.getRecentTotalSlimeCoins(id_server = server.id)
@@ -352,7 +358,7 @@ async def on_ready():
 
 @client.event
 async def on_member_join(member):
-	roles_map = ewutils.getRoleMap(member.server.roles)
+	roles_map = ewutils.getRoleMap(member.guild.roles)
 	role_juvenile = roles_map[ewcfg.role_juvenile]
 
 	ewutils.logMsg("New member \"{}\" joined. Assigned Juveniles role.".format(member.display_name))
@@ -361,7 +367,7 @@ async def on_member_join(member):
 
 @client.event
 async def on_message_delete(message):
-	if message != None and message.server != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
+	if message != None and message.guild != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
 		ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
 		await client.send_message(message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
 
@@ -373,24 +379,24 @@ async def on_message(message):
 	if message.author.id == client.user.id or message.author.bot == True:
 		return
 
-	if message.server != None:
+	if message.guild != None:
 		# Note that the user posted a message.
-		active_map = active_users_map.get(message.server.id)
+		active_map = active_users_map.get(message.guild.id)
 		if active_map == None:
 			active_map = {}
-			active_users_map[message.server.id] = active_map
+			active_users_map[message.guild.id] = active_map
 		active_map[message.author.id] = True
 
 		# Update player information.
 		ewplayer.player_update(
 			member = message.author,
-			server = message.server
+			server = message.guild
 		)
 
 	content_tolower = message.content.lower()
 	re_awoo = re.compile('.*![a]+[w]+o[o]+.*')
 
-	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2:
+	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or len(message.author.roles) < 2:
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
@@ -416,7 +422,7 @@ async def on_message(message):
 		)
 
 		""" reply to DMs with help document """
-		if message.server == None:
+		if message.guild == None:
 			# Direct message the player their inventory.
 			if ewitem.cmd_is_inventory(cmd):
 				return await ewitem.inventory_print(cmd_obj)
@@ -466,7 +472,7 @@ async def on_message(message):
 			item_id = ewitem.item_create(
 				item_type = 'medal',
 				id_user = message.author.id,
-				id_server = message.server.id,
+				id_server = message.guild.id,
 				item_props = {
 					'medal_name': 'Test Award',
 					'medal_desc': '**{medal_name}**: *Awarded to Krak by Krak for testing shit.*'
@@ -487,7 +493,7 @@ async def on_message(message):
 		elif cmd == '!delete':
 			items = ewitem.inventory(
 				id_user = message.author.id,
-				id_server = message.server.id
+				id_server = message.guild.id
 			)
 
 			for item in items:
