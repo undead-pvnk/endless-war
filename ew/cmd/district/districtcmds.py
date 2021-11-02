@@ -447,6 +447,9 @@ async def abduct(cmd):
                     ewcfg.poi_id_stockexchange, ewcfg.poi_id_ab_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_jr_farms]):
                 response = "The tractor beam on this ship sucks. You can't really see indoors."
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            elif target_poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown]:
+                response = "Don't do that."
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
             bknd_item.item_delete(id_item=item_sought.get('id_item'))
             response = 'You plug in your battery pack and begin to abduct {} They\'re 20 seconds away.'.format(cmd.mentions[0].display_name)
