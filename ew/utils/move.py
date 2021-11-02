@@ -434,7 +434,7 @@ def inaccessible(user_data = None, poi = None):
                     return True
 
     shipstate = EwGamestate(id_server=user_data.id_server, id_state='shipstate')
-    if ((shipstate.bit == 0 or user_data.life_state == ewcfg.life_state_corpse) and (user_data.poi == 'ufoufo' or poi.id_poi == 'ufoufo')):
+    if ((shipstate.bit == 0) and (user_data.poi == 'ufoufo' or poi.id_poi == 'ufoufo')) or (poi.id_poi == 'ufoufo' and user_data.life_state == ewcfg.life_state_corpse):
         return True
 
     bans = user_data.get_bans()
