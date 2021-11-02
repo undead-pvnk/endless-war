@@ -3673,8 +3673,8 @@ async def check_bot(cmd):
 async def arrest(cmd):
     author = cmd.message.author
 
-    if not author.guild_permissions.administrator:
-        return
+    if not 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
+        return await cmd_utils.fake_failed_command(cmd)
 
     if cmd.mentions_count == 1:
         member = cmd.mentions[0]
@@ -3687,6 +3687,8 @@ async def arrest(cmd):
         response = "{} is thrown into one of the Juvenile Detention Center's high security solitary confinement spheres.".format(member.display_name)
         await ewrolemgr.updateRoles(client=cmd.client, member=member)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        leak_channel = fe_utils.get_channel(server=cmd.guild, channel_name='squickyleaks')
+        await fe_utils.send_message(cmd.client, leak_channel, "{} ({}): Arrested {}.".format(cmd.message.author.display_name, cmd.message.author.id, member.display_name))
 
 
 """
@@ -3697,8 +3699,8 @@ async def arrest(cmd):
 async def release(cmd):
     author = cmd.message.author
 
-    if not author.guild_permissions.administrator:
-        return
+    if not 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
+        return await cmd_utils.fake_failed_command(cmd)
 
     if cmd.mentions_count == 1:
         member = cmd.mentions[0]
@@ -3710,6 +3712,9 @@ async def release(cmd):
         response = "{} is released. But beware, the cops will be keeping an eye on you.".format(member.display_name)
         await ewrolemgr.updateRoles(client=cmd.client, member=member)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        leak_channel = fe_utils.get_channel(server=cmd.guild, channel_name='squickyleaks')
+        await fe_utils.send_message(cmd.client, leak_channel, "{} ({}): Released {}.".format(cmd.message.author.display_name, cmd.message.author.id, member.display_name))
+
 
 
 async def post_leaderboard(cmd):
