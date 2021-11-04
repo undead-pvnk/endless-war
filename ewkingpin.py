@@ -61,7 +61,8 @@ async def devour(cmd):
 				# update slime counts
 				try:
 					# set roles to corpse for mentioned players
-					await cmd.client.replace_roles(member, role_corpse)
+					member.edit(roles=role_corpse)
+					#await cmd.client.replace_roles(member, role_corpse)
 				except:
 					pass
 

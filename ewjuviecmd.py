@@ -40,7 +40,8 @@ async def enlist(cmd):
 				user_data.persist()
 
 				if user_is_pvp:
-					await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_rowdyfuckers], cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
+					#await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_rowdyfuckers], cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
+					cmd.message.author.edit(roles =)
 				else:
 					await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_rowdyfuckers])
 
