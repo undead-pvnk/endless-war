@@ -41,9 +41,10 @@ async def enlist(cmd):
 
 				if user_is_pvp:
 					#await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_rowdyfuckers], cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
-					cmd.message.author.edit(roles =)
+					await cmd.message.author.edit(roles = [cmd.roles_map[ewcfg.role_rowdyfuckers], cmd.roles_map[ewcfg.role_rowdyfuckers_pvp]])
 				else:
-					await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_rowdyfuckers])
+					#await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_rowdyfuckers])
+					await cmd.message.author.edit(roles=cmd.roles_map[ewcfg.role_rowdyfuckers])
 
 				response = "Enlisted in the {}.".format(ewcfg.faction_rowdys)
 			elif faction == ewcfg.faction_killers:
@@ -51,9 +52,11 @@ async def enlist(cmd):
 				user_data.persist()
 
 				if user_is_pvp:
-					await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_copkillers], cmd.roles_map[ewcfg.role_copkillers_pvp])
+					#await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_copkillers], cmd.roles_map[ewcfg.role_copkillers_pvp])
+					await cmd.message.author.edit(roles=[cmd.roles_map[ewcfg.role_copkillers], cmd.roles_map[ewcfg.role_copkillers_pvp]])
 				else:
-					await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_copkillers])
+					#await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_copkillers])
+					await cmd.message.author.edit(roles=cmd.roles_map[ewcfg.role_copkillers])
 
 				response = "Enlisted in the {}.".format(ewcfg.faction_killers)
 			else:
@@ -111,7 +114,8 @@ async def mine(cmd):
 					user_data.persist()
 
 					await ewutils.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have died in a mining accident."))
-					await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_corpse])
+					#await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_corpse])
+					await cmd.message.author.edit(roles=cmd.roles_map[ewcfg.role_corpse])
 				else:
 					await ewutils.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You've exhausted yourself from mining. You'll need some refreshment before getting back to work."))
 			else:
@@ -202,6 +206,8 @@ async def mine(cmd):
 
 
 				await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, "You have died in a mining accident."))
-				await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_corpse])
+				#await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_corpse])
+				await cmd.message.author.edit(roles=cmd.roles_map[ewcfg.role_corpse])
+
 			else:
 				await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, "You can't mine here. Try #{}.".format(ewcfg.channel_mines)))

@@ -554,7 +554,8 @@ async def attack(cmd):
 
 			# Assign the corpse role to the newly dead player.
 			if was_killed:
-				await cmd.client.replace_roles(member, role_corpse)
+				#await cmd.client.replace_roles(member, role_corpse)
+				await member.edit(roles=cmd.roles_map[ewcfg.role_corpse])
 
 	# Send the response to the player.
 	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
@@ -634,7 +635,8 @@ async def suicide(cmd):
 			role_corpse = cmd.roles_map[ewcfg.role_corpse]
 
 			# Assign the corpse role to the player. He dead.
-			await cmd.client.replace_roles(cmd.message.author, role_corpse)
+			#await cmd.client.replace_roles(cmd.message.author, role_corpse)
+			await cmd.message.author.edit(roles=cmd.roles_map[ewcfg.role_corpse])
 
 			# Set the id_killer to the player himself, remove his slime and slime poudrins.
 			user_data.id_killer = cmd.message.author.id

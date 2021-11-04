@@ -83,9 +83,11 @@ async def revive(cmd):
 				ewutils.databaseClose(conn_info)
 
 			if player_is_pvp:
-				await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_juvenile], cmd.roles_map[ewcfg.role_juvenile_pvp])
+				#await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_juvenile], cmd.roles_map[ewcfg.role_juvenile_pvp])
+				await cmd.message.author.edit(roles=[cmd.roles_map[ewcfg.role_juvenile], cmd.roles_map[ewcfg.role_juvenile_pvp]])
 			else:
-				await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_juvenile])
+				#await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_juvenile])
+				await cmd.message.author.edit(roles=cmd.roles_map[ewcfg.role_juvenile])
 
 			response = '{slime4} A geyser of fresh slime erupts, showering Rowdy, Killer, and Juvenile alike. {slime4} {name} has been reborn in slime. {slime4}'.format(slime4 = ewcfg.emote_slime4, name = cmd.message.author.display_name)
 		else:
