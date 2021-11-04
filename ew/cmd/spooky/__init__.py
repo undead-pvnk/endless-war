@@ -60,5 +60,5 @@ cmd_map = {
     ewcfg.cmd_favor: spookycmds.favor
 
 }
-if ewcfg.dh_active:
+if ewcfg.dh_active and ewcfg.dh_stage == 2:
     cmd_map[ewcfg.cmd_sacrifice] = spookycmds.sacrifice

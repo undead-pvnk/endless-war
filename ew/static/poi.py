@@ -3450,7 +3450,7 @@ poi_list = [
         minor_role="nullminorrole",
         permissions= {"rp-city": ["read", "send", "connect"]},
         pvp = False,
-        closed = ewcfg.dh_active == False, #TODO: Change this when Double Halloween comes around you fuckin nerds
+        closed = ewcfg.dh_active == False,
         str_closed = "RP City is closed outside of Double Halloween. Come back when it's a little... spookier.",
         vendors = ["RP City"],
         is_subzone = True,

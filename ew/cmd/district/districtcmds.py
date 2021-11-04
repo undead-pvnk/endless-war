@@ -346,7 +346,7 @@ async def ufo_observe(cmd):
         response = "The ship is grounded. Can't see much from here."
     elif cmd.tokens_count <= 1:
         response = "Observe what?"
-    elif not ewcfg.dh_active or ewcfg.dh_stage < 3:
+    elif not ewcfg.dh_active or ewcfg.dh_stage != 3:
         response = "Wait, your alien espionage is waaaay out of season."
     else:
         poi_seek = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -392,7 +392,7 @@ async def launch(cmd):
         response = "Launch what, dumbass? My patience?"
     elif not protected:
         response = "The aliens aren't gonna let you start the ship. You're basically their captive now."
-    elif not ewcfg.dh_active or ewcfg.dh_stage < 3:
+    elif not ewcfg.dh_active or ewcfg.dh_stage != 3:
         response = "Wait, your alien espionage is waaaay out of season."
     else:
         launchstate = EwGamestate(id_state='shipstate', id_server=cmd.guild.id)
@@ -426,7 +426,7 @@ async def abduct(cmd):
         response = "Launch what, dumbass? My patience?"
     elif not protected:
         response = "The aliens aren't gonna let you start the ship. You're basically their captive now."
-    elif not ewcfg.dh_active or ewcfg.dh_stage < 3:
+    elif not ewcfg.dh_active or ewcfg.dh_stage != 3:
         response = "Wait, your alien espionage is waaaay out of season."
     elif cmd.mentions_count == 0:
         response = "Abduct who?"
@@ -452,6 +452,7 @@ async def abduct(cmd):
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
             bknd_item.item_delete(id_item=item_sought.get('id_item'))
+            ewutils.moves_active[target_data.id_user] = 0
             response = 'You plug in your battery pack and begin to abduct {} They\'re 20 seconds away.'.format(cmd.mentions[0].display_name)
             await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 

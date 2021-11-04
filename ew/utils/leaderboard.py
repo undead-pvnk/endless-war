@@ -54,8 +54,9 @@ async def post_leaderboards(client = None, server = None):
     topzines = make_zines_top_board(server=server.id)
     resp_cont.add_channel_response(leaderboard_channel, topzines)
 
-    topfavor = make_statdata_board(server=server.id, category='sacrificerate', title =ewcfg.leaderboard_sacrificial)
-    resp_cont.add_channel_response(leaderboard_channel, topfavor)
+    if ewcfg.dh_stage == 2 and ewcfg.dh_active:
+        topfavor = make_statdata_board(server=server.id, category='sacrificerate', title =ewcfg.leaderboard_sacrificial)
+        resp_cont.add_channel_response(leaderboard_channel, topfavor)
 
     await resp_cont.post()
 

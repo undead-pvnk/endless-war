@@ -25,8 +25,19 @@ territory_time_gain = 10
 
 # A variable which is used to determine how certain functions of enemies are to perform
 gvs_active = False
+#Double Halloween Features
 dh_active = True
+#Existing Stages for Double Halloween. As the years go by we may add on to this
 dh_stage = 3
+"""
+1: Normal
+2: Sacrifice Minigame
+3: UFO Abduction
+"""
+
+
+
+
 # The max amount of degradation a district can have before it is shambled completely
 district_max_degradation = 10000
 
