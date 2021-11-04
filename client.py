@@ -363,7 +363,8 @@ async def on_member_join(member):
 
 	ewutils.logMsg("New member \"{}\" joined. Assigned Juveniles role.".format(member.display_name))
 
-	await client.replace_roles(member, role_juvenile)
+	member.edit(role_juvenile)
+	#await client.replace_roles(member, role_juvenile)
 
 @client.event
 async def on_message_delete(message):
@@ -443,7 +444,8 @@ async def on_message(message):
 		# assign the juveniles role to a user with only 1 or 0 roles.
 		if len(message.author.roles) < 2:
 			role_juvenile = roles_map[ewcfg.role_juvenile]
-			await client.replace_roles(message.author, role_juvenile)
+			await message.author.edit(role_juvenile)
+			#await client.replace_roles(message.author, role_juvenile)
 			return
 
 		# Scold/ignore offline players.
@@ -520,7 +522,11 @@ async def on_message(message):
 
 				if role != None:
 					for user in mentions:
-						await client.replace_roles(user, role)
+						try:
+							await user.edit(roles=role)
+						except:
+							ewutils.logMsg(
+								'Failed to replace_roles for user {} with {}.'.format(user.display_name, role.name))
 
 					response = 'Done.'
 				else:
