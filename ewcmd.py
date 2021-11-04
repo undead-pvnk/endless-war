@@ -98,7 +98,7 @@ async def score(cmd):
 		user_data.persist()
 
 	# Send the response to the player.
-	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 
 """ show player information and description """
 async def data(cmd):
@@ -220,7 +220,7 @@ async def data(cmd):
 		user_data.persist()
 
 	# Send the response to the player.
-	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 
 """ time and weather information """
 async def weather(cmd):
@@ -259,7 +259,7 @@ async def weather(cmd):
 	response += "It is currently {}{} in NLACakaNM.{}".format(displaytime, ampm, (' ' + flair))
 	
 	# Send the response to the player.
-	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 
 
 """

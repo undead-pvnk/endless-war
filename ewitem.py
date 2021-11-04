@@ -462,4 +462,4 @@ async def inventory_print(cmd):
 			quantity = (" x{:,}".format(quantity) if (quantity > 0) else "")
 		)
 
-	await cmd.client.edit_message(resp, response)
+	await ewutils.editmessage(resp, response)

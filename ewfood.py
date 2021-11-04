@@ -169,4 +169,4 @@ async def order(cmd):
 					ewutils.databaseClose(conn_info)
 
 	# Send the response to the player.
-	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))

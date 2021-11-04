@@ -77,7 +77,7 @@ async def devour(cmd):
 				response = 'No one was devoured.'
 
 	# Send the response to the player.
-	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 
 
 """ Give any player any amount of slime from your own stash. """
@@ -146,7 +146,7 @@ async def giveslime(cmd):
 					response = "Give how much slime?"
 
 	# Send the response to the player.
-	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 
 """ Destroy a megaslime of your own for lore reasons. """
 async def deadmega(cmd):
@@ -169,4 +169,4 @@ async def deadmega(cmd):
 			response = "Alas, poor megaslime. You have {:,} slime remaining.".format(user_data.slimes)
 
 	# Send the response to the player.
-	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))

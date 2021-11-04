@@ -13,14 +13,14 @@ async def invest(cmd):
 	if cmd.message.channel.name != ewcfg.channel_stockexchange:
 		# Only allowed in the stock exchange.
 		response = ewcfg.str_exchange_channelreq.format(currency="slime", action="invest")
-		await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+		await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 		return
 
 	roles_map_user = ewutils.getRoleMap(cmd.message.author.roles)
 	if ewcfg.role_rowdyfucker in roles_map_user or ewcfg.role_copkiller in roles_map_user:
 		# Disallow investments by RF and CK kingpins.
 		response = "You're too powerful to be playing the market."
-		await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+		await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 		return
 
 	try:
@@ -89,7 +89,7 @@ async def invest(cmd):
 			response = ewcfg.str_exchange_specify.format(currency="slime", action="invest")
 
 	# Send the response to the player.
-	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 
 """ player withdraws slime from the market """
 async def withdraw(cmd):
@@ -99,7 +99,7 @@ async def withdraw(cmd):
 	if cmd.message.channel.name != ewcfg.channel_stockexchange:
 		# Only allowed in the stock exchange.
 		response = ewcfg.str_exchange_channelreq.format(currency="SlimeCoin", action="withdraw")
-		await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+		await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 		return
 
 	try:
@@ -175,7 +175,7 @@ async def withdraw(cmd):
 			response = ewcfg.str_exchange_specify.format(currency="SlimeCoin", action="withdraw")
 
 	# Send the response to the player.
-	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 
 """ transfer slimecoin between players """
 async def xfer(cmd):
@@ -185,13 +185,13 @@ async def xfer(cmd):
 	if cmd.message.channel.name != ewcfg.channel_stockexchange:
 		# Only allowed in the stock exchange.
 		response = ewcfg.str_exchange_channelreq.format(currency="SlimeCoin", action="transfer")
-		await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+		await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 		return
 
 	if cmd.mentions_count != 1:
 		# Must have exactly one target to send to.
 		response = "Mention the player you want to send SlimeCoin to."
-		await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+		await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 		return
 
 	member = cmd.mentions[0]
@@ -200,7 +200,7 @@ async def xfer(cmd):
 	if ewcfg.role_rowdyfucker in roles_map_target or ewcfg.role_copkiller in roles_map_target:
 		# Disallow transfers to RF and CK kingpins.
 		response = "You can't transfer SlimeCoin to a known criminal warlord."
-		await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+		await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 		return
 
 
@@ -264,7 +264,7 @@ async def xfer(cmd):
 			response = ewcfg.str_exchange_specify.format(currency="SlimeCoin", action="transfer")
 
 	# Send the response to the player.
-	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 
 """ show the current market exchange rate """
 async def rate(cmd):
@@ -276,7 +276,7 @@ async def rate(cmd):
 	response = "The current market value of SlimeCoin is {cred:,.3f} slime per 1,000 coin.".format(cred=(market_data.rate_exchange / 1000.0))
 
 	# Send the response to the player.
-	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 
 """ show player's slimecoin balance """
 async def slimecoin(cmd):
@@ -298,4 +298,4 @@ async def slimecoin(cmd):
 	response = "You have {:,} SlimeCoin, currently valued at {:,} slime.".format(user_slimecredit, net_worth)
 
 	# Send the response to the player.
-	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))

@@ -64,7 +64,7 @@ async def enlist(cmd):
 		response = "You can't do that right now, bitch."
 
 	# Send the response to the player.
-	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 
 """ mine for slime """
 async def mine(cmd):
@@ -74,11 +74,11 @@ async def mine(cmd):
 
 
 	if ewcfg.role_corpse in roles_map_user:
-		await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You can't mine while you're dead. Try {}.".format(ewcfg.cmd_revive)))
+		await ewutils.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You can't mine while you're dead. Try {}.".format(ewcfg.cmd_revive)))
 	if ewcfg.role_rowdyfuckers and (market_data.clock < 8 or market_data.clock > 17):
-		await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Rowdies only mine in the daytime. Wait for full daylight at 8am.".format(ewcfg.cmd_revive)))
+		await ewutils.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Rowdies only mine in the daytime. Wait for full daylight at 8am.".format(ewcfg.cmd_revive)))
 	if ewcfg.role_copkillers and (market_data.clock < 20 and market_data.clock > 5):
-		await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Killers only mine under cover of darkness. Wait for nightfall at 8pm.".format(ewcfg.cmd_revive)))
+		await ewutils.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Killers only mine under cover of darkness. Wait for nightfall at 8pm.".format(ewcfg.cmd_revive)))
 
 	else:
 		if(cmd.message.channel.name == ewcfg.channel_mines):
@@ -109,10 +109,10 @@ async def mine(cmd):
 					user_data.slimes = 0
 					user_data.persist()
 
-					await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have died in a mining accident."))
+					await ewutils.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have died in a mining accident."))
 					await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_corpse])
 				else:
-					await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You've exhausted yourself from mining. You'll need some refreshment before getting back to work."))
+					await ewutils.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You've exhausted yourself from mining. You'll need some refreshment before getting back to work."))
 			else:
 				# Determine if a poudrin is found.
 				poudrin = False
@@ -160,7 +160,7 @@ async def mine(cmd):
 					if was_levelup:
 						response += "You have been empowered by slime and are now a level {} slimeboi!".format(new_level)
 
-					await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					await ewutils.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		else:
 			# Mismined. Potentially kill the player for spamming the wrong channel.
 			mismined = last_mismined_times.get(cmd.message.author.id)
@@ -200,7 +200,7 @@ async def mine(cmd):
 					ewutils.databaseClose(conn_info)
 
 
-				await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, "You have died in a mining accident."))
+				await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, "You have died in a mining accident."))
 				await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_corpse])
 			else:
-				await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, "You can't mine here. Try #{}.".format(ewcfg.channel_mines)))
+				await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, "You can't mine here. Try #{}.".format(ewcfg.channel_mines)))

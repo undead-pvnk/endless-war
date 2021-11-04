@@ -61,7 +61,7 @@ async def pachinko(cmd):
 			user_data.slimecredit -= value
 			user_data.persist()
 
-			await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, "You insert {:,} SlimeCoin. Balls begin to drop!".format(ewcfg.slimes_perpachinko)))
+			await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, "You insert {:,} SlimeCoin. Balls begin to drop!".format(ewcfg.slimes_perpachinko)))
 			await asyncio.sleep(3)
 
 			ball_count = 10
@@ -87,7 +87,7 @@ async def pachinko(cmd):
 					response += " ... **ding!**"
 					winballs += 1
 
-				await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+				await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 				await asyncio.sleep(1)
 
 			winnings = winballs * 250
@@ -118,7 +118,7 @@ async def pachinko(cmd):
 		last_pachinkoed_times[cmd.message.author.id] = 0
 
 	# Send the response to the player.
-	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 
 
 async def craps(cmd):
@@ -200,7 +200,7 @@ async def craps(cmd):
 			response = "Specify how much SlimeCoin you will wager."
 
 	# Send the response to the player.
-	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
 
 async def slots(cmd):
 	resp = await ewcmd.start(cmd = cmd)
@@ -244,7 +244,7 @@ async def slots(cmd):
 			user_data.persist()
 
 			# Add some suspense...
-			await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, "You insert {:,} SlimeCoin and pull the handle...".format(ewcfg.slimes_perslot)))
+			await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, "You insert {:,} SlimeCoin and pull the handle...".format(ewcfg.slimes_perslot)))
 			await asyncio.sleep(3)
 
 			slots = [
@@ -262,7 +262,7 @@ async def slots(cmd):
 			# Roll those tumblers!
 			spins = 3
 			while spins > 0:
-				await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, "{} {} {}".format(
+				await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, "{} {} {}".format(
 					slots[random.randrange(0, slots_len)],
 					slots[random.randrange(0, slots_len)],
 					slots[random.randrange(0, slots_len)]
@@ -340,4 +340,4 @@ async def slots(cmd):
 		last_slotsed_times[cmd.message.author.id] = 0
 
 	# Send the response to the player.
-	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))

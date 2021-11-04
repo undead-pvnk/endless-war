@@ -452,7 +452,7 @@ async def on_message(message):
 			response = "You cannot participate in the ENDLESS WAR while offline."
 
 			if resp != None:
-				await client.edit_message(resp, ewutils.formatMessage(message.author, response))
+				await ewutils.editmessage(resp, ewutils.formatMessage(message.author, response))
 			else:
 				await ewutils.send_message(message.channel, ewutils.formatMessage(message.author, response))
 
@@ -526,7 +526,7 @@ async def on_message(message):
 				else:
 					response = 'Unrecognized role.'
 
-			await client.edit_message(resp, ewutils.formatMessage(message.author, response))
+			await ewutils.editmessage(resp, ewutils.formatMessage(message.author, response))
 
 		# didn't match any of the command words.
 		else:
@@ -542,7 +542,7 @@ async def on_message(message):
 				msg_mistake = "ENDLESS WAR pays you no mind."
 
 			await asyncio.sleep(1)
-			await client.edit_message(resp, msg_mistake)
+			await ewutils.editmessage(resp, msg_mistake)
 			await asyncio.sleep(2)
 			await client.delete_message(resp)
 
