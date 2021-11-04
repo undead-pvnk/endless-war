@@ -33,7 +33,7 @@ class EwMarket:
 						conn = conn_info.get('conn')
 						our_conn = True
 
-					cursor = conn.cursor();
+					cursor = conn.cursor()
 					our_cursor = True
 
 				# Retrieve object
@@ -48,7 +48,7 @@ class EwMarket:
 					ewcfg.col_clock,
 					ewcfg.col_weather,
 				), (self.id_server, ))
-				result = cursor.fetchone();
+				result = cursor.fetchone()
 
 				if result != None:
 					# Record found: apply the data to this object.
@@ -86,7 +86,7 @@ class EwMarket:
 					conn = conn_info.get('conn')
 					our_conn = True
 
-				cursor = conn.cursor();
+				cursor = conn.cursor()
 				our_cursor = True
 
 			# Save the object.
@@ -184,7 +184,7 @@ class EwUser:
 						conn = conn_info.get('conn')
 						our_conn = True
 
-					cursor = conn.cursor();
+					cursor = conn.cursor()
 					our_cursor = True
 
 				# Retrieve object
@@ -214,7 +214,7 @@ class EwUser:
 					id_user,
 					id_server
 				))
-				result = cursor.fetchone();
+				result = cursor.fetchone()
 
 				if result != None:
 					# Record found: apply the data to this object.
@@ -268,7 +268,7 @@ class EwUser:
 					self.weaponskill = 0
 					self.weaponname = ""
 
-				self.limit_fix();
+				self.limit_fix()
 			finally:
 				# Clean up the database handles.
 				if(our_cursor):
@@ -289,10 +289,10 @@ class EwUser:
 					conn = conn_info.get('conn')
 					our_conn = True
 
-				cursor = conn.cursor();
+				cursor = conn.cursor()
 				our_cursor = True
 
-			self.limit_fix();
+			self.limit_fix()
 
 			# Save the object.
 			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(

@@ -179,7 +179,7 @@ async def attack(cmd):
 		slimes_spent = int(slimes_bylevel / 10)
 		slimes_damage = int((slimes_bylevel / 5.0) * (100 + (user_data.weaponskill * 5)) / 100.0)
 		slimes_dropped = shootee_data.totaldamage
-
+		coinbounty = 0
 		fumble_chance = (random.randrange(10) - 4)
 		if fumble_chance > user_data.weaponskill:
 			miss = True
@@ -297,10 +297,10 @@ async def attack(cmd):
 				response = "{name_target}\'s ghost has been **BUSTED**!!".format(name_target = member.display_name)
 				
 				if coinbounty > 0:
-					response += "\n\n SlimeCorp transfers {} SlimeCoin to {}\'s account.".format(str(coinbonty), message.author.display_name)
+					response += "\n\n SlimeCorp transfers {} SlimeCoin to {}\'s account.".format(str(coinbounty), cmd.message.author.display_name)
 
 				#adjust busts
-				user_data.busts += 1
+				#user_data.busts += 1
 
 			else:
 				# A non-lethal blow!
@@ -347,10 +347,6 @@ async def attack(cmd):
 				user_data.persist(conn = conn, cursor = cursor)
 				shootee_data.persist(conn = conn, cursor = cursor)
 
-				if boss_member != None:
-					boss_data = EwUser(member = boss_member, conn = conn, cursor = cursor)
-					boss_data.slimes += boss_slimes
-					boss_data.persist(conn = conn, cursor = cursor)
 
 				conn.commit()
 			finally:
@@ -470,7 +466,7 @@ async def attack(cmd):
 						shootee_data.trauma = ""
 					
 					if coinbounty > 0:
-						response += "\n\n SlimeCorp transfers {} SlimeCoin to {}\'s account.".format(str(coinbonty), message.author.display_name)
+						response += "\n\n SlimeCorp transfers {} SlimeCoin to {}\'s account.".format(str(coinbounty), cmd.message.author.display_name)
 
 					#adjust kills bounty
 					user_data.kills += 1
@@ -640,8 +636,8 @@ async def suicide(cmd):
 
 			# Set the id_killer to the player himself, remove his slime and slime poudrins.
 			user_data.id_killer = cmd.message.author.id
-			shootee_data.totaldamage += shootee_data.slimes
-			shootee_data.slimes = -int(shootee_data.totaldamage / 10)
+			user_data.totaldamage += user_data.slimes
+			user_data.slimes = -int(user_data.totaldamage / 10)
 			user_data.slimes = 0
 			user_data.slimepoudrins = 0
 			user_data.persist()

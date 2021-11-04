@@ -304,7 +304,7 @@ async def on_ready():
 
 							# If the user's PvP expire time is historical, remove the PvP role.
 							if user_data.time_expirpvp < int(time.time()):
-								await client.remove_roles(member, pvp_role)
+								await member.remove_roles(pvp_role)
 
 			except:
 				ewutils.logMsg('An error occurred in the scheduled role update task:')
@@ -370,7 +370,7 @@ async def on_member_join(member):
 async def on_message_delete(message):
 	if message != None and message.guild != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
 		ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
-		await ewutils.send_message(message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
+		await ewutils.send_message(message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'))
 
 @client.event
 async def on_message(message):

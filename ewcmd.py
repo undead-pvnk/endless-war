@@ -161,7 +161,7 @@ async def data(cmd):
 			response += " You are {}% hungry.".format(user_data.stamina * 100.0 / ewcfg.stamina_max)
 	else:
 		member = cmd.mentions[0]
-		roles_map_user = ewutils.getRoleMap(member.roles)
+		roles_map_target = ewutils.getRoleMap(member.roles)
 
 		try:
 			conn_info = ewutils.databaseConnect()
