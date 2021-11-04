@@ -224,6 +224,6 @@ async def weather_cycle(id_server = None):
                 while market_data.weather == weather_old:
                     pick = random.randrange(len(weather_static.weather_list))
                     market_data.weather = weather_static.weather_list[pick].name
-
+                    market_data.persist()
             # Log message for statistics tracking.
             ewutils.logMsg("The weather changed. It's now {}.".format(market_data.weather))

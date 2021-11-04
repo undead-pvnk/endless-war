@@ -423,7 +423,7 @@ async def abduct(cmd):
     shipstate = EwGamestate(id_server=user_data.id_server, id_state='shipstate')
 
     if user_data.poi != 'ufoufo':
-        response = "Launch what, dumbass? My patience?"
+        response = "Abduct what, dumbass? My patience?"
     elif not protected:
         response = "The aliens aren't gonna let you start the ship. You're basically their captive now."
     elif not ewcfg.dh_active or ewcfg.dh_stage != 3:
