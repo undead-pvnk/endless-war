@@ -439,7 +439,7 @@ async def on_message(message):
 
 		# common data we'll need
 		roles_map = cmd_obj.roles_map
-
+#ff
 		# assign the juveniles role to a user with only 1 or 0 roles.
 		if len(message.author.roles) < 2:
 			role_juvenile = roles_map[ewcfg.role_juvenile]
@@ -544,7 +544,8 @@ async def on_message(message):
 			await asyncio.sleep(1)
 			await ewutils.editmessage(resp, msg_mistake)
 			await asyncio.sleep(2)
-			await client.delete_message(resp)
+			resp.delete()
+			#await client.delete_message(resp)
 
 	elif content_tolower.find(ewcfg.cmd_howl) >= 0 or content_tolower.find(ewcfg.cmd_howl_alt1) >= 0 or re_awoo.match(content_tolower):
 		""" Howl if !howl is in the message at all. """
