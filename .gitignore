@@ -26,3 +26,4 @@ cfg_exporter.py
 /junit/
 /coverage.xml
 /json_revert
+ew/cmd/debug/__init__.py
