@@ -183,6 +183,7 @@ async def restoreRoleNames(cmd):
 """
 
 
+
 async def recreateRoles(cmd):
     member = cmd.message.author
 
@@ -367,6 +368,9 @@ async def updateRoles(
     # Manage faction roles.
     faction_role = ewutils.get_faction(user_data=user_data)
 
+    if ewcfg.dh_stage == 4 and ewcfg.dh_active:
+        faction_role = ewcfg.role_juvenile
+
     faction_roles_remove.remove(faction_role)
 
     non_wanted_pois = [
@@ -420,8 +424,8 @@ async def updateRoles(
 
     poi_roles_remove = []
     for poi in poi_static.poi_list:
-        if poi.major_role != None and poi.major_role != poi_major_role:
-            poi_roles_remove.append(poi.major_role)
+        #if poi.major_role != None and poi.major_role != poi_major_role:
+        poi_roles_remove.append(poi.major_role)
         # if poi.minor_role != None and poi.minor_role != poi_minor_role:
         poi_roles_remove.append(poi.minor_role)
 

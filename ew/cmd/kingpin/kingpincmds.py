@@ -11,6 +11,8 @@ from ew.utils import item as itm_utils
 from ew.utils import move as move_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
+import ew.backend.core as bknd_core
+from ew.backend.item import EwItem
 
 
 async def pa_command(cmd):
@@ -387,3 +389,50 @@ async def hogtie(cmd):
 
                 leak_channel = fe_utils.get_channel(server=cmd.guild, channel_name='squickyleaks')
                 await fe_utils.send_message(cmd.client, leak_channel, "{}: Hogtied {}.".format(cmd.message.author.display_name, member.display_name))
+
+
+async def clowncar(cmd):#shoves everyone not there into JR or the sewers
+    if not cmd.message.author.guild_permissions.administrator:
+        return
+
+    id_server = cmd.guild.id
+
+    gellphones = itm_utils.find_item_all(item_search=ewcfg.item_id_gellphone, id_server=id_server, item_type_filter=ewcfg.it_item)
+
+    for phone in gellphones:
+        phone_data = EwItem(id_item=phone.get('id_item'))
+        phone_data.item_props['gellphoneactive'] = 'false'
+        if phone_data.id_owner.isnumeric():
+            member_object = cmd.guild.get_member(phone_data.id_owner)
+            user_data = EwUser(member=member_object)
+            user_data.poi = 'juviesrow'
+            user_data.persist()
+            await ewrolemgr.updateRoles(client=cmd.client, member=member_object)
+        phone_data.persist()
+
+    if id_server != None:
+        try:
+            selection = bknd_core.execute_sql_query(
+                "SELECT {id_user} FROM users WHERE id_server = %s AND {poi} NOT IN('juviesrow', 'thesewers')".format(
+                    id_user=ewcfg.col_id_user,
+                    poi = ewcfg.col_poi
+                ), (
+                    'juviesrow'
+                ))
+
+
+            bknd_core.execute_sql_query(
+                "UPDATE users SET {poi} = %s WHERE id_server = %s AND {poi} NOT IN('juviesrow', 'thesewers')".format(
+                    poi=ewcfg.col_poi
+                ), (
+                    'juviesrow'
+                ))
+
+            for member in selection:
+                member_object = cmd.guild.get_member(member[0])
+                await ewrolemgr.updateRoles(client = cmd.client, member=member_object )
+
+
+        except:
+            ewutils.logMsg(
+                'server {}: failed to clowncar.'.format(cmd.message.guild.id, cmd.message.author.id))

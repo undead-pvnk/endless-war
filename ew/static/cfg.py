@@ -28,11 +28,12 @@ gvs_active = False
 #Double Halloween Features
 dh_active = True
 #Existing Stages for Double Halloween. As the years go by we may add on to this
-dh_stage = 3
+dh_stage = 4
 """
 1: Normal
 2: Sacrifice Minigame
 3: UFO Abduction
+4: Rewind
 """
 
 
