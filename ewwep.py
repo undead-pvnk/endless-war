@@ -632,7 +632,7 @@ async def suicide(cmd):
 
 			# Assign the corpse role to the player. He dead.
 			#await cmd.client.replace_roles(cmd.message.author, role_corpse)
-			await cmd.message.author.edit(roles=cmd.roles_map[ewcfg.role_corpse])
+			await cmd.message.author.edit(roles=[cmd.roles_map[ewcfg.role_corpse]])
 
 			# Set the id_killer to the player himself, remove his slime and slime poudrins.
 			user_data.id_killer = cmd.message.author.id

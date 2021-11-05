@@ -444,7 +444,7 @@ async def on_message(message):
 		# assign the juveniles role to a user with only 1 or 0 roles.
 		if len(message.author.roles) < 2:
 			role_juvenile = roles_map[ewcfg.role_juvenile]
-			await message.author.edit(roles=role_juvenile)
+			await message.author.edit(roles=[role_juvenile])
 			#await client.replace_roles(message.author, role_juvenile)
 			return
 

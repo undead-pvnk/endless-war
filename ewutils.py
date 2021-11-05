@@ -127,7 +127,7 @@ def getSlimesForPlayer(conn, cursor, member):
     user_slimes = 0
 
     cursor.execute("SELECT slimes FROM users WHERE id_user = %s AND id_server = %s", (member.id, member.guild.id))
-    result = cursor.fetchone();
+    result = cursor.fetchone()
 
     if result == None:
         cursor.execute("REPLACE INTO users(id_user, id_server) VALUES(%s, %s)", (member.id, member.guild.id))
@@ -504,13 +504,17 @@ async def add_pvp_role(cmd = None):
     roles_map_user = getRoleMap(member.roles)
 
     if ewcfg.role_copkillers in roles_map_user and ewcfg.role_copkillers_pvp not in roles_map_user:
-        await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_copkillers_pvp])
+        #await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_copkillers_pvp])
+        await member.add_roles(cmd.roles_map[ewcfg.role_copkillers_pvp])
     elif ewcfg.role_rowdyfuckers in roles_map_user and ewcfg.role_rowdyfuckers_pvp not in roles_map_user:
-        await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
+        #await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
+        await member.add_roles(cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
     elif ewcfg.role_juvenile in roles_map_user and ewcfg.role_juvenile_pvp not in roles_map_user:
-        await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_juvenile_pvp])
+        #await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_juvenile_pvp])
+        await member.add_roles(cmd.roles_map[cmd.roles_map[ewcfg.role_juvenile_pvp]])
     elif ewcfg.role_corpse in roles_map_user and ewcfg.role_corpse_pvp not in roles_map_user:
-        await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_corpse_pvp])
+        #await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_corpse_pvp])
+        await member.add_roles(cmd.roles_map[cmd.roles_map[ewcfg.role_corpse_pvp]])
 
 
 async def send_message(channel = None, text = None, filter_everyone = True):
