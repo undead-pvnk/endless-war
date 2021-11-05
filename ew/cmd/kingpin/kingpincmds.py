@@ -12,6 +12,7 @@ from ew.utils import move as move_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 import ew.backend.core as bknd_core
+import asyncio
 from ew.backend.item import EwItem
 
 
@@ -396,40 +397,50 @@ async def clowncar(cmd):#shoves everyone not there into JR or the sewers
         return
 
     id_server = cmd.guild.id
-
+    server = ewcfg.server_list[cmd.guild.id]
     gellphones = itm_utils.find_item_all(item_search=ewcfg.item_id_gellphone, id_server=id_server, item_type_filter=ewcfg.it_item)
 
     for phone in gellphones:
         phone_data = EwItem(id_item=phone.get('id_item'))
         phone_data.item_props['gellphoneactive'] = 'false'
-        if phone_data.id_owner.isnumeric():
-            member_object = cmd.guild.get_member(phone_data.id_owner)
+        phone_data.persist()
+        if phone_data.id_owner.isnumeric() and int(phone_data.id_owner)>0:
+            print(phone_data.id_owner)
+            member_object = server.get_member(int(phone_data.id_owner))
+            if member_object is None:
+                continue
             user_data = EwUser(member=member_object)
+            print('{}{}'.format('clowning:', user_data.id_user))
             user_data.poi = 'juviesrow'
             user_data.persist()
             await ewrolemgr.updateRoles(client=cmd.client, member=member_object)
-        phone_data.persist()
+
 
     if id_server != None:
         try:
+
             selection = bknd_core.execute_sql_query(
-                "SELECT {id_user} FROM users WHERE id_server = %s AND {poi} NOT IN('juviesrow', 'thesewers')".format(
+                "SELECT {id_user} FROM users WHERE id_server = %s AND {poi} NOT IN('juviesrow', 'thesewers', 'rowdyroughhouse', 'copkilltown')".format(
                     id_user=ewcfg.col_id_user,
                     poi = ewcfg.col_poi
                 ), (
-                    'juviesrow'
+                    [str(id_server)]
                 ))
 
 
             bknd_core.execute_sql_query(
-                "UPDATE users SET {poi} = %s WHERE id_server = %s AND {poi} NOT IN('juviesrow', 'thesewers')".format(
+                "UPDATE users SET {poi} = %s WHERE id_server = %s AND {poi} NOT IN('juviesrow', 'thesewers', 'rowdyroughhouse', 'copkilltown')".format(
                     poi=ewcfg.col_poi
                 ), (
-                    'juviesrow'
+                    'juviesrow',
+                    [str(id_server)]
                 ))
-
+            iterator = 0
             for member in selection:
-                member_object = cmd.guild.get_member(member[0])
+                iterator += 1
+                if iterator % 20 == 0:
+                    await asyncio.sleep(5)
+                member_object = server.get_member(member[0])
                 await ewrolemgr.updateRoles(client = cmd.client, member=member_object )
 
 
