@@ -11,6 +11,9 @@ from ew.utils import item as itm_utils
 from ew.utils import move as move_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
+import ew.backend.core as bknd_core
+import asyncio
+from ew.backend.item import EwItem
 
 
 async def pa_command(cmd):
@@ -230,12 +233,24 @@ async def create(cmd):
     else:
         response = 'You need to specify a recipient. Usage: !create "<item_name>" "<item_desc>" <recipient>'
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
+    # princeps stopped assigning durability and stuff for... reasons (idk!!!! something with the caching update???? As far as I can tell????) so I just assigned them here lol
     item_props = {
+        "id_cosmetic": "princep",
         "cosmetic_name": item_name,
         "cosmetic_desc": item_desc,
-        "adorned": "false",
+        "str_onadorn": ewcfg.str_generic_onadorn,
+        "str_unadorn": ewcfg.str_generic_unadorn,
+        "str_onbreak": ewcfg.str_generic_onbreak,
         "rarity": rarity,
+        "attack": 3,
+        "defense": 3,
+        "speed": 3,
+        "ability": None,
+        "durability": ewcfg.base_durability * 100,
+        "size": 1,
+        "fashion_style": ewcfg.style_cool,
+        "freshness": 100,
+        "adorned": "false",
         "context": context
     }
 
@@ -375,3 +390,60 @@ async def hogtie(cmd):
 
                 leak_channel = fe_utils.get_channel(server=cmd.guild, channel_name='squickyleaks')
                 await fe_utils.send_message(cmd.client, leak_channel, "{}: Hogtied {}.".format(cmd.message.author.display_name, member.display_name))
+
+
+async def clowncar(cmd):#shoves everyone not there into JR or the sewers
+    if not cmd.message.author.guild_permissions.administrator:
+        return
+
+    id_server = cmd.guild.id
+    server = ewcfg.server_list[cmd.guild.id]
+    gellphones = itm_utils.find_item_all(item_search=ewcfg.item_id_gellphone, id_server=id_server, item_type_filter=ewcfg.it_item)
+
+    for phone in gellphones:
+        phone_data = EwItem(id_item=phone.get('id_item'))
+        phone_data.item_props['gellphoneactive'] = 'false'
+        phone_data.persist()
+        if phone_data.id_owner.isnumeric() and int(phone_data.id_owner)>0:
+            print(phone_data.id_owner)
+            member_object = server.get_member(int(phone_data.id_owner))
+            if member_object is None:
+                continue
+            user_data = EwUser(member=member_object)
+            print('{}{}'.format('clowning:', user_data.id_user))
+            user_data.poi = 'juviesrow'
+            user_data.persist()
+            await ewrolemgr.updateRoles(client=cmd.client, member=member_object)
+
+
+    if id_server != None:
+        try:
+
+            selection = bknd_core.execute_sql_query(
+                "SELECT {id_user} FROM users WHERE id_server = %s AND {poi} NOT IN('juviesrow', 'thesewers', 'rowdyroughhouse', 'copkilltown')".format(
+                    id_user=ewcfg.col_id_user,
+                    poi = ewcfg.col_poi
+                ), (
+                    [str(id_server)]
+                ))
+
+
+            bknd_core.execute_sql_query(
+                "UPDATE users SET {poi} = %s WHERE id_server = %s AND {poi} NOT IN('juviesrow', 'thesewers', 'rowdyroughhouse', 'copkilltown')".format(
+                    poi=ewcfg.col_poi
+                ), (
+                    'juviesrow',
+                    [str(id_server)]
+                ))
+            iterator = 0
+            for member in selection:
+                iterator += 1
+                if iterator % 20 == 0:
+                    await asyncio.sleep(5)
+                member_object = server.get_member(member[0])
+                await ewrolemgr.updateRoles(client = cmd.client, member=member_object )
+
+
+        except:
+            ewutils.logMsg(
+                'server {}: failed to clowncar.'.format(cmd.message.guild.id, cmd.message.author.id))

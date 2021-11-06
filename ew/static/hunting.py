@@ -331,6 +331,33 @@ enemy_attack_type_list = [
         str_damage="{name_enemy} pecks at {name_target}! They draw blood!",
         fn_effect=atf_talons
     ),
+    EwAttackType(  # 14
+        id_type="graspers",
+        str_crit="**AAAAAHHHHHHH!!!** The {name_enemy} starts to wail as it twists and wrings slime out of your body! {name_target} breaks several bones!",
+        str_miss="**WHOA!** You barely duck out of the way of {name_enemy}'s grasp!",
+        str_kill="**RRRRRRIPPPP!!!** The {name_enemy} tears you in half! Actually it looks disappointed, {name_target} was a pretty interesting specimen. {emote_skull}",
+        str_killdescriptor="strangled",
+        str_damage="{name_enemy} constricts their graspers all over {name_target}! Creepy!",
+        fn_effect=atf_body
+    ),
+    EwAttackType(  # 14
+        id_type="raygun",
+        str_crit="**PEWPEWPEW!!!** The {name_enemy} fires several shots right in the kisser! {name_target} is stunned and blinded!",
+        str_miss="**PEW -SSSSSSS!** You barely dodge a laser blast! You hair's singed...",
+        str_kill="**PEW -SSSSHhhhh.** The {name_enemy} finally hit its mark, {name_target} disintegrated into a pile of char and goo. {emote_skull}",
+        str_killdescriptor="beamed",
+        str_damage="{name_enemy} nails {name_target} with their laser pistol!",
+        fn_effect=atf_gunkshot
+    ),
+    EwAttackType(  # 14
+        id_type="feed",
+        str_crit="**CRUNCH!!!** The {name_enemy} clutches {name_target}'s shouders and takes a bite from their neck! GET IT OFF GET IT OFF GET IT OFF!",
+        str_miss="**WHOOSH-SMACK!** You jump out of the way of {name_enemy}'s lunge and kick them away!",
+        str_kill="**GULP.** The {name_enemy} swallows you whole! {name_target} can feel a load of stomach acid on their face and then nothing. {emote_skull}",
+        str_killdescriptor="eaten alive",
+        str_damage="{name_enemy} bites {name_target} deep!",
+        fn_effect=atf_fangs
+    ),
     # If str_trauma and str_trauma_self make a return, consider filling GvS attacktypes out in these attributes.
     EwAttackType(  # GvS - 1
         id_type="g_seeds",

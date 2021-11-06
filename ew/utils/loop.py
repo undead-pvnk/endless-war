@@ -31,6 +31,7 @@ from ..backend import fish as bknd_fish
 from ..backend import ads as bknd_ads
 from ..backend.market import EwMarket
 from ..backend.player import EwPlayer
+from ..backend.dungeons import EwGamestate
 from ..backend.status import EwEnemyStatusEffect
 from ..backend.status import EwStatusEffect
 from ..backend.worldevent import EwWorldEvent
@@ -212,7 +213,7 @@ async def decaySlimes(id_server = None):
 
 
 """
-	Kills users who have left the server while the bot was offline
+    Kills users who have left the server while the bot was offline
 """
 
 
@@ -291,7 +292,7 @@ async def flag_outskirts(id_server = None):
 
 
 """
-	Flag all users in vulnerable territory, defined as capturable territory (streets) and outskirts.
+    Flag all users in vulnerable territory, defined as capturable territory (streets) and outskirts.
 """
 
 
@@ -332,7 +333,7 @@ async def flag_vulnerable_districts(id_server = None):
 
 
 """
-	Coroutine that continually calls bleedSlimes; is called once per server, and not just once globally
+    Coroutine that continually calls bleedSlimes; is called once per server, and not just once globally
 """
 
 
@@ -524,7 +525,7 @@ async def pushdownServerInebriation(id_server = None):
             ewutils.logMsg("Failed to pushdown server inebriation.")     
 
 """
-	Coroutine that continually calls burnSlimes; is called once per server, and not just once globally
+    Coroutine that continually calls burnSlimes; is called once per server, and not just once globally
 """
 
 
@@ -797,18 +798,27 @@ async def decrease_food_multiplier():
         await asyncio.sleep(5)
 
 
-async def spawn_enemies(id_server = None):
+async def spawn_enemies(id_server = None, debug = False):
     market_data = EwMarket(id_server=id_server)
     resp_list = []
+    chosen_type = None
+    chosen_POI = None
+
     # One in 3 chance of spawning a regular enemy in the outskirts
-    if random.randrange(3) == 0:
+
+    if random.randrange(2) == 0 or debug:
         weathertype = ewcfg.enemy_weathertype_normal
         # If it's raining, an enemy has  2/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
         if market_data.weather == ewcfg.weather_bicarbonaterain:
             if random.randrange(3) < 2:
                 weathertype = ewcfg.enemy_weathertype_rainresist
+        if ewcfg.dh_stage == 3 and ewcfg.dh_active:
+            chosen_type = random.choice([ewcfg.enemy_type_unnervingfightingoperator, ewcfg.enemy_type_grey, ewcfg.enemy_type_tangeloid, ewcfg.enemy_type_alienscum])
+            if chosen_type == ewcfg.enemy_type_unnervingfightingoperator:
+                #chosen_POI = 'westoutskirts'
+                pass
 
-        resp_list.append(hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_weather=weathertype))
+        resp_list.append(hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_weather=weathertype, pre_chosen_type=chosen_type, pre_chosen_poi=chosen_POI))
     # One in two chance of spawning a slimeoid trainer in either the Battle Arena or Subway
     # Why did I make this into incredibly hacky code? Because.
     if random.randrange(2) == 0:
@@ -821,15 +831,19 @@ async def spawn_enemies(id_server = None):
         await cont.post()
 
 
-# TODO remove after double halloween
-# market_data = EwMarket(id_server=id_server)
-# underworld_district = EwDistrict(district=ewcfg.poi_id_underworld, id_server=id_server)
-# enemies_count = len(underworld_district.get_enemies_in_district())
 
-# if enemies_count == 0 and int(time.time()) > (market_data.horseman_timeofdeath + ewcfg.horseman_death_cooldown):
-#	dh_resp_cont = ewhunting.spawn_enemy(id_server=id_server, pre_chosen_type=ewcfg.enemy_type_doubleheadlessdoublehorseman, pre_chosen_poi=ewcfg.poi_id_underworld, manual_spawn=True)
+    if ewcfg.dh_active:
+        dhspawn = EwGamestate(id_server = id_server, id_state='dhorsemankills')
+        count = int(dhspawn.value)
+        if count < 2:
+            market_data = EwMarket(id_server=id_server)
+            underworld_district = EwDistrict(district=ewcfg.poi_id_underworld, id_server=id_server)
+            enemies_count = len(underworld_district.get_enemies_in_district())
 
-#	await dh_resp_cont.post()
+            if enemies_count == 0 and int(time.time()) > (market_data.horseman_timeofdeath + ewcfg.horseman_death_cooldown):
+                dh_resp_cont = hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_type=ewcfg.enemy_type_doubleheadlessdoublehorseman, pre_chosen_poi=ewcfg.poi_id_underworld, manual_spawn=True)
+
+                await dh_resp_cont.post()
 
 async def spawn_enemies_tick_loop(id_server):
     interval = ewcfg.enemy_spawn_tick_length
@@ -1087,7 +1101,7 @@ async def pay_salary(id_server = None):
 
 
 """
-	Updates/Increments the capture_points values of all districts every time it's called
+    Updates/Increments the capture_points values of all districts every time it's called
 """
 
 
@@ -1108,18 +1122,15 @@ async def capture_tick(id_server):
             district_name = district
             dist = EwDistrict(id_server=id_server, district=district_name)
 
+            # if it has a lock and isnt surrounded by friendly districts, degrade the lock
             if dist.time_unlock > 0 and not dist.all_neighbors_friendly():
                 responses = dist.change_capture_lock(progress=-ewcfg.capture_tick_length)
                 resp_cont_capture_tick.add_response_container(responses)
                 dist.persist()
 
+            # If a lock is active, or if it is surrounded, skip this district for capping calculations
             if dist.time_unlock > 0:
                 continue
-
-            # no more automatic capping
-            continue
-
-            controlling_faction = dist.controlling_faction
 
             gangsters_in_district = dist.get_players_in_district(min_slimes=ewcfg.min_slime_to_cap, life_states=[ewcfg.life_state_enlisted], ignore_offline=True)
 
@@ -1140,6 +1151,7 @@ async def capture_tick(id_server):
             # number of players actively capturing
             num_capturers = 0
 
+            # list of players contributing to capping, who need stats tracked
             dc_stat_increase_list = []
 
             # checks if any players are in the district and if there are only players of the same faction, i.e. progress can happen
@@ -1150,6 +1162,7 @@ async def capture_tick(id_server):
 
                 mutations = user_data.get_mutations()
 
+                # dont count offline players
                 try:
                     player_online = server.get_member(player_id).status != discord.Status.offline
                 except:
@@ -1170,29 +1183,37 @@ async def capture_tick(id_server):
                         if ewcfg.mutation_id_lonewolf in mutations and len(gangsters_in_district) == 1:
                             player_capture_speed *= 2
                         if ewcfg.mutation_id_patriot in mutations:
-                            player_capture_speed *= 2
+                            player_capture_speed *= 1.5
+                        if ewcfg.mutation_id_unnaturalcharisma in mutations:
+                            player_capture_speed += 1
 
+                        #ewutils.logMsg("Adding {} to Capture Speed of {} for player {}".format(player_capture_speed, capture_speed, player_id))
                         capture_speed += player_capture_speed
                         num_capturers += 1
                         dc_stat_increase_list.append(player_id)
 
             if faction_capture not in ['both', None]:  # if only members of one faction is present
                 if district_name in poi_static.capturable_districts:
+                    # 10% extra/less speed per adjacent district under same faction if being reinforced/taken
                     friendly_neighbors = dist.get_number_of_friendly_neighbors()
                     if dist.all_neighbors_friendly():
                         capture_speed = 0
-                    elif dist.controlling_faction == faction_capture:
+                    if dist.controlling_faction == faction_capture:
                         capture_speed *= 1 + 0.1 * friendly_neighbors
                     else:
                         capture_speed /= 1 + 0.1 * friendly_neighbors
 
+                    # get current capping progress
                     capture_progress = dist.capture_points
 
+                    # set calculated progress negative if it was being captured by the other gang
                     if faction_capture != dist.capturing_faction:
                         capture_progress *= -1
 
+                    # properly scale the speed to the scale of points needed
                     capture_speed *= ewcfg.baseline_capture_speed
 
+                    # Track capturer stats as long as they arent overcapping
                     if dist.capture_points < dist.max_capture_points:
                         for stat_recipient in dc_stat_increase_list:
                             ewstats.change_stat(
@@ -1202,10 +1223,12 @@ async def capture_tick(id_server):
                                 n=ewcfg.capture_tick_length * capture_speed
                             )
 
+                    # if it was already being captured by the currently capturing faction
                     if faction_capture == dist.capturing_faction:  # if the faction is already in the process of capturing, continue
                         responses = dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture, num_capturers)
                         resp_cont_capture_tick.add_response_container(responses)
 
+                    # otherwise, if it has zero points and is uncontrolled
                     elif dist.capture_points == 0 and dist.controlling_faction == "":  # if it's neutral, start the capture
                         responses = dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture, num_capturers)
                         resp_cont_capture_tick.add_response_container(responses)
@@ -1219,12 +1242,11 @@ async def capture_tick(id_server):
 
                     dist.persist()
 
-
-# await resp_cont_capture_tick.post()
+    return await resp_cont_capture_tick.post()
 
 
 """
-	Coroutine that continually calls capture_tick; is called once per server, and not just once globally
+    Coroutine that continually calls capture_tick; is called once per server, and not just once globally
 """
 
 
@@ -1239,7 +1261,7 @@ async def capture_tick_loop(id_server):
 
 
 """
-	Gives both kingpins the appropriate amount of slime for how many districts they own and lowers the capture_points property of each district by a certain amount, turning them neutral after a while
+    Gives both kingpins the appropriate amount of slime for how many districts they own and lowers the capture_points property of each district by a certain amount, turning them neutral after a while
 """
 
 
@@ -1275,10 +1297,11 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
     for id_district in poi_static.capturable_districts:
         district = EwDistrict(id_server=id_server, district=id_district)
 
-        district.decay_capture_points()
-        # resp_cont_decay_loop.add_response_container(responses)
+        responses = district.decay_capture_points()
+        resp_cont_decay_loop.add_response_container(responses)
         district.persist()
-# await resp_cont_decay_loop.post()
+
+    return await resp_cont_decay_loop.post()
 
 """ Good ol' Clock Tick Loop. Handles everything that has to occur on an in-game hour. (15 minutes)"""
 
@@ -1313,8 +1336,8 @@ async def clock_tick_loop(id_server = None, force_active = False):
                     ewutils.logMsg("Handling weather cycle...")
                     await weather_utils.weather_cycle(id_server)
 
-                    if not ewutils.check_fursuit_active(market_data):
-                        await cosmetic_utils.dedorn_all_costumes()
+                    if not ewutils.check_fursuit_active(market_data) and not ewcfg.dh_active: # I don't see why costumes should be dedorned automatically so, like, just removing this. It's dumb.
+                         await cosmetic_utils.dedorn_all_costumes()
 
                     await apt_utils.setOffAlarms(id_server)
 

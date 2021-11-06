@@ -26,3 +26,7 @@ cmd_map = {
     ewcfg.cmd_hogtie: kingpincmds.hogtie,
     ewcfg.cmd_defect: kingpincmds.defect
 }
+if ewcfg.dh_active:
+    cmd_map[ewcfg.cmd_exalt] = kingpincmds.exalt
+    if ewcfg.dh_stage == 4:
+        cmd_map[ewcfg.cmd_prefix + 'clowncar'] = kingpincmds.clowncar

@@ -395,7 +395,7 @@ smelting_recipe_list = [
             "whip"
         ],
         ingredients={
-            ewcfg.item_id_monofilamentfragment: 25,
+            ewcfg.item_id_monofilamentfragment: 25, 
             ewcfg.item_id_ironingot: 1,
         },
         products=[ewcfg.weapon_id_monofilamentwhip]
@@ -1671,21 +1671,65 @@ smelting_recipe_list = [
         ingredients={
             'partypoppeppers': 1,
         },
-        products=['partypopper']
+        products=['partypopper']),
+    EwSmeltingRecipe(
+        id_recipe="skinsuit",
+        str_name="skinsuit",
+        alias=[
+            'alien skinsuit',
+            'alien costume',
+            'aliencostume'
+        ],
+        ingredients={
+            'alienscalp': 10,
+        },
+        products=['skinsuit']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="batterypack",
+        str_name="battery pack",
+        alias=[
+            'battery pack',
+            'battery string',
+            'bigbattery',
+            'big battery'
+        ],
+        ingredients={
+            'alienbattery': 5,
+        },
+        products=['batterypack']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="alienbattery",
+        str_name="alien battery",
+        alias=[
+            'battery',
+            'AA'
+        ],
+        ingredients={
+            'tangeloidraygun': 1,
+        },
+        products=['alienbattery']
     )
-    # TODO remove after double halloween
-    # EwSmeltingRecipe(
-    #    id_recipe = "ticket",
-    #    str_name = "Ticket to the White Line",
-    #    alias = [
-    #        "tickettohell",
-    #    ],
-    #    ingredients = {
-    #        ewcfg.item_id_doublehalloweengrist: 100,
-    #    },
-    #    products = ['ticket']
-    # )
 ]
+
+# TODO remove after double halloween
+if ewcfg.dh_active:
+    smelting_recipe_list.append(EwSmeltingRecipe(
+            id_recipe = "ticket",
+            str_name = "Ticket to the White Line",
+            alias = [
+                "tickettohell",
+            ],
+            ingredients = {
+                ewcfg.item_id_doublehalloweengrist: 100,
+            },
+            products = ['ticket']
+         ))
+
+
+
+
 # smelting_recipe_list += ewdebug.debugrecipes
 
 # A map of id_recipe to EwSmeltingRecipe objects.

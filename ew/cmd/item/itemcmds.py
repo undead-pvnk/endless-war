@@ -81,17 +81,27 @@ async def returnsoul(cmd):
     user_inv = bknd_item.inventory(id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
     soul_item = None
     soul = None
+    eldritch = False
     for inv_object in user_inv:
         soul = inv_object
         soul_item = EwItem(id_item=soul.get('id_item'))
-        if str(soul_item.item_props.get('user_id')) == str(cmd.message.author.id):
+        if soul_item.item_props.get('id_cosmetic') == 'eldritchsoul':
+            eldritch = True
+            break
+        elif str(soul_item.item_props.get('user_id')) == str(cmd.message.author.id):
             break
 
     if usermodel.has_soul == 1:
         response = "Your current soul is a little upset you tried to give it a roommate. Only one fits in your body at a time."
-    elif soul:
 
-        if soul.get('item_type') == ewcfg.it_cosmetic and soul_item.item_props.get('id_cosmetic') == "soul":
+    elif soul:
+        if eldritch:
+            response = "The eldritch soul jar shudders for a second. You hesitate, but decide to open it. Black tendrils begin to emerge, slowly rooting deep into your chest and stomach. You don't even notice at first but you can't stop cackling. Your hands convulse, like they want to be invited inside that bystander's ribcage over there. Perhaps you'll indulge them. You're cackling so hard you can't breathe. You don't remember collapsing to the ground, but you're kneeling in the shards of the soul jar and a growing pool of your own blood.\n\nBut after a few minutes things seem to be back to normal. You can feel a soul inside you that actually resembles yours. You suppose those cosmic entities kept their promise then.\n\nAs long as this doesn't come back to haunt you, anyway."
+            bknd_item.item_delete(id_item=soul.get('id_item'))
+            usermodel.has_soul = 1
+            usermodel.persist()
+
+        elif soul.get('item_type') == ewcfg.it_cosmetic and soul_item.item_props.get('id_cosmetic') == "soul":
             if str(soul_item.item_props.get('user_id')) != str(cmd.message.author.id):
                 response = "That's not your soul. Nice try, though."
             else:
@@ -817,6 +827,9 @@ async def item_use(cmd):
             elif context == "prankcapsule":
                 response = itm_utils.popcapsule(id_user=author, id_server=server, item=item)
 
+            elif context == 'partypopper':
+                response = "***:tada:POP!!!:tada:*** Confetti flies all throughout the air, filling the area with a sense of celebration! :confetti_ball::confetti_ball::confetti_ball:"
+
             elif context == ewcfg.item_id_modelovaccine:
 
                 if user_data.life_state == ewcfg.life_state_shambler:
@@ -1130,11 +1143,23 @@ async def makecostume(cmd):
     item_desc = cmd.tokens[2]
 
     item_props = {
+        "id_cosmetic" : 'dhcostume',
         "cosmetic_name": item_name,
         "cosmetic_desc": item_desc,
         "adorned": "false",
         "rarity": "Plebeian",
         "context": "costume",
+        'attack': 6,
+        'defense': 6,
+        'speed': 6,
+        'size': 3,
+        'durability': ewcfg.soul_durability,
+        'fashion_style': ewcfg.style_cool,
+        'freshness': 10,
+        'ability': None,
+        'str_onadorn': ewcfg.str_generic_onadorn,
+        'str_unadorn': ewcfg.str_generic_unadorn,
+        'str_onbreak': ewcfg.str_generic_onbreak
     }
 
     new_item_id = bknd_item.item_create(

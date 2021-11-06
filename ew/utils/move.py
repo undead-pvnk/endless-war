@@ -433,6 +433,10 @@ def inaccessible(user_data = None, poi = None):
                 if gamestate.bit == 0:
                     return True
 
+    shipstate = EwGamestate(id_server=user_data.id_server, id_state='shipstate')
+    if ((shipstate.bit == 0) and (user_data.poi == 'ufoufo' or poi.id_poi == 'ufoufo')) or (poi.id_poi == 'ufoufo' and user_data.life_state == ewcfg.life_state_corpse):
+        return True
+
     bans = user_data.get_bans()
     vouchers = user_data.get_vouchers()
 
@@ -527,10 +531,10 @@ async def send_gangbase_messages(server_id, clock):
     highnoon = 0
 
     response = ""
-    if clock == 3:
-        response = "The police are probably asleep, the lazy fucks. It's a good time for painting the town!"
-    elif clock == 11:
-        response = "Spray time's over, looks like the cops are back out. Fuck those guys."
+    #if clock == 3:
+    #    response = "The police are probably asleep, the lazy fucks. It's a good time for painting the town!"
+    #elif clock == 11:
+    #    response = "Spray time's over, looks like the cops are back out. Fuck those guys."
     if random.randint(1, 50) == 2:
         lucky_lucy = 1
 

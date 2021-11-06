@@ -2,7 +2,6 @@ import asyncio
 import random
 import sys
 import time
-
 from ew.backend import core as bknd_core
 from ew.backend import hunting as bknd_hunt
 from ew.backend import item as bknd_item
@@ -43,7 +42,10 @@ from .cmdsutils import item_commands
 from .cmdsutils import item_off
 from .cmdsutils import location_commands
 from .cmdsutils import mutation_commands
+
 from .cmdsutils import get_crime_level
+from .cmdsutils import holiday_commands
+
 from .. import item as ewitem
 from ..apt import aptcmds as apt_cmds
 from ..faction import factioncmds as faction_cmds
@@ -1562,12 +1564,13 @@ async def commands(cmd):
         response += location_commands(cmd)
         response += mutation_commands(cmd)
         response += item_commands(cmd)
+        response += holiday_commands()
         if response != "":
             response += "\n\nLook up basic commands with !commands basic, \nor a full list with !commands categories."
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if "categories" in category:
-        response += "Categories are: \nbasic: basic info.\nmyitems: Commands for items you have.\nmylocation: Commands based in this area.\nmymutations: Commands for the mutations you currently have.\nmyfaction: Commands for the faction you're in.\nmyrace: The command for your current race.\ncombat: Combat-based commands.\ncapping: Capping-based commands.\nplayerinfo: Commands that tell you some of your statistics.\noutsidelinks: These display links to outside the server.\nitems: Show item-related commands.\ncosmeticsanddyes: Display information on cosmetics and dyes.\nsmelting: Smelting related commands.\ntrading: Trading related commands.\nquadrants: Quadrant related commands.\nslimeoids: Slimeoid-related commands.\njuvies: Commands for juvies.\nenlisted: Commands for enlisted players.\ncorpses:Commands for corpses.\nmisc: Miscellaneous commands.\nflavor: Other shitposty type commands.\nallitem: All item-specific commands.\nallmutation: All mutation specific commands.\nYou can also check the commands of a specific location using !commands location <district>."
+        response += "Categories are: \nbasic: basic info.\nmyitems: Commands for items you have.\nmylocation: Commands based in this area.\nmymutations: Commands for the mutations you currently have.\nmyfaction: Commands for the faction you're in.\nmyrace: The command for your current race.\ncombat: Combat-based commands.\ncapping: Capping-based commands.\nplayerinfo: Commands that tell you some of your statistics.\noutsidelinks: These display links to outside the server.\nitems: Show item-related commands.\ncosmeticsanddyes: Display information on cosmetics and dyes.\nsmelting: Smelting related commands.\ntrading: Trading related commands.\nquadrants: Quadrant related commands.\nslimeoids: Slimeoid-related commands.\njuvies: Commands for juvies.\nenlisted: Commands for enlisted players.\ncorpses:Commands for corpses.\nmisc: Miscellaneous commands.\nflavor: Other shitposty type commands.\nallitem: All item-specific commands.\nallmutation: All mutation specific commands.\nholiday: If an event is going on, display the commands for it.\nYou can also check the commands of a specific location using !commands location <district>."
 
     if cmd.tokens_count == 1 or "basic" in category:
         response += "\n\n" + ewcfg.basic_commands
@@ -1614,6 +1617,10 @@ async def commands(cmd):
             response += "\n\n" + ewcfg.race_unique_commands.get(race)
         else:
             response += "\n\nNo racial commands found."
+    if "doublehalloween" in category:
+        response += "\n\n" + ewcfg.holidaycommands.get("doublehalloween")
+    if "holiday" in category:
+        response += "\n\n" + holiday_commands(header = False)
     if "combat" in category:
         response += "\n\n" + ewcfg.combat_commands
     if "capping" in category:
@@ -3696,8 +3703,8 @@ async def check_bot(cmd):
 async def arrest(cmd):
     author = cmd.message.author
 
-    if not author.guild_permissions.administrator:
-        return
+    if not 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
+        return await cmd_utils.fake_failed_command(cmd)
 
     if cmd.mentions_count == 1:
         member = cmd.mentions[0]
@@ -3710,6 +3717,8 @@ async def arrest(cmd):
         response = "{} is thrown into one of the Juvenile Detention Center's high security solitary confinement spheres.".format(member.display_name)
         await ewrolemgr.updateRoles(client=cmd.client, member=member)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        leak_channel = fe_utils.get_channel(server=cmd.guild, channel_name='squickyleaks')
+        await fe_utils.send_message(cmd.client, leak_channel, "{} ({}): Arrested {}.".format(cmd.message.author.display_name, cmd.message.author.id, member.display_name))
 
 
 """
@@ -3720,8 +3729,8 @@ async def arrest(cmd):
 async def release(cmd):
     author = cmd.message.author
 
-    if not author.guild_permissions.administrator:
-        return
+    if not 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
+        return await cmd_utils.fake_failed_command(cmd)
 
     if cmd.mentions_count == 1:
         member = cmd.mentions[0]
@@ -3733,6 +3742,9 @@ async def release(cmd):
         response = "{} is released. But beware, the cops will be keeping an eye on you.".format(member.display_name)
         await ewrolemgr.updateRoles(client=cmd.client, member=member)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        leak_channel = fe_utils.get_channel(server=cmd.guild, channel_name='squickyleaks')
+        await fe_utils.send_message(cmd.client, leak_channel, "{} ({}): Released {}.".format(cmd.message.author.display_name, cmd.message.author.id, member.display_name))
+
 
 
 async def post_leaderboard(cmd):
@@ -3901,3 +3913,59 @@ async def verify_cache(cmd):
             ewutils.logMsg("Item {}'s name failed flattening. Data: \n{}".format(item_data.get("id_item"), item_data))
 
     return
+
+async def cockdraw(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    command_used = str(cmd.tokens[0])
+    cosmetics = bknd_item.inventory(id_user=user_data.id_user, id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
+    protected = False
+    action = 'measure the'
+    object = ''
+    for cosmetic in cosmetics:
+        cosmetic_data = EwItem(id_item=cosmetic.get('id_item'))
+        if cosmetic_data.item_props.get('id_cosmetic') == 'chastitybelt':
+            if cosmetic_data.item_props.get('adorned') == 'true':
+                protected = True
+
+
+    if len(command_used[8:]) > 0:
+        object = command_used[8:]
+    elif cmd.tokens_count > 1:
+        object = message_text = ' '.join(word for word in cmd.tokens[1:])
+    else:
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "Measure what?"))
+
+    if cmd.tokens[0] in ['!cockdraw', '!measurecock']:
+        object = 'dick'
+        action = 'whip out your'
+        if protected:
+
+            response = "You reach for your pants, only to be blocked by your chastity belt. The Lord has once again thwarted your degeneracy."
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        size = float(user_data.rand_seed % 110)/10
+
+        if size >= 10:
+            size = user_data.rand_seed % 1000
+    else:
+        random.seed(object)
+        size = float((random.randint(1, 100000) + user_data.rand_seed) % 110) / 10
+
+        if size >= 10:
+            size = (random.randint(1, 100000) + user_data.rand_seed) % 1000
+
+    if cmd.tokens[0] == '!cockdraw':
+        response = "You slowly stick your hand in your pants..."
+        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        await asyncio.sleep(1)
+        response = "**3!**"
+        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        await asyncio.sleep(1)
+        response = "**2!**"
+        await fe_utils.send_message(cmd.client, cmd.message.channel,fe_utils.formatMessage(cmd.message.author, response))
+        await asyncio.sleep(1)
+        response = "**1!**"
+        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        await asyncio.sleep(1)
+
+    response = "You {} {}! It's {} inches long!".format(action, object, size)
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

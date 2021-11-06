@@ -57,5 +57,8 @@ cmd_map = {
     ewcfg.cmd_crystalize_negapoudrin_alt1: spookycmds.crystalize_negapoudrin,
     ewcfg.cmd_crystalize_negapoudrin_alt2: spookycmds.crystalize_negapoudrin,
     ewcfg.cmd_crystalize_negapoudrin_alt3: spookycmds.crystalize_negapoudrin,
+    ewcfg.cmd_favor: spookycmds.favor
 
 }
+if ewcfg.dh_active and ewcfg.dh_stage == 2:
+    cmd_map[ewcfg.cmd_sacrifice] = spookycmds.sacrifice

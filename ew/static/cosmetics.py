@@ -3,6 +3,8 @@ import os
 
 from ..model.item import EwCosmeticItem
 
+unique_smeltables = ['skinsuit', 'eldritchsoul']
+
 cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "propellerhat",
@@ -260,6 +262,17 @@ cosmetic_items_list = [
         price = 50000,
         vendors = ['bazaar'],
         is_hat = True,
+    ),
+    EwCosmeticItem(
+        id_cosmetic="eldritchsoul",
+        str_name="eldritch soul",
+        str_desc="The inside of this bottle is pitch black, and occasionally you see an insect-like appendage rap against the glass. If you listen to it closely you can hear it whispering tesseracts and imaginary numbers.",
+        rarity="Patrician",
+        durability=2500000,
+        style="cool",
+        acquisition="eldritchsoul",
+        price=50000,
+        vendors=[],
     ),
     EwCosmeticItem(
         id_cosmetic = "jestershat",
@@ -1123,6 +1136,49 @@ cosmetic_items_list = [
         freshness = 10,
         acquisition = "Safari",
         price = 1000000,
+    ),
+    EwCosmeticItem(
+        id_cosmetic="chastitybelt",
+        str_name="Chastity Belt",
+        str_desc="A metal codpiece used to protect against sexual urges and, when necessary, pickpockets. It's locked and there's no key to go with it.",
+        str_onadorn="You strap on the chastity belt, locking it up tight. Maybe too tight, you have no means of pissing now.",
+        str_unadorn="You rip off your legs, tear the belt off, then try reattaching your legs. Wait, that worked?",
+        str_onbreak="",
+        rarity="Plebeian",
+        durability=250000,
+        style="beautiful",
+        freshness=10,
+        acquisition="",
+        price=200000,
+        vendors = ['bazaar'],
+    ),
+    EwCosmeticItem(
+        id_cosmetic="skinsuit",
+        str_name="Alien Skin Suit",
+        str_desc="A patched together suit made out of the scalps of various extraterrestrials. You're shocked this fools anyone, but they seem to work.",
+        str_onadorn="You cloak up into the alien skinsuit. Who's invading now, body snatchers?",
+        str_unadorn="You take off the skinsuit. Phew, it was hot and weirdly gelatinous in there.",
+        str_onbreak="",
+        rarity="Plebeian",
+        durability=250000,
+        style="smart",
+        freshness=10,
+        acquisition='smelting',
+        price=200000,
+        vendors=[],
+    ),
+    EwCosmeticItem(
+        id_cosmetic="alienscalp",
+        str_name="Alien Scalp",
+        str_desc="It's the severed scalp of one of NLACakaNM's many alien races. Most of them don't have hair though, so you guess it's more of like a head skin...chunk.",
+        str_onadorn="You attach the scalp to your belt. Another freak exterminated.",
+        str_unadorn="You put away the alien scalp. Don't want your space friends to see this...",
+        str_onbreak="",
+        rarity="Plebeian",
+        durability=250000,
+        style="tough",
+        freshness=10,
+        price=200000,
     ),
     EwCosmeticItem(
         id_cosmetic = "guillotinecharm",

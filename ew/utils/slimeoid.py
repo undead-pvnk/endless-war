@@ -49,7 +49,7 @@ class EwSlimeoid(EwSlimeoidBase):
                 haunt_cap = 10 ** (self.level - 1)
                 haunted_slimes = min(haunt_cap, haunted_slimes)  # cap on for how much you can haunt
 
-                haunted_data.change_slimes(n=-haunted_slimes, source=ewcfg.source_haunted)
+                haunted_data.slimes -= haunted_slimes #can't do .change_slimes for import reasons. #TODO: Fix that. #haunted_data.change_slimes(n=-haunted_slimes, source=ewcfg.source_haunted)
                 market_data.negaslime -= haunted_slimes
 
                 # Persist changes to the database.

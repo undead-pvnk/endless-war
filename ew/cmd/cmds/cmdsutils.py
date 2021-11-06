@@ -149,6 +149,16 @@ def item_commands(cmd):
         return ""
 
 
+def holiday_commands(header = True):
+    if header:
+        response = "\n**EVENTS:**\n"
+    else:
+        response = ""
+    if ewcfg.dh_active:
+        return "{}{}".format(response, ewcfg.holidaycommands.get('doublehalloween'))
+    else:
+        return ''
+
 """ used for !shares """
 
 

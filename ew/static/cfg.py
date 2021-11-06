@@ -3,7 +3,7 @@
 
 
 
-version = "v4.011 afterparty 😜"
+version = "v4.012 doubledoublehalloween"
 
 dir_msgqueue = 'msgqueue'
 
@@ -25,6 +25,19 @@ territory_time_gain = 10
 
 # A variable which is used to determine how certain functions of enemies are to perform
 gvs_active = False
+#Double Halloween Features
+dh_active = True
+#Existing Stages for Double Halloween. As the years go by we may add on to this
+dh_stage = 4
+"""
+1: Normal
+2: Sacrifice Minigame
+3: UFO Abduction
+4: Rewind
+"""
+
+
+
 
 # The max amount of degradation a district can have before it is shambled completely
 district_max_degradation = 10000
@@ -64,7 +77,7 @@ playerstats_list = [
     stat_speed,
 ]
 
-slimeoid_tick_length = 5 * 60  # 5 minutes
+slimeoid_tick_length = 5 * 60 # 5 minutes
 
 # slimeoid life states
 slimeoid_state_none = 0
@@ -911,7 +924,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '!'
+cmd_prefix = '/~'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -979,6 +992,7 @@ cmd_crystalize_negapoudrin = cmd_prefix + 'crystalizenegapoudrin'
 cmd_crystalize_negapoudrin_alt1 = cmd_prefix + 'smeltnegapoudrin'
 cmd_crystalize_negapoudrin_alt2 = cmd_prefix + 'crystallise'
 cmd_crystalize_negapoudrin_alt3 = cmd_prefix + 'crystalize'
+cmd_favor = cmd_prefix + 'favor'
 cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
 cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
 cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
@@ -1095,6 +1109,7 @@ cmd_scout_alt1 = cmd_prefix + 'sniff'
 cmd_scrutinize = cmd_prefix + 'scrutinize'
 cmd_map = cmd_prefix + 'map'
 cmd_transportmap = cmd_prefix + 'transportmap'
+cmd_transportmap_alt1 = cmd_prefix + 'transitmap'
 cmd_wiki = cmd_prefix + 'wiki'
 cmd_booru = cmd_prefix + 'booru'
 cmd_bandcamp = cmd_prefix + 'bandcamp'
@@ -1118,7 +1133,8 @@ cmd_dance_alt = cmd_prefix + 'vance'
 cmd_propaganda = cmd_prefix + 'propaganda'
 cmd_coinflip = cmd_prefix + 'co1nfl1p'
 cmd_spook = cmd_prefix + 'spook'
-# cmd_makecostume = cmd_prefix + 'makecostume'
+cmd_sacrifice = cmd_prefix + 'sacrifice'
+cmd_makecostume = cmd_prefix + 'makecostume'
 cmd_trick = cmd_prefix + 'trick'
 cmd_treat = cmd_prefix + 'treat'
 cmd_russian = cmd_prefix + 'russianroulette'
@@ -1162,7 +1178,7 @@ cmd_editprops = cmd_prefix + 'editprops'
 cmd_setslime = cmd_prefix + 'setslime'
 cmd_checkstats = cmd_prefix + 'checkstats'
 cmd_makebp = cmd_prefix + 'makebp'
-# cmd_exalt = cmd_prefix + 'exalt'
+cmd_exalt = cmd_prefix + 'exalt'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
 cmd_discard_alt1 = cmd_prefix + 'drop'
@@ -1184,6 +1200,11 @@ cmd_capture_progress = cmd_prefix + 'progress'
 cmd_changespray = cmd_prefix + 'changespray'
 cmd_changespray_alt1 = cmd_prefix + 'changetag'
 cmd_tag = cmd_prefix + 'tag'
+cmd_observe = cmd_prefix + 'observe'
+cmd_launch  =cmd_prefix + 'launch'
+cmd_land = cmd_prefix + 'land'
+cmd_beammeup = cmd_prefix + 'beammeup'
+cmd_abduct = cmd_prefix + 'abduct'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
 cmd_teleport_player = cmd_prefix + 'tpp'
@@ -1479,7 +1500,11 @@ cmd_offer = cmd_prefix + 'offer'
 cmd_remove_offer = cmd_prefix + 'removeoffer'
 cmd_completetrade = cmd_prefix + 'completetrade'
 cmd_canceltrade = cmd_prefix + 'canceltrade'
+
 cmd_bazaar_refresh = cmd_prefix + 'refreshbazaar'
+
+cmd_cockdraw = cmd_prefix + 'cockdraw'
+cmd_measurecock = cmd_prefix + 'measurecock'
 
 # race
 cmd_set_race = cmd_prefix + 'setrace'
@@ -1646,10 +1671,10 @@ property_class_c = "c"
 
 # district capturing
 capture_tick_length = 10  # in seconds; also affects how much progress is made per tick
-max_capture_points_s = 500000  # 500k
-max_capture_points_a = 300000  # 300k
-max_capture_points_b = 200000  # 200k
-max_capture_points_c = 100000  # 100k
+max_capture_points_s = 13105  # 4 hours
+max_capture_points_a = 6553  # 2 hours
+max_capture_points_b = 3277  # 1 hour
+max_capture_points_c = 1638  # 30 minutes
 
 limit_influence_s = 133200000
 limit_influence_a = 66600000
@@ -2572,6 +2597,7 @@ leaderboard_shamblers_killed = "MOST SHAMBLER KILLS"
 # SWILLDERKMUK
 leaderboard_gambit_high = "HIGHEST GAMBIT"
 leaderboard_gambit_low = "LOWEST GAMBIT"
+leaderboard_sacrificial = "SACRIFICIAL LAMBS"
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -4022,10 +4048,10 @@ mutation_descriptions = {
     mutation_id_fatchance: "Take 25% less damage from attacks when above 50% hunger.",
     mutation_id_fastmetabolism: "Movement speed is increased by 33% when below 40% hunger.",
     mutation_id_bingeeater: "Upon eating food, the restored hunger is multiplied by the number of dishes you’ve consumed in the past 5 seconds. Eating lots of food at once puts you in a raging food coma, increasing defense.",
-    mutation_id_lonewolf: "50% more damage when in a district without any friendly gangsters. Stacks with the Patriot mutation.",
+    mutation_id_lonewolf: "50% more damage and 2x capping speed when in a district without any friendly gangsters. Stacks with the Patriot mutation.",
     mutation_id_quantumlegs: "You can now use the !tp command, allowing you to teleport to a district up to two locations away from you after an uninterrupted 15 second running start, with a cooldown of 3 hours.",
     mutation_id_chameleonskin: "While offline, you can move to and scout other districts and cannot be scouted.",
-    mutation_id_patriot: "25% influence bonus. Stacks with Unnatural Charisma.",
+    mutation_id_patriot: "1.5x capping speed. Stacks with Lone Wolf.",
     mutation_id_socialanimal: "Your damage increases by 10% for every ally in your district.",
     mutation_id_threesashroud: "Cannot be scouted and crit chance is doubled if there are more than 3 allies in your district. Cannot be scouted by players with the Keen Smell mutation.",
     mutation_id_aposematicstench: "For every 5 levels you gain, you appear as 1 more person when being scouted. Cannot be scouted by players with the Keen Smell mutation. Use !stink to produce a monster repelling effect. Attacking enemies with it on causes a temporary damage nerf and the removal of the effect.",
@@ -4041,9 +4067,9 @@ mutation_descriptions = {
     mutation_id_handyman: "If you kill an enemy gangster with a tool instead of a weapon, your kingpin gets double the slime they normally do.",
     mutation_id_packrat: "Apartment storage is doubled, regardless of apartment class.",
     mutation_id_stickyfingers: "When using !order at a store, there is a 20% chance to get the item for free. You still need to have the slime to purchase it, though.",
-    mutation_id_unnaturalcharisma: "Influence when !spraying goes up by 20%. You also gain 500 freshness.",
+    mutation_id_unnaturalcharisma: "Additive +1 to capping speed (not multiplied by Lone Wolf or Patriot). You also gain 500 freshness.",
     mutation_id_rigormortis: "You are able to !preserve up to 5 items. These items will not drop when you are killed. You must have this mutation for the preservation to take effect, and the items must be in your inventory.",
-    mutation_id_nervesofsteel: "As a gangster, you aren't damaged by !spray-ing in ally-surrounded districts. As a juvie, you can play Russian Roulette and commit suicide.",
+    mutation_id_nervesofsteel: "As a juvie, you can play Russian Roulette and commit suicide.",
     mutation_id_napalmsnot: "You do some burn damage when attacking with any weapon, in addition to its normal damage. You also gain immunity to burn damage.",
     mutation_id_ditchslap: "Use !slap @user <location> on an ally to instantly launch them to an adjacent district. If you are in a safe zone, the target must use !clench before they can be hit. Any given ally can't be slapped again for a 5 minute cooldown.",
     mutation_id_greenfingers: "Farming wait time is decreased by 33%, and yields are increased by 20%.",
@@ -4150,7 +4176,7 @@ item_unique_commands = {
 holidaycommands = {
     "swildermuk": "",
     "slimernalia": "",
-    "doublehalloween": "",
+    "doublehalloween": "DOUBLE HALLOWEEN:\n!makecostume \"<Name>\" \"<<Description\" Create a Double Halloween costume using a costume kit.\n!crush <candy> Crush candy to get Double Halloween Grist.\n!trickortreat <player> Get candy in a district, or from a player's apartment if you @ them.\n!sacrifice <item>: In ENDLESS WAR, sacrifice an item to appease...someone. Probably an elder god.",
 }
 
 district_unique_commands = {
@@ -4246,7 +4272,9 @@ enemy_attacktype_prairieking = 'prairieking'
 enemy_attacktype_tinyclaws = 'tinyclaws'
 enemy_attacktype_whale = 'whale'
 enemy_attacktype_phoenix = 'phoenix'
-
+enemy_attacktype_graspers = 'graspers'
+enemy_attacktype_raygun = 'raygun'
+enemy_attacktype_feed = 'feed'
 enemy_attacktype_amateur = 'amateur'
 
 enemy_attacktype_gvs_g_seeds = 'g_seeds'
@@ -4290,6 +4318,10 @@ enemy_type_mammoslime = 'mammoslime'
 enemy_type_rivalhunter = 'rivalhunter'
 # Rare enemies
 enemy_type_microslime = 'microslime'
+enemy_type_grey = 'grey'
+enemy_type_tangeloid = 'tangeloid'
+enemy_type_alienscum = 'alienscum'
+
 enemy_type_mammoslimebull = 'mammoslimebull'
 enemy_type_slimeofgreed = 'slimeofgreed'
 enemy_type_microgullswarm = 'microgullswarm'
@@ -4532,6 +4564,27 @@ enemy_drop_tables = {
         {item_id_dinoslimemeat: [100, 1, 1]},
         {item_id_tradingcardpack: [100, 1, 1]},
         {item_id_monofilamentfragment: [100, 1, 1]},
+        {"alienscalp": [100, 1, 1]},
+    ],
+    enemy_type_grey: [
+        {item_id_slimepoudrin: [100, 1, 1]},
+        {"taco": [33, 1, 1]},
+        {"chickenbucket": [33, 1, 1]},
+        {"pepperoni": [33, 1, 1]},
+        {"alienscalp": [100, 1, 1]},
+    ],
+    enemy_type_tangeloid: [
+        {item_id_slimepoudrin: [100, 1, 1]},
+        {"tangeloidraygun": [100, 1, 1]},
+        {'alienbattery': [20, 1, 1]},
+        {"alienscalp": [100, 1, 1]},
+    ],
+    enemy_type_alienscum: [
+        {item_id_slimepoudrin: [100, 1, 1]},
+        {"alienbattery": [20, 1, 1]},
+        {item_id_dinoslimemeat: [100, 1, 1]},
+        {item_id_civilianscalp: [50, 1, 1]},
+        {"alienscalp": [100, 1, 1]},
     ],
     enemy_type_civilian: [
         {item_id_slimepoudrin: [20, 1, 1]},
@@ -4631,6 +4684,30 @@ enemy_data_table = {
         "displayname": "Microslime",
         "raredisplayname": "Irridescent Microslime",
         "aliases": ["micro", "pinky"]
+    },
+    enemy_type_grey: {
+        "slimerange": [250000, 750000],
+        "ai": enemy_ai_attacker_b,
+        "attacktype": enemy_attacktype_graspers,
+        "displayname": "Grey Alien",
+        "raredisplayname": "Grey with a Burger King Crown On Its Head",
+        "aliases": ["greys", "galien", "unnervingfightingoperator", "unnerving"]
+    },
+    enemy_type_tangeloid: {
+        "slimerange": [250000, 500000],
+        "ai": enemy_ai_attacker_a,
+        "attacktype": enemy_attacktype_raygun,
+        "displayname": "Tangeloid",
+        "raredisplayname": "Squiggled Tangeloid",
+        "aliases": ["tangela", "tangle", "millite", "milly", "squiggle", "squig"]
+    },
+    enemy_type_alienscum: {
+        "slimerange": [500000, 750000],
+        "ai": enemy_ai_attacker_a,
+        "attacktype": enemy_attacktype_feed,
+        "displayname": "Alien Scum",
+        "raredisplayname": "Unhinged Alien Psycho",
+        "aliases": ["scum", "ascum", "psycho", "unhinged"]
     },
     enemy_type_slimeofgreed: {
         "slimerange": [20000, 100000],
@@ -5550,6 +5627,49 @@ rating_flavor = [
     "Glowing with admiration",
 ]
 
+id_item_convert ={
+    it_furniture:'id_furniture',
+    it_cosmetic:'id_cosmetic',
+    it_weapon:'weapon_type',
+    it_food : 'id_food',
+    it_item: 'id_item',
+    it_questitem:'qitem_name'
+}
+
+sacrifice_rates = {
+'scalp':[30, "You make a little effigy out of the scalp and toss it on the altar."],
+'soul':[1000, "Literally without thinking at all, you decide to offer your soul to the devil in exchange for a chance at getting your soul. Your idiocy is rewarded with like a billion points."],
+'slimepoudrin':[5, "Sure, slime makes sense as a sacrifice."],
+'water':[-1, 'What the fuck kind of sacrifice is a glass of water? Not even slime, just kill me now.' ],
+'sord':[-1, 'https://cdn.discordapp.com/attachments/608051831775428648/902359140607885392/sweets-meme.jpg \n!spook'],
+'barbecuesauce':[-5, "The nameless dieties you're sacrificing to don't really like barbecue sauce."],
+'butler':[150, "Human sacrifice? Let's go."],
+'reanimatedcorpse':[300, "Human sacrifice? Let's go."],
+'humancorpse':[150, "Human sacrifice? Let's go."],
+'dragonsoul':[100, "Animal souls aren't as good as the real deal. You wouldn't fuck an animal, right? It's like that but with souls."],
+'monsterbones':[30, "Animal sacrifice is good, but maybe a little too ethical for the eldritch horrors downstairs."],
+'dinoslimemeat':[25, "Animal sacrifice is good, but maybe a little too ethical for the eldritch horrors downstairs."],
+'bloodcabbages':[50, "Blood for the blood god."],
+'bloodstone':[1200, "We are eternally grateful for your generous donation. We shall feed for centuries on it."],
+'bloodcabbagecoleslaw':[-100, "You sacrifice cole slaw to the undead. Seriously, what the fuck were you thinking?"],
+'coleslaw': [-100, "You sacrifice cole slaw to the undead. Seriously, what the fuck were you thinking?"],
+'bloodtransfusion':[170, "Blood for the blood god."],
+'normal':[1, "You toss your worldly posessions to the altar."],
+'brick': [-5, "Can't dodge a valuable gift with a brick."],
+'humanskeleton':[100, "Human sacrifice? Let's go."],
+'dinoslimeskeleton':[650, "You throw the priceless piece of history to be immolated on the stone slab."],
+'slimeadactylskeleton':[650, "You throw the priceless piece of history to be immolated on the stone slab."],
+'mammoslimeskeleton':[650, "You throw the priceless piece of history to be immolated on the stone slab."],
+'slimeasaurusskeleton':[650, "You throw the priceless piece of history to be immolated on the stone slab."],
+'slimedragonskeleton':[650, "You throw the priceless piece of history to be immolated on the stone slab."],
+'leatherchair':[153, "It's furniturized, but it oughta do the job well enough."],
+'leatherlamp':[120, "It's furniturized, but it oughta do the job well enough."],
+'leatherdesk':[150, "It's furniturized, but it oughta do the job well enough."],
+'leatherbed':[390, "It's furniturized, but it oughta do the job well enough."],
+'leathercouch':[350, "It's furniturized, but it oughta do the job well enough."],
+'civilianscalp':[50, "You make a little effigy out of the scalp and toss it on the altar."]
+}
+
 zine_cost = 10000
 minimum_pages = 5
 maximum_pages = 20
@@ -5594,7 +5714,8 @@ lock_states = {
     "n9door": ["n9office", "n4office"],
     "n10door": ["n10office", "n4office"],
     "n11door": ["n11office", "n4office"],
-    "groundfloordoor": ["slimecorphq", "n10office"]
+    "groundfloordoor": ["slimecorphq", "n10office"],
+    "shipstate": ["ufoufo", "westoutskirts"]
 }
 
 region_lock_states = {

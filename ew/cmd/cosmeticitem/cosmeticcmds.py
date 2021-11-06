@@ -109,7 +109,6 @@ async def adorn(cmd):
             id_server=cmd.guild.id,
             item_type_filter=ewcfg.it_cosmetic
         )
-
         item_sought = None
         item_from_slimeoid = None
         already_adorned = False
@@ -133,8 +132,8 @@ async def adorn(cmd):
                     continue
                 if i.item_props.get("adorned") == 'true':
                     already_adorned = True
-                elif i.item_props.get("context") == 'costume':
-                    if not ewutils.check_fursuit_active(market_data):
+                elif i.item_props.get("context") == 'costume' and not ewcfg.dh_active:
+                    if not ewcfg.dh_active and not ewutils.check_fursuit_active(market_data) :
                         response = "You can't adorn your costume right now."
                 else:
                     item_sought = i

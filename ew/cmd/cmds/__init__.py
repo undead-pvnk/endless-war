@@ -31,8 +31,7 @@ cmd_map = {
     # Ghosts can BOO
     ewcfg.cmd_boo: cmdcmds.boo,
 
-    # TODO remove after double halloween
-    # ewcfg.cmd_spook: cmds.spook,
+
 
     # Juvies can dance
     ewcfg.cmd_dance: cmdcmds.dance,
@@ -86,6 +85,7 @@ cmd_map = {
     # link to the world maps
     ewcfg.cmd_map: cmdcmds.map,
     ewcfg.cmd_transportmap: cmdcmds.transportmap,
+    ewcfg.cmd_transportmap_alt1: cmdcmds.transportmap,
 
     # Check your fashion ratings
     ewcfg.cmd_fashion: cmdcmds.fashion,
@@ -219,8 +219,13 @@ cmd_map = {
 
     # Verify that the cache is functional
     ewcfg.cmd_verify_cache: cmdcmds.verify_cache,
-
+    ewcfg.cmd_cockdraw: cmdcmds.cockdraw,
+    ewcfg.cmd_measurecock: cmdcmds.cockdraw
 }
+# TODO remove after double halloween
+if ewcfg.dh_active:
+    cmd_map[ewcfg.cmd_spook] = cmdcmds.spook
+
 
 dm_cmd_map = {
 
