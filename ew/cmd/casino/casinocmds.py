@@ -192,6 +192,8 @@ async def pachinko(cmd):
 
             if user_data.life_state == ewcfg.life_state_corpse:
                 return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_machine))
+            elif user_data.poi != ewcfg.poi_id_thecasino:
+                return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, "You try to shove the slime through your phone into the casino, but it just bounces off the screen. Better use a digital currency. Or your soul."))
 
             if value > user_data.slimes:
                 response = "You don't have enough slime to play. You need {} but only have {}.".format(value, user_data.slimes)
@@ -343,6 +345,8 @@ async def craps(cmd):
             else:
                 if user_data.life_state == ewcfg.life_state_corpse:
                     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
+                elif user_data.poi != ewcfg.poi_id_thecasino:
+                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You try to shove the slime through your phone into the casino, but it just bounces off the screen. Better use a digital currency. Or your soul."))
 
                 if value == -1:
                     value = user_data.slimes
@@ -460,6 +464,8 @@ async def slots(cmd):
 
             if user_data.life_state == ewcfg.life_state_corpse:
                 return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_machine))
+            elif user_data.poi != ewcfg.poi_id_thecasino:
+                return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, "You try to shove the slime through your phone into the casino, but it just bounces off the screen. Better use a digital currency. Or your soul."))
 
             if value > user_data.slimes:
                 response = "You don't have enough slime. You need {} but only have {}.".format(value, user_data.slimes)
@@ -654,6 +660,8 @@ async def roulette(cmd):
             else:
                 if user_data.life_state == ewcfg.life_state_corpse:
                     return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
+                elif user_data.poi != ewcfg.poi_id_thecasino:
+                    return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, "You try to shove the slime through your phone into the casino, but it just bounces off the screen. Better use a digital currency. Or your soul."))
 
                 if value == -1:
                     value = user_data.slimes
@@ -867,7 +875,8 @@ async def baccarat(cmd):
             else:
                 if user_data.life_state == ewcfg.life_state_corpse:
                     return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
-
+                elif user_data.poi != ewcfg.poi_id_thecasino:
+                    return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, "You try to shove the slime through your phone into the casino, but it just bounces off the screen. Better use a digital currency. Or your soul."))
                 if value == -1:
                     value = user_data.slimes
 

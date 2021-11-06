@@ -3117,7 +3117,7 @@ poi_list = [
         minor_role = "nullminorrole",
         permissions = {'north-outskirts-depths': ['read', 'send', 'connect']},
         is_outskirts = True,
-        neighbors = {'nuclearbeachdepths': 60, 'northoutskirts': 60, 'northwestoutskirts': 60},
+        neighbors = {'nuclearbeachdepths': 60, 'northoutskirts': 60, 'northwestoutskirts': 60, 'northwestoutskirtsdepths': 60},
         wikipage = "https://rfck.miraheze.org/wiki/Outskirts#Depths",
     ),
     EwPoi(
@@ -3335,7 +3335,7 @@ EwPoi(
         vendors=[],
         is_subzone=False,
         mother_districts=["westoutskirts"],
-        neighbors={"westoutskirts": 60},
+        neighbors={"westoutskirts": 60} if ewcfg.dh_stage == 3 else {},
         wikipage=""
     ),
 ]
