@@ -9,7 +9,8 @@ from ..backend.player import EwPlayer
 from ..utils.frontend import EwResponseContainer
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
-
+import ew.static.rstatic as static_relic
+from ew.backend.dungeons import EwGamestate
 
 async def post_leaderboards(client = None, server = None):
     ewutils.logMsg("Started leaderboard calcs...")
@@ -36,23 +37,43 @@ async def post_leaderboards(client = None, server = None):
     topghosts = make_userdata_board(server=server.id, category=ewcfg.col_slimes, title=ewcfg.leaderboard_ghosts, lowscores=True, rows=3)
     resp_cont.add_channel_response(leaderboard_channel, topghosts)
 
-    topbounty = make_userdata_board(server=server.id, category=ewcfg.col_bounty, title=ewcfg.leaderboard_bounty, divide_by=ewcfg.slimecoin_exchangerate)
-    resp_cont.add_channel_response(leaderboard_channel, topbounty)
+    if market.day % 3 == 0:
 
-    topfashion = make_freshness_top_board(server=server.id)
-    resp_cont.add_channel_response(leaderboard_channel, topfashion)
+        topbounty = make_userdata_board(server=server.id, category=ewcfg.col_bounty, title=ewcfg.leaderboard_bounty, divide_by=ewcfg.slimecoin_exchangerate)
+        resp_cont.add_channel_response(leaderboard_channel, topbounty)
 
-    topdonated = make_userdata_board(server=server.id, category=ewcfg.col_splattered_slimes, title=ewcfg.leaderboard_donated)
-    resp_cont.add_channel_response(leaderboard_channel, topdonated)
+        toplifetimekills = make_statdata_board(server=server.id, category=ewcfg.stat_lifetime_kills, title=ewcfg.leaderboard_lifetimekills)
+        resp_cont.add_channel_response(leaderboard_channel, toplifetimekills)
 
-    topslimeoids = make_slimeoids_top_board(server=server.id)
-    resp_cont.add_channel_response(leaderboard_channel, topslimeoids)
+        toplifetimedeaths = make_statdata_board(server=server.id, category=ewcfg.stat_lifetime_deaths, title=ewcfg.leaderboard_lifetimedeaths)
+        resp_cont.add_channel_response(leaderboard_channel, toplifetimedeaths)
 
-    # topfestivity = make_slimernalia_board(server = serve.id, title = ewcfg.leaderboard_slimernalia)
-    # resp_cont.add_channel_response(leaderboard_channel, topfestivity)
+    elif market.day % 3 == 1:
 
-    topzines = make_zines_top_board(server=server.id)
-    resp_cont.add_channel_response(leaderboard_channel, topzines)
+        topfashion = make_freshness_top_board(server=server.id)
+        resp_cont.add_channel_response(leaderboard_channel, topfashion)
+
+        topslimeoids = make_slimeoids_top_board(server=server.id)
+        resp_cont.add_channel_response(leaderboard_channel, topslimeoids)
+
+        topzines = make_zines_top_board(server=server.id)
+        resp_cont.add_channel_response(leaderboard_channel, topzines)
+    else:
+        topbounty = make_userdata_board(server=server.id, category=ewcfg.col_crime, title=ewcfg.leaderboard_crime, divide_by=ewcfg.slimecoin_exchangerate)
+        resp_cont.add_channel_response(leaderboard_channel, topbounty)
+
+        toprelics = make_relics_found_board(id_server=server.id, title = ewcfg.leaderboard_relics)
+        resp_cont.add_channel_response(leaderboard_channel, toprelics)
+
+        #TODO: Add KP Slime Offered  as a Leaderboard Option
+
+
+
+        # topfestivity = make_slimernalia_board(server = serve.id, title = ewcfg.leaderboard_slimernalia)
+        # resp_cont.add_channel_response(leaderboard_channel, topfestivity)
+
+        # topdonated = make_userdata_board(server=server.id, category=ewcfg.col_splattered_slimes, title=ewcfg.leaderboard_donated)
+        # resp_cont.add_channel_response(leaderboard_channel, topdonated)
 
     if ewcfg.dh_stage == 2 and ewcfg.dh_active:
         topfavor = make_statdata_board(server=server.id, category='sacrificerate', title =ewcfg.leaderboard_sacrificial)
@@ -437,6 +458,22 @@ def make_district_control_board(id_server, title):
         entry_type=ewcfg.entry_type_districts
     )
 
+def make_relics_found_board(id_server, title):
+    existing_relics = len(static_relic.relic_list)
+    relic_count_state = EwGamestate(id_server=id_server, id_state='donated_relics')
+    relic_count_donated = int(relic_count_state.value)
+
+
+    allrelics = ['TOTAL', existing_relics]
+    donatedrelics = ['DONATED', relic_count_donated]
+
+    return format_board(
+        entries=[donatedrelics, allrelics],
+        title=title,
+        entry_type=ewcfg.entry_type_relics
+    )
+
+
 
 # SLIMERNALIA
 def make_slimernalia_board(server, title):
@@ -602,6 +639,10 @@ def board_header(title):
         emote = ewcfg.emote_nlacakanm
         bar += " "
 
+    elif title == ewcfg.leaderboard_relics:
+        emote = "🗺️"
+        bar += " "
+
     elif title == ewcfg.leaderboard_donated:
         emote = ewcfg.emote_slimecorp
         bar += " "
@@ -634,6 +675,18 @@ def board_header(title):
 
     elif title == ewcfg.leaderboard_sacrificial:
         emote = "🗡"
+        bar += " "
+
+    elif title == ewcfg.leaderboard_lifetimekills:
+        emote = "🗡"
+        bar += " "
+
+    elif title == ewcfg.leaderboard_lifetimedeaths:
+        emote = "⚰️"
+        bar += " "
+
+    elif title == ewcfg.leaderboard_crime:
+        emote = "💰"
         bar += " "
 
     if emote == None and emote2 == None:
@@ -674,6 +727,16 @@ def board_entry(entry, entry_type, divide_by):
             faction_symbol,
             faction,
             districts
+        )
+    elif entry_type == ewcfg.entry_type_relics:
+        type = entry[0]
+        number = entry[1]
+        symbol = '🗿' if type == 'TOTAL' else '🏛️'
+
+        result = "\n{} `{:_>15} | {}`".format(
+            symbol,
+            type,
+            number
         )
 
     return result

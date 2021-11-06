@@ -2589,6 +2589,8 @@ leaderboard_kingpins = "KINGPINS' COFFERS"
 leaderboard_districts = "DISTRICTS CONTROLLED"
 leaderboard_donated = "LOYALEST CONSUMERS"
 leaderboard_fashion = "NLACakaNM'S TOP MODELS"
+leaderboard_crime = "BIGGEST CROOKS"
+leaderboard_relics = "KNOWN RELICS"
 # SLIMERNALIA
 leaderboard_slimernalia = "MOST FESTIVE"
 # INTERMISSION2
@@ -2598,10 +2600,13 @@ leaderboard_shamblers_killed = "MOST SHAMBLER KILLS"
 leaderboard_gambit_high = "HIGHEST GAMBIT"
 leaderboard_gambit_low = "LOWEST GAMBIT"
 leaderboard_sacrificial = "SACRIFICIAL LAMBS"
+leaderboard_lifetimekills = "LIFETIME KILLS"
+leaderboard_lifetimedeaths = "BIGGEST VICTIMS"
 
 # leaderboard entry types
 entry_type_player = "player"
 entry_type_districts = "districts"
+entry_type_relics = "relics"
 
 # district control channel topic text
 control_topic_killers = "Currently controlled by the killers."

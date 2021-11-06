@@ -467,6 +467,12 @@ async def relic_donate(id_item, cmd):
         item_obj.item_props['donated'] = 1
         item_obj.persist()
 
+        relic_count = EwGamestate(id_server=cmd.guild.id, id_state='donated_relics')
+        count = int(relic_count.value)
+        count += 1
+        relic_count.value = str(count)
+        relic_count.persist()
+
         relic_obj = relic_static.relic_map.get(item_obj.item_props.get('id_relic'))
         payout = relic_obj.amount_yield
         player = EwPlayer(id_user=item_obj.id_owner, id_server=cmd.guild.id)
