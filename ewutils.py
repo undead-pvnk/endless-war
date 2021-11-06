@@ -535,3 +535,16 @@ async def editmessage(message, text):
         return await message.edit(content=str(text))
     except:
         logMsg('Failed to edit message. Updated text would have been:\n{}'.format(text))
+
+async def editRoles(new_roles, member, cmd):
+    usermap = getRoleMap(member.roles)
+
+    if ewcfg.role_terezigang in usermap:
+        new_roles.append(cmd.roles_map[ewcfg.role_terezigang])
+    if ewcfg.role_brimstoneprogrammer in usermap:
+        new_roles.append(cmd.roles_map[ewcfg.role_brimstoneprogrammer])
+
+    print(new_roles)
+    await member.edit(roles=new_roles)
+
+

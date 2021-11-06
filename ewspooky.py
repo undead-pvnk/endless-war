@@ -84,10 +84,12 @@ async def revive(cmd):
 
 			if player_is_pvp:
 				#await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_juvenile], cmd.roles_map[ewcfg.role_juvenile_pvp])
-				await cmd.message.author.edit(roles=[cmd.roles_map[ewcfg.role_juvenile], cmd.roles_map[ewcfg.role_juvenile_pvp]])
+				#await cmd.message.author.edit(roles=[cmd.roles_map[ewcfg.role_juvenile], cmd.roles_map[ewcfg.role_juvenile_pvp]])
+				await ewutils.editRoles(new_roles=[cmd.roles_map[ewcfg.role_juvenile], cmd.roles_map[ewcfg.role_juvenile_pvp]], member=cmd.message.author, cmd=cmd)
 			else:
 				#await cmd.client.replace_roles(cmd.message.author, cmd.roles_map[ewcfg.role_juvenile])
-				await cmd.message.author.edit(roles=[cmd.roles_map[ewcfg.role_juvenile]])
+				#await cmd.message.author.edit(roles=[cmd.roles_map[ewcfg.role_juvenile]])
+				await ewutils.editRoles(new_roles=[cmd.roles_map[ewcfg.role_juvenile]], member=cmd.message.author, cmd=cmd)
 
 			response = '{slime4} A geyser of fresh slime erupts, showering Rowdy, Killer, and Juvenile alike. {slime4} {name} has been reborn in slime. {slime4}'.format(slime4 = ewcfg.emote_slime4, name = cmd.message.author.display_name)
 		else:
