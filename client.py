@@ -233,7 +233,7 @@ async def on_ready():
 			ewutils.logMsg("Periodic hook still active.")
 
 		# Check to see if a stream is live via the Twitch API.
-		if twitch_client_id != None and (time_now - time_last_twitch) >= ewcfg.update_twitch:
+		if twitch_client_id != None and (time_now - time_last_twitch) >= ewcfg.update_twitch and False:
 			time_last_twitch = time_now
 
 			try:
