@@ -1107,7 +1107,7 @@ async def on_message(message):
         if usermodel.arrested:
             return
 
-        mutations = usermodel.getut_mutations()
+        mutations = usermodel.get_mutations()
         # Scold/ignore offline players.
         if message.author.status == discord.Status.offline:
 

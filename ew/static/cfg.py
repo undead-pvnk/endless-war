@@ -27,7 +27,7 @@ gvs_active = False
 #Double Halloween Features
 dh_active = False
 #Existing Stages for Double Halloween. As the years go by we may add on to this
-dh_stage = 0
+dh_stage = 1
 """
 1: Normal
 2: Sacrifice Minigame
@@ -35,7 +35,9 @@ dh_stage = 0
 4: Rewind
 """
 
-
+public_gamestates = {
+    'dhorsemankills': [1, '4'] #determines spawn frequency in double halloween. the bit is set to true(unused) and the value is set to 4, indicating he has been killed 4 times.
+}
 
 
 # The max amount of degradation a district can have before it is shambled completely
