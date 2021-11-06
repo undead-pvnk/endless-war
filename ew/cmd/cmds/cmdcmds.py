@@ -3936,6 +3936,8 @@ async def cockdraw(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "Measure what?"))
 
     if cmd.tokens[0] in ['!cockdraw', '!measurecock']:
+        user_data.change_crime(n=1)
+        user_data.persist()
         object = 'dick'
         action = 'whip out your'
         if protected:

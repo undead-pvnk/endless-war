@@ -11,6 +11,7 @@ from ..backend import core as bknd_core
 from ..backend.district import EwDistrictBase
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
+from ew.utils.combat import EwUser
 
 """
 	district data model for database persistence
@@ -453,6 +454,13 @@ class EwDistrict(EwDistrictBase):
                         countdown=countdown_message
                     )
                     channels = [poi_static.id_to_poi[self.name].channel] + ewcfg.hideout_channels
+
+                    gangsters_in_district = self.get_players_in_district(min_slimes=ewcfg.min_slime_to_cap, life_states=[ewcfg.life_state_enlisted], ignore_offline=True, factions=[new_owner])
+
+                    for gangster in gangsters_in_district:
+                        player = EwUser(id_user=gangster, id_server=self.id_server)
+                        player.change_crime(n=ewcfg.max_capture_points[self.property_class]/1000) #crime for capping a district, dependent on property class
+                        player.persist()
 
                     for ch in channels:
                         resp_cont_owner.add_channel_response(channel=ch, response=message)

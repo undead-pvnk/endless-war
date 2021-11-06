@@ -2,7 +2,7 @@
 
 
 
-version = "v4.012 doubledoublehalloween"
+version = "v4.100 Season 4 Act 1"
 
 dir_msgqueue = 'msgqueue'
 
@@ -25,9 +25,9 @@ territory_time_gain = 10
 # A variable which is used to determine how certain functions of enemies are to perform
 gvs_active = False
 #Double Halloween Features
-dh_active = True
+dh_active = False
 #Existing Stages for Double Halloween. As the years go by we may add on to this
-dh_stage = 4
+dh_stage = 0
 """
 1: Normal
 2: Sacrifice Minigame
@@ -1842,7 +1842,7 @@ invuln_onrevive = 0
 #crime rates, lol
 cr_murder_points = 500
 cr_assault_points = 75
-cr_vandalism_points = 75
+cr_vandalism_points = 100
 cr_arson_points = 600
 cr_larceny_points = 1
 cr_underage_drinking_points = 1
@@ -1850,6 +1850,8 @@ cr_littering_points = 1
 cr_posession_points = 5
 cr_underage_smoking_points = 1
 cr_dojo_crime_points = 50
+cr_indecent_exposure_points = 1
+
 
 crime_status = {
 0:"{their} record is spotless.",

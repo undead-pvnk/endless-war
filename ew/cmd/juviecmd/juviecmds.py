@@ -892,3 +892,26 @@ async def identify(cmd):
         user_data.persist()
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+async def scrub(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    poi = poi_static.id_to_poi.get(user_data.poi)
+    district = EwDistrict(id_server=cmd.guild.id, district=poi.id_poi)
+
+    if user_data.life_state != ewcfg.life_state_juvenile:
+        response = "You wouldn't stoop that low. Only Juvies would be that needlessly obedient."
+    elif not poi.is_capturable:
+        response = "No need to scrub, scrub. The gangs don't really mark up this place."
+    elif district.capture_points == 0:
+        response = "{} is clean. Good job, assuming you actually did anything.".format(poi.str_name)
+    elif district.all_neighbors_friendly():
+        response = "You're too deep into enemy territory. Scrub here and you might wet yourself."
+    else:
+        district.change_capture_points(progress=-1, actor=ewcfg.actor_decay)
+        if user_data.crime >= 1:
+            user_data.crime -= 1
+            user_data.persist()
+        response = "-"
+
+    if response != "-":
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
