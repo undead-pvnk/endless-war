@@ -595,7 +595,7 @@ async def on_message(message):
 
 		# FIXME debug
 		# Test item creation
-		elif cmd == '!create':
+		elif cmd == '!create' and debug == True:
 			item_id = ewitem.item_create(
 				item_type = 'medal',
 				id_user = message.author.id,
@@ -617,7 +617,7 @@ async def on_message(message):
 
 		# FIXME debug
 		# Test item deletion
-		elif cmd == '!delete':
+		elif cmd == '!delete' and debug == True:
 			items = ewitem.inventory(
 				id_user = message.author.id,
 				id_server = message.guild.id
