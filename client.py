@@ -151,6 +151,10 @@ ewcfg.cmd_debug7 = ewcfg.cmd_prefix + ewdebug.cmd_debug7
 ewcfg.cmd_debug8 = ewcfg.cmd_prefix + ewdebug.cmd_debug8
 ewcfg.cmd_debug9 = ewcfg.cmd_prefix + ewdebug.cmd_debug9
 
+re_awoo_g = re.compile('.*![a]+[w]+o[o]+.*') #taking these out of on_message so they only need to be compiled once
+re_moan_g = re.compile('.*![b]+[r]+[a]+[i]+[n]+[z]+.*')
+re_measure_g = re.compile('!measure.*')
+
 
 @client.event
 async def on_member_remove(member):
@@ -515,11 +519,424 @@ async def on_message_delete(message):
             ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
             await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, '**I SAW THAT.**'))
 
+# consolidates the debug conditions into their own function. poorly ordered because no function prototyping in python, boo
+async def debugHandling(message, cmd, cmd_obj):
+    # Test item creation
+    time_now = int(time.time())
+    if cmd == (ewcfg.cmd_prefix + 'enemytick'):
+        await loop_utils.spawn_enemies(id_server=message.guild.id, debug=True)
+
+    elif cmd == (ewcfg.cmd_prefix + 'createtestitem'):
+        item_id = bknd_item.item_create(
+            item_type='medal',
+            id_user=message.author.id,
+            id_server=message.guild.id,
+            item_props={
+                'medal_name': 'Test Award',
+                'medal_desc': '**{medal_name}**: *Awarded to Krak by Krak for testing shit.*'
+            }
+        )
+
+        ewutils.logMsg('Created item: {}'.format(item_id))
+        item = EwItem(id_item=item_id)
+        item.item_props['test'] = 'meow'
+        item.persist()
+
+        item = EwItem(id_item=item_id)
+
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, ewitem.item_look(item)))
+
+        # Creates a poudrin
+    elif cmd == (ewcfg.cmd_prefix + 'createpoudrin'):
+        for item in static_items.item_list:
+            if item.context == "poudrin":
+                poudrin_count = 1
+                if cmd_obj.tokens_count > 1:
+                    try:
+                        poudrin_count = int(cmd_obj.tokens[1])
+                    except:
+                        poudrin_count = 1
+                for i in range(poudrin_count):
+                    bknd_item.item_create(
+                        item_type=ewcfg.it_item,
+                        id_user=message.author.id,
+                        id_server=message.guild.id,
+                        item_props={
+                            'id_item': item.id_item,
+                            'context': item.context,
+                            'item_name': item.str_name,
+                            'item_desc': item.str_desc,
+                        }
+                    )
+                    ewutils.logMsg('Created item: {}'.format(item.id_item))
+        else:
+            pass
+
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, "Poudrin(s) created."))
+
+        # Shows damage
+    elif cmd == (ewcfg.cmd_prefix + 'damage'):
+        user_data = EwUser(member=message.author, data_level=1)
+        slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
+        # disabled until held items update
+        # attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
+        attack_stat_multiplier = 1
+        weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100)  # 5% more damage per skill point
+        slimes_damage = int(
+            10 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier)  # ten times slime spent, multiplied by both multipliers
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, "{}".format(slimes_damage)))
+
+        # Gives the user some slime
+    elif cmd == (ewcfg.cmd_prefix + 'getslime'):
+        user_data = EwUser(member=message.author)
+        user_initial_level = user_data.slimelevel
+
+        response = "You get 1,000,000 slime!"
+
+        levelup_response = user_data.change_slimes(n=1000000)
+
+        was_levelup = True if user_initial_level < user_data.slimelevel else False
+
+        if was_levelup:
+            response += " {}".format(levelup_response)
+
+        user_data.persist()
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
+    elif cmd == (ewcfg.cmd_prefix + 'getcoin'):
+        user_data = EwUser(member=message.author)
+        user_data.change_slimecoin(n=1000000000000, coinsource=ewcfg.coinsource_spending)
+
+        response = "You get 1,000,000,000,000 slimecoin!"
+
+        user_data.persist()
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
+
+        # Deletes all items in your inventory.
+    elif cmd == (ewcfg.cmd_prefix + 'clearinv'):
+        user_data = EwUser(member=message.author)
+        bknd_item.item_destroyall(id_server=message.guild.id, id_user=message.author.id)
+        response = "You destroy every single item in your inventory."
+        user_data.persist()
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
+
+    elif cmd == (ewcfg.cmd_prefix + 'createapple'):
+        item_id = bknd_item.item_create(
+            id_user=message.author.id,
+            id_server=message.guild.id,
+            item_type=ewcfg.it_food,
+            item_props={
+                'id_food': "direapples",
+                'food_name': "Dire Apples",
+                'food_desc': "This sure is a illegal Dire Apple!",
+                'recover_hunger': 500,
+                'str_eat': "You chomp into this illegal Dire Apple.",
+                'time_expir': int(time.time() + ewcfg.farm_food_expir)
+            }
+        )
+
+        ewutils.logMsg('Created item: {}'.format(item_id))
+        item = EwItem(id_item=item_id)
+        item.item_props['test'] = 'meow'
+        item.persist()
+
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, "Apple created."))
+
+    elif cmd == (ewcfg.cmd_prefix + 'weathertick'):
+
+        await apt_utils.setOffAlarms(id_server=message.guild.id)
+
+    elif cmd == (ewcfg.cmd_prefix + 'createhat'):
+        patrician_rarity = 20
+        patrician_smelted = random.randint(1, patrician_rarity)
+        patrician = False
+
+        if patrician_smelted == 1:
+            patrician = True
+
+        items = []
+
+        for cosmetic in cosmetics.cosmetic_items_list:
+            if patrician and cosmetic.rarity == ewcfg.rarity_patrician:
+                items.append(cosmetic)
+            elif not patrician and cosmetic.rarity == ewcfg.rarity_plebeian:
+                items.append(cosmetic)
+
+        item = items[random.randint(0, len(items) - 1)]
+
+        item_props = itm_utils.gen_item_props(item)
+
+        item_id = bknd_item.item_create(
+            item_type=item.item_type,
+            id_user=message.author.id,
+            id_server=message.guild.id,
+            item_props=item_props
+        )
+
+        ewutils.logMsg('Created item: {}'.format(item_id))
+        item = EwItem(id_item=item_id)
+        item.item_props['test'] = 'meow'
+        item.persist()
+
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, "Hat created."))
+
+    elif cmd == (ewcfg.cmd_prefix + 'createfood'):
+        item = static_food.food_list[random.randint(0, len(static_food.food_list) - 1)]
+
+        item_id = bknd_item.item_create(
+            item_type=ewcfg.it_food,
+            id_user=message.author.id,
+            id_server=message.guild.id,
+            item_props={
+                'id_food': item.id_food,
+                'food_name': item.str_name,
+                'food_desc': item.str_desc,
+                'recover_hunger': item.recover_hunger,
+                'str_eat': item.str_eat,
+                'time_expir': item.time_expir
+            }
+        )
+
+        ewutils.logMsg('Created item: {}'.format(item_id))
+        item = EwItem(id_item=item_id)
+        item.item_props['test'] = 'meow'
+        item.persist()
+
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, "Food created."))
+
+    elif cmd == (ewcfg.cmd_prefix + 'createdye'):
+        item = static_items.dye_list[random.randint(0, len(static_items.dye_list) - 1)]
+
+        item_props = itm_utils.gen_item_props(item)
+
+        bknd_item.item_create(
+            item_type=item.item_type,
+            id_user=message.author.id,
+            id_server=message.guild.id,
+            item_props=item_props
+        )
+
+        await fe_utils.send_message(client, message.channel,
+                                    fe_utils.formatMessage(message.author, "{} created.".format(item.str_name)))
+
+    elif cmd == (ewcfg.cmd_prefix + 'createoldhat'):
+        patrician_rarity = 20
+        patrician_smelted = random.randint(1, patrician_rarity)
+        patrician = False
+
+        if patrician_smelted == 1:
+            patrician = True
+
+        cosmetics_list = []
+
+        for result in cosmetics.cosmetic_items_list:
+            if result.acquisition == ewcfg.acquisition_smelting:
+                cosmetics_list.append(result)
+            else:
+                pass
+
+        items = []
+
+        for cosmetic in cosmetics_list:
+            if patrician and cosmetic.rarity == ewcfg.rarity_patrician:
+                items.append(cosmetic)
+            elif not patrician and cosmetic.rarity == ewcfg.rarity_plebeian:
+                items.append(cosmetic)
+
+        item = items[random.randint(0, len(items) - 1)]
+
+        bknd_item.item_create(
+            item_type=ewcfg.it_cosmetic,
+            id_user=message.author.id,
+            id_server=message.guild.id,
+            item_props={
+                'id_cosmetic': item.id_cosmetic,
+                'cosmetic_name': item.str_name,
+                'cosmetic_desc': item.str_desc,
+                'rarity': item.rarity,
+                'adorned': 'false'
+            }
+        )
+
+        response = "Success! You've smelted a {}!".format(item.str_name)
+
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
+    elif cmd == (ewcfg.cmd_prefix + 'createoldscalp'):
+        bknd_item.item_create(
+            item_type=ewcfg.it_cosmetic,
+            id_user=message.author.id,
+            id_server=message.guild.id,
+            item_props={
+                'id_cosmetic': 'scalp',
+                'cosmetic_name': "My scalp",
+                'cosmetic_desc': "A scalp.",
+                'adorned': 'false'
+            }
+        )
+        response = "Success! You've smelted a scalp!"
+
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
+    elif cmd == (ewcfg.cmd_prefix + 'createoldsoul'):
+        bknd_item.item_create(
+            id_user=message.author.id,
+            id_server=message.guild.id,
+            item_type=ewcfg.it_cosmetic,
+            item_props={
+                'id_cosmetic': "soul",
+                'cosmetic_name': "My soul",
+                'cosmetic_desc': "The immortal soul of me. It dances with a vivacious energy inside its jar.\n If you listen to it closely you can hear it whispering numbers: me.",
+                'rarity': ewcfg.rarity_patrician,
+                'adorned': 'false',
+                'user_id': "usermodel.id_user",
+            }
+        )
+
+        response = "Success! You've smelted a soul!"
+
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
+
+        # FIXME debug
+        # Test item deletion
+    elif cmd == (ewcfg.cmd_prefix + 'delete'):
+        items = bknd_item.inventory(
+            id_user=message.author.id,
+            id_server=message.guild.id
+        )
+
+        for item in items:
+            bknd_item.item_delete(
+                id_item=item.get('id_item')
+            )
+
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, 'ok'))
+    elif cmd == (ewcfg.cmd_prefix + 'setrole'):
+
+        response = ""
+
+        if cmd_obj.mentions_count == 0:
+            response = 'Set who\'s role?'
+        else:
+            roles_map = ewutils.getRoleMap(message.guild.roles)
+            role_target = cmd_obj.tokens[1]
+            role = roles_map.get(role_target)
+
+            if role != None:
+                for user in cmd_obj.mentions:
+                    try:
+                        await user.edit(roles=role)
+                    except:
+                        ewutils.logMsg(
+                            'Failed to replace_roles for user {} with {}.'.format(user.display_name, role.name))
+
+                response = 'Done.'
+            else:
+                response = 'Unrecognized role.'
+
+        await fe_utils.send_message(client, cmd.message.channel, fe_utils.formatMessage(message.author, response))
+
+    elif cmd == (ewcfg.cmd_prefix + 'getrowdy'):
+        response = "You get rowdy. Fuck. YES!"
+        user_data = EwUser(member=message.author)
+        user_data.life_state = ewcfg.life_state_enlisted
+        user_data.faction = ewcfg.faction_rowdys
+        user_data.time_lastenlist = time_now + ewcfg.cd_enlist
+        user_data.persist()
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
+
+    elif cmd == (ewcfg.cmd_prefix + 'getkiller'):
+        response = "You uh... 'get' killer. Sure."
+        user_data = EwUser(member=message.author)
+        user_data.life_state = ewcfg.life_state_enlisted
+        user_data.faction = ewcfg.faction_killers
+        user_data.time_lastenlist = time_now + ewcfg.cd_enlist
+        user_data.persist()
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
+
+    elif cmd == (ewcfg.cmd_prefix + 'getshambler'):
+        response = "You get shambler. Jesus fucking Christ, why not, sure."
+        user_data = EwUser(member=message.author)
+        user_data.life_state = ewcfg.life_state_shambler
+        user_data.persist()
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
+
+    # Toggles rain on and off
+    elif cmd == (ewcfg.cmd_prefix + 'toggledownfall'):
+        market_data = EwMarket(id_server=message.guild.id)
+
+        if market_data.weather == ewcfg.weather_bicarbonaterain:
+            newweather = ewcfg.weather_sunny
+
+            market_data.weather = newweather
+            response = "Bicarbonate rain turned OFF. Weather was set to {}.".format(newweather)
+        else:
+            market_data.weather = ewcfg.weather_bicarbonaterain
+            response = "Bicarbonate rain turned ON."
+
+        market_data.persist()
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
+
+    elif cmd == (ewcfg.cmd_prefix + 'dayforward'):
+        market_data = EwMarket(id_server=message.guild.id)
+
+        market_data.day += 1
+        market_data.persist()
+
+        response = "Time has progressed 1 day forward manually."
+
+        if ewutils.check_fursuit_active(market_data):
+            response += "\nIt's a full moon!"
+
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
+
+    elif cmd == (ewcfg.cmd_prefix + 'hourforward'):
+        market_data = EwMarket(id_server=message.guild.id)
+        market_data.clock += 1
+        response = "Time has progressed 1 hour forward manually."
+
+        if market_data.clock >= 24 or market_data.clock < 0:
+            market_data.clock = 0
+            market_data.day += 1
+            response += "\nMidnight has come. 1 day progressed forward."
+
+        if ewutils.check_fursuit_active(market_data):
+            response += "\nIt's a full moon!"
+
+        market_data.persist()
+        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
+
+    elif cmd == (ewcfg.cmd_prefix + 'postleaderboard'):
+        try:
+            for server in client.guilds:
+                await bknd_leaderboard.post_leaderboards(client=client, server=server)
+        except:
+            pass
+
+    elif cmd == (ewcfg.cmd_prefix + 'genslimeoid'):
+        user_data = EwUser(member=message.author)
+        if user_data.active_slimeoid == -1:
+            slimeoid_utils.generate_slimeoid(id_owner=user_data.id_user, id_server=user_data.id_server, persist=True)
+            return await fe_utils.send_message(client, message.channel,
+                                               "Generated slimeoid for user. Take care of them!")
+        else:
+            return await fe_utils.send_message(client, message.channel, "You already have a slimeoid, bub!")
+
+    elif cmd == (ewcfg.cmd_prefix + 'massgenslimeoidnames'):
+        response = ""
+        for sl in range(10):
+            new_sl = slimeoid_utils.generate_slimeoid()
+            if new_sl.hue != "":
+                hue_str = " **" + new_sl.hue + "** "
+            else:
+                hue_str = ""
+            response += ("\n" + hue_str + new_sl.name)
+        return await fe_utils.send_message(client, message.channel, response)
 
 @client.event
 async def on_message(message):
     time_now = int(time.time())
     ewcfg.set_client(client)
+
+    playermodel = EwPlayer(id_user=message.author.id)
+    usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
 
     """ do not interact with our own messages """
     if message.author.id == client.user.id or message.author.bot == True:
@@ -542,9 +959,9 @@ async def on_message(message):
     content_tolower = message.content.lower()
     content_tolower_list = content_tolower.split(" ")
 
-    re_awoo = re.compile('.*![a]+[w]+o[o]+.*')
-    re_moan = re.compile('.*![b]+[r]+[a]+[i]+[n]+[z]+.*')
-    re_measure = re.compile('!measure.*')
+    re_awoo = re_awoo_g
+    re_moan = re_moan_g
+    re_measure = re_measure_g
     
     # update the player's time_last_action which is used for kicking AFK players out of subzones
     if message.guild != None:
@@ -560,27 +977,27 @@ async def on_message(message):
         except:
             ewutils.logMsg('server {}: failed to update time_last_action for {}'.format(message.guild.id, message.author.id))
 
-        user_data = EwUser(member=message.author)
-        statuses = user_data.getStatusEffects()
+        #user_data = EwUser(member=message.author)
+        statuses = usermodel.getStatusEffects()
 
         if ewcfg.status_strangled_id in statuses:
-            strangle_effect = EwStatusEffect(id_status=ewcfg.status_strangled_id, user_data=user_data)
+            strangle_effect = EwStatusEffect(id_status=ewcfg.status_strangled_id, user_data=usermodel)
             source = EwPlayer(id_user=strangle_effect.source, id_server=message.guild.id)
             response = "You manage to break {}'s garrote wire!".format(source.display_name)
-            user_data.clear_status(ewcfg.status_strangled_id)
+            usermodel.clear_status(ewcfg.status_strangled_id)
             return await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
 
-        if ewutils.active_restrictions.get(user_data.id_user) == 3:
-            user_data.trauma = ewcfg.trauma_id_environment
-            die_resp = user_data.die(cause=ewcfg.cause_praying)
-            user_data.persist()
+        if ewutils.active_restrictions.get(usermodel.id_user) == 3:
+            usermodel.trauma = ewcfg.trauma_id_environment
+            die_resp = usermodel.die(cause=ewcfg.cause_praying)
+            usermodel.persist()
             await ewrolemgr.updateRoles(client=client, member=message.author)
             await die_resp.post()
 
             response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
             return await fe_utils.send_message(client, message.channel, response)
         if str(message.channel) in ["nurses-office", "suggestion-box", "detention-center", "community-service", "playground", "graffiti-wall", "post-slime-drip", "outside-the-lunchroom", "outside-the-lunchrooom"]:
-            if user_data.hogtied == 1:
+            if usermodel.hogtied == 1:
                 response = random.choice(["MMMPH!", "MBBBBB", "HMMHM", "MMMMMHMMF!"])
                 await fe_utils.send_message(client, message.channel, response)
                 await message.delete()
@@ -614,7 +1031,7 @@ async def on_message(message):
         mentions = message.mentions
         mentions_count = len(mentions)
 
-        playermodel = EwPlayer(id_user=message.author.id)
+
 
         if message.guild == None:
             guild_used = ewcfg.server_list[playermodel.id_server]
@@ -641,69 +1058,19 @@ async def on_message(message):
             Punish the user for swearing.
             The swear_jar attribute has been repurposed for SlimeCorp security officers
         """
-        await ewdebug.contentCheck(cmd=cmd_obj, line=content_tolower)
-        if (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
-            # print(content_tolower_list)
-            swear_multiplier = 0
+        if ewdebug.debug_content_1 in content_tolower:
+            usermodel.persist()
+            await ewdebug.contentCheck(cmd=cmd_obj, line=content_tolower)
             usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
-
-            if usermodel != None:
-                market_data = EwMarket(id_server=usermodel.id_server)
-
-                if usermodel.faction == ewcfg.faction_slimecorp and usermodel.life_state == ewcfg.life_state_enlisted:
-
-                    # gather all the swear words the user typed.
-                    for swear in ewcfg.curse_words.keys():
-
-                        swear_count = content_tolower.count(swear)
-
-                        # Niche scenarios. If certain words are used, don't count their components as swears.
-                        if swear == "shit" and "shit" not in content_tolower:
-                            # print('swear detection turned off for {}.'.format(swear))
-                            continue
-
-                        # This one's funny, keep this one on. Bit of a gamer...
-                        # elif swear == "fag" and "fag" not in content_tolower:
-                        # print('swear detection turned off for {}.'.format(swear))
-                        # continue
-
-                        elif swear == "fuck" and (content_tolower.count('<rowdyfucker431275088076079105>') > 0 or content_tolower.count('<fucker431424220837183489>') > 0):
-                            # print('swear detection turned off for {}.'.format(swear))
-                            continue
-                        elif swear == "mick" and (content_tolower.count('gimmick') > 0):
-                            # print('swear detection turned off for {}.'.format(swear))
-                            continue
-
-                        for i in range(swear_count):
-                            swear_multiplier += ewcfg.curse_words[swear]
-
-                        # usermodel.swear_jar += 1
-
-                    # print('multiplier: {}'.format(swear_multiplier))
-
-                    # don't fine the user or send out the message if there weren't enough curse words
-                    if swear_multiplier > 10:
-                        # fine the user for swearing, based on how much they've sworn right now, as well as in the past
-                        swear_jar_fee = swear_multiplier * 10000
-
-                        usermodel.salary_credits -= swear_jar_fee
-
-                        response = '*{}*: Your SlimeCorp headset chatters in your ear...\n"Reminder: Foul language is strictly prohibited. {} salary credits have been docked from your profile."'.format(message.author.display_name, swear_jar_fee)
-                        await fe_utils.send_message(client, message.channel, response)
-
-                    market_data.persist()
-                    usermodel.persist()
-
-            # if the message wasn't a command, we can stop here
-            if not message.content.startswith(ewcfg.cmd_prefix):
-                return
+        # if the message wasn't a command, we can stop here
+        if not message.content.startswith(ewcfg.cmd_prefix):
+            return
 
         """
             Handle direct messages.
         """
         if message.guild == None:
-            playermodel = EwPlayer(id_user=message.author.id)
-            usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
+
             poi = poi_static.id_to_poi.get(usermodel.poi)
             cmd_obj.guild = ewcfg.server_list[playermodel.id_server]
             cmd_obj.message.author = cmd_obj.guild.get_member(playermodel.id_user)
@@ -736,11 +1103,11 @@ async def on_message(message):
         # if len(message.author.roles) < 4:
         # await ewrolemgr.updateRoles(client = client, member = message.author)
 
-        user_data = EwUser(member=message.author)
-        if user_data.arrested:
+        #user_data = EwUser(member=message.author)
+        if usermodel.arrested:
             return
 
-        mutations = user_data.get_mutations()
+        mutations = usermodel.get_mutations()
         # Scold/ignore offline players.
         if message.author.status == discord.Status.offline:
 
@@ -749,14 +1116,14 @@ async def on_message(message):
 
                 return await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
 
-        if user_data.time_lastoffline > time_now - ewcfg.time_offline:
+        if usermodel.time_lastoffline > time_now - ewcfg.time_offline:
 
             if ewcfg.mutation_id_chameleonskin not in mutations or cmd not in ewcfg.offline_cmds:
                 response = "You are too paralyzed by ENDLESS WAR's judgemental stare to act."
 
                 return await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
 
-        statuses = user_data.getStatusEffects()
+        statuses = usermodel.getStatusEffects()
         # Ignore stunned players
         if ewcfg.status_stunned_id in statuses:
             return
@@ -765,303 +1132,18 @@ async def on_message(message):
         #global cmd_map
         cmd_fn = cmd_map.get(cmd)
 
-        if user_data.poi in ewdebug.act_pois.keys():
-            if content_tolower in ewdebug.act_pois.get(user_data.poi).keys():
-                function = ewdebug.act_pois.get(user_data.poi).get(content_tolower)
+        if usermodel.poi in ewdebug.act_pois.keys():
+            if content_tolower in ewdebug.act_pois.get(usermodel.poi).keys():
+                function = ewdebug.act_pois.get(usermodel.poi).get(content_tolower)
                 return await function(cmd=cmd_obj)
 
-        if user_data.poi in poi_static.tutorial_pois:
-            return await ewdungeons.tutorial_cmd(cmd_obj)
+        #if usermodel.poi in poi_static.tutorial_pois:
+        #    return await ewdungeons.tutorial_cmd(cmd_obj)
 
         elif cmd_fn != None:
             # Execute found command
             return await cmd_fn(cmd_obj)
 
-        # FIXME debug
-        # Test item creation
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'enemytick'):
-            await loop_utils.spawn_enemies(id_server=message.guild.id, debug = True)
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'createtestitem'):
-            item_id = bknd_item.item_create(
-                item_type='medal',
-                id_user=message.author.id,
-                id_server=message.guild.id,
-                item_props={
-                    'medal_name': 'Test Award',
-                    'medal_desc': '**{medal_name}**: *Awarded to Krak by Krak for testing shit.*'
-                }
-            )
-
-            ewutils.logMsg('Created item: {}'.format(item_id))
-            item = EwItem(id_item=item_id)
-            item.item_props['test'] = 'meow'
-            item.persist()
-
-            item = EwItem(id_item=item_id)
-
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, ewitem.item_look(item)))
-
-        # Creates a poudrin
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'createpoudrin'):
-            for item in static_items.item_list:
-                if item.context == "poudrin":
-                    poudrin_count = 1
-                    if cmd_obj.tokens_count > 1:
-                        try:
-                            poudrin_count = int(cmd_obj.tokens[1])
-                        except:
-                            poudrin_count = 1
-                    for i in range(poudrin_count):
-                        bknd_item.item_create(
-                            item_type=ewcfg.it_item,
-                            id_user=message.author.id,
-                            id_server=message.guild.id,
-                            item_props={
-                                'id_item': item.id_item,
-                                'context': item.context,
-                                'item_name': item.str_name,
-                                'item_desc': item.str_desc,
-                            }
-                        )
-                        ewutils.logMsg('Created item: {}'.format(item.id_item))
-            else:
-                pass
-
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, "Poudrin(s) created."))
-
-        # Shows damage
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'damage'):
-            user_data = EwUser(member=message.author, data_level=1)
-            slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
-            # disabled until held items update
-            # attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
-            attack_stat_multiplier = 1
-            weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100)  # 5% more damage per skill point
-            slimes_damage = int(10 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier)  # ten times slime spent, multiplied by both multipliers
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, "{}".format(slimes_damage)))
-
-        # Gives the user some slime
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'getslime'):
-            user_data = EwUser(member=message.author)
-            user_initial_level = user_data.slimelevel
-
-            response = "You get 1,000,000 slime!"
-
-            levelup_response = user_data.change_slimes(n=1000000)
-
-            was_levelup = True if user_initial_level < user_data.slimelevel else False
-
-            if was_levelup:
-                response += " {}".format(levelup_response)
-
-            user_data.persist()
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'getcoin'):
-            user_data = EwUser(member=message.author)
-            user_data.change_slimecoin(n=1000000000000, coinsource=ewcfg.coinsource_spending)
-
-            response = "You get 1,000,000,000,000 slimecoin!"
-
-            user_data.persist()
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
-
-        # Deletes all items in your inventory.
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'clearinv'):
-            user_data = EwUser(member=message.author)
-            bknd_item.item_destroyall(id_server=message.guild.id, id_user=message.author.id)
-            response = "You destroy every single item in your inventory."
-            user_data.persist()
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
-
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'createapple'):
-            item_id = bknd_item.item_create(
-                id_user=message.author.id,
-                id_server=message.guild.id,
-                item_type=ewcfg.it_food,
-                item_props={
-                    'id_food': "direapples",
-                    'food_name': "Dire Apples",
-                    'food_desc': "This sure is a illegal Dire Apple!",
-                    'recover_hunger': 500,
-                    'str_eat': "You chomp into this illegal Dire Apple.",
-                    'time_expir': int(time.time() + ewcfg.farm_food_expir)
-                }
-            )
-
-            ewutils.logMsg('Created item: {}'.format(item_id))
-            item = EwItem(id_item=item_id)
-            item.item_props['test'] = 'meow'
-            item.persist()
-
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, "Apple created."))
-
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'weathertick'):
-
-            await apt_utils.setOffAlarms(id_server=message.guild.id)
-
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'createhat'):
-            patrician_rarity = 20
-            patrician_smelted = random.randint(1, patrician_rarity)
-            patrician = False
-
-            if patrician_smelted == 1:
-                patrician = True
-
-            items = []
-
-            for cosmetic in cosmetics.cosmetic_items_list:
-                if patrician and cosmetic.rarity == ewcfg.rarity_patrician:
-                    items.append(cosmetic)
-                elif not patrician and cosmetic.rarity == ewcfg.rarity_plebeian:
-                    items.append(cosmetic)
-
-            item = items[random.randint(0, len(items) - 1)]
-
-            item_props = itm_utils.gen_item_props(item)
-
-            item_id = bknd_item.item_create(
-                item_type=item.item_type,
-                id_user=message.author.id,
-                id_server=message.guild.id,
-                item_props=item_props
-            )
-
-            ewutils.logMsg('Created item: {}'.format(item_id))
-            item = EwItem(id_item=item_id)
-            item.item_props['test'] = 'meow'
-            item.persist()
-
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, "Hat created."))
-
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'createfood'):
-            item = static_food.food_list[random.randint(0, len(static_food.food_list) - 1)]
-
-            item_id = bknd_item.item_create(
-                item_type=ewcfg.it_food,
-                id_user=message.author.id,
-                id_server=message.guild.id,
-                item_props={
-                    'id_food': item.id_food,
-                    'food_name': item.str_name,
-                    'food_desc': item.str_desc,
-                    'recover_hunger': item.recover_hunger,
-                    'str_eat': item.str_eat,
-                    'time_expir': item.time_expir
-                }
-            )
-
-            ewutils.logMsg('Created item: {}'.format(item_id))
-            item = EwItem(id_item=item_id)
-            item.item_props['test'] = 'meow'
-            item.persist()
-
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, "Food created."))
-
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'createdye'):
-            item = static_items.dye_list[random.randint(0, len(static_items.dye_list) - 1)]
-
-            item_props = itm_utils.gen_item_props(item)
-
-            bknd_item.item_create(
-                item_type=item.item_type,
-                id_user=message.author.id,
-                id_server=message.guild.id,
-                item_props=item_props
-            )
-
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, "{} created.".format(item.str_name)))
-
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'createoldhat'):
-            patrician_rarity = 20
-            patrician_smelted = random.randint(1, patrician_rarity)
-            patrician = False
-
-            if patrician_smelted == 1:
-                patrician = True
-
-            cosmetics_list = []
-
-            for result in cosmetics.cosmetic_items_list:
-                if result.acquisition == ewcfg.acquisition_smelting:
-                    cosmetics_list.append(result)
-                else:
-                    pass
-
-            items = []
-
-            for cosmetic in cosmetics_list:
-                if patrician and cosmetic.rarity == ewcfg.rarity_patrician:
-                    items.append(cosmetic)
-                elif not patrician and cosmetic.rarity == ewcfg.rarity_plebeian:
-                    items.append(cosmetic)
-
-            item = items[random.randint(0, len(items) - 1)]
-
-            bknd_item.item_create(
-                item_type=ewcfg.it_cosmetic,
-                id_user=message.author.id,
-                id_server=message.guild.id,
-                item_props={
-                    'id_cosmetic': item.id_cosmetic,
-                    'cosmetic_name': item.str_name,
-                    'cosmetic_desc': item.str_desc,
-                    'rarity': item.rarity,
-                    'adorned': 'false'
-                }
-            )
-
-            response = "Success! You've smelted a {}!".format(item.str_name)
-
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'createoldscalp'):
-            bknd_item.item_create(
-                item_type=ewcfg.it_cosmetic,
-                id_user=message.author.id,
-                id_server=message.guild.id,
-                item_props={
-                    'id_cosmetic': 'scalp',
-                    'cosmetic_name': "My scalp",
-                    'cosmetic_desc': "A scalp.",
-                    'adorned': 'false'
-                }
-            )
-            response = "Success! You've smelted a scalp!"
-
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'createoldsoul'):
-            bknd_item.item_create(
-                id_user=message.author.id,
-                id_server=message.guild.id,
-                item_type=ewcfg.it_cosmetic,
-                item_props={
-                    'id_cosmetic': "soul",
-                    'cosmetic_name': "My soul",
-                    'cosmetic_desc': "The immortal soul of me. It dances with a vivacious energy inside its jar.\n If you listen to it closely you can hear it whispering numbers: me.",
-                    'rarity': ewcfg.rarity_patrician,
-                    'adorned': 'false',
-                    'user_id': "usermodel.id_user",
-                }
-            )
-
-            response = "Success! You've smelted a soul!"
-
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
-
-
-        # FIXME debug
-        # Test item deletion
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'delete'):
-            items = bknd_item.inventory(
-                id_user=message.author.id,
-                id_server=message.guild.id
-            )
-
-            for item in items:
-                bknd_item.item_delete(
-                    id_item=item.get('id_item')
-                )
-
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, 'ok'))
 
         # AWOOOOO
         elif re_awoo.match(cmd):
@@ -1071,126 +1153,8 @@ async def on_message(message):
         elif re_measure.match(cmd):
             return await ewcmd.cmdcmds.cockdraw(cmd_obj)
 
-        # Debug command to override the role of a user
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'setrole'):
-
-            response = ""
-
-            if mentions_count == 0:
-                response = 'Set who\'s role?'
-            else:
-                roles_map = ewutils.getRoleMap(message.guild.roles)
-                role_target = tokens[1]
-                role = roles_map.get(role_target)
-
-                if role != None:
-                    for user in mentions:
-                        try:
-                            await user.edit(roles=role)
-                        except:
-                            ewutils.logMsg('Failed to replace_roles for user {} with {}.'.format(user.display_name, role.name))
-
-                    response = 'Done.'
-                else:
-                    response = 'Unrecognized role.'
-
-            await fe_utils.send_message(client, cmd.message.channel, fe_utils.formatMessage(message.author, response))
-
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'getrowdy'):
-            response = "You get rowdy. Fuck. YES!"
-            user_data = EwUser(member=message.author)
-            user_data.life_state = ewcfg.life_state_enlisted
-            user_data.faction = ewcfg.faction_rowdys
-            user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-            user_data.persist()
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
-
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'getkiller'):
-            response = "You uh... 'get' killer. Sure."
-            user_data = EwUser(member=message.author)
-            user_data.life_state = ewcfg.life_state_enlisted
-            user_data.faction = ewcfg.faction_killers
-            user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-            user_data.persist()
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
-
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'getshambler'):
-            response = "You get shambler. Jesus fucking Christ, why not, sure."
-            user_data = EwUser(member=message.author)
-            user_data.life_state = ewcfg.life_state_shambler
-            user_data.persist()
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
-
-        # Toggles rain on and off
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'toggledownfall'):
-            market_data = EwMarket(id_server=message.guild.id)
-
-            if market_data.weather == ewcfg.weather_bicarbonaterain:
-                newweather = ewcfg.weather_sunny
-
-                market_data.weather = newweather
-                response = "Bicarbonate rain turned OFF. Weather was set to {}.".format(newweather)
-            else:
-                market_data.weather = ewcfg.weather_bicarbonaterain
-                response = "Bicarbonate rain turned ON."
-
-            market_data.persist()
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
-
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'dayforward'):
-            market_data = EwMarket(id_server=message.guild.id)
-
-            market_data.day += 1
-            market_data.persist()
-
-            response = "Time has progressed 1 day forward manually."
-
-            if ewutils.check_fursuit_active(market_data):
-                response += "\nIt's a full moon!"
-
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
-
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'hourforward'):
-            market_data = EwMarket(id_server=message.guild.id)
-            market_data.clock += 1
-            response = "Time has progressed 1 hour forward manually."
-
-            if market_data.clock >= 24 or market_data.clock < 0:
-                market_data.clock = 0
-                market_data.day += 1
-                response += "\nMidnight has come. 1 day progressed forward."
-
-            if ewutils.check_fursuit_active(market_data):
-                response += "\nIt's a full moon!"
-
-            market_data.persist()
-            await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
-
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'postleaderboard'):
-            try:
-                for server in client.guilds:
-                    await bknd_leaderboard.post_leaderboards(client=client, server=server)
-            except:
-                pass
-        
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'genslimeoid'):
-            user_data = EwUser(member=message.author)
-            if user_data.active_slimeoid == -1:
-                slimeoid_utils.generate_slimeoid(id_owner=user_data.id_user, id_server=user_data.id_server, persist=True)
-                return await fe_utils.send_message(client, message.channel, "Generated slimeoid for user. Take care of them!")
-            else:
-                return await fe_utils.send_message(client, message.channel, "You already have a slimeoid, bub!")
-        
-        elif debug == True and cmd == (ewcfg.cmd_prefix + 'massgenslimeoidnames'):
-            response = ""
-            for sl in range(10):
-                new_sl = slimeoid_utils.generate_slimeoid()
-                if new_sl.hue != "":
-                    hue_str = " **" + new_sl.hue + "** "
-                else:
-                    hue_str = ""
-                response += ("\n" + hue_str + new_sl.name)
-            return await fe_utils.send_message(client, message.channel, response)
+        elif debug == True and cmd in ewcfg.client_debug_commands:
+            return await debugHandling(message=message, cmd=cmd, cmd_obj=cmd_obj)
 
 
 

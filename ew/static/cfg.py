@@ -1,4 +1,3 @@
-
 # Global configuration options.
 
 
@@ -76,6 +75,8 @@ playerstats_list = [
     stat_defense,
     stat_speed,
 ]
+
+
 
 slimeoid_tick_length = 5 * 60 # 5 minutes
 
@@ -924,7 +925,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '/~'
+cmd_prefix = '!'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -1573,6 +1574,33 @@ offline_cmds = [
     cmd_retire
     # cmd_scrutinize
 ]
+
+client_debug_commands =['!enemytick',
+ '!createtestitem',
+ '!createpoudrin',
+ '!damage',
+ '!getslime',
+ '!getcoin',
+ '!clearinv',
+ '!createapple',
+ '!weathertick',
+ '!createhat',
+ '!createfood',
+ '!createdye',
+ '!createoldhat',
+ '!createoldscalp',
+ '!createoldsoul',
+ '!delete',
+ '!setrole',
+ '!getrowdy',
+ '!getkiller',
+ '!getshambler',
+ '!toggledownfall',
+ '!dayforward',
+ '!hourforward',
+ '!postleaderboard',
+ '!genslimeoid',
+ '!massgenslimeoidnames']
 
 # Maximum amount of slime juveniles can have before being killable
 # max_safe_slime = 100000
