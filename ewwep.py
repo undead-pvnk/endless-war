@@ -551,7 +551,7 @@ async def attack(cmd):
 			# Assign the corpse role to the newly dead player.
 			if was_killed:
 				#await cmd.client.replace_roles(member, role_corpse)
-				await member.edit(roles=cmd.roles_map[ewcfg.role_corpse])
+				await member.edit(roles=[cmd.roles_map[ewcfg.role_corpse]])
 
 	# Send the response to the player.
 	await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
