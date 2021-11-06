@@ -197,6 +197,10 @@ async def xfer(cmd):
 	member = cmd.mentions[0]
 	roles_map_target = ewutils.getRoleMap(member.roles)
 
+	if member.id == cmd.message.author.id:
+		response = "You tell your slimebroker to make a transfer to yourself. They look back at you like you're a braindead 5 year old. You insist that you'll make millions this way and they inform you it doesn't work like that. They then kick you in the nuts and get back to their duties."
+		return await ewutils.editmessage(resp, ewutils.formatMessage(cmd.message.author, response))
+
 	if ewcfg.role_rowdyfucker in roles_map_target or ewcfg.role_copkiller in roles_map_target:
 		# Disallow transfers to RF and CK kingpins.
 		response = "You can't transfer SlimeCoin to a known criminal warlord."
