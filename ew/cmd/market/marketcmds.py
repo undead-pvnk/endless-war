@@ -556,7 +556,7 @@ def check_art_for_duplicates(link):
 
 
 async def populate_image(cmd):
-    if cmd.message.author.guild_permissions.administrator:
+    if 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
         if cmd.tokens_count != 4:
             response = "Invalid command. Try !addart <fish/relic> <title> <link>."
         else:
@@ -581,6 +581,9 @@ async def populate_image(cmd):
             await message.edit(content = message.content.replace('-...-', link))
             response = "Added an image to the message."
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    else:
+        response = "The Curator doesn't trust you with his precious displays. Maybe you could get someone else to help you..."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 

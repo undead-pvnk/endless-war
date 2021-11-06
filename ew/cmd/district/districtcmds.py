@@ -32,23 +32,20 @@ async def capture_progress(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     district_data = EwDistrict(id_server=user_data.id_server, district=user_data.poi)
+    percent_progress_after = int(district_data.capture_points / district_data.max_capture_points * 100)
 
     if district_data.controlling_faction != "":
         response += "{} control this district. ".format(district_data.controlling_faction.capitalize())
-    elif district_data.capturing_faction != "" and district_data.cap_side != district_data.capturing_faction:
+    elif district_data.capturing_faction not in ["", district_data.controlling_faction]:
         response += "{} are de-capturing this district. ".format(district_data.capturing_faction.capitalize())
     elif district_data.capturing_faction != "":
         response += "{} are capturing this district. ".format(district_data.capturing_faction.capitalize())
     else:
-        response += "Nobody has staked a claim to this district yet."
+        response += "Nobody has staked a claim to this district yet. "
 
-    response += "\n\n**Current influence: {:,}**\nMaximum influence: {:,}\nPercentage to maximum influence: {:,}%".format(abs(district_data.capture_points), int(ewcfg.max_capture_points[district_data.property_class]),
-                                                                                                                                                   round((abs(district_data.capture_points) * 100 / (ewcfg.max_capture_points[district_data.property_class])), 1))
-
-    # if district_data.time_unlock > 0:
-
-    # response += "\nThis district cannot be captured currently. It will unlock in {}.".format(ewutils.formatNiceTime(seconds = district_data.time_unlock, round_to_minutes = True))
+    response += "Current progress: {progress}%".format(progress=percent_progress_after)
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 
 # Old capping CMD

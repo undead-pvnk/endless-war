@@ -2591,6 +2591,7 @@ leaderboard_donated = "LOYALEST CONSUMERS"
 leaderboard_fashion = "NLACakaNM'S TOP MODELS"
 leaderboard_crime = "BIGGEST CROOKS"
 leaderboard_relics = "KNOWN RELICS"
+leaderboard_kingpindonated = "KINGPIN SLIME EARNED"
 # SLIMERNALIA
 leaderboard_slimernalia = "MOST FESTIVE"
 # INTERMISSION2
@@ -2696,6 +2697,7 @@ stat_lifetime_pve_takedowns = 'lifetime_pve_takedowns'
 stat_lifetime_pve_ganks = 'lifetime_pve_ganks'
 stat_lifetime_pve_deaths = 'lifetime_pve_deaths'
 stat_shamblers_killed = 'shamblers_killed'
+stat_lifetime_kingpin_slimes = 'lifetime_kingpin_slimes'
 
 stat_revolver_kills = 'revolver_kills'
 stat_dual_pistols_kills = 'dual_pistols_kills'

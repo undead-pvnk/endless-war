@@ -261,6 +261,8 @@ async def attack(cmd):
                     ewstats.increment_stat(user=attacker, metric=ewcfg.stat_lifetime_ganks)
                 elif attacker.slimelevel < target.slimelevel:
                     ewstats.increment_stat(user=attacker, metric=ewcfg.stat_lifetime_takedowns)
+                if to_kingpin > 0:
+                    ewstats.change_stat(user=attacker, metric=ewcfg.stat_lifetime_king, n=to_kingpin)
                 if target.life_state == ewcfg.life_state_shambler:
                     ewstats.increment_stat(user=attacker, metric=ewcfg.stat_shamblers_killed)
                 end = time.perf_counter()

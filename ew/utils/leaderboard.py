@@ -65,9 +65,8 @@ async def post_leaderboards(client = None, server = None):
         toprelics = make_relics_found_board(id_server=server.id, title = ewcfg.leaderboard_relics)
         resp_cont.add_channel_response(leaderboard_channel, toprelics)
 
-        #TODO: Add KP Slime Offered  as a Leaderboard Option
-
-
+        topkpdonated = make_statdata_board(server=server.id, category=ewcfg.stat_lifetime_kingpin_slimes, title=ewcfg.leaderboard_kingpindonated)
+        resp_cont.add_channel_response(leaderboard_channel, topkpdonated)
 
         # topfestivity = make_slimernalia_board(server = serve.id, title = ewcfg.leaderboard_slimernalia)
         # resp_cont.add_channel_response(leaderboard_channel, topfestivity)
@@ -687,6 +686,10 @@ def board_header(title):
 
     elif title == ewcfg.leaderboard_crime:
         emote = "💰"
+        bar += " "
+
+    elif title == ewcfg.leaderboard_kingpindonated:
+        emote = "👑"
         bar += " "
 
     if emote == None and emote2 == None:
