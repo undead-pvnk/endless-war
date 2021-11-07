@@ -469,7 +469,7 @@ async def on_ready():
 					# Send the announcement.
 					channel = channels_stockmarket.get(server.id)
 					if channel != None:
-						await client.send_message(channel, ('**' + response + '**'))
+						await ewutils.send_message(channel, ('**' + response + '**'))
 					else:
 						ewutils.logMsg('No stock market channel for server {}'.format(server.name))
 		except:
