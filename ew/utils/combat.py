@@ -2343,10 +2343,6 @@ class EwUser(EwUserBase):
                 self.totaldamage += change
                 ewstats.track_maximum(user=self, metric=ewcfg.stat_max_hitsurvived, value=change)
 
-            if source == ewcfg.source_self_damage:
-                self.totaldamage += change
-                ewstats.change_stat(user=self, metric=ewcfg.stat_lifetime_selfdamage, n=change)
-
             if source == ewcfg.source_decay:
                 ewstats.change_stat(user=self, metric=ewcfg.stat_lifetime_slimesdecayed, n=change)
 
@@ -2551,28 +2547,17 @@ class EwUser(EwUserBase):
         self.slimecoin += change
 
         if change >= 0:
-            ewstats.track_maximum(user=self, metric=ewcfg.stat_max_slimecoin, value=self.slimecoin)
             ewstats.change_stat(user=self, metric=ewcfg.stat_lifetime_slimecoin, n=change)
             if coinsource == ewcfg.coinsource_bounty:
                 ewstats.change_stat(user=self, metric=ewcfg.stat_bounty_collected, n=change)
             if coinsource == ewcfg.coinsource_casino:
                 ewstats.track_maximum(user=self, metric=ewcfg.stat_biggest_casino_win, value=change)
                 ewstats.change_stat(user=self, metric=ewcfg.stat_lifetime_casino_winnings, n=change)
-            if coinsource == ewcfg.coinsource_withdraw:
-                ewstats.change_stat(user=self, metric=ewcfg.stat_total_slimecoin_withdrawn, n=change)
-            if coinsource == ewcfg.coinsource_recycle:
-                ewstats.change_stat(user=self, metric=ewcfg.stat_total_slimecoin_from_recycling, n=change)
         else:
             change *= -1
-            if coinsource == ewcfg.coinsource_revival:
-                ewstats.change_stat(user=self, metric=ewcfg.stat_slimecoin_spent_on_revives, n=change)
             if coinsource == ewcfg.coinsource_casino:
                 ewstats.track_maximum(user=self, metric=ewcfg.stat_biggest_casino_loss, value=change)
                 ewstats.change_stat(user=self, metric=ewcfg.stat_lifetime_casino_losses, n=change)
-            if coinsource == ewcfg.coinsource_invest:
-                ewstats.change_stat(user=self, metric=ewcfg.stat_total_slimecoin_invested, n=change)
-            if coinsource == ewcfg.coinsource_swearjar:
-                ewstats.change_stat(user=self, metric=ewcfg.stat_total_slimecoin_from_swearing, n=change)
 
 
     def add_weaponskill(self, n = 0, weapon_type = None):

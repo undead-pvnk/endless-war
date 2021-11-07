@@ -1513,6 +1513,9 @@ cmd_bazaar_refresh = cmd_prefix + 'refreshbazaar'
 cmd_cockdraw = cmd_prefix + 'cockdraw'
 cmd_measurecock = cmd_prefix + 'measurecock'
 
+cmd_dual_key_ban = cmd_prefix + 'dualkeyban'
+cmd_dual_key_release = cmd_prefix + 'dualkeyrelease'
+
 # race
 cmd_set_race = cmd_prefix + 'setrace'
 cmd_set_race_alt1 = cmd_prefix + 'identifyas'
@@ -2662,26 +2665,17 @@ stat_lifetime_kills = 'lifetime_kills'
 stat_lifetime_ganks = 'lifetime_ganks'
 stat_lifetime_takedowns = 'lifetime_takedowns'
 stat_max_wepskill = 'max_wep_skill'
-stat_lifetime_slimecoin = 'lifetime_slime_coins'
-
 stat_biggest_casino_win = 'biggest_casino_win'
 stat_biggest_casino_loss = 'biggest_casino_loss'
 stat_lifetime_casino_winnings = 'lifetime_casino_winnings'
 stat_lifetime_casino_losses = 'lifetime_casino_losses'
-stat_total_slimecoin_invested = 'total_slimecoin_invested'
-stat_total_slimecoin_withdrawn = 'total_slimecoin_withdrawn'
-
+stat_lifetime_slimecoin = 'lifetime_slime_coins'
 stat_bounty_collected = 'bounty_collected'
 stat_max_bounty = 'max_bounty'
-stat_ghostbusts = 'ghostbusts'
-stat_biggest_bust_level = 'biggest_bust_level'
-stat_lifetime_ghostbusts = 'lifetime_ghostbusts'
-stat_max_ghostbusts = 'max_ghostbusts'
-stat_max_poudrins = 'max_poudrins'
-stat_poudrins_looted = 'poudrins_looted'
+
 stat_lifetime_poudrins = 'lifetime_poudrins'
 stat_lifetime_damagedealt = 'lifetime_damage_dealt'
-stat_lifetime_selfdamage = 'lifetime_self_damage'
+
 stat_lifetime_deaths = 'lifetime_deaths'
 # Track revolver trigger pulls survived?
 stat_capture_points_contributed = 'capture_points_contributed'
@@ -2805,7 +2799,6 @@ stats_clear_on_death = [
     stat_slimesfromkills,
     stat_kills,
     stat_pve_kills,
-    stat_ghostbusts,
     stat_slimesfarmed,
     stat_slimesscavenged
 ]

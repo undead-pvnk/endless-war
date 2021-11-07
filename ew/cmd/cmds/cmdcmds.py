@@ -2479,8 +2479,14 @@ async def arrest(cmd):
     market = EwMarket(id_server=cmd.guild.id)
     time_done = ""
 
+
+
     if cmd.mentions_count == 1:
         member = cmd.mentions[0]
+        if 0 < ewrolemgr.checkClearance(member=member) < 4:
+            response = "I'm sorry, {}. I can't let you do that.".format(member.display_name)
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
         if cmd.tokens_count == 3 and cmd.tokens[2].isnumeric():
             length = int(cmd.tokens[2])
             time_done = " for {} days. They'll be released on Day {}, RFCK Standard Time".format(length, market.day + (length * 4))
@@ -2507,8 +2513,6 @@ async def arrest(cmd):
 
 
 async def release(cmd):
-    author = cmd.message.author
-
     if not 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
         return await cmd_utils.fake_failed_command(cmd)
 
@@ -2524,6 +2528,61 @@ async def release(cmd):
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         leak_channel = fe_utils.get_channel(server=cmd.guild, channel_name='squickyleaks')
         await fe_utils.send_message(cmd.client, leak_channel, "{} ({}): Released {}.".format(cmd.message.author.display_name, cmd.message.author.id, member.display_name))
+
+
+async def dual_key_ban(cmd):
+    if not 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
+        return await cmd_utils.fake_failed_command(cmd)
+
+    if cmd.mentions_count == 1:
+        member = cmd.mentions[0]
+        if 0 < ewrolemgr.checkClearance(member=member) < 4:
+            response = "I'm sorry, {}. I can't let you do that.".format(member.display_name)
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        target_data = EwUser(member=member)
+
+        for ban in target_data.get_bans():
+            if 'dualkey' in ban:
+                trimmed = ban[7:]
+                if int(trimmed) == cmd.message.author.id:
+                    response = "You already banned them."
+                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                else:
+                    target_data.ban(faction="dualkey{}").format(cmd.message.author.id)
+                    response = "You banish {} into the torturous depths of somewhere else. They're in a better place now. What a shame.".format(member.display_name)
+                    member.ban(reason="Dual key banned.")
+                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        target_data.ban(faction="dualkey{}").format(cmd.message.author.id)
+        response = "You turn your key. {} is just one step away from banishment..."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+async def dual_key_release(cmd):
+    if not 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
+        return await cmd_utils.fake_failed_command(cmd)
+    response = ""
+    if cmd.mentions_count == 1:
+        member = cmd.mentions[0]
+        target_data = EwUser(member=member)
+
+        bans = target_data.get_bans()
+        key = 'dualkey{}'.format(cmd.message.author.id)
+        response = "You never banned then to begin with."
+
+        if key in bans:
+            target_data.unban(faction=key)
+            response = "You take your ban key out of the slot."
+            bans.remove(key)
+
+        ban_count = 0
+        for ban in bans:
+            if 'dualkey' in ban:
+                ban_count += 1
+
+        if ban_count == 1:
+            member.unban()
+            response += "{} is unbanned!".format(member.display_name)
+
+        return await fe_utils.send_message(cmd.client, cmd.message.channel,fe_utils.formatMessage(cmd.message.author, response))
 
 
 

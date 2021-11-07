@@ -435,9 +435,6 @@ async def attack(cmd):
         target.id_killer = attacker.id_user
         attacker.change_slimecoin(n=bounty, coinsource=ewcfg.coinsource_bounty)
 
-        # Track stats
-        ewstats.track_maximum(user=attacker, metric=ewcfg.stat_biggest_bust_level, value=target.slimelevel)
-        ewstats.increment_stat(user=attacker, metric=ewcfg.stat_ghostbusts)
 
         # Generate Flavortext
         response = "{name_target}\'s ghost has been **BUSTED**!!".format(name_target=target_member.display_name)

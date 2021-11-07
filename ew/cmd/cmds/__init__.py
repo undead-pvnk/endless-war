@@ -155,29 +155,8 @@ cmd_map = {
 
     ewcfg.cmd_prank: cmdcmds.prank,
 
-    # Gankers Vs. Shamblers -- Please make GvS specific cmd/util files on reimplementation
-    # Maybe shoulda had its own file
-    # ewcfg.cmd_gvs_printgrid: cmds.gvs_print_grid,
-    # ewcfg.cmd_gvs_printgrid_alt1: cmds.gvs_print_grid,
-    # ewcfg.cmd_gvs_printlane: cmds.gvs_print_lane,
-    # ewcfg.cmd_gvs_incubategaiaslimeoid: cmds.gvs_incubate_gaiaslimeoid,
-    # ewcfg.cmd_gvs_fabricatetombstone: cmds.gvs_fabricate_tombstone,
-    # ewcfg.cmd_gvs_joinoperation: cmds.gvs_join_operation,
-    # ewcfg.cmd_gvs_leaveoperation: cmds.gvs_leave_operation,
-    # ewcfg.cmd_gvs_checkoperation: cmds.gvs_check_operations,
-    # ewcfg.cmd_gvs_plantgaiaslimeoid: cmds.gvs_plant_gaiaslimeoid,
+
     ewcfg.cmd_gvs_almanac: cmdcmds.almanac,
-    # ewcfg.cmd_gvs_searchforbrainz: cmds.gvs_searchforbrainz,
-    # ewcfg.cmd_gvs_grabbrainz: cmds.gvs_grabbrainz,
-    # ewcfg.cmd_gvs_dive: cmds.gvs_dive,
-    # ewcfg.cmd_gvs_resurface: cmds.gvs_resurface,
-    # ewcfg.cmd_gvs_sellgaiaslimeoid: cmds.gvs_sell_gaiaslimeoid,
-    # ewcfg.cmd_gvs_sellgaiaslimeoid_alt: cmds.gvs_sell_gaiaslimeoid,
-    # ewcfg.cmd_gvs_dig: cmds.dig,
-    # ewcfg.cmd_gvs_progress: cmds.gvs_progress,
-    # ewcfg.cmd_gvs_gaiaslime: cmds.gvs_gaiaslime,
-    # ewcfg.cmd_gvs_gaiaslime_alt1: cmds.gvs_gaiaslime,
-    # ewcfg.cmd_gvs_brainz: cmds.gvs_brainz,
 
     # Check your weapon masteries
     ewcfg.cmd_mastery: cmdcmds.check_mastery,
@@ -204,7 +183,9 @@ cmd_map = {
     # Verify that the cache is functional
     ewcfg.cmd_verify_cache: cmdcmds.verify_cache,
     ewcfg.cmd_cockdraw: cmdcmds.cockdraw,
-    ewcfg.cmd_measurecock: cmdcmds.cockdraw
+    ewcfg.cmd_measurecock: cmdcmds.cockdraw,
+    ewcfg.cmd_dual_key_ban:cmdcmds.dual_key_ban,
+    ewcfg.cmd_dual_key_release:cmdcmds.dual_key_release
 }
 if ewcfg.dh_active:
     cmd_map[ewcfg.cmd_spook] = cmdcmds.spook

@@ -466,13 +466,6 @@ def item_lootrandom(user_data):
             response += "You found a {}!".format(item_sought.get('name'))
 
             if bknd_item.check_inv_capacity(user_data=user_data, item_type=item_sought.get('item_type')):
-                if item_sought.get('name') == "Slime Poudrin":
-                    ewstats.change_stat(
-                        id_server=user_data.id_server,
-                        id_user=user_data.id_user,
-                        metric=ewcfg.stat_poudrins_looted,
-                        n=1
-                    )
                 bknd_item.give_item(id_user=user_data.id_user, id_server=user_data.id_server, id_item=item_sought.get("id_item"))
             else:
                 response += " But you couldn't carry any more {}s, so you tossed it back.".format(item_sought.get('item_type'))
