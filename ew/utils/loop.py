@@ -211,6 +211,17 @@ async def decaySlimes(id_server = None):
             cursor.close()
             bknd_core.databaseClose(conn_info)
 
+async def release_timed_prisoners(id_server, day):
+    if id_server != None:
+        users = bknd_core.execute_sql_query("SELECT id_user FROM users WHERE {arrests} <= %s and {arrests} > 0".format(arrests = ewcfg.col_arrested), (day))
+
+        for user in users:
+            user_data = EwUser(id_server=id_server, id_user=user)
+            user_data.arrested = 0
+            user_data.poi = ewcfg.poi_id_juviesrow
+            user_data.persist()
+
+
 
 """
     Kills users who have left the server while the bot was offline
@@ -1379,12 +1390,19 @@ async def clock_tick_loop(id_server = None, force_active = False):
                         ewutils.logMsg("...finished bazaar refresh.")
                         
                         await leaderboard_utils.post_leaderboards(client=client, server=server)
-                        
+
+                        ewutils.logMsg("Releasing timed prisoners...")
+                        await release_timed_prisoners(id_server=id_server, day=market_data.day)
+                        ewutils.logMsg("Released timed prisoners.")
+
+
                         if market_data.day % 8 == 0 or force_active:
                             ewutils.logMsg("Started rent calc...")
                             await apt_utils.rent_time(id_server)
                             await pay_salary(id_server)
                             ewutils.logMsg("...finished rent calc.")
+
+
 
                     elif market_data.clock == 20:
                         response = ' The SlimeCorp Stock Exchange has closed for the night.'

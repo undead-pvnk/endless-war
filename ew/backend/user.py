@@ -33,7 +33,7 @@ class EwUserBase:
     busted = False
     time_last_action = 0
     weaponmarried = False
-    arrested = False
+    arrested = 0
     active_slimeoid = -1
     splattered_slimes = 0
     # sap = 0
@@ -254,7 +254,7 @@ class EwUserBase:
                     self.poi_death = result[26]
                     self.slime_donations = result[27]
                     self.poudrin_donations = result[28]
-                    self.arrested = (result[29] == 1)
+                    self.arrested = result[29]
                     self.splattered_slimes = result[30]
                     self.time_expirpvp = result[31]
                     self.time_lastenlist = result[32]
@@ -427,7 +427,7 @@ class EwUserBase:
                     self.poi_death,
                     self.slime_donations,
                     self.poudrin_donations,
-                    (1 if self.arrested else 0),
+                    self.arrested,
                     self.splattered_slimes,
                     self.time_expirpvp,
                     self.time_lastenlist,

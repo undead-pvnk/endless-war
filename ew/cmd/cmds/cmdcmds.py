@@ -3703,22 +3703,32 @@ async def check_bot(cmd):
 async def arrest(cmd):
     author = cmd.message.author
 
-    if not 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
+
+    if not 0 < ewrolemgr.checkClearance(member=author) < 4:
         return await cmd_utils.fake_failed_command(cmd)
+    market = EwMarket(id_server=cmd.guild.id)
+    time_done = ""
 
     if cmd.mentions_count == 1:
         member = cmd.mentions[0]
+        if cmd.tokens_count == 3 and cmd.tokens[2].isnumeric():
+            length = int(cmd.tokens[2])
+            time_done = " for {} days".format(length)
+        else:
+            length = 9999
+
+
         user_data = EwUser(member=member)
-        user_data.arrested = True
+        user_data.arrested = market.day + (length * 4)
         user_data.poi = ewcfg.poi_id_thesphere
         user_data.change_slimes(n=- user_data.slimes)
         user_data.persist()
 
-        response = "{} is thrown into one of the Juvenile Detention Center's high security solitary confinement spheres.".format(member.display_name)
+        response = "{} is thrown into one of the Juvenile Detention Center's high security solitary confinement spheres{}.".format(member.display_name, time_done)
         await ewrolemgr.updateRoles(client=cmd.client, member=member)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         leak_channel = fe_utils.get_channel(server=cmd.guild, channel_name='squickyleaks')
-        await fe_utils.send_message(cmd.client, leak_channel, "{} ({}): Arrested {}.".format(cmd.message.author.display_name, cmd.message.author.id, member.display_name))
+        await fe_utils.send_message(cmd.client, leak_channel, "{} ({}): Arrested {}{}.".format(cmd.message.author.display_name, cmd.message.author.id, member.display_name, time_done))
 
 
 """
@@ -3735,7 +3745,7 @@ async def release(cmd):
     if cmd.mentions_count == 1:
         member = cmd.mentions[0]
         user_data = EwUser(member=member)
-        user_data.arrested = False
+        user_data.arrested = 0
         user_data.poi = ewcfg.poi_id_juviesrow
         user_data.persist()
 

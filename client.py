@@ -1104,7 +1104,7 @@ async def on_message(message):
         # await ewrolemgr.updateRoles(client = client, member = message.author)
 
         #user_data = EwUser(member=message.author)
-        if usermodel.arrested:
+        if usermodel.arrested > 0:
             return
 
         mutations = usermodel.get_mutations()
