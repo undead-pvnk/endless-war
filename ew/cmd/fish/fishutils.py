@@ -344,9 +344,9 @@ async def award_fish(fisher, cmd, user_data):
         if user_data.poi == ewcfg.poi_id_juviesrow_pier:
             slime_gain = int(slime_gain / 4)
 
-        trauma = se_static.trauma_map.get(user_data.trauma)
-        if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
-            slime_gain *= (1 - 0.5 * user_data.degradation / 100)
+        #trauma = se_static.trauma_map.get(user_data.trauma)
+        #if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain and False:
+            #slime_gain *= (1 - 0.5 * user_data.degradation / 100)
 
         slime_gain = max(0, round(slime_gain))
 

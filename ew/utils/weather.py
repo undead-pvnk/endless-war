@@ -120,7 +120,8 @@ async def weather_tick(id_server = None):
 
                     else:
                         if random.random() < 0.01:
-                            user_data.degradation += 1
+                            pass
+                            #user_data.degradation += 1
 
                     user_data.persist()
 

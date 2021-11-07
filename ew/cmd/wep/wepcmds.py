@@ -248,7 +248,7 @@ async def attack(cmd):
                     target.trauma = ewcfg.trauma_id_betrayal
                 else:
                     target.trauma = attacker_weapon.id_weapon
-                target.degradation = 0 if ctn.vax else target.degradation
+                #target.degradation = 0 if ctn.vax else target.degradation
                 target.id_killer = attacker.id_user
 
 

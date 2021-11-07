@@ -121,7 +121,7 @@ class EwUserBase:
 
         # self.hardened_sap = max(0, min(self.hardened_sap, ewutils.sap_max_bylevel(self.slimelevel) - self.sap))
 
-        self.degradation = max(0, self.degradation)
+        #self.degradation = max(0, self.degradation)
 
     """ Create a new EwUser and optionally retrieve it from the database. """
 
@@ -151,7 +151,7 @@ class EwUserBase:
                 # Retrieve object
 
                 cursor.execute(
-                    "SELECT  {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+                    "SELECT  {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 
                         ewcfg.col_slimes,
@@ -172,7 +172,6 @@ class EwUserBase:
                         ewcfg.col_faction,
                         ewcfg.col_poi,
                         ewcfg.col_life_state,
-                        ewcfg.col_busted,
                         ewcfg.col_time_last_action,
                         ewcfg.col_weaponmarried,
                         ewcfg.col_time_lastscavenge,
@@ -181,35 +180,21 @@ class EwUserBase:
                         ewcfg.col_time_lastoffline,
                         ewcfg.col_time_joined,
                         ewcfg.col_poi_death,
-                        ewcfg.col_slime_donations,
-                        ewcfg.col_poudrin_donations,
                         ewcfg.col_arrested,
-                        ewcfg.col_splattered_slimes,
                         ewcfg.col_time_expirpvp,
                         ewcfg.col_time_lastenlist,
-                        ewcfg.col_apt_zone,
                         ewcfg.col_visiting,
                         ewcfg.col_active_slimeoid,
                         ewcfg.col_has_soul,
                         # ewcfg.col_sap,
                         # ewcfg.col_hardened_sap,
-                        ewcfg.col_festivity,
-                        ewcfg.col_festivity_from_slimecoin,
-                        ewcfg.col_slimernalia_kingpin,
                         ewcfg.col_manuscript,
                         ewcfg.col_spray,
-                        ewcfg.col_salary_credits,
-                        ewcfg.col_degradation,
                         ewcfg.col_time_lastdeath,
                         ewcfg.col_sidearm,
-                        ewcfg.col_gambit,
-                        ewcfg.col_credence,
-                        ewcfg.col_credence_used,
                         ewcfg.col_race,
                         ewcfg.col_time_racialability,
                         ewcfg.col_time_lastpremiumpurchase,
-                        ewcfg.col_juviemode,
-                        ewcfg.col_gvs_time_lastshambaquarium,
                         ewcfg.col_rand_seed,
                         ewcfg.col_time_lasthit,
                         ewcfg.col_verified,
@@ -243,50 +228,33 @@ class EwUserBase:
                     self.faction = result[15]
                     self.poi = result[16]
                     self.life_state = result[17]
-                    self.busted = (result[18] == 1)
-                    self.time_last_action = result[19]
-                    self.weaponmarried = (result[20] == 1)
-                    self.time_lastscavenge = result[21]
-                    self.bleed_storage = result[22]
-                    self.time_lastenter = result[23]
-                    self.time_lastoffline = result[24]
-                    self.time_joined = result[25]
-                    self.poi_death = result[26]
-                    self.slime_donations = result[27]
-                    self.poudrin_donations = result[28]
-                    self.arrested = result[29]
-                    self.splattered_slimes = result[30]
-                    self.time_expirpvp = result[31]
-                    self.time_lastenlist = result[32]
-                    self.apt_zone = result[33]
-                    self.visiting = result[34]
-                    self.active_slimeoid = result[35]
-                    self.has_soul = result[36]
-                    # self.sap = result[37]
-                    # self.hardened_sap = result[38]
-                    self.festivity = result[37]
-                    self.festivity_from_slimecoin = result[38]
-                    self.slimernalia_kingpin = (result[39] == 1)
-                    self.manuscript = result[40]
-                    self.spray = result[41]
-                    self.salary_credits = result[42]
-                    self.degradation = result[43]
-                    self.time_lastdeath = result[44]
-                    self.sidearm = result[45]
-                    self.gambit = result[46]
-                    self.credence = result[47]
-                    self.credence_used = result[48]
-                    self.race = result[49]
-                    self.time_racialability = result[50]
-                    self.time_lastpremiumpurchase = result[51]
-                    self.juviemode = result[52]
-                    self.gvs_time_lastshambaquarium = result[53]
-                    self.rand_seed = result[54]
-                    self.time_lasthit = result[55]
-                    self.verified = result[56]
-                    self.gender = result[57]
-                    self.hogtied = result[58]
-                    self.crime = result[59]
+                    self.time_last_action = result[18]
+                    self.weaponmarried = (result[19] == 1)
+                    self.time_lastscavenge = result[20]
+                    self.bleed_storage = result[21]
+                    self.time_lastenter = result[22]
+                    self.time_lastoffline = result[23]
+                    self.time_joined = result[24]
+                    self.poi_death = result[25]
+                    self.arrested = result[26]
+                    self.time_expirpvp = result[27]
+                    self.time_lastenlist = result[28]
+                    self.visiting = result[29]
+                    self.active_slimeoid = result[30]
+                    self.has_soul = result[31]
+                    self.manuscript = result[32]
+                    self.spray = result[33]
+                    self.time_lastdeath = result[34]
+                    self.sidearm = result[35]
+                    self.race = result[36]
+                    self.time_racialability = result[37]
+                    self.time_lastpremiumpurchase = result[38]
+                    self.rand_seed = result[39]
+                    self.time_lasthit = result[40]
+                    self.verified = result[41]
+                    self.gender = result[42]
+                    self.hogtied = result[43]
+                    self.crime = result[44]
 
 
                 else:
@@ -329,7 +297,7 @@ class EwUserBase:
             # Save the object.
 
             cursor.execute(
-                "REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+                "REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 
                     ewcfg.col_id_user,
                     ewcfg.col_id_server,
@@ -351,7 +319,6 @@ class EwUserBase:
                     ewcfg.col_faction,
                     ewcfg.col_poi,
                     ewcfg.col_life_state,
-                    ewcfg.col_busted, #todo could we consolidate this into life_state? no, but phased out
                     ewcfg.col_time_last_action,
                     ewcfg.col_weaponmarried,
                     ewcfg.col_time_lastscavenge,
@@ -360,35 +327,21 @@ class EwUserBase:
                     ewcfg.col_time_lastoffline,
                     ewcfg.col_time_joined,
                     ewcfg.col_poi_death,
-                    ewcfg.col_slime_donations,#todo remove - phased out
-                    ewcfg.col_poudrin_donations, #todo remove - phased out
                     ewcfg.col_arrested,
-                    ewcfg.col_splattered_slimes,#todo remove entirely - phased out
                     ewcfg.col_time_expirpvp,
                     ewcfg.col_time_lastenlist,
-                    ewcfg.col_apt_zone, #todo check to see if we can load the apartment in to replace this harder than expected but done
                     ewcfg.col_visiting,
                     ewcfg.col_active_slimeoid,
                     ewcfg.col_has_soul,
                     # ewcfg.col_sap,
                     # ewcfg.col_hardened_sap,
-                    ewcfg.col_festivity, #Todo Modify to stat - phased out
-                    ewcfg.col_festivity_from_slimecoin, #Todo Modify to stat - phased out
-                    ewcfg.col_slimernalia_kingpin, #Todo Modify to gamestate - done, and i set up the slimernalia bool while i was at it
                     ewcfg.col_manuscript,
                     ewcfg.col_spray,
-                    ewcfg.col_salary_credits,#Todo Remove completely - Phased out
-                    ewcfg.col_degradation,#Todo Convert to stat, maybe remove?
                     ewcfg.col_time_lastdeath,
                     ewcfg.col_sidearm,
-                    ewcfg.col_gambit, #Todo Convert to Stat - Phased out
-                    ewcfg.col_credence,#Todo Convert to Stat - Phased Out
-                    ewcfg.col_credence_used,#Todo Convert to Stat - Phased Out
                     ewcfg.col_race,
                     ewcfg.col_time_racialability,
                     ewcfg.col_time_lastpremiumpurchase,
-                    ewcfg.col_juviemode, #Todo Remove completely - Done
-                    ewcfg.col_gvs_time_lastshambaquarium, #Todo Remove completely - Done
                     ewcfg.col_rand_seed,
                     ewcfg.col_time_lasthit,
                     ewcfg.col_verified,
@@ -416,7 +369,6 @@ class EwUserBase:
                     self.faction,
                     self.poi,
                     self.life_state,
-                    (1 if self.busted else 0),
                     self.time_last_action,
                     (1 if self.weaponmarried else 0),
                     self.time_lastscavenge,
@@ -425,35 +377,19 @@ class EwUserBase:
                     self.time_lastoffline,
                     self.time_joined,
                     self.poi_death,
-                    self.slime_donations,
-                    self.poudrin_donations,
                     self.arrested,
-                    self.splattered_slimes,
                     self.time_expirpvp,
                     self.time_lastenlist,
-                    self.apt_zone,
                     self.visiting,
                     self.active_slimeoid,
                     self.has_soul,
-                    # self.sap,
-                    # self.hardened_sap,
-                    self.festivity,
-                    self.festivity_from_slimecoin,
-                    self.slimernalia_kingpin,
                     self.manuscript,
                     self.spray,
-                    self.salary_credits,
-                    self.degradation,
                     self.time_lastdeath,
                     self.sidearm,
-                    self.gambit,
-                    self.credence,
-                    self.credence_used,
                     self.race,
                     self.time_racialability,
                     self.time_lastpremiumpurchase,
-                    self.juviemode,
-                    self.gvs_time_lastshambaquarium,
                     self.rand_seed,
                     self.time_lasthit,
                     self.verified,

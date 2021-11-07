@@ -205,7 +205,7 @@ async def data(cmd):
             response += "You are a {}level {} {}shambler.".format(race_prefix, user_data.slimelevel, race_suffix)
         else:
             response += "You are a {}level {} {}slime{}.".format(race_prefix, user_data.slimelevel, race_suffix, user_data.gender)
-            if user_data.degradation < 20:
+            """if user_data.degradation < 20:
                 pass
             elif user_data.degradation < 40:
                 response += " Your bodily integrity is starting to slip."
@@ -216,7 +216,7 @@ async def data(cmd):
             elif user_data.degradation < 100:
                 response += " Your limbs keep falling off. It's really annoying."
             else:
-                response += " You almost look like a shambler already."
+                response += " You almost look like a shambler already."""
 
         if user_data.has_soul == 0:
             response += " You have no soul."

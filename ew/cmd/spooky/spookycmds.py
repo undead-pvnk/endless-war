@@ -55,7 +55,7 @@ async def revive(cmd):
         player_data = EwUser(member=cmd.message.author)
 
         # time_until_revive = (player_data.time_lastdeath + 600) - time_now
-        time_until_revive = (player_data.time_lastdeath + player_data.degradation) - time_now
+        time_until_revive = (player_data.time_lastdeath) - time_now
 
         if time_until_revive > 0:
             response = "ENDLESS WAR is not ready to {} you yet ({}s).".format(cmd.tokens[0], time_until_revive)
@@ -83,7 +83,7 @@ async def revive(cmd):
             # Set time of last revive. This used to provied spawn protection, but currently isn't used.
             player_data.time_lastrevive = time_now
 
-            if player_data.degradation >= 100:
+            if False: #player_data.degradation >= 100:
                 player_data.life_state = ewcfg.life_state_shambler
                 player_data.change_slimes(n=0.5 * ewcfg.slimes_shambler)
                 player_data.trauma = ""
