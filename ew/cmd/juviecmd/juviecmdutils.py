@@ -825,7 +825,7 @@ def create_mining_event(cmd):
             )
         # 10 second poudrin frenzy
         else:
-            if bknd_item.check_inv_capacity(user_data=user_data, item_type=ewcfg.it_item):  # and not user_data.juviemode:
+            if bknd_item.check_inv_capacity(user_data=user_data, item_type=ewcfg.it_item):
                 event_props = {}
                 event_props['id_user'] = cmd.message.author.id
                 event_props['poi'] = user_data.poi

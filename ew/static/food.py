@@ -1996,6 +1996,7 @@ food_map = {}
 
 # A list of food names
 food_names = []
+swilldermuk_food = []
 
 # Populate food map, including all aliases.
 for food in food_list:
@@ -2004,6 +2005,14 @@ for food in food_list:
 
     for alias in food.alias:
         food_map[alias] = food
+
+# Pity-pies will also spawn across the map.
+if ewcfg.swilldermuk_active:
+    for p in food_list:
+        if p.acquisition == "swilldermuk":
+            swilldermuk_food.append(p)
+        else:
+            pass
 
 # list of crops you're able to !reap
 vegetable_list = []

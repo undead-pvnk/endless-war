@@ -2222,7 +2222,7 @@ for slimexodia in item_list:
 prank_items_heinous = []  # common
 prank_items_scandalous = []  # uncommon
 prank_items_forbidden = []  # rare
-swilldermuk_food = []
+
 
 # Gather all prank items
 for p in item_list:
@@ -2241,12 +2241,7 @@ for p in item_list:
     else:
         pass
 
-# Pity-pies will also spawn across the map.
-# for p in food_list:
-# 	if p.acquisition == "swilldermuk":
-# 		swilldermuk_food.append(p)
-# 	else:
-# 		pass
+
 
 furniture_list = [
     EwFurniture(

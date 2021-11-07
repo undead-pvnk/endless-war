@@ -264,7 +264,7 @@ def gen_item_props(item):
             'time_fridged': 0,
             'acquisition': ewcfg.acquisition_fishing,
             'value': 3,
-            'noslime': 'false'  # if not actual_fisherman_data.juviemode else 'true'
+            'noslime': 'false'
         }
     elif item.item_type == ewcfg.it_food:
         item_props = {

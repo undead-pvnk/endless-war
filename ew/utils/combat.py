@@ -2310,10 +2310,7 @@ class EwUser(EwUserBase):
     def change_slimes(self, n = 0, source = None):
         change = int(n)
         self.slimes += change
-        # if self.life_state == ewcfg.life_state_juvenile:
-        #
-        #	if self.juviemode == 1 and self.slimes > ewcfg.max_safe_slime:
-        #		self.slimes = ewcfg.max_safe_slime
+
 
         response = ""
 

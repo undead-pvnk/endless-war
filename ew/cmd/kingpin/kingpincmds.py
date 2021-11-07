@@ -4,6 +4,7 @@ from ew.backend import item as bknd_item
 from ew.static import cfg as ewcfg
 from ew.static import cosmetics
 from ew.static import poi as poi_static
+import ew.static.items as static_items
 from ew.utils import cmd as cmd_utils
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
@@ -14,6 +15,7 @@ from ew.utils.combat import EwUser
 import ew.backend.core as bknd_core
 import asyncio
 from ew.backend.item import EwItem
+from ew.utils import stats as ewstats
 
 
 async def pa_command(cmd):
@@ -64,8 +66,8 @@ async def deadmega(cmd):
 
 
 """
-	Release the specified player from their commitment to their faction.
-	Returns enlisted players to juvenile.
+    Release the specified player from their commitment to their faction.
+    Returns enlisted players to juvenile.
 """
 
 
@@ -209,7 +211,7 @@ async def banish(cmd):
 
 
 """
-	Command that creates a princeps cosmetic item
+    Command that creates a princeps cosmetic item
 """
 
 
@@ -268,7 +270,7 @@ async def create(cmd):
 
 
 """
-	Command that grants someone a specific cosmetic for an event.
+    Command that grants someone a specific cosmetic for an event.
 """
 
 
@@ -291,78 +293,82 @@ async def exalt(cmd):
     # 	DOUBLE HALLOWEEN
     #
     # 	# Gather the Medallion
-    medallion_results = []
-    for m in cosmetics.cosmetic_items_list:
-        if m.ingredients == 'HorsemanSoul':
-            medallion_results.append(m)
-        else:
-            pass
+    if ewcfg.dh_active:
+        medallion_results = []
+        for m in cosmetics.cosmetic_items_list:
+            if m.ingredients == 'HorsemanSoul':
+                medallion_results.append(m)
+            else:
+                pass
 
-    medallion = medallion_results[0]
-    medallion_props = itm_utils.gen_item_props(medallion)
+        medallion = medallion_results[0]
+        medallion_props = itm_utils.gen_item_props(medallion)
 
-    medallion_id = bknd_item.item_create(
-        item_type=medallion.item_type,
-        id_user=recipient.id,
-        id_server=cmd.guild.id,
-        item_props=medallion_props
-    )
+        medallion_id = bknd_item.item_create(
+            item_type=medallion.item_type,
+            id_user=recipient.id,
+            id_server=cmd.guild.id,
+            item_props=medallion_props
+        )
 
-    # Soulbind the medallion. A player can get at most twice, but later on a new command could be added to destroy them/trade them in.
-    # I imagine this would be something similar to how players can destroy Australium Wrenches in TF2, which broadcasts a message to everyone in the game, or something.
-    itm_utils.soulbind(medallion_id)
+        # Soulbind the medallion. A player can get at most twice, but later on a new command could be added to destroy them/trade them in.
+        # I imagine this would be something similar to how players can destroy Australium Wrenches in TF2, which broadcasts a message to everyone in the game, or something.
+        itm_utils.soulbind(medallion_id)
 
-    response = "**{} has been gifted the Double Halloween Medallion!!**\n".format(recipient.display_name)
-    #
+        response = "**{} has been gifted the Double Halloween Medallion!!**\n".format(recipient.display_name)
+    elif ewcfg.swilldermuk_active:
+
     # 	SWILLDERMUK
-    #
-    # 	if recipient_data.gambit > 0:
-    # 		# Give the user the Janus Mask
-    #
-    # 		mask_results = []
-    # 		for m in cosmetics.cosmetic_items_list:
-    # 			if m.ingredients == 'SwilldermukFinalGambit':
-    # 				mask_results.append(m)
-    # 			else:
-    # 				pass
-    #
-    # 		mask = mask_results[0]
-    # 		mask_props = itm_utils.gen_item_props(mask)
-    #
-    # 		mask_id = bknd_item.item_create(
-    # 			item_type=mask.item_type,
-    # 			id_user=recipient.id,
-    # 			id_server=cmd.guild.id,
-    # 			item_props=mask_props
-    # 		)
-    #
-    # 		ewitem.soulbind(mask_id)
-    #
-    # 		response = "In light of their supreme reign over Swilldermuk, and in honor of their pranking prowess, {} recieves the Janus Mask!".format(recipient.display_name)
-    #
-    # 	else:
-    # 		# Give the user the Sword of Seething
-    # 		sword_results = []
-    # 		for s in items.item_list:
-    # 			if s.context == 'swordofseething':
-    # 				sword_results.append(s)
-    # 			else:
-    # 				pass
-    #
-    # 		sword = sword_results[0]
-    # 		sword_props = itm_utils.gen_item_props(sword)
-    #
-    # 		sword_id = bknd_item.item_create(
-    # 			item_type=sword.item_type,
-    # 			id_user=recipient.id,
-    # 			id_server=cmd.guild.id,
-    # 			item_props=sword_props
-    # 		)
-    #
-    # 		ewitem.soulbind(sword_id)
-    #
-    # 		response = "In response to their unparalleled ability to let everything go to shit and be the laughingstock of all of NLACakaNM, {} recieves the SWORD OF SEETHING! God help us all...".format(recipient.display_name)
-    #
+        gambit = ewstats.get_stat(id_server=cmd.guild.id, id_user=recipient_data.id_user, metric=ewcfg.stat_gambit)
+        if gambit > 0:
+            # Give the user the Janus Mask
+
+            mask_results = []
+            for m in cosmetics.cosmetic_items_list:
+                if m.ingredients == 'SwilldermukFinalGambit':
+                    mask_results.append(m)
+                else:
+                    pass
+
+            mask = mask_results[0]
+            mask_props = itm_utils.gen_item_props(mask)
+
+            mask_id = bknd_item.item_create(
+                item_type=mask.item_type,
+                id_user=recipient.id,
+                id_server=cmd.guild.id,
+                item_props=mask_props
+            )
+
+            itm_utils.soulbind(mask_id)
+
+            response = "In light of their supreme reign over Swilldermuk, and in honor of their pranking prowess, {} recieves the Janus Mask!".format(recipient.display_name)
+
+        else:
+            # Give the user the Sword of Seething
+            sword_results = []
+            for s in static_items.item_list:
+                if s.context == 'swordofseething':
+                    sword_results.append(s)
+                else:
+                    pass
+
+            sword = sword_results[0]
+            sword_props = itm_utils.gen_item_props(sword)
+
+            sword_id = bknd_item.item_create(
+                item_type=sword.item_type,
+                id_user=recipient.id,
+                id_server=cmd.guild.id,
+                item_props=sword_props
+            )
+
+            itm_utils.soulbind(sword_id)
+
+            response = "In response to their unparalleled ability to let everything go to shit and be the laughingstock of all of NLACakaNM, {} recieves the SWORD OF SEETHING! God help us all...".format(recipient.display_name)
+    else:
+        response = "Exalting? Nah, not enough holiday cheer."
+
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 

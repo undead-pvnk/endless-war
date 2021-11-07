@@ -378,17 +378,17 @@ class EwUserBase:
                     ewcfg.col_manuscript,
                     ewcfg.col_spray,
                     ewcfg.col_salary_credits,#Todo Remove completely - Phased out
-                    ewcfg.col_degradation,#Todo Convert to stat
+                    ewcfg.col_degradation,#Todo Convert to stat, maybe remove?
                     ewcfg.col_time_lastdeath,
                     ewcfg.col_sidearm,
-                    ewcfg.col_gambit, #Todo Convert to Stat
-                    ewcfg.col_credence,#Todo Convert to Stat
-                    ewcfg.col_credence_used,#Todo Convert to Stat
+                    ewcfg.col_gambit, #Todo Convert to Stat - Phased out
+                    ewcfg.col_credence,#Todo Convert to Stat - Phased Out
+                    ewcfg.col_credence_used,#Todo Convert to Stat - Phased Out
                     ewcfg.col_race,
                     ewcfg.col_time_racialability,
                     ewcfg.col_time_lastpremiumpurchase,
-                    ewcfg.col_juviemode, #Todo Remove completely
-                    ewcfg.col_gvs_time_lastshambaquarium, #Todo Remove completely
+                    ewcfg.col_juviemode, #Todo Remove completely - Done
+                    ewcfg.col_gvs_time_lastshambaquarium, #Todo Remove completely - Done
                     ewcfg.col_rand_seed,
                     ewcfg.col_time_lasthit,
                     ewcfg.col_verified,

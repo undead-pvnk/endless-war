@@ -37,6 +37,7 @@ from ..backend.status import EwStatusEffect
 from ..backend.worldevent import EwWorldEvent
 from ..static import cfg as ewcfg
 from ..static import items as static_items
+from ..static.food import swilldermuk_food
 from ..static import poi as poi_static
 from ..static import status as se_static
 from ..static import weapons as static_weapons
@@ -963,7 +964,7 @@ async def spawn_prank_items(id_server):
         pie_or_prank = random.randrange(3)
 
         if pie_or_prank == 0:
-            swilldermuk_food_item = random.choice(static_items.swilldermuk_food)
+            swilldermuk_food_item = random.choice(swilldermuk_food)
 
             item_props = itm_utils.gen_item_props(swilldermuk_food_item)
 
@@ -1046,28 +1047,30 @@ async def generate_credence(id_server):
 
             for user in users:
                 user_data = EwUser(id_user=user[0], id_server=id_server)
-                added_credence = 0
-                lowered_credence_used = 0
 
-                if user_data.credence >= 1000:
+                lowered_credence_used = 0
+                credence = ewstats.get_stat(id_server=id_server, id_user=user[0], metric=ewcfg.stat_credence)
+                credence_used = ewstats.get_stat(id_server=id_server, id_user=user[0], metric=ewcfg.stat_credence_used)
+                if credence >= 1000:
                     added_credence = 1 + random.randrange(5)
-                elif user_data.credence >= 500:
+                elif credence >= 500:
                     added_credence = 10 + random.randrange(41)
-                elif user_data.credence >= 100:
+                elif credence >= 100:
                     added_credence = 25 + random.randrange(76)
                 else:
                     added_credence = 50 + random.randrange(151)
 
-                if user_data.credence_used > 0:
-                    lowered_credence_used = int(user_data.credence_used / 10)
+                if credence_used > 0:
+                    lowered_credence_used = int(credence_used / 10)
 
                     if lowered_credence_used == 1:
                         lowered_credence_used = 0
 
-                    user_data.credence_used = lowered_credence_used
+
+                    ewstats.set_stat(id_server=id_server, id_user=user[0], metric=ewcfg.stat_credence_used, value=lowered_credence_used)
 
                 added_credence = max(0, added_credence - lowered_credence_used)
-                user_data.credence += added_credence
+                ewstats.change_stat(id_server=id_server, id_user=user[0], metric = ewcfg.stat_credence, n=added_credence)
 
                 user_data.persist()
 
@@ -1367,7 +1370,6 @@ async def clock_tick_loop(id_server = None, force_active = False):
                         if market_data.day % 8 == 0 or force_active:
                             ewutils.logMsg("Started rent calc...")
                             await apt_utils.rent_time(id_server)
-                            await pay_salary(id_server)
                             ewutils.logMsg("...finished rent calc.")
 
 

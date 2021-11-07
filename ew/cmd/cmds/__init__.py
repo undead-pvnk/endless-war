@@ -152,13 +152,7 @@ cmd_map = {
 
 
 
-    # Swilldermuk -- Please make swilldermuk specific cmd/util files on reimplementation
-    # ewcfg.cmd_gambit: cmds.gambit,
-    # ewcfg.cmd_credence: cmds.credence, #debug
-    # ewcfg.cmd_get_credence: cmds.get_credence, #debug
-    # ewcfg.cmd_reset_prank_stats: cmds.reset_prank_stats, #debug
-    # ewcfg.cmd_set_gambit: cmds.set_gambit, #debug
-    # ewcfg.cmd_pointandlaugh: cmds.point_and_laugh,
+
     ewcfg.cmd_prank: cmdcmds.prank,
 
     # Gankers Vs. Shamblers -- Please make GvS specific cmd/util files on reimplementation

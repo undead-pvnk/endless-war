@@ -30,6 +30,7 @@ from . import spooky
 from . import sports
 from . import transport
 from . import wep
+from . import prank
 from . import debugr
 
 import ew.utils.frontend as fe_utils
@@ -69,7 +70,8 @@ cmd_modules = [
     slimetwitter,
     smelting,
     sports,
-    debugr
+    debugr,
+    prank
 ]
 
 cmd_map = {

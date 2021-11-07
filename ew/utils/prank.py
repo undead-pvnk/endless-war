@@ -10,6 +10,7 @@ from ..backend.item import EwItem
 from ..backend.user import EwUserBase as EwUser
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
+from ew.utils import stats as ewstats
 
 
 response_timer = 6  # How long does it take for a response item to send out its attacks
@@ -22,9 +23,6 @@ async def activate_trap_items(district, id_server, id_user):
     trap_was_dud = False
 
     user_data = EwUser(id_user=id_user, id_server=id_server)
-    # if user_data.credence == 0:
-    # 	#print('no credence')
-    # 	return
 
     if user_data.life_state == ewcfg.life_state_corpse:
         # print('get out ghosts reeeee!')
@@ -132,15 +130,17 @@ async def prank_item_effect_instantuse(cmd, item):
         if pranker_data.poi != pranked_data.poi:
             response = "You need to be in the same place as your target to prank them with that item."
             return item_action, response, use_mention_displayname, side_effect
+        if ewcfg.swilldermuk_active:
+            pranker_credence = ewstats.get_stat(id_server=cmd.guild.id, id_user=pranker_data.id_user, metric=ewcfg.stat_credence)
+            pranked_credence = ewstats.get_stat(id_server=cmd.guild.id, id_user=pranked_data.id_user, metric=ewcfg.stat_credence)
+            if pranker_credence == 0 or pranked_credence == 0:
+                if pranker_credence == 0:
 
-        # if pranker_data.credence == 0 or pranked_data.credence == 0:
-        # 	if pranker_data.credence == 0:
-        #
-        # 		response = "You can't prank that person right now, you don't have any credence!"
-        # 	else:
-        # 		response = "You can't prank that person right now, they don't have any credence!"
-        #
-        # 	return item_action, response, use_mention_displayname, side_effect
+                    response = "You can't prank that person right now, you don't have any credence!"
+                else:
+                    response = "You can't prank that person right now, they don't have any credence!"
+
+                return item_action, response, use_mention_displayname, side_effect
 
         if (ewutils.active_restrictions.get(pranker_data.id_user) != None and ewutils.active_restrictions.get(pranker_data.id_user) == 2) or (ewutils.active_restrictions.get(pranked_data.id_user) != None and ewutils.active_restrictions.get(pranked_data.id_user) == 2):
             response = "You can't prank that person right now."
@@ -191,14 +191,17 @@ async def prank_item_effect_response(cmd, item):
             response = "You need to be in the same place as your target to prank them with that item."
             return item_action, response, use_mention_displayname, side_effect
 
-        # if pranker_data.credence == 0 or pranked_data.credence == 0:
-        # 	if pranker_data.credence == 0:
-        #
-        # 		response = "You can't prank that person right now, you don't have any credence!"
-        # 	else:
-        # 		response = "You can't prank that person right now, they don't have any credence!"
-        #
-        # 	return item_action, response, use_mention_displayname, side_effect
+        if ewcfg.swilldermuk_active:
+            pranker_credence = ewstats.get_stat(id_server=cmd.guild.id, id_user=pranker_data.id_user, metric=ewcfg.stat_credence)
+            pranked_credence = ewstats.get_stat(id_server=cmd.guild.id, id_user=pranked_data.id_user, metric=ewcfg.stat_credence)
+            if pranker_credence == 0 or pranked_credence == 0:
+                if pranker_credence == 0:
+
+                    response = "You can't prank that person right now, you don't have any credence!"
+                else:
+                    response = "You can't prank that person right now, they don't have any credence!"
+
+                return item_action, response, use_mention_displayname, side_effect
 
         if (ewutils.active_restrictions.get(pranker_data.id_user) != None and ewutils.active_restrictions.get(pranker_data.id_user) == 2) or (ewutils.active_restrictions.get(pranked_data.id_user) != None and ewutils.active_restrictions.get(pranked_data.id_user) == 2):
             response = "You can't prank that person right now."
@@ -323,21 +326,25 @@ async def prank_item_effect_trap(cmd, item):
 
         pranker_data = EwUser(member=cmd.message.author)
 
-        # if pranker_data.credence == 0:
-        # 	response = "You can't lay down a trap without any credence!"
-        # 	return item_action, response, use_mention_displayname, side_effect
+        if ewcfg.swilldermuk_active:
+            credence = ewstats.get_stat(id_server=cmd.guild.id, id_user=cmd.message.author.id, metric=ewcfg.stat_credence)
+            if credence == 0:
+                response = "You can't lay down a trap without any credence!"
+                return item_action, response, use_mention_displayname, side_effect
 
-        # Store values inside the trap's item_props
+            # Store values inside the trap's item_props
 
-        # halved_credence = int(pranker_data.credence / 2)
-        # if halved_credence == 0:
-        # 	halved_credence = 1
-        #
-        # pranker_data.credence = halved_credence
-        # pranker_data.credence_used += halved_credence
+            halved_credence = int(credence / 2)
+            if halved_credence == 0:
+                halved_credence = 1
 
-        # item.item_props["trap_stored_credence"] = halved_credence
-        item.item_props["trap_stored_credence"] = 0
+            ewstats.set_stat(id_server=cmd.guild.id, id_user=cmd.message.author.id, metric=ewcfg.stat_credence_used, value=halved_credence)
+            ewstats.change_stat(id_server=cmd.guild.id, id_user=cmd.message.author.id, metric=ewcfg.stat_credence_used, n=halved_credence)
+
+            item.item_props["trap_stored_credence"] = halved_credence
+        else:
+            item.item_props["trap_stored_credence"] = 0
+
         item.item_props["trap_user_id"] = str(pranker_data.id_user)
 
         item.persist()
