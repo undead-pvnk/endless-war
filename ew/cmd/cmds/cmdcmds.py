@@ -3713,7 +3713,7 @@ async def arrest(cmd):
         member = cmd.mentions[0]
         if cmd.tokens_count == 3 and cmd.tokens[2].isnumeric():
             length = int(cmd.tokens[2])
-            time_done = " for {} days".format(length)
+            time_done = " for {} days. They'll be released on Day {}, RFCK Standard Time".format(length, market.day + (length * 4))
         else:
             length = 9999
 
