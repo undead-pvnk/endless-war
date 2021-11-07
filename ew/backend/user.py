@@ -336,7 +336,7 @@ class EwUserBase:
                     ewcfg.col_slimes,
                     ewcfg.col_slimelevel,
                     ewcfg.col_hunger,
-                    ewcfg.col_totaldamage, #todo not used or modified anywhere
+                    ewcfg.col_totaldamage,
                     ewcfg.col_bounty,
                     ewcfg.col_weapon,
                     ewcfg.col_trauma,

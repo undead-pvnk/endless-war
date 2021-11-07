@@ -2380,6 +2380,10 @@ class EwUser(EwUserBase):
 
         return response
 
+    def applyStatus(self, id_status = None, value = 0, source = "", multiplier = 1, id_target = -1):
+
+        return bknd_status.applyStatus(self, id_status, value, source, multiplier, id_target)
+
     def die(self, cause = None):
 
         time_now = int(time.time())
@@ -2420,7 +2424,7 @@ class EwUser(EwUserBase):
                 explode_poi_channel = poi_static.id_to_poi.get(self.poi).channel
 
         if self.life_state == ewcfg.life_state_corpse:
-            self.busted = True
+            self.applyStatus(ewcfg.status_busted_id)
             self.poi = ewcfg.poi_id_thesewers
         # self.slimes = int(self.slimes * 0.9)
         else:
@@ -2432,7 +2436,7 @@ class EwUser(EwUserBase):
             else:
                 rigor = False
 
-            self.busted = False  # reset busted state on normal death; potentially move this to ewspooky.revive
+            #self.busted = False  # busted is now a status effect, redundant
             self.weaponmarried = False  # sure hope this works right
             self.slimes = 0
             self.slimelevel = 1
@@ -2824,9 +2828,6 @@ class EwUser(EwUserBase):
         finally:
             return values
 
-    def applyStatus(self, id_status = None, value = 0, source = "", multiplier = 1, id_target = -1):
-
-        return bknd_status.applyStatus(self, id_status, value, source, multiplier, id_target)
 
     def clear_status(self, id_status = None):
         if id_status != None:

@@ -562,7 +562,7 @@ def canAttack(cmd):
             # User is currently invulnerable.
             response = "{} has died too recently and is immune.".format(member.display_name)
 
-        elif shootee_data.life_state == ewcfg.life_state_corpse and shootee_data.busted == True:
+        elif shootee_data.life_state == ewcfg.life_state_corpse and ewcfg.status_busted_id not in shootee_data.getStatusEffects():
             # Target is already dead and not a ghost.
             response = "{} is already dead.".format(member.display_name)
 

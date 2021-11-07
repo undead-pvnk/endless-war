@@ -279,7 +279,7 @@ async def haunt(cmd):
                 market_data.negaslime -= haunted_slimes
 
                 user_data.time_lasthaunt = time_now
-                user_data.busted = False
+                user_data.clear_status(id_status=ewcfg.status_busted_id)
 
                 resp_cont.add_member_to_update(cmd.message.author)
                 # Persist changes to the database.

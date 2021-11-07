@@ -456,16 +456,17 @@ class EwDistrict(EwDistrictBase):
                     channels = [poi_static.id_to_poi[self.name].channel] + ewcfg.hideout_channels
 
                     crime_awarded = ewcfg.crime_yield_capping.get(self.property_class)
-
-                    bknd_core.execute_sql_query(
-                        'UPDATE users SET {crime} = {crime} + %s '
-                        'WHERE {poi} = %s '
-                        'and {faction} = %s '
-                        'and {lifestate} = %s '
-                        'and {id_server} = %s '
-                        'and {slimes} > %s'.format(crime = ewcfg.col_crime, poi=ewcfg.col_poi, faction=ewcfg.col_faction, lifestate=ewcfg.col_life_state, id_server=ewcfg.col_id_server, slimes = ewcfg.col_slimes),
-                        (crime_awarded, self.name, self.capturing_faction, ewcfg.life_state_enlisted, self.id_server, ewcfg.min_slime_to_cap))
-
+                    try:
+                        bknd_core.execute_sql_query(
+                            'UPDATE users SET {crime} = {crime} + %s '
+                            'WHERE {poi} = %s '
+                            'and {faction} = %s '
+                            'and {lifestate} = %s '
+                            'and {id_server} = %s '
+                            'and {slimes} > %s'.format(crime = ewcfg.col_crime, poi=ewcfg.col_poi, faction=ewcfg.col_faction, lifestate=ewcfg.col_life_state, id_server=ewcfg.col_id_server, slimes = ewcfg.col_slimes),
+                            (crime_awarded, self.name, self.capturing_faction, ewcfg.life_state_enlisted, self.id_server, ewcfg.min_slime_to_cap))
+                    except:
+                        ewutils.logMsg('Failed to update crime for a captured district. Agent was {}'.format(actor))
                     for ch in channels:
                         resp_cont_owner.add_channel_response(channel=ch, response=message)
                 else:  # successful de-capture or full decay

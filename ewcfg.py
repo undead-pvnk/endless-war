@@ -12540,6 +12540,12 @@ status_effect_list = [
 		str_describe_self = 'The coleslaw in your stomach allows you to bust ghosts.'
 	),
 	EwStatusEffectDef(
+		id_status = status_busted_id,
+		time_expire = 86400,
+		str_describe = "Their ghost has been busted.",
+		str_describe_self = "You've been busted..."
+	),
+	EwStatusEffectDef(
 		id_status = status_strangled_id,
 		time_expire = 5,
 		str_describe = 'They are being strangled.'

@@ -280,10 +280,10 @@ async def data(cmd):
                 round(user_data.hunger * 100.0 / user_data.get_hunger_max(), 1)
             )
 
-        if user_data.busted and user_data.life_state == ewcfg.life_state_corpse:
-            response_block += "You are busted and therefore cannot leave the sewers until your next !haunt. "
-
         statuses = user_data.getStatusEffects()
+
+        if ewcfg.status_busted_id in statuses and user_data.life_state == ewcfg.life_state_corpse:
+            response_block += "You are busted and therefore cannot leave the sewers until your next !haunt. "
 
         for status in statuses:
             status_effect = EwStatusEffect(id_status=status, user_data=user_data)
