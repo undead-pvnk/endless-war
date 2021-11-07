@@ -2099,9 +2099,8 @@ async def wrap(cmd):
             bknd_item.give_item(id_item=item_sought.get('id_item'), id_user=str(cmd.message.author.id) + "gift", id_server=cmd.guild.id)
             bknd_item.item_delete(id_item=paper_item.id_item)
 
-            user_data.festivity += ewcfg.festivity_on_gift_wrapping
+            ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity, n=ewcfg.festivity_on_gift_wrapping)
 
-            user_data.persist()
     else:
         if item_search == "" or item_search == None:
             response = "Specify the item you want to wrap."

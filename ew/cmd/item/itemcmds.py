@@ -29,6 +29,7 @@ from ew.utils import apt as apt_utils
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
+from ew.utils import stats as ewstats
 from ew.utils import loop as loop_utils
 from ew.utils import prank as prank_utils
 from ew.utils import rolemgr as ewrolemgr
@@ -928,17 +929,17 @@ async def give(cmd):
 
     if item_sought:  # if an item was found
 
-        """
+
         # Slimernalia gifting
-        if item_sought.get('item_type') == ewcfg.it_item:
+
+        if item_sought.get('item_type') == ewcfg.it_item and ewcfg.slimernalia_active:
             item_data = EwItem(id_item = item_sought.get('id_item'))
 
             if item_data.item_props.get('id_item') == 'gift' and item_data.item_props.get("gifted") == "false":
                 item_data.item_props['gifted'] = "true"
                 item_data.persist()
-                user_data.festivity += ewcfg.festivity_on_gift_giving
-                user_data.persist()
-        """
+                ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity, n=ewcfg.festivity_on_gift_giving)
+
         # don't let people give others food when they shouldn't be able to carry more food items
         if item_sought.get('item_type') == ewcfg.it_food:
             food_items = bknd_item.inventory(
@@ -1528,9 +1529,8 @@ async def unwrap(cmd):
                     gifted_item_name = gifted_item.item_props.get('{}'.format(gift_name_type))
                     gifted_item_message = item.item_props.get('context')
 
-                    # user_data = EwUser(member=cmd.message.author)
-                    # user_data.festivity += ewcfg.festivity_on_gift_wrapping
-                    # user_data.persist()
+                    ewstats.change_stat(id_server=cmd.guild.id, id_user=cmd.message.author.id, metric=ewcfg.stat_festivity, n=ewcfg.festivity_on_gift_wrapping)
+
 
                     response = "You shred through the packaging formalities to reveal a {}!\nThere is a note attached: '{}'.".format(gifted_item_name, gifted_item_message)
                     bknd_item.item_delete(id_item=item_sought.get('id_item'))

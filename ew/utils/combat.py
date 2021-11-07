@@ -2576,8 +2576,7 @@ class EwUser(EwUserBase):
                 ewstats.change_stat(user=self, metric=ewcfg.stat_total_slimecoin_invested, n=change)
             if coinsource == ewcfg.coinsource_swearjar:
                 ewstats.change_stat(user=self, metric=ewcfg.stat_total_slimecoin_from_swearing, n=change)
-            if coinsource == ewcfg.coinsource_salary:
-                ewstats.change_stat(user=self, metric=ewcfg.stat_total_slimecoin_from_salary, n=change)
+
 
     def add_weaponskill(self, n = 0, weapon_type = None):
         # Save the current weapon's skill
@@ -3093,7 +3092,10 @@ class EwUser(EwUserBase):
             })
 
             # return the sum of festivity props and 1000 per sigil
-            return self.festivity + self.festivity_from_slimecoin + (len(sigils)*1000)
+            festivity = ewstats.get_stat(id_server=self.id_server, id_user=self.id_user, metric=ewcfg.stat_festivity)
+            festivity_sc = ewstats.get_stat(id_server=self.id_server, id_user=self.id_user, metric=ewcfg.stat_festivity_from_slimecoin)
+
+            return festivity + festivity_sc + (len(sigils)*1000)
 
 
         data = bknd_core.execute_sql_query(

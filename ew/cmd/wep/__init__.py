@@ -64,12 +64,6 @@ cmd_map = {
     cfg.cmd_dodge_alt1: wepcmds.dodge,
     cfg.cmd_dodge_alt2: wepcmds.dodge,
 
-    # !spray
-    # cfg.cmd_spray: wepcmds.spray,
-    # cfg.cmd_spray_alt1: wepcmds.spray,
-
-    # !sanitize
-    cfg.cmd_sanitize: wepcmds.sanitize,
 
     # !switch
     cfg.cmd_switch: wepcmds.switch_weapon,

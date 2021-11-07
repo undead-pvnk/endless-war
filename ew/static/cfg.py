@@ -28,6 +28,13 @@ gvs_active = False
 dh_active = False
 #Existing Stages for Double Halloween. As the years go by we may add on to this
 dh_stage = 1
+
+#Slimernalia Features
+slimernalia_active = False
+
+#Swilldermuk Features
+swilldermuk_active = False
+
 """
 1: Normal
 2: Sacrifice Minigame
@@ -36,7 +43,8 @@ dh_stage = 1
 """
 
 public_gamestates = {
-    'dhorsemankills': [1, '4'] #determines spawn frequency in double halloween. the bit is set to true(unused) and the value is set to 4, indicating he has been killed 4 times.
+    'dhorsemankills': [1, '4'], #determines spawn frequency in double halloween. the bit is set to true(unused) and the value is set to 4, indicating he has been killed 4 times.
+    'slimernaliakingpin':[1, '-1'] #The existing slimernalia kingpin
 }
 
 
@@ -2665,7 +2673,7 @@ stat_total_slimecoin_invested = 'total_slimecoin_invested'
 stat_total_slimecoin_withdrawn = 'total_slimecoin_withdrawn'
 stat_total_slimecoin_from_recycling = 'total_slimecoin_from_recycling'
 stat_total_slimecoin_from_swearing = 'total_slimecoin_from_swearing'
-stat_total_slimecoin_from_salary = 'total_slimecoin_from_salary'
+
 stat_bounty_collected = 'bounty_collected'
 stat_max_bounty = 'max_bounty'
 stat_ghostbusts = 'ghostbusts'
@@ -2679,8 +2687,6 @@ stat_lifetime_damagedealt = 'lifetime_damage_dealt'
 stat_lifetime_selfdamage = 'lifetime_self_damage'
 stat_lifetime_deaths = 'lifetime_deaths'
 # Track revolver trigger pulls survived?
-stat_lifetime_spins_survived = 'lifetime_spins_survived'
-stat_max_spins_survived = 'max_spins_survived'
 stat_capture_points_contributed = 'capture_points_contributed'
 stat_pve_kills = 'pve_kills'
 stat_max_pve_kills = 'max_pve_kills'
@@ -2690,6 +2696,10 @@ stat_lifetime_pve_ganks = 'lifetime_pve_ganks'
 stat_lifetime_pve_deaths = 'lifetime_pve_deaths'
 stat_shamblers_killed = 'shamblers_killed'
 stat_lifetime_kingpin_slimes = 'lifetime_kingpin_slimes'
+stat_credence = 'credence'
+stat_gambit = 'gambit'
+stat_festivity = 'festivity'
+stat_festivity_from_slimecoin = 'festivity_from_slimecoin'
 
 stat_revolver_kills = 'revolver_kills'
 stat_dual_pistols_kills = 'dual_pistols_kills'
@@ -3639,17 +3649,10 @@ thrownobjects_list = [
 
 mutation_id_spontaneouscombustion = "spontaneouscombustion"
 # mutation_id_thickerthanblood = "thickerthanblood"
-mutation_id_graveyardswift = "graveyardswift"  # TODO
 mutation_id_fungalfeaster = "fungalfeaster"
 mutation_id_sharptoother = "sharptoother"
-mutation_id_openarms = "openarms"  # TODO
 mutation_id_2ndamendment = "2ndamendment"
-mutation_id_panicattacks = "panicattacks"  # TODO
-mutation_id_twobirdswithonekidneystone = "2birds1stone"  # TODO
-mutation_id_shellshock = "shellshock"  # TODO
 mutation_id_bleedingheart = "bleedingheart"
-mutation_id_paranoia = "paranoia"  # TODO
-mutation_id_cloakandstagger = "cloakandstagger"  # TODO
 mutation_id_nosferatu = "nosferatu"
 mutation_id_organicfursuit = "organicfursuit"
 mutation_id_lightasafeather = "lightasafeather"
@@ -3664,10 +3667,8 @@ mutation_id_quantumlegs = "quantumlegs"
 mutation_id_chameleonskin = "chameleonskin"
 mutation_id_patriot = "patriot"
 mutation_id_socialanimal = "socialanimal"
-mutation_id_corpseparty = "corpseparty"  # TODO
 mutation_id_threesashroud = "threesashroud"
 mutation_id_aposematicstench = "aposematicstench"
-mutation_id_paintrain = "paintrain"  # TODO
 mutation_id_lucky = "lucky"
 mutation_id_dressedtokill = "dressedtokill"
 mutation_id_keensmell = "keensmell"

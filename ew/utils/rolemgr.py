@@ -7,6 +7,7 @@ from . import core as ewutils
 from . import frontend as fe_utils
 from ..backend.role import EwRole
 from ..backend.user import EwUserBase as EwUser
+from ew.backend.dungeons import EwGamestate
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
 
@@ -443,7 +444,8 @@ async def updateRoles(
         misc_roles_remove.remove(ewcfg.role_gellphone)
 
     role_slimernalia = None
-    if user_data.slimernalia_kingpin == True:
+    currentkingpin = EwGamestate(id_server=id_server, id_state='slimernaliakingpin').value
+    if currentkingpin.value != str(user_data.id_user):
         role_slimernalia = ewcfg.role_slimernalia
         misc_roles_remove.remove(ewcfg.role_slimernalia)
 

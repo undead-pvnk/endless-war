@@ -15,6 +15,7 @@ from ..static import cfg as ewcfg
 from ..static import hunting as hunt_static
 from ..static import poi as poi_static
 from ..static import weapons as static_weapons
+from ew.backend.dungeons import EwGamestate
 
 
 class Message:
@@ -482,26 +483,26 @@ def create_death_report(cause = None, user_data = None):
 
 async def update_slimernalia_kingpin(client, server):
     # Depose current slimernalia kingpin
-    old_kingpin_id = ewutils.get_slimernalia_kingpin(server)
-    if old_kingpin_id != None:
-        old_kingpin = EwUser(id_user=old_kingpin_id, id_server=server.id)
-        old_kingpin.slimernalia_kingpin = False
-        old_kingpin.persist()
+    kingpin_state = EwGamestate(id_server=server.id, id_state='slimernaliakingpin')
+    old_kingpin_id = int(kingpin_state.value)
+
+    if old_kingpin_id != None and old_kingpin_id > 0:
+        kingpin_state.value = '-1'
         try:
-            old_kingpin_member = server.get_member(old_kingpin.id_user)
+            old_kingpin_member = server.get_member(old_kingpin_id)
             await ewrolemgr.updateRoles(client=client, member=old_kingpin_member)
         except:
-            ewutils.logMsg("Error removing kingpin of slimernalia role from {} in server {}.".format(old_kingpin.id_user, server.id))
+            ewutils.logMsg("Error removing kingpin of slimernalia role from {} in server {}.".format(old_kingpin_id, server.id))
 
     # Update the new kingpin of slimernalia
-    new_kingpin = EwUser(id_user=ewutils.get_most_festive(server), id_server=server.id)
-    new_kingpin.slimernalia_kingpin = True
-    new_kingpin.persist()
+    new_kingpin_id = ewutils.get_most_festive(server)
+    kingpin_state.value = str(new_kingpin_id)
+
     try:
-        new_kingpin_member = server.get_member(new_kingpin.id_user)
+        new_kingpin_member = server.get_member(new_kingpin_id)
         await ewrolemgr.updateRoles(client=client, member=new_kingpin_member)
     except:
-        ewutils.logMsg("Error adding kingpin of slimernalia role to user {} in server {}.".format(new_kingpin.id_user, server.id))
+        ewutils.logMsg("Error adding kingpin of slimernalia role to user {} in server {}.".format(new_kingpin_id, server.id))
 
 
 def check_user_has_role(server, member, checked_role_name):

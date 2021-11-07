@@ -11,6 +11,7 @@ from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as item_utils
 from ew.utils import rolemgr as ewrolemgr
+from ew.utils import stats as ewstats
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from .casinoutils import check_skat_bid
@@ -23,6 +24,7 @@ from .casinoutils import get_skat_play
 from .casinoutils import printcard
 from .casinoutils import printhand
 from .casinoutils import skat_putback
+from .casinoutils import slimecoin_to_festivity
 
 # Map containing user IDs and the last time in UTC seconds since the pachinko
 # machine was used.
@@ -185,7 +187,9 @@ async def pachinko(cmd):
             # subtract costs
             user_data.change_slimecoin(n=-value, coinsource=ewcfg.coinsource_casino)
         # SLIMERNALIA
-        # user_data.festivity_from_slimecoin += slimecoin_to_festivity(value, user_data.festivity_from_slimecoin)
+            if ewcfg.slimernalia_active:
+                old_festivity = ewstats.get_stat(id_server=user_data.id_server, id_user=user_data.id_user, metric=ewcfg.stat_festivity_from_slimecoin)
+                ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric = ewcfg.stat_festivity_from_slimecoin, n=slimecoin_to_festivity(value, old_festivity))
 
         else:
             value = ewcfg.slimes_perpachinko * ewcfg.slimecoin_exchangerate
@@ -202,7 +206,8 @@ async def pachinko(cmd):
             # subtract costs
             user_data.change_slimes(n=-value, source=ewcfg.source_casino)
         # SLIMERNALIA
-        # user_data.festivity += value
+            if ewcfg.slimernalia_active:
+                ewstats.change_stat(id_server=cmd.guild.id, id_user=cmd.message.author.id, metric = ewcfg.stat_festivity, n=value)
 
         user_data.persist()
 
@@ -387,7 +392,10 @@ async def craps(cmd):
             if currency_used == ewcfg.currency_slimecoin:
                 user_data.change_slimecoin(n=winnings - value, coinsource=ewcfg.coinsource_casino)
             # SLIMERNALIA
-            # user_data.festivity_from_slimecoin += slimecoin_to_festivity(value, user_data.festivity_from_slimecoin)
+                if ewcfg.slimernalia_active:
+                    old_festivity = ewstats.get_stat(id_server=user_data.id_server, id_user=user_data.id_user,metric=ewcfg.stat_festivity_from_slimecoin)
+                    ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity_from_slimecoin, n=slimecoin_to_festivity(value, old_festivity))
+
             elif currency_used == ewcfg.currency_slime:
                 levelup_response = user_data.change_slimes(n=winnings - value, source=ewcfg.source_casino)
 
@@ -395,7 +403,8 @@ async def craps(cmd):
                     response += "\n\n" + levelup_response
 
             # SLIMERNALIA
-            # user_data.festivity += value
+                if ewcfg.slimernalia_active:
+                    ewstats.change_stat(id_server=cmd.guild.id, id_user=cmd.message.author.id, metric = ewcfg.stat_festivity, n=value)
 
             user_data.persist()
         else:
@@ -457,7 +466,10 @@ async def slots(cmd):
             user_data.change_slimecoin(n=-value, coinsource=ewcfg.coinsource_casino)
 
         # SLIMERNALIA
-        # user_data.festivity_from_slimecoin += slimecoin_to_festivity(value, user_data.festivity_from_slimecoin)
+            if ewcfg.slimernalia_active:
+                old_festivity = ewstats.get_stat(id_server=user_data.id_server, id_user=user_data.id_user, metric=ewcfg.stat_festivity_from_slimecoin)
+                ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity_from_slimecoin, n=slimecoin_to_festivity(value, old_festivity))
+
 
         else:
             value = ewcfg.slimes_perslot * ewcfg.slimecoin_exchangerate
@@ -475,7 +487,8 @@ async def slots(cmd):
             user_data.change_slimes(n=-value, source=ewcfg.source_casino)
 
         # SLIMERNALIA
-        # user_data.festivity += value
+            if ewcfg.slimernalia_active:
+                ewstats.change_stat(id_server=cmd.guild.id, id_user=cmd.message.author.id, metric = ewcfg.stat_festivity, n=value)
 
         user_data.persist()
 
@@ -653,7 +666,10 @@ async def roulette(cmd):
                 # subtract costs
                 user_data.change_slimecoin(n=-value, coinsource=ewcfg.coinsource_casino)
             # SLIMERNALIA
-            # user_data.festivity_from_slimecoin += slimecoin_to_festivity(value, user_data.festivity_from_slimecoin)
+                if ewcfg.slimernalia_active:
+                    old_festivity = ewstats.get_stat(id_server=user_data.id_server, id_user=user_data.id_user, metric=ewcfg.stat_festivity_from_slimecoin)
+                    ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity_from_slimecoin, n=slimecoin_to_festivity(value, old_festivity))
+
 
             elif currency_used == ewcfg.currency_soul:
                 pass
@@ -673,7 +689,8 @@ async def roulette(cmd):
                 # subtract costs
                 user_data.change_slimes(n=-value, source=ewcfg.source_casino)
             # SLIMERNALIA
-            # user_data.festivity += value
+                if ewcfg.slimernalia_active:
+                    ewstats.change_stat(id_server=cmd.guild.id, id_user=cmd.message.author.id, metric = ewcfg.stat_festivity, n=value)
 
             if len(bet) == 0:
                 response = "You need to say what you're betting on. Options are: {}\n{}board.png".format(ewutils.formatNiceList(names=all_bets), img_base)
@@ -868,7 +885,10 @@ async def baccarat(cmd):
                 # subtract costs
                 user_data.change_slimecoin(n=-value, coinsource=ewcfg.coinsource_casino)
             # SLIMERNALIA
-            # user_data.festivity_from_slimecoin += slimecoin_to_festivity(value, user_data.festivity_from_slimecoin)
+                if ewcfg.slimernalia_active:
+                    old_festivity = ewstats.get_stat(id_server=user_data.id_server, id_user=user_data.id_user, metric=ewcfg.stat_festivity_from_slimecoin)
+                    ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity_from_slimecoin, n=slimecoin_to_festivity(value, old_festivity))
+
 
             elif currency_used == ewcfg.currency_soul:
                 pass
@@ -888,7 +908,8 @@ async def baccarat(cmd):
                 user_data.change_slimes(n=-value, source=ewcfg.source_casino)
 
             # SLIMERNALIA
-            # user_data.festivity += value
+            if ewcfg.slimernalia_active:
+                ewstats.change_stat(id_server=cmd.guild.id, id_user=cmd.message.author.id, metric = ewcfg.stat_festivity, n=value)
 
             if len(bet) == 0:
                 response = "You must specify what hand you are betting on. Options are {}.".format(ewutils.formatNiceList(names=all_bets), img_base)
@@ -2181,17 +2202,17 @@ async def russian_roulette(cmd):
     # Start game
     if accepted == 1:
         # SLIMERNALIA
-        """
-        if not soulstake:
+
+        if not soulstake and ewcfg.slimernalia_active:
             challenger = EwUser(member = author)
             challengee = EwUser(member = member)
 
-            challengee.festivity += challengee.slimes
-            challenger.festivity += challenger.slimes
+            ewstats.change_stat(id_server=cmd.guild.id, id_user=challengee.id_user, metric=ewcfg.stat_festivity, n=challengee.slimes)
+            ewstats.change_stat(id_server=cmd.guild.id, id_user=challenger.id_user, metric=ewcfg.stat_festivity, n=challenger.slimes)
 
             challenger.persist()
             challengee.persist()
-        """
+
 
         wait_time = 1
         if soulstake:

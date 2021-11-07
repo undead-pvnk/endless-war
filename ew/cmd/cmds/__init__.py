@@ -150,13 +150,7 @@ cmd_map = {
     # Praying at the base of ENDLESS WAR.
     ewcfg.cmd_pray: cmdcmds.pray,
 
-    # Slimernalia -- Moved unwrap to item cmds. Please move wrap upon reimplementation
-    # Check your current festivity
-    # ewcfg.cmd_festivity: cmds.festivity,
-    # Wrap a gift -- ewitem maybe?
-    # ewcfg.cmd_wrap: cmds.wrap,
-    # Yo, Slimernalia
-    # ewcfg.cmd_yoslimernalia: cmds.yoslimernalia,
+
 
     # Swilldermuk -- Please make swilldermuk specific cmd/util files on reimplementation
     # ewcfg.cmd_gambit: cmds.gambit,
@@ -218,9 +212,14 @@ cmd_map = {
     ewcfg.cmd_cockdraw: cmdcmds.cockdraw,
     ewcfg.cmd_measurecock: cmdcmds.cockdraw
 }
-# TODO remove after double halloween
 if ewcfg.dh_active:
     cmd_map[ewcfg.cmd_spook] = cmdcmds.spook
+
+if ewcfg.slimernalia_active:
+    # Slimernalia -- Moved unwrap to item cmds. Please move wrap upon reimplementation
+    cmd_map[ewcfg.cmd_festivity]= cmdcmds.festivity
+    cmd_map[ewcfg.cmd_wrap] = cmdcmds.wrap
+    cmd_map[ewcfg.cmd_yoslimernalia]= cmdcmds.yoslimernalia
 
 
 dm_cmd_map = {

@@ -372,9 +372,9 @@ class EwUserBase:
                     ewcfg.col_has_soul,
                     # ewcfg.col_sap,
                     # ewcfg.col_hardened_sap,
-                    ewcfg.col_festivity, #Todo Modify to stat
-                    ewcfg.col_festivity_from_slimecoin, #Todo Modify to stat
-                    ewcfg.col_slimernalia_kingpin, #Todo Modify to gamestate
+                    ewcfg.col_festivity, #Todo Modify to stat - phased out
+                    ewcfg.col_festivity_from_slimecoin, #Todo Modify to stat - phased out
+                    ewcfg.col_slimernalia_kingpin, #Todo Modify to gamestate - done, and i set up the slimernalia bool while i was at it
                     ewcfg.col_manuscript,
                     ewcfg.col_spray,
                     ewcfg.col_salary_credits,#Todo Remove completely - Phased out
@@ -387,8 +387,8 @@ class EwUserBase:
                     ewcfg.col_race,
                     ewcfg.col_time_racialability,
                     ewcfg.col_time_lastpremiumpurchase,
-                    ewcfg.col_juviemode,
-                    ewcfg.col_gvs_time_lastshambaquarium,
+                    ewcfg.col_juviemode, #Todo Remove completely
+                    ewcfg.col_gvs_time_lastshambaquarium, #Todo Remove completely
                     ewcfg.col_rand_seed,
                     ewcfg.col_time_lasthit,
                     ewcfg.col_verified,

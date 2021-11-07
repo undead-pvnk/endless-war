@@ -703,21 +703,7 @@ def check_fursuit_active(market_data):
 
 
 
-# Get the current kingpin of slimernalia
-def get_slimernalia_kingpin(server):
-    data = bknd_core.execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s AND {slimernalia_kingpin} = true".format(
-        id_user = ewcfg.col_id_user,
-        id_server = ewcfg.col_id_server,
-        slimernalia_kingpin = ewcfg.col_slimernalia_kingpin
-    ),(
-        server.id,
-    ))
 
-    if len(data) > 0:
-        return data[0][0]
-
-
-    return None
 
 
 # Get the player with the most festivity

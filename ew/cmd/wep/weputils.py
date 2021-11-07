@@ -430,15 +430,12 @@ def canAttack(cmd):
             code_count += 1
 
     channel_poi = poi_static.chname_to_poi.get(cmd.message.channel.name)
-    """
-    if user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_corpse:
+
+    if (user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_corpse) and ewcfg.slimernalia_active:
         if user_data.life_state == ewcfg.life_state_enlisted:
             response = "Not so fast, you scrooge! Only Juveniles can attack during Slimernalia."
         else:
             response = "You lack the moral fiber necessary for violence."
-    elif user_data.slimelevel <= ewcfg.max_safe_level:
-        response = "You are still too cowardly to hurt another being."
-    """
 
     if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
         response = "You can't commit violence from here."
