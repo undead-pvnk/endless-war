@@ -1336,6 +1336,7 @@ async def knock(cmd = None):
 				response = "You arrive in the abode of {}.".format(target.display_name)
 				await fe_utils.send_message(cmd.client, cmd.message.author, fe_utils.formatMessage(cmd.message.author, response))
 				response = "{} enters your home.".format(cmd.message.author.display_name)
+				await user_data.move_inhabitants(id_poi=target_poi.id_poi, visitor=target_data.id_user)
 				return await fe_utils.send_message(cmd.client, target, fe_utils.formatMessage(target, response))
 			else:
 				if ewutils.active_target_map.get(user_data.id_user) != "":

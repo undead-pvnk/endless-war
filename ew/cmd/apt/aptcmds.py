@@ -70,6 +70,7 @@ async def retire(cmd = None, isGoto = False, movecurrent = None):
             user_data.poi = poi_dest.id_poi
             user_data.persist()
             await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+            await user_data.move_inhabitants(id_poi=poi_dest.id_poi, visitor=user_data.id_user)
             response = "You're in your apartment."
 
             try:

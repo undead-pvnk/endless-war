@@ -3003,13 +3003,22 @@ class EwUser(EwUserBase):
             # otherwise return None
             return None
 
-    async def move_inhabitants(self, id_poi = None):
+    async def move_inhabitants(self, id_poi = None, visitor = None):
         client = ewutils.get_client()
         inhabitants = self.get_inhabitants()
+
+        poi = poi_static.id_to_poi.get(id_poi)
+
         if inhabitants:
             server = client.get_guild(self.id_server)
             for ghost in inhabitants:
                 ghost_data = EwUser(id_user=ghost, id_server=self.id_server)
+
+                if poi.is_apartment and visitor is not None:
+                    ghost_data.visiting = visitor
+                elif not poi.is_apartment:
+                    ghost_data.visiting = ewcfg.location_id_empty
+
                 ghost_data.poi = id_poi
                 ghost_data.time_lastenter = int(time.time())
                 ghost_data.persist()

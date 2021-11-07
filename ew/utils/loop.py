@@ -1380,7 +1380,7 @@ async def clock_tick_loop(id_server = None, force_active = False):
                         
                         await leaderboard_utils.post_leaderboards(client=client, server=server)
                         
-                        if market_data.clock % 8 == 0 or force_active:
+                        if market_data.day % 8 == 0 or force_active:
                             ewutils.logMsg("Started rent calc...")
                             await apt_utils.rent_time(id_server)
                             await pay_salary(id_server)
