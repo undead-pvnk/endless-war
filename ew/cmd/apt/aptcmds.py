@@ -36,7 +36,11 @@ async def nothing(cmd):  # for an accept, refuse, sign or rip
 async def retire(cmd = None, isGoto = False, movecurrent = None):
     user_data = EwUser(member=cmd.message.author)
     poi = poi_static.id_to_poi.get(user_data.poi)
-    poi_dest = poi_static.id_to_poi.get(ewcfg.poi_id_apt + user_data.apt_zone)  # there isn't an easy way to change this, apologies for being a little hacky
+    apt_data = EwApartment(id_server=cmd.guild.id, id_user=cmd.message.author.id)
+    apt_zone = apt_data.poi
+
+
+    poi_dest = poi_static.id_to_poi.get(ewcfg.poi_id_apt + apt_zone)  # there isn't an easy way to change this, apologies for being a little hacky
 
     owner_user = None
     if cmd.mentions_count == 0 and cmd.tokens_count > 1 and isGoto == False:
@@ -53,7 +57,7 @@ async def retire(cmd = None, isGoto = False, movecurrent = None):
     elif ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
         response = "You can't do that right now."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    elif user_data.apt_zone != poi.id_poi:
+    elif apt_zone != poi.id_poi:
         response = "You don't own an apartment here."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     else:
@@ -292,13 +296,12 @@ async def signlease(cmd):
         user_data = EwUser(member=cmd.message.author)
         user_apt = EwApartment(id_user=user_data.id_user, id_server=user_data.id_server)
 
-        if (user_data.apt_zone != ewcfg.location_id_empty):
+        if (user_apt.rent != 0):
             had_old_place = True
         else:
             had_old_place = False
 
         user_data.change_slimecoin(n=-base_cost * 4, coinsource=ewcfg.coinsource_spending)
-        user_data.apt_zone = poi.id_poi
         user_data.persist()
 
         # if user_apt.key_1 != 0:
@@ -344,11 +347,11 @@ async def signlease(cmd):
 async def apartment(cmd):
     usermodel = EwUser(member=cmd.message.author)
     apartmentmodel = EwApartment(id_user=usermodel.id_user, id_server=usermodel.id_server)
-    if usermodel.apt_zone == ewcfg.location_id_empty:
+    if apartmentmodel.rent == 0:
         response = "You don't have an apartment."
 
     else:
-        poi = poi_static.id_to_poi.get(usermodel.apt_zone)
+        poi = poi_static.id_to_poi.get(apartmentmodel.poi)
         response = "Your apartment is in {}. This {} rank apartment costs {:,} SlimeCoin a month.".format(poi.str_name, apartmentmodel.apt_class.upper(), apartmentmodel.rent)
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -363,7 +366,7 @@ async def upgrade(cmd):
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-    if usermodel.apt_zone == ewcfg.location_id_empty:
+    if apt_model.rent == 0:
         response = "You don't have an apartment."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
@@ -437,10 +440,11 @@ async def knock(cmd = None):
 
     if target_data:
         target_poi = poi_static.id_to_poi.get(target_data.poi)
+        target_apt = EwApartment(id_user=target_data.id_user, id_server=target_data.id_server)
         if poi.is_apartment:
             response = "You're already in an apartment."
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        elif target_data.apt_zone != user_data.poi:
+        elif target_apt.poi != user_data.poi:
             response = "You're not anywhere near their apartment."
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
@@ -458,11 +462,11 @@ async def knock(cmd = None):
 
             try:
                 accepted = False
-                if ewutils.active_target_map.get(user_data.id_user) == target_data.apt_zone:
+                if ewutils.active_target_map.get(user_data.id_user) == target_apt.poi:
                     return  # returns if the user is spam knocking. However, the person in the apt still gets each of the DMs above.
                 else:
                     user_data = EwUser(member=cmd.message.author)
-                    ewutils.active_target_map[user_data.id_user] = target_data.apt_zone
+                    ewutils.active_target_map[user_data.id_user] = target_apt.poi
                     message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == target and
                                                                                                      message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
@@ -541,11 +545,12 @@ async def trickortreat(cmd = None):
     if cmd.mentions_count == 1:
         target = cmd.mentions[0]
         target_data = EwUser(member=target)
+        target_apt = EwApartment(id_user=target_data.id_user, id_server=target_data.id_server)
         target_poi = poi_static.id_to_poi.get(target_data.poi)
         if poi.is_apartment:
             response = "You're already in an apartment."
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        elif target_data.apt_zone != user_data.poi:
+        elif target_apt.poi != user_data.poi:
             response = "You're not anywhere near their apartment."
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
@@ -564,14 +569,14 @@ async def trickortreat(cmd = None):
 
             try:
                 treat = False
-                if ewutils.active_target_map.get(user_data.id_user) == target_data.apt_zone:
+                if ewutils.active_target_map.get(user_data.id_user) == target_apt.poi:
                     # For Double Halloween spam knocking isn't really an issue. Just clear up their slot in the active target map for now.
                     # print('DEBUG: Spam knock in trickortreat command.')
                     ewutils.active_target_map[user_data.id_user] = ""
                     return  # returns if the user is spam knocking. However, the person in the apt still gets each of the DMs above.
                 else:
                     user_data = EwUser(member=cmd.message.author)
-                    ewutils.active_target_map[user_data.id_user] = target_data.apt_zone
+                    ewutils.active_target_map[user_data.id_user] = target_apt.poi
                     message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == target and
                                                                                                      message.content.lower() in [ewcfg.cmd_trick, ewcfg.cmd_treat])
 
@@ -768,7 +773,7 @@ async def cancel(cmd):
 
     if usermodel.poi != ewcfg.poi_id_realestate:
         response = "You can only null your lease at the Real Estate Agency."
-    elif usermodel.apt_zone == ewcfg.location_id_empty:
+    elif aptmodel.rent == 0:
         response = "You don't have an apartment."
     elif aptmodel.rent * 4 > usermodel.slimecoin:
         response = "You can't afford the lease separation. Time to take your eviction like a champ."
@@ -780,7 +785,7 @@ async def cancel(cmd):
             response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-        poi = poi_static.id_to_poi.get(usermodel.apt_zone)
+        poi = poi_static.id_to_poi.get(aptmodel.poi)
         response = "The separation will cost {:,} SlimeCoin. Do you !accept the termination, or !refuse it?".format(aptmodel.rent * 4)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         try:
@@ -810,7 +815,7 @@ async def cancel(cmd):
             apt_utils.toss_items(id_user=str(usermodel.id_user) + ewcfg.compartment_id_fridge, id_server=playermodel.id_server, poi=poi)
             apt_utils.toss_items(id_user=str(usermodel.id_user) + ewcfg.compartment_id_decorate, id_server=playermodel.id_server, poi=poi)
 
-            usermodel.apt_zone = ewcfg.location_id_empty
+
             usermodel.change_slimecoin(n=aptmodel.rent * -4, coinsource=ewcfg.coinsource_spending)
             aptmodel.rent = 0
             aptmodel.poi = ""
@@ -901,6 +906,8 @@ async def dyefurniture(cmd):
 async def add_key(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     user_data = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
+
     if user_data.life_state == ewcfg.life_state_shambler:
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -908,7 +915,7 @@ async def add_key(cmd):
     apartment_data = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
     if user_data.poi != ewcfg.poi_id_realestate:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You need to request a housekey at the Real Estate Agency."))
-    elif user_data.apt_zone == ewcfg.location_id_empty:
+    elif apartment_data.rent == 0:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You don't have an apartment."))
     elif apartment_data.apt_class == ewcfg.property_class_c:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You're practically homeless yourself with that slumhouse you've leased out. Upgrade your house to get a roommate!"))
@@ -981,6 +988,7 @@ async def add_key(cmd):
 async def manual_changelocks(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     user_data = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+    apartment = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
     if user_data.life_state == ewcfg.life_state_shambler:
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -988,7 +996,7 @@ async def manual_changelocks(cmd):
     apartment_data = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
     if user_data.poi != ewcfg.poi_id_realestate:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You need to request a housekey at the Real Estate Agency."))
-    elif user_data.apt_zone == ewcfg.location_id_empty:
+    elif apartment.rent == 0:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You don't have an apartment."))
     elif apartment_data.num_keys <= 0:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You don't have any roommates. You live alone."))

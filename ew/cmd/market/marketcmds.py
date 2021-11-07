@@ -342,7 +342,6 @@ async def donate(cmd):
                 market_data.persist()
                 user_data.change_slimes(n = -cost_total, source = ewcfg.source_spending)
                 user_data.change_slimecoin(n = coin_total, coinsource = ewcfg.coinsource_donation)
-                user_data.slime_donations += cost_total
 
                 # Persist changes
                 user_data.persist()
@@ -369,8 +368,6 @@ async def donate(cmd):
             bknd_item.item_delete(id_item = poudrins.get('id_item'))  # Remove Poudrins
             market_data.donated_poudrins += 1
             market_data.persist()
-            user_data.poudrin_donations += 1
-            user_data.persist()
 
             response = "You hand off one of your hard-earned poudrins to the front desk receptionist, who is all too happy to collect it. Pretty uneventful, but at the very least you’re glad donating isn’t physically painful anymore."
 

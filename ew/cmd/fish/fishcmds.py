@@ -820,8 +820,6 @@ async def embiggen(cmd):
 
                 market_data.donated_poudrins += poudrin_cost
                 market_data.persist()
-                user_data.poudrin_donations += poudrin_cost
-                user_data.persist()
 
                 response = "After several minutes long elevator descents, in the depths of some basement level far below the laboratory's lobby, you lay down your {} on a reclined medical chair. An NLACU med student finishes the novel length terms of service they were reciting and asks you if you have any questions. You weren’t listening so you just tell them to get on with it so you can go back to haggling prices with Captain Albert Alexander. They oblige.\nThey grab a butterfly needle and carefully stab your fish with it, injecting filled with some bizarre, multi-colored serum you’ve never seen before. Sick, it’s bigger now!!".format(
                     name)

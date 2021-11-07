@@ -37,13 +37,14 @@ async def rent_time(id_server = None):
                 owner_rent_price = landowner[0]
 
                 user_data = EwUser(id_user=owner_id_user, id_server=id_server)
+                user_apt = EwApartment(id_user=owner_id_user, id_server=id_server)
                 user_poi = poi_static.id_to_poi.get(user_data.poi)
-                poi = poi_static.id_to_poi.get(user_data.apt_zone)
+                poi = poi_static.id_to_poi.get(user_apt.poi)
 
                 if owner_rent_price > user_data.slimecoin:
 
                     if (user_poi.is_apartment and user_data.visiting == ewcfg.location_id_empty):
-                        user_data.poi = user_data.apt_zone  # toss out player
+                        user_data.poi = user_apt.poi  # toss out player
                         user_data.persist()
                         server = ewcfg.server_list[user_data.id_server]
                         member_object = server.get_member(owner_id_user)
@@ -53,15 +54,14 @@ async def rent_time(id_server = None):
                         response = "{} just got evicted. Point and laugh, everyone.".format(player.display_name)
                         await fe_utils.send_message(client, fe_utils.get_channel(server, poi.channel), response)
 
-                    user_data = EwUser(id_user=owner_id_user, id_server=id_server)
-                    user_apt = EwApartment(id_user=owner_id_user, id_server=id_server)
-                    poi = poi_static.id_to_poi.get(user_data.apt_zone)
+
+                    poi = poi_static.id_to_poi.get(user_apt.poi)
 
                     toss_items(id_user=str(user_data.id_user) + 'closet', id_server=user_data.id_server, poi=poi)
                     toss_items(id_user=str(user_data.id_user) + 'fridge', id_server=user_data.id_server, poi=poi)
                     toss_items(id_user=str(user_data.id_user) + 'decorate', id_server=user_data.id_server, poi=poi)
 
-                    user_data.apt_zone = ewcfg.location_id_empty
+
                     user_data.persist()
                     user_apt.rent = 0
                     user_apt.poi = " "

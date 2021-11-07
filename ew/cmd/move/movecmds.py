@@ -25,6 +25,7 @@ from ew.utils.ads import format_ad_response
 from ew.utils.combat import EwEnemy
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
+from ew.backend.apt import EwApartment
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.move import EwPath
 from ew.utils.transport import EwTransport
@@ -71,9 +72,14 @@ async def move(cmd = None, isApt = False, isSplit = 0):
     if poi_current.is_apartment == True:
         isApt = True
     if target_name in ['apt', 'apartment']:
+        apartment = EwApartment(id_server=cmd.guild.id, id_user=cmd.message.author.id)
         intoApt = True
-        poi = poi_static.id_to_poi.get(user_data.apt_zone)
-        target_name = user_data.apt_zone
+        poi = poi_static.id_to_poi.get(apartment.poi)
+        target_name = apartment.poi
+        if not poi:
+            response = "You don't have an apartment."
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
     else:
         intoApt = False
     server_data = ewcfg.server_list[user_data.id_server]

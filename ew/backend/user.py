@@ -351,7 +351,7 @@ class EwUserBase:
                     ewcfg.col_faction,
                     ewcfg.col_poi,
                     ewcfg.col_life_state,
-                    ewcfg.col_busted, #todo could we consolidate this into life_state?
+                    ewcfg.col_busted, #todo could we consolidate this into life_state? no, but phased out
                     ewcfg.col_time_last_action,
                     ewcfg.col_weaponmarried,
                     ewcfg.col_time_lastscavenge,
@@ -360,10 +360,10 @@ class EwUserBase:
                     ewcfg.col_time_lastoffline,
                     ewcfg.col_time_joined,
                     ewcfg.col_poi_death,
-                    ewcfg.col_slime_donations,#todo remove
-                    ewcfg.col_poudrin_donations, #todo remove
+                    ewcfg.col_slime_donations,#todo remove - phased out
+                    ewcfg.col_poudrin_donations, #todo remove - phased out
                     ewcfg.col_arrested,
-                    ewcfg.col_splattered_slimes,#todo remove entirely
+                    ewcfg.col_splattered_slimes,#todo remove entirely - phased out
                     ewcfg.col_time_expirpvp,
                     ewcfg.col_time_lastenlist,
                     ewcfg.col_apt_zone, #todo check to see if we can load the apartment in to replace this

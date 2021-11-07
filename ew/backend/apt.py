@@ -9,7 +9,7 @@ class EwApartment:
     name = "a city apartment."
     description = "It's drafty in here! You briefly consider moving out, but your SlimeCoin is desperate to leave your pocket."
     poi = "downtown"
-    rent = 200000
+    rent = 0
     apt_class = "c"
     num_keys = 0
     key_1 = 0

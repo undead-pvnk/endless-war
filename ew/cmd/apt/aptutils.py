@@ -67,11 +67,12 @@ def check(str):
 
 
 async def usekey(cmd, owner_user):
+    owner_apartment = EwApartment(id_user=owner_user.id_user, id_server=cmd.guild.id)
     user_data = EwUser(member=cmd.message.author)
     poi = poi_static.id_to_poi.get(user_data.poi)
-    poi_dest = poi_static.id_to_poi.get(ewcfg.poi_id_apt + owner_user.apt_zone)  # there isn't an easy way to change this, apologies for being a little hacky
+    poi_dest = poi_static.id_to_poi.get(ewcfg.poi_id_apt + owner_apartment.poi)  # there isn't an easy way to change this, apologies for being a little hacky
     inv = bknd_item.inventory(id_user=cmd.message.author.id, id_server=cmd.guild.id)
-    apartment = EwApartment(id_server=cmd.guild.id, id_user=owner_user.id_user)
+
 
     key = None
     for item_inv in inv:
@@ -85,9 +86,9 @@ async def usekey(cmd, owner_user):
     elif key == None:
         response = "You don't have a key for their apartment."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    elif apartment.apt_class == ewcfg.property_class_c or (apartment.apt_class in [ewcfg.property_class_a, ewcfg.property_class_b] and key.id_item == apartment.key_2):
+    elif owner_apartment.apt_class == ewcfg.property_class_c or (apartment.apt_class in [ewcfg.property_class_a, ewcfg.property_class_b] and key.id_item == apartment.key_2):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "Your key's not working at this new flat. Your roomates must've forgotten to upgrade apartments. Congratulations on the homelessness by the way.".format(cmd.tokens[0])))
-    elif owner_user.apt_zone != poi.id_poi:
+    elif owner_apartment.poi != poi.id_poi:
         response = "Your key doesn't match an apartment here."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     else:

@@ -7,6 +7,7 @@ from ew.backend import hunting as bknd_hunt
 from ew.backend import item as bknd_item
 from ew.backend import worldevent as bknd_worldevent
 from ew.backend.hunting import EwOperationData
+from ew.backend.apt import EwApartment
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.status import EwEnemyStatusEffect
@@ -683,7 +684,8 @@ async def toss_off_cliff(cmd):
             if item_sought.get('name') == "brick" and cmd.mentions_count > 0:
                 item = EwItem(id_item=item_sought.get('id_item'))
                 target = EwUser(member=cmd.mentions[0])
-                if target.apt_zone == user_data.poi:
+                target_apt = EwApartment(id_user=cmd.message.author.id, id_server=cmd.guild.id)
+                if target_apt.poi == user_data.poi:
                     item.id_owner = str(cmd.mentions[0].id) + ewcfg.compartment_id_decorate
                     item.persist()
                     response = "You throw a brick through {}'s window. Oh shit! Quick, scatter before they see you!".format(cmd.mentions[0].display_name)

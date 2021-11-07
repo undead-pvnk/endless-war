@@ -2258,6 +2258,7 @@ col_soulbound = 'soulbound'
 col_template = 'template'
 
 #Database columns for apartments
+
 col_apt_name = 'apt_name'
 col_apt_description = 'apt_description'
 col_rent = 'rent'
