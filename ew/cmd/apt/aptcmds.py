@@ -1331,7 +1331,7 @@ async def store_item(cmd):
             else:
                 destination = ewcfg.compartment_id_closet
 
-        storage_limit_base = 8
+        storage_limit_base = 4
         if apt_model.apt_class == ewcfg.property_class_b:
             storage_limit_base *= 2
 
