@@ -336,7 +336,7 @@ class EwUserBase:
                     ewcfg.col_slimes,
                     ewcfg.col_slimelevel,
                     ewcfg.col_hunger,
-                    ewcfg.col_totaldamage,
+                    ewcfg.col_totaldamage, #todo not used or modified anywhere
                     ewcfg.col_bounty,
                     ewcfg.col_weapon,
                     ewcfg.col_trauma,
@@ -351,7 +351,7 @@ class EwUserBase:
                     ewcfg.col_faction,
                     ewcfg.col_poi,
                     ewcfg.col_life_state,
-                    ewcfg.col_busted,
+                    ewcfg.col_busted, #todo could we consolidate this into life_state?
                     ewcfg.col_time_last_action,
                     ewcfg.col_weaponmarried,
                     ewcfg.col_time_lastscavenge,
@@ -360,30 +360,30 @@ class EwUserBase:
                     ewcfg.col_time_lastoffline,
                     ewcfg.col_time_joined,
                     ewcfg.col_poi_death,
-                    ewcfg.col_slime_donations,
-                    ewcfg.col_poudrin_donations,
+                    ewcfg.col_slime_donations,#todo remove
+                    ewcfg.col_poudrin_donations, #todo remove
                     ewcfg.col_arrested,
-                    ewcfg.col_splattered_slimes,
+                    ewcfg.col_splattered_slimes,#todo remove entirely
                     ewcfg.col_time_expirpvp,
                     ewcfg.col_time_lastenlist,
-                    ewcfg.col_apt_zone,
+                    ewcfg.col_apt_zone, #todo check to see if we can load the apartment in to replace this
                     ewcfg.col_visiting,
                     ewcfg.col_active_slimeoid,
                     ewcfg.col_has_soul,
                     # ewcfg.col_sap,
                     # ewcfg.col_hardened_sap,
-                    ewcfg.col_festivity,
-                    ewcfg.col_festivity_from_slimecoin,
-                    ewcfg.col_slimernalia_kingpin,
+                    ewcfg.col_festivity, #Todo Modify to stat
+                    ewcfg.col_festivity_from_slimecoin, #Todo Modify to stat
+                    ewcfg.col_slimernalia_kingpin, #Todo Modify to gamestate
                     ewcfg.col_manuscript,
                     ewcfg.col_spray,
-                    ewcfg.col_salary_credits,
-                    ewcfg.col_degradation,
+                    ewcfg.col_salary_credits,#Todo Remove completely
+                    ewcfg.col_degradation,#Todo Convert to stat
                     ewcfg.col_time_lastdeath,
                     ewcfg.col_sidearm,
-                    ewcfg.col_gambit,
-                    ewcfg.col_credence,
-                    ewcfg.col_credence_used,
+                    ewcfg.col_gambit, #Todo Convert to Stat
+                    ewcfg.col_credence,#Todo Convert to Stat
+                    ewcfg.col_credence_used,#Todo Convert to Stat
                     ewcfg.col_race,
                     ewcfg.col_time_racialability,
                     ewcfg.col_time_lastpremiumpurchase,

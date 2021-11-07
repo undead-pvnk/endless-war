@@ -183,6 +183,7 @@ async def on_member_update(before, after):
             user_data = EwUser(member=after)
             user_data.time_lastoffline = int(time.time())
             user_data.persist()
+
     except:
         ewutils.logMsg('Failed to update member\'s last offline time.')
 
