@@ -45,9 +45,7 @@ cmd_map = {
     ewcfg.cmd_flushstreets: movecmds.flush_streets,
     # ---- -------------- ---- #
 
-    # SlimeCorp commands
-    ewcfg.cmd_clockin: movecmds.clockin,
-    ewcfg.cmd_clockout: movecmds.clockout,
+
     # Isn't this dead?
     ewcfg.cmd_surveil: movecmds.surveil,
 

@@ -230,7 +230,6 @@ def wef_staff(ctn = None):
         lambda ctn: ctn.user_data.get_possession('weapon'),
         lambda ctn: ctn.user_data.poi == ewcfg.poi_id_thevoid,
         lambda ctn: ctn.shootee_data.slimes > ctn.user_data.slimes,
-        lambda ctn: (ctn.user_data.salary_credits <= -50000) or (ctn.shootee_data.salary_credits == 0),
         lambda ctn: (ctn.user_data.poi_death == ctn.user_data.poi) or (ctn.shootee_data.poi_death == ctn.shootee_data.poi),
         lambda ctn: (ctn.user_data.id_killer == ctn.shootee_data.id_user) or (ctn.user_data.id_user == ctn.shootee_data.id_killer),
         lambda ctn: (ctn.shootee_data.life_state == ewcfg.life_state_juvenile) or (ctn.shootee_data.life_state == ewcfg.life_state_enlisted and ctn.shootee_data.faction == ctn.user_data.faction),

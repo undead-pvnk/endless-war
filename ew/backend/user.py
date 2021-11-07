@@ -366,7 +366,7 @@ class EwUserBase:
                     ewcfg.col_splattered_slimes,#todo remove entirely - phased out
                     ewcfg.col_time_expirpvp,
                     ewcfg.col_time_lastenlist,
-                    ewcfg.col_apt_zone, #todo check to see if we can load the apartment in to replace this
+                    ewcfg.col_apt_zone, #todo check to see if we can load the apartment in to replace this harder than expected but done
                     ewcfg.col_visiting,
                     ewcfg.col_active_slimeoid,
                     ewcfg.col_has_soul,
@@ -377,7 +377,7 @@ class EwUserBase:
                     ewcfg.col_slimernalia_kingpin, #Todo Modify to gamestate
                     ewcfg.col_manuscript,
                     ewcfg.col_spray,
-                    ewcfg.col_salary_credits,#Todo Remove completely
+                    ewcfg.col_salary_credits,#Todo Remove completely - Phased out
                     ewcfg.col_degradation,#Todo Convert to stat
                     ewcfg.col_time_lastdeath,
                     ewcfg.col_sidearm,

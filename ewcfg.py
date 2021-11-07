@@ -1229,11 +1229,8 @@ cmd_unwrap = cmd_prefix + 'unwrap'
 cmd_yoslimernalia = cmd_prefix + 'yoslimernalia'
 cmd_shamble = cmd_prefix + 'shamble'
 cmd_rejuvenate = cmd_prefix + 'rejuvenate'
-cmd_clockin = cmd_prefix + 'clockin'
-cmd_clockout = cmd_prefix + 'clockout'
-cmd_sanitize = cmd_prefix + 'sanitize'
-cmd_paycheck = cmd_prefix + 'paycheck'
-cmd_payday = cmd_prefix + 'payday'
+
+
 cmd_win = cmd_prefix + 'win'
 cmd_slimefest = cmd_prefix + 'slimefest'
 
@@ -1390,7 +1387,7 @@ cmd_untakedown_alt_2 = cmd_prefix + 'undeletezine'
 cmd_lol = cmd_prefix + 'lol'
 cmd_mastery = cmd_prefix + 'mastery'
 
-cmd_getattire = cmd_prefix + 'getattire'
+
 cmd_pacommand = cmd_prefix + 'pacommand'
 
 cmd_surveil = cmd_prefix + 'surveil'
@@ -1533,7 +1530,7 @@ cmd_display_states = cmd_prefix + 'displaystates'
 cmd_press_button = cmd_prefix + 'press'
 cmd_call_elevator = cmd_prefix + 'callelevator'
 cmd_addstatuseffect = cmd_prefix + 'addstatuseffect'
-cmd_getattire = cmd_prefix + 'getattire'
+
 #SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
@@ -5131,7 +5128,6 @@ def wef_staff(ctn = None):
 		lambda ctn: ctn.user_data.get_possession('weapon'),
 		lambda ctn: ctn.user_data.poi == poi_id_thevoid,
 		lambda ctn: ctn.shootee_data.slimes > ctn.user_data.slimes,
-		lambda ctn: (ctn.user_data.salary_credits <= -50000) or (ctn.shootee_data.salary_credits == 0),
 		lambda ctn: (ctn.user_data.poi_death == ctn.user_data.poi) or (ctn.shootee_data.poi_death == ctn.shootee_data.poi),
 		lambda ctn: (ctn.user_data.id_killer == ctn.shootee_data.id_user) or (ctn.user_data.id_user == ctn.shootee_data.id_killer),
 		lambda ctn: (ctn.shootee_data.life_state == life_state_juvenile) or (ctn.shootee_data.life_state == life_state_enlisted and ctn.shootee_data.faction == ctn.user_data.faction),
@@ -13506,7 +13502,7 @@ district_unique_commands = {
 "thecasino":"CASINO\n!slimecraps <amount> <currency>: Gamble at the craps table. Gambling types include slimecoin, slime, and your soul.\n!slimeroulette <amount> <bet> <type>:Gamble at the roulette wheel. Types are same as above, bet options are shown by typing !slimeroulette <amount>.\n!slimeslots <type>: Bet a fixed amount in slots. Accepts Slime and SlimeCoin.\n!slimepachinko <type> Same as above, but in pachinko.\n!slimebaccarat <amount> <currency> <hand>: Bet slime, slimecoin, or souls on baccarat. The hand is either 'player' or 'dealer'.\n!slimeskat <player> <player>: Challenge two players to a game of slimeskat. You bet Slimecoin once the game has started.\n!russianroulette <player>: Challenge your opponent to russian roulette. Add 'soul' to the end of the command to gamble souls.\n!betsoul: Exchange your soul for {} SlimeCoin.\n!buysoul <player>: Buy a soul off the casino for {} SlimeCoin, if one is in stock.".format(soulprice, soulprice),
 "thedojo":"DOJO\n!spar <player>: Spar with someone to increase your weapon level.\n!marry: Marry your weapon.\n!divorce: The inevitable, after marrying your weapon.",
 "thebattlearena":"BATTLE ARENA\n!slimeoidbattle <player>: Challenge a player to a slimeoid battle. They can !accept or !decline.",
-"slimecorphq":"SLIMECORP HQ\n!donate <amount>: Donate slime to Slimecorp and exchange it for SlimeCoin.\n!requestverification: Acquire a verified checkmark for Slime Twitter.\n!advertise <content>: Advertise something.\n!clockin: If you're in the Slimecorp Security Force, you enter the breakroom this way.\n!payday: Slimecorp can get slime for salary credits here.",
+"slimecorphq":"SLIMECORP HQ\n!donate <amount>: Donate slime to Slimecorp and exchange it for SlimeCoin.\n!requestverification: Acquire a verified checkmark for Slime Twitter.\n!advertise <content>: Advertise something.",
 "slimesendcliffs":"CLIFFS\n!push <player>: Push a player off the cliff.\n!jump: Jump off the cliff.\n!toss <item>: Toss an item off the cliff.",
 "sodafountain":"SODA FOUNTAIN\n!purify: At Level 50, you can reset slime to zero and level to 1. Mutations stick around.",
 "speakeasy":"SPEAKEASY\n!barter <fish>: Barter your fish with Albert Alexander.\nbarterall: All the fish will be removed from your inventory and exchanged with slime and items you would've gotten for bartering.\n!appraise: Get the quality of a fish reviewed by Albert Alexander.",
@@ -13515,7 +13511,6 @@ district_unique_commands = {
 "rowdyroughhouse":"ROWDY ROUGHHOUSE\n!renounce: Unenlist from your gang in exchange for half your slime.\n!chest: Check the contents of the community chest.\n!snag <item>: Take items from the community chest.\n!stow <item>: Place inventory items in the community chest.",
 "juviesrow":"JUVIE'S ROW\n!chest: Check the contents of the community chest.\n!snag <item>: Take items from the community chest.\n!stow <item>: Place inventory items in the community chest.",
 "bazaar":"BAZAAR\n!unstand <item>: Remove an item from its prop stand.\n!releasefish <aquarium>: Remove fish from their aquarium.",
-"breakroom":"BREAKROOM\n!getattire: Get some Kevlar Attire for combat in the field.\n!clockout: Exit the breakroom and move to Slimecorp HQ.",
 "vandalpark":"VANDAL PARK\n!slimeball <team>: Join a game of Slimeball. Teams are purple and pink. Read about details in the Game Guide.",
 "endlesswar":"ENDLESS WAR\n!pray <target>: Pray to someone.",
 "lobbybackroom":"LOBBY BACKROOM\n!combo <combination>: Input a combination. The number sequence is all one sequence, for example, !combo 44311111",

@@ -1078,38 +1078,6 @@ async def generate_credence(id_server):
             bknd_core.databaseClose(conn_info)
 
 
-# Pay out salaries. SlimeCoin can be taken away or given depending on if the user has positive or negative credits.
-async def pay_salary(id_server = None):
-    ewutils.logMsg('Paying salary...')
-
-    try:
-        conn_info = bknd_core.databaseConnect()
-        conn = conn_info.get('conn')
-        cursor = conn.cursor()
-        client = ewutils.get_client()
-        if id_server != None:
-            # get all players with apartments. If a player is evicted, thir rent is 0, so this will not affect any bystanders.
-            cursor.execute("SELECT id_user FROM users WHERE salary_credits != 0 AND id_server = {}".format(id_server))
-
-            security_officers = cursor.fetchall()
-
-            for officer in security_officers:
-                officer_id_user = int(officer[0])
-
-                user_data = EwUser(id_user=officer_id_user, id_server=id_server)
-                credits = user_data.salary_credits
-
-                # Prevent the user from obtaining negative slimecoin
-                if credits < 0 and user_data.slimecoin < (-1 * credits):
-                    user_data.change_slimecoin(n=-user_data.slimecoin, coinsource=ewcfg.coinsource_salary)
-                else:
-                    user_data.change_slimecoin(n=user_data.salary_credits, coinsource=ewcfg.coinsource_salary)
-
-                user_data.persist()
-    finally:
-        cursor.close()
-        bknd_core.databaseClose(conn_info)
-
 
 """
     Updates/Increments the capture_points values of all districts every time it's called

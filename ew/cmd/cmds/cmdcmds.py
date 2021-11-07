@@ -1793,46 +1793,8 @@ async def lol(cmd):
     await fe_utils.send_response(response, cmd)
 
 
-async def paycheck(cmd):
-    user_data = EwUser(member=cmd.message.author)
-    credits = user_data.salary_credits
-
-    if credits == 0:
-        response = "You don't have any salary credits..."
-    else:
-        response = "You have {:,} salary credits.".format(credits)
-
-        if credits > 10000:
-            response += " They can be exchanged for {:,} slime with !payday at SlimeCorp HQ.".format(int(credits / 10000))
-
-    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-async def payday(cmd):
-    user_data = EwUser(member=cmd.message.author)
-    credits = user_data.salary_credits
-
-    market_data = EwMarket(id_server=cmd.message.author.guild.id)
-
-    if user_data.poi != ewcfg.poi_id_slimecorphq:
-        response = "You don't work here."
-    elif user_data.faction != ewcfg.faction_slimecorp:
-        response = "You don't work here."
-    elif market_data.clock < 6 or market_data.clock >= 8:
-        response = "The kind lady at the receptionist desk informs you that paychecks can only be collected between 6 and 8 AM."
-    elif credits <= 9999:
-        response = "You don't have any salary credits that can be exchanged..."
-    else:
-        user_data.salary_credits = 0
-
-        slime_added = int(credits / 10000)
-        user_data.change_slimes(n=slime_added, source=ewcfg.coinsource_salary)
-
-        user_data.persist()
-
-        response = "You cash in all of your salary credits for {:,} slime.".format(slime_added)
-
-    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def pray(cmd):
@@ -2041,20 +2003,6 @@ async def check_mastery(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-async def get_attire(cmd):
-    user_data = EwUser(member=cmd.message.author)
-    status = user_data.getStatusEffects()
-    if user_data.poi != ewcfg.poi_id_thebreakroom:
-        response = "Are you a Slimecorp Security Force official, planted firmly in their lavish breakroom? No? Then you're not getting shit."
-    elif ewcfg.status_kevlarattire_id in status:
-        response = "You're already armed, though. This stuff's too expensive so the company's not gonna let you double dip."
-    elif user_data.life_state != ewcfg.life_state_enlisted:
-        response = "You're not committed enough to wear this attire. You're a slob. How did you even get in here?"
-    else:
-        response = "You suit up in top-of-the-line Kevlar attire. Sleek. Professional. Bulletproof."
-        await assign_status_effect(status_name='kevlarattire', user_id=cmd.message.author.id, server_id=cmd.guild.id, cmd=cmd)
-    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
 
 """
     SLIMERNALIA COMMANDS
@@ -2173,25 +2121,15 @@ async def slimecoin(cmd):
     if cmd.mentions_count == 0:
         user_data = EwUser(member=cmd.message.author)
         coins = user_data.slimecoin
-        credits = user_data.salary_credits
-        response = "You have {:,} SlimeCoin".format(coins)
+        response = "You have {:,} SlimeCoin.".format(coins)
 
-        if credits != 0:
-            response += " and {:,} SlimeCorp Salary Credits.".format(credits)
-        else:
-            response += "."
 
     else:
         member = cmd.mentions[0]
         user_data = EwUser(member=member)
         coins = user_data.slimecoin
-        credits = user_data.salary_credits
-        response = "{} has {:,} SlimeCoin".format(member.display_name, coins)
+        response = "{} has {:,} SlimeCoin.".format(member.display_name, coins)
 
-        if credits != 0:
-            response += " and {:,} SlimeCorp Salary Credits.".format(credits)
-        else:
-            response += "."
 
     # Send the response to the player.
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

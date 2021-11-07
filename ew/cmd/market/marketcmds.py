@@ -790,25 +790,15 @@ async def slimecoin(cmd):
     if cmd.mentions_count == 0:
         user_data = EwUser(member = cmd.message.author)
         coins = user_data.slimecoin
-        credits = user_data.salary_credits
-        response = "You have {:,} SlimeCoin".format(coins)
+        response = "You have {:,} SlimeCoin.".format(coins)
 
-        if credits != 0:
-            response += " and {:,} SlimeCorp Salary Credits.".format(credits)
-        else:
-            response += "."
 
     else:
         member = cmd.mentions[0]
         user_data = EwUser(member = member)
         coins = user_data.slimecoin
-        credits = user_data.salary_credits
-        response = "{} has {:,} SlimeCoin".format(member.display_name, coins)
+        response = "{} has {:,} SlimeCoin.".format(member.display_name, coins)
 
-        if credits != 0:
-            response += " and {:,} SlimeCorp Salary Credits.".format(credits)
-        else:
-            response += "."
 
     # Send the response to the player.
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

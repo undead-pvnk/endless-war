@@ -146,9 +146,6 @@ cmd_map = {
 
     ewcfg.cmd_set_debug_option: cmdcmds.set_debug_option,
 
-    # for the filth
-    ewcfg.cmd_paycheck: cmdcmds.paycheck,
-    ewcfg.cmd_payday: cmdcmds.payday,
 
     # Praying at the base of ENDLESS WAR.
     ewcfg.cmd_pray: cmdcmds.pray,
@@ -196,7 +193,6 @@ cmd_map = {
 
     # Check your weapon masteries
     ewcfg.cmd_mastery: cmdcmds.check_mastery,
-    ewcfg.cmd_getattire: cmdcmds.get_attire,
 
     # SlimeCorp security officers can post propaganda
     # ewcfg.cmd_propaganda: ewcmd.propaganda,

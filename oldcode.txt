@@ -1431,3 +1431,438 @@ slimes_toannex = {
     property_class_b: slimes_toannex_b,
     property_class_c: slimes_toannex_c
 }
+
+
+""" Attack control of a district, slimecorp only """
+
+
+async def sanitize(cmd):
+    roomba_loop = 0
+    while 1:
+        # Get user data, then flag for PVP
+        user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
+
+        market_data = EwMarket(id_server=cmd.guild.id)
+        time_current = market_data.clock
+
+        time_now_float = time.time()
+        time_now = int(time_now_float)
+
+        user_data.persist()
+
+        # Get shooting player's info
+
+        weapon = None
+        weapon_item = None
+        sidearm_viable = 0
+        user_mutations = user_data.get_mutations()
+
+        # if user_data.sidearm >= 0:
+        #	weapon_item = EwItem(id_item=user_data.sidearm)
+        #	weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+        #	captcha = weapon_item.item_props.get('captcha')
+        #	if ewcfg.weapon_class_paint in weapon.classes:
+        #		sidearm_viable = 1
+
+        if user_data.weapon >= 0 and sidearm_viable == 0:
+            weapon_item = EwItem(id_item=user_data.weapon)
+            weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+            captcha = weapon_item.item_props.get('captcha')
+
+        if weapon_item is not None and roomba_loop == 0:
+            if weapon_item.item_props.get("weapon_type") == 'roomba':
+                if weapon_item.item_props.get("roomba") == user_data.poi:
+                    weapon_item.item_props['roomba'] = ""
+                    weapon_item.persist()
+                    response = "You pick the roomba back up and have it stop cleaning up the floor."
+                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                else:
+                    weapon_item.item_props['roomba'] = user_data.poi
+                    weapon_item.persist()
+
+        response = canCap(cmd, "sanitize", roomba_loop)
+        if response == "":
+            if user_data.slimelevel <= 0:
+                user_data.slimelevel = 1
+                user_data.persist()
+
+            # Get district data
+            poi = poi_static.id_to_poi.get(user_data.poi)
+            district_data = EwDistrict(id_server=cmd.guild.id, district=poi.id_poi)
+
+            gangsters_in_district = district_data.get_players_in_district(min_slimes=ewcfg.min_slime_to_cap, life_states=[ewcfg.life_state_enlisted], ignore_offline=True)
+
+            miss = False
+            crit = False
+
+            bystander_damage = 0
+            hit_chance_mod = 0
+            crit_mod = 0
+            dmg_mod = 0
+            # sap_damage = 0
+            # sap_ignored = 0
+
+            weapon.fn_effect = static_weapons.weapon_type_convert.get(weapon.id_weapon)
+
+            shooter_status_mods = cmbt_utils.get_shooter_status_mods(user_data, None, None)
+
+            hit_chance_mod += round(shooter_status_mods['hit_chance'], 2)
+            crit_mod += round(shooter_status_mods['crit'], 2)
+            dmg_mod += round(shooter_status_mods['dmg'], 2)
+
+            slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 300)
+            slimes_damage = int((50000 + slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
+            slimes_spent = round(slimes_spent * .1125)
+            statuses = user_data.getStatusEffects()
+
+            if weapon is None:
+                slimes_damage /= 2  # penalty for not using a weapon, otherwise fists would be on par with other weapons
+
+            slimes_damage += int(slimes_damage * dmg_mod)
+            # user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
+
+            if weapon != None and weapon.fn_effect != None:
+                # Build effect container
+                ctn = EwEffectContainer(
+                    miss=miss,
+                    crit=crit,
+                    slimes_damage=slimes_damage,
+                    slimes_spent=slimes_spent,
+                    user_data=user_data,
+                    weapon_item=weapon_item,
+                    shootee_data=None,
+                    time_now=time_now,
+                    bystander_damage=bystander_damage,
+                    hit_chance_mod=hit_chance_mod,
+                    crit_mod=crit_mod,
+                    market_data=market_data,
+                    # sap_damage=sap_damage,
+                    # sap_ignored=sap_ignored,
+                )
+
+                # Make adjustments
+
+                weapon.fn_effect(ctn)
+
+                # Apply effects for non-reference values
+                resp_cont = EwResponseContainer(id_server=cmd.guild.id)
+                miss = ctn.miss
+                crit = ctn.crit
+                slimes_damage = ctn.slimes_damage
+                slimes_spent = ctn.slimes_spent
+                # sap_damage = ctn.sap_damage
+
+                if miss is True and random.randint(0, 1) == 0:
+                    miss = False
+
+                if (slimes_spent > user_data.slimes):
+                    # Not enough slime to shoot.
+                    response = "You don't have enough slime to sanitize. ({:,}/{:,})".format(user_data.slimes, slimes_spent)
+                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+                # if district_data.controlling_faction == "" and district_data.capture_points == 0:
+                #	response = "There's no graffiti to clean up here."
+                #	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+                weapon_item.item_props['time_lastattack'] = time_now_float
+                weapon_item.persist()
+                user_data.change_slimes(n=(-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source=ewcfg.source_spending)
+                user_data.persist()
+
+                # Remove a bullet from the weapon
+                if ewcfg.weapon_class_ammo in weapon.classes:
+                    weapon_item.item_props['ammo'] = int(weapon_item.item_props.get("ammo")) - 1
+
+                if miss:
+                    slimes_damage = 0
+
+                    weapon_item.item_props["consecutive_hits"] = 0
+                    crit = False
+                weapon_item.persist()
+                # Remove !revive invulnerability.
+                user_data.time_lastrevive = 0
+                market_data = EwMarket(id_server=cmd.guild.id)
+                # apply attacker damage mods
+                slimes_damage *= cmbt_utils.damage_mod_attack(
+                    user_data=user_data,
+                    user_mutations=user_mutations,
+                    market_data=market_data,
+                    district_data=district_data
+                )
+                if weapon.id_weapon == ewcfg.weapon_id_watercolors:
+                    if not miss:
+                        slimes_damage = ewcfg.min_garotte
+
+                elif weapon.id_weapon == ewcfg.weapon_id_thinnerbomb:
+                    if user_data.faction == district_data.controlling_faction:
+                        slimes_damage = round(slimes_damage * .2)
+                    else:
+                        slimes_damage *= 3
+
+                if ewcfg.mutation_id_patriot in user_mutations:
+                    slimes_damage *= 1.25
+                if len(gangsters_in_district) == 1 and ewcfg.mutation_id_lonewolf in user_mutations:
+                    slimes_damage *= 1.25
+
+                if 3 <= time_current <= 10:
+                    slimes_damage *= (4 / 3)
+
+                credits_added = int(abs(slimes_damage)) * 25
+
+                # if (user_data.faction != district_data.controlling_faction and (user_data.faction is None or user_data.faction == '')) and district_data.capture_points > ewcfg.limit_influence[district_data.property_class]:
+                #	slimes_damage = round(slimes_damage / 5)
+                #	pass
+                if weapon != None:
+                    if miss:
+                        response = weapon.tool_props[0].get('miss_spray')
+                    else:
+                        response = "Your sanitizer-filled {} washes away the filth from the city streets.".format(weapon.str_name)
+                        response += " You removed {:,} existing influence from gangsters.".format(int(abs(slimes_damage)))
+
+                        if district_data.cap_side == "slimecorp" or district_data.cap_side == "":
+                            response = "Your paint-filled {} covers the city in Slimecorp propaganda.".format(weapon.str_name)
+                            response += " You added {:,} existing influence for Slimecorp.".format(round(int(abs(slimes_damage))))
+
+                        if (user_data.faction != district_data.cap_side and district_data.cap_side != "") and (user_data.faction is not None or user_data.faction != ''):
+                            slimes_damage = round(slimes_damage * -.8)
+                        # district_data.change_capture_points()
+
+                        district_data.change_capture_points(progress=slimes_damage, actor=user_data.faction)
+
+                        if crit and weapon.id_weapon == ewcfg.weapon_id_watercolors: district_data.change_capture_points(progress=-district_data.capture_points, actor=user_data.faction)
+
+                        district_data.persist()
+
+                        district_data = EwDistrict(district=district_data.name, id_server=district_data.id_server)
+                        # district_data.capture_points += slimes_damage
+                        # if district_data.capture_points < 0:
+                        #	district_data.controlling_faction = user_data.faction
+                        #	district_data.capture_points *= -1
+                        # district_data.persist()
+                        # response = weapon.str_damage.format(
+                        #	name_player=cmd.message.author.display_name,
+                        #	name_target=enemy_data.display_name,
+                        #	hitzone=randombodypart,
+                        #	strikes=strikes
+                        # )
+                        if (district_data.cap_side == "slimecorp" or district_data.cap_side == '') == "" and crit:
+                            response += " You score a critical hit adding {:,} additional influence!".format(round(abs(slimes_damage)))
+                        elif crit:
+                            response += " You score a critical hit, removing {:,} additional influence!".format(abs(slimes_damage))
+
+                        response += " {:,} salary credits have been added to your profile.".format(credits_added)
+
+                        user_data.persist()
+
+                    # response += " {}".format(weapon.str_crit.format(
+                    #	name_player=cmd.message.author.display_name,
+                    #	name_target=enemy_data.display_name,
+                    #	hitzone=randombodypart,
+                    # ))
+
+                    if ewcfg.weapon_class_ammo in weapon.classes and weapon_item.item_props.get("ammo") == 0:
+                        response += "\n" + weapon.str_reload_warning.format(name_player=cmd.message.author.display_name)
+
+                    if (ewcfg.weapon_class_captcha in weapon.classes) and roomba_loop == 0:
+                        if weapon.id_weapon != ewcfg.weapon_id_paintgun:
+                            new_captcha_low = ewutils.generate_captcha(length=weapon.captcha_length)
+                            new_captcha = ewutils.text_to_regional_indicator(new_captcha_low)
+                            # new_loc = new_loc.replace(new_captcha_low, new_captcha)
+                            response += "\nNew captcha is {}.".format(new_captcha)
+                            weapon_item.item_props['captcha'] = new_captcha_low
+                        # new_captcha = ewutils.generate_captcha(length = weapon.captcha_length)
+                        else:
+                            riflearray = ewcfg.riflecap
+                            direction = str(random.choice(riflearray))
+                            weapon_item.item_props['captcha'] = direction
+                            new_captcha_gun = ewutils.text_to_regional_indicator(direction)
+                            response += "\nNext target is {}.".format(new_captcha_gun)
+                        weapon_item.persist()
+
+            else:
+                if miss:
+                    response = "Your sanitizer completely misses any graffiti..."
+                else:
+                    response = "Nice community service effort! You clean {damage} influence off the streets!".format(
+                        damage=abs(slimes_damage)
+                    )
+        else:
+            if user_data.weapon >= 0:
+                weapon_item = EwItem(id_item=user_data.weapon)
+                weapon_item.item_props['roomba'] = ""
+                weapon_item.persist()
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+        user_data = EwUser(member=cmd.message.author)
+        if user_data.weapon >= 0:
+            weapon_item = EwItem(id_item=user_data.weapon)
+            if weapon_item.item_props.get('roomba') == user_data.poi:
+                await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                await asyncio.sleep(7)
+                roomba_loop = 1
+            else:
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        else:
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+# Pay out salaries. SlimeCoin can be taken away or given depending on if the user has positive or negative credits.
+async def pay_salary(id_server = None):
+    ewutils.logMsg('Paying salary...')
+
+    try:
+        conn_info = bknd_core.databaseConnect()
+        conn = conn_info.get('conn')
+        cursor = conn.cursor()
+        client = ewutils.get_client()
+        if id_server != None:
+            # get all players with apartments. If a player is evicted, thir rent is 0, so this will not affect any bystanders.
+            cursor.execute("SELECT id_user FROM users WHERE salary_credits != 0 AND id_server = {}".format(id_server))
+
+            security_officers = cursor.fetchall()
+
+            for officer in security_officers:
+                officer_id_user = int(officer[0])
+
+                user_data = EwUser(id_user=officer_id_user, id_server=id_server)
+                credits = user_data.salary_credits
+
+                # Prevent the user from obtaining negative slimecoin
+                if credits < 0 and user_data.slimecoin < (-1 * credits):
+                    user_data.change_slimecoin(n=-user_data.slimecoin, coinsource=ewcfg.coinsource_salary)
+                else:
+                    user_data.change_slimecoin(n=user_data.salary_credits, coinsource=ewcfg.coinsource_salary)
+
+                user_data.persist()
+    finally:
+        cursor.close()
+        bknd_core.databaseClose(conn_info)
+
+async def payday(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    credits = user_data.salary_credits
+
+    market_data = EwMarket(id_server=cmd.message.author.guild.id)
+
+    if user_data.poi != ewcfg.poi_id_slimecorphq:
+        response = "You don't work here."
+    elif user_data.faction != ewcfg.faction_slimecorp:
+        response = "You don't work here."
+    elif market_data.clock < 6 or market_data.clock >= 8:
+        response = "The kind lady at the receptionist desk informs you that paychecks can only be collected between 6 and 8 AM."
+    elif credits <= 9999:
+        response = "You don't have any salary credits that can be exchanged..."
+    else:
+        user_data.salary_credits = 0
+
+        slime_added = int(credits / 10000)
+        user_data.change_slimes(n=slime_added, source=ewcfg.coinsource_salary)
+
+        user_data.persist()
+
+        response = "You cash in all of your salary credits for {:,} slime.".format(slime_added)
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def paycheck(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    credits = user_data.salary_credits
+
+    if credits == 0:
+        response = "You don't have any salary credits..."
+    else:
+        response = "You have {:,} salary credits.".format(credits)
+
+        if credits > 10000:
+            response += " They can be exchanged for {:,} slime with !payday at SlimeCorp HQ.".format(int(credits / 10000))
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+async def clockin(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    # poi = poi_static.id_to_poi.get(user_data.poi)
+    poi_dest = poi_static.id_to_poi.get(ewcfg.poi_id_thebreakroom)
+
+    if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+
+    elif ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
+        response = "You can't do that right now."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    elif user_data.poi != ewcfg.poi_id_slimecorphq:
+        response = "You don't work here."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    elif user_data.faction != ewcfg.faction_slimecorp and user_data.life_state != ewcfg.life_state_executive:
+        response = "Security guards block your path. It seems the only way through is to assimilate into their ranks and !enlist slimecorp."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    else:
+        # global move_counter
+
+        move_utils.move_counter += 1
+        move_current = ewutils.moves_active[cmd.message.author.id] = move_utils.move_counter
+        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You start walking towards the breakroom."))
+        await asyncio.sleep(20)
+
+        if move_current == ewutils.moves_active[cmd.message.author.id]:
+            user_data = EwUser(member=cmd.message.author)
+            user_data.poi = poi_dest.id_poi
+            user_data.persist()
+            await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+            response = "Welcome to the breakroom. It's safer here."
+
+            client = ewutils.get_client()
+            server = client.get_guild(user_data.id_server)
+
+            await fe_utils.send_message(cmd.client, fe_utils.get_channel(server, poi_dest.channel), fe_utils.formatMessage(cmd.message.author, response))
+
+async def clockout(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    # poi = poi_static.id_to_poi.get(user_data.poi)
+    poi_dest = poi_static.id_to_poi.get(ewcfg.poi_id_slimecorphq)
+
+    if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+
+    elif ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
+        response = "You can't do that right now."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    elif user_data.poi != ewcfg.poi_id_thebreakroom:
+        response = "You don't work here."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    else:
+        # global move_counter
+
+        move_utils.move_counter += 1
+        move_current = ewutils.moves_active[cmd.message.author.id] = move_utils.move_counter
+        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You start walking towards the lobby of SlimeCorp HQ."))
+        await asyncio.sleep(20)
+
+        if move_current == ewutils.moves_active[cmd.message.author.id]:
+            user_data = EwUser(member=cmd.message.author)
+            user_data.poi = poi_dest.id_poi
+            user_data.persist()
+            await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+            response = "Well, time to get to work."
+
+            client = ewutils.get_client()
+            server = client.get_guild(user_data.id_server)
+
+            await fe_utils.send_message(cmd.client, fe_utils.get_channel(server, poi_dest.channel), fe_utils.formatMessage(cmd.message.author, response))
+
+async def get_attire(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    status = user_data.getStatusEffects()
+    if user_data.poi != ewcfg.poi_id_thebreakroom:
+        response = "Are you a Slimecorp Security Force official, planted firmly in their lavish breakroom? No? Then you're not getting shit."
+    elif ewcfg.status_kevlarattire_id in status:
+        response = "You're already armed, though. This stuff's too expensive so the company's not gonna let you double dip."
+    elif user_data.life_state != ewcfg.life_state_enlisted:
+        response = "You're not committed enough to wear this attire. You're a slob. How did you even get in here?"
+    else:
+        response = "You suit up in top-of-the-line Kevlar attire. Sleek. Professional. Bulletproof."
+        await assign_status_effect(status_name='kevlarattire', user_id=cmd.message.author.id, server_id=cmd.guild.id, cmd=cmd)
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
