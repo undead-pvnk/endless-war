@@ -38,7 +38,10 @@ def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
         bknd_item.item_delete(id_item=id_item)
     elif random.randrange(500) < 125 or item_obj.item_type in([ewcfg.it_questitem, item_obj.item_type == ewcfg.it_medal, ewcfg.it_relic])  or item_obj.item_props.get('rarity') == ewcfg.rarity_princeps or item_obj.item_props.get('id_cosmetic') == "soul" or item_obj.item_props.get('id_furniture') == "propstand" :
         response = "You toss the {} off the cliff. It sinks into the ooze disappointingly.".format(item_name)
-        bknd_item.give_item(id_item=id_item, id_server=id_server, id_user=ewcfg.poi_id_slimesea)
+        if item_obj.item_props.get('id_item') in [ewcfg.item_id_oldboot, ewcfg.item_id_seaweed, ewcfg.item_id_tincan, ewcfg.item_id_slimepoudrin] or item_obj.item_props.get('acquisition') == ewcfg.acquisition_fishing:
+            bknd_item.item_delete(id_item=id_item)
+        else:
+            bknd_item.give_item(id_item=id_item, id_server=id_server, id_user=ewcfg.poi_id_slimesea)
 
     elif random.randrange(500) < 498:
         response = "You toss the {} off the cliff. A nearby kraken swoops in and chomps it down with the cephalapod's equivalent of a smile. Your new friend kicks up some sea slime for you. Sick!".format(item_name)
