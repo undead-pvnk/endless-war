@@ -1706,15 +1706,10 @@ max_capture_points_a = 6553  # 2 hours
 max_capture_points_b = 3277  # 1 hour
 max_capture_points_c = 1638  # 30 minutes
 
-limit_influence_s = 133200000
-limit_influence_a = 66600000
-limit_influence_b = 40000000
-limit_influence_c = 19000000
-
-min_influence_s = 66600000
-min_influence_a = 34000000
-min_influence_b = 20000000
-min_influence_c = 7000000
+crime_yield_s = 500
+crime_yield_a = 200
+crime_yield_b = 100
+crime_yield_c = 50
 
 min_garotte = 2000
 
@@ -1726,47 +1721,16 @@ max_capture_points = {
     property_class_c: max_capture_points_c
 }
 
-limit_influence = {
-    property_class_s: limit_influence_s,
-    property_class_a: limit_influence_a,
-    property_class_b: limit_influence_b,
-    property_class_c: limit_influence_c
+crime_yield_capping = {
+    property_class_s: crime_yield_s,
+    property_class_a: crime_yield_a,
+    property_class_b: crime_yield_b,
+    property_class_c: crime_yield_c
 }
 
-min_influence = {
-    property_class_s: min_influence_s,
-    property_class_a: min_influence_a,
-    property_class_b: min_influence_b,
-    property_class_c: min_influence_c
-}
 
-# how long districts stay locked after capture
-capture_lock_s = 48 * 60 * 60  # 2 days
-capture_lock_a = 24 * 60 * 60  # 1 day
-capture_lock_b = 12 * 60 * 60  # 12 hours
-capture_lock_c = 6 * 60 * 60  # 6 hours
 
-# district lock times assigned to property classes
-capture_locks = {
-    property_class_s: capture_lock_s,
-    property_class_a: capture_lock_a,
-    property_class_b: capture_lock_b,
-    property_class_c: capture_lock_c,
-}
 
-# how much slimes is needed to bypass capture times
-slimes_toannex_s = 1000000  # 1 mega
-slimes_toannex_a = 500000  # 500 k
-slimes_toannex_b = 200000  # 200 k
-slimes_toannex_c = 100000  # 100 k
-
-# slimes to annex by property class
-slimes_toannex = {
-    property_class_s: slimes_toannex_s,
-    property_class_a: slimes_toannex_a,
-    property_class_b: slimes_toannex_b,
-    property_class_c: slimes_toannex_c
-}
 
 # by how much to extend the capture lock per additional gangster capping
 capture_lock_per_gangster = 60 * 60  # 60 min

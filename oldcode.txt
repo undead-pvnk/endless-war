@@ -1404,3 +1404,30 @@ async def rent_time(id_server = None):
 	finally:
 		cursor.close()
 		bknd_core.databaseClose(conn_info)
+# how long districts stay locked after capture
+capture_lock_s = 48 * 60 * 60  # 2 days
+capture_lock_a = 24 * 60 * 60  # 1 day
+capture_lock_b = 12 * 60 * 60  # 12 hours
+capture_lock_c = 6 * 60 * 60  # 6 hours
+
+# district lock times assigned to property classes
+capture_locks = {
+    property_class_s: capture_lock_s,
+    property_class_a: capture_lock_a,
+    property_class_b: capture_lock_b,
+    property_class_c: capture_lock_c,
+}
+
+# how much slimes is needed to bypass capture times
+slimes_toannex_s = 1000000  # 1 mega
+slimes_toannex_a = 500000  # 500 k
+slimes_toannex_b = 200000  # 200 k
+slimes_toannex_c = 100000  # 100 k
+
+# slimes to annex by property class
+slimes_toannex = {
+    property_class_s: slimes_toannex_s,
+    property_class_a: slimes_toannex_a,
+    property_class_b: slimes_toannex_b,
+    property_class_c: slimes_toannex_c
+}

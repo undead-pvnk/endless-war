@@ -11,7 +11,7 @@ from ..backend import core as bknd_core
 from ..backend.district import EwDistrictBase
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
-from ew.utils.combat import EwUser
+
 
 """
 	district data model for database persistence
@@ -455,12 +455,16 @@ class EwDistrict(EwDistrictBase):
                     )
                     channels = [poi_static.id_to_poi[self.name].channel] + ewcfg.hideout_channels
 
-                    gangsters_in_district = self.get_players_in_district(min_slimes=ewcfg.min_slime_to_cap, life_states=[ewcfg.life_state_enlisted], ignore_offline=True, factions=[new_owner])
+                    crime_awarded = ewcfg.crime_yield_capping.get(self.property_class)
 
-                    for gangster in gangsters_in_district:
-                        player = EwUser(id_user=gangster, id_server=self.id_server)
-                        player.change_crime(n=ewcfg.max_capture_points[self.property_class]/1000) #crime for capping a district, dependent on property class
-                        player.persist()
+                    bknd_core.execute_sql_query(
+                        'UPDATE users SET {crime} = {crime} + %s '
+                        'WHERE {poi} = %s '
+                        'and {faction} = %s '
+                        'and {lifestate} = %s '
+                        'and {id_server} = %s '
+                        'and {slimes} > %s'.format(crime = ewcfg.col_crime, poi=ewcfg.col_poi, faction=ewcfg.col_faction, lifestate=ewcfg.col_life_state, id_server=ewcfg.col_id_server, slimes = ewcfg.col_slimes),
+                        (crime_awarded, self.name, self.capturing_faction, ewcfg.life_state_enlisted, self.id_server, ewcfg.min_slime_to_cap))
 
                     for ch in channels:
                         resp_cont_owner.add_channel_response(channel=ch, response=message)
