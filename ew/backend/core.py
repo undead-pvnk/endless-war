@@ -170,36 +170,43 @@ class ObjCache():
             return True
         return False
 
-    def find_entries(self, criteria = None):
+    def find_entries(self, criteria = None, id_list = None):
         """
             Takes a dictionary of object property names and values. Checks against all data entered in the cache.
             Returns a list of copies of all data that met the given criteria.
         """
-
         copied_matches = []
 
-        # iterate through all entered data
-        for data in self.entries.values():
+        if id_list != None:
+            for id in id_list:
+                copied_matches.append(self.entries.get(id))
 
-            # Check against all given criteria
-            meets = True
-            for key, value in criteria.items():
-                # For search through props type things
-                if key in self.nested_props:
-                    for k2, v2 in value.items():
-                        if not (k2 in data.get(key).keys() and str(v2) == str(data.get(key).get(k2))):
-                            meets = False
-                            break
-                # Stop and mark if it isn't a match
-                elif not ((key in data.keys()) and (str(value) == str(data.get(key)))):
-                    meets = False
-                    break
+        else:
 
-            # track data if it matches
-            if meets:
-                copied_matches.append(self.copy_entry(data))
 
-        return copied_matches
+
+            # iterate through all entered data
+            for data in self.entries.values():
+
+                # Check against all given criteria
+                meets = True
+                for key, value in criteria.items():
+                    # For search through props type things
+                    if key in self.nested_props:
+                        for k2, v2 in value.items():
+                            if not (k2 in data.get(key).keys() and str(v2) == str(data.get(key).get(k2))):
+                                meets = False
+                                break
+                    # Stop and mark if it isn't a match
+                    elif not ((key in data.keys()) and (str(value) == str(data.get(key)))):
+                        meets = False
+                        break
+
+                # track data if it matches
+                if meets:
+                    copied_matches.append(self.copy_entry(data))
+
+            return copied_matches
 
 
 """ connect to the database """

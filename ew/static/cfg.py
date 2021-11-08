@@ -1228,7 +1228,6 @@ cmd_piss = cmd_prefix + 'piss'
 cmd_fursuit = cmd_prefix + 'fursuit'
 cmd_recycle = cmd_prefix + 'recycle'
 cmd_recycle_alt1 = cmd_prefix + 'incinerate'
-cmd_view_sap = cmd_prefix + 'sap'
 cmd_harden_sap = cmd_prefix + 'harden'
 cmd_harden_sap_alt1 = cmd_prefix + 'solidify'
 cmd_liquefy_sap = cmd_prefix + 'liquefy'
@@ -1284,27 +1283,8 @@ cmd_reset_prank_stats = cmd_prefix + 'resetprankstats'
 cmd_set_gambit = cmd_prefix + 'setgambit'
 cmd_pointandlaugh = cmd_prefix + 'pointandlaugh'
 cmd_prank = cmd_prefix + 'prank'
-cmd_gvs_printgrid = cmd_prefix + 'grid'
-cmd_gvs_printgrid_alt1 = cmd_prefix + 'lawn'
-cmd_gvs_printlane = cmd_prefix + 'lane'
-cmd_gvs_incubategaiaslimeoid = cmd_prefix + 'incubategaiaslimeoid'
-cmd_gvs_fabricatetombstone = cmd_prefix + 'fabricatetombstone'
-cmd_gvs_joinoperation = cmd_prefix + 'joinop'
-cmd_gvs_leaveoperation = cmd_prefix + 'leaveop'
-cmd_gvs_checkoperation = cmd_prefix + 'checkops'
-cmd_gvs_plantgaiaslimeoid = cmd_prefix + 'plant'
 cmd_gvs_almanac = cmd_prefix + 'almanac'
-cmd_gvs_searchforbrainz = cmd_prefix + 'searchforbrainz'
-cmd_gvs_grabbrainz = cmd_prefix + 'grabbrainz'
-cmd_gvs_dive = cmd_prefix + 'dive'
-cmd_gvs_resurface = cmd_prefix + 'resurface'
-cmd_gvs_sellgaiaslimeoid = cmd_prefix + 'sellgaiaslimeoid'
-cmd_gvs_sellgaiaslimeoid_alt = cmd_prefix + 'sellgaia'
-cmd_gvs_dig = cmd_prefix + 'dig'
-cmd_gvs_progress = cmd_prefix + 'gvs'
-cmd_gvs_gaiaslime = cmd_prefix + 'gaiaslime'
-cmd_gvs_gaiaslime_alt1 = cmd_prefix + 'gs'
-cmd_gvs_brainz = cmd_prefix + 'brainz'
+
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_paspeaker = cmd_prefix + 'paspeaker'
@@ -3254,7 +3234,7 @@ durability_items = [
 ]
 
 all_item_ids = []
-
+slimesea_disposables = [] #if any particular junk items wind up in the slime sea, we can mark them for cleanup here.
 vendor_dojo = "Dojo"
 
 weapon_class_ammo = "ammo"

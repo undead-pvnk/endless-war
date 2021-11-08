@@ -1372,6 +1372,10 @@ async def clock_tick_loop(id_server = None, force_active = False):
                             await apt_utils.rent_time(id_server)
                             ewutils.logMsg("...finished rent calc.")
 
+                    elif market_data.clock == 13 and market_data.day % 28 == 0: #regulate slimesea items every week
+                        ewutils.logMsg('Regulating Slime Sea items...')
+                        number = itm_utils.cull_slime_sea(id_server=id_server)
+                        ewutils.logMsg('...Slime Sea culled. {} items deleted.'.format(number))
 
 
                     elif market_data.clock == 20:

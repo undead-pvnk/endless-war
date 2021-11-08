@@ -481,18 +481,10 @@ def make_slimernalia_board(server, title):
     item_cache = bknd_core.get_cache(obj_type = "EwItem")
     if item_cache is not False:
         # get a list of [id, name, lifestate, faction, basefestivitysum] for all users in server
-        dat = bknd_core.execute_sql_query("SELECT  {id_user}, {display_name}, {state}, {faction}, FLOOR({festivity}) + FLOOR({festivity_from_slimecoin}) FROM users WHERE {id_server} = %s".format(
-                id_user=ewcfg.col_id_user,
-                id_server=ewcfg.col_id_server,
-                display_name=ewcfg.col_display_name,
-                state=ewcfg.col_life_state,
-                faction=ewcfg.col_faction,
 
-                festivity=ewcfg.col_festivity,
-                festivity_from_slimecoin=ewcfg.col_festivity_from_slimecoin,
-            ), (
-                server
-            ))
+
+        dat = bknd_core.execute_sql_query("select u.id_user, p.display_name, u.life_state, u.faction, ifnull(st1.stat_value, 0) + ifnull(st2.stat_value, 0) as total from stats st1 left join stats st2 on st1.id_user = st2.id_user inner join users u on st1.id_user = u.id_user inner join players p on u.id_user = p.id_user where st1.stat_metric = 'festivity' and st2.stat_metric = 'festivity_from_slimecoin' and u.id_server = u.id_server union select u.id_user, p.display_name, u.life_state, u.faction, ifnull(st1.stat_value, 0) + ifnull(st2.stat_value, 0) as total from stats st1 right join stats st2 on st1.id_user = st2.id_user inner join users u on st2.id_user = u.id_user inner join players p on u.id_user = p.id_user where st1.stat_metric = 'festivity' and st2.stat_metric = 'festivity_from_slimecoin' and u.id_server = %s",
+    (server))
 
         # iterate through all users, add sigillaria festivity to the base
         for row in dat:
@@ -520,6 +512,7 @@ def make_slimernalia_board(server, title):
             entries.append(dat[i])
 
     else:
+        return "" #whose idea was it to separate festivity into 3 different stats? idk, but fuck it, we're not running slimernalia without the cache.
         data = bknd_core.execute_sql_query(
             "SELECT {display_name}, {state}, {faction}, FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) as total_festivity FROM users " \
             "LEFT JOIN (SELECT id_user, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}) f on users.{id_user} = f.{id_user}, players " \

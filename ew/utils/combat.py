@@ -2466,17 +2466,42 @@ class EwUser(EwUserBase):
                     food_fraction = 2
                     cosmetic_fraction = 2
 
-                itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_item, fraction=item_fraction, rigor=rigor)  # Drop a random fraction of your items on the ground.
-                itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_food, fraction=food_fraction, rigor=rigor)  # Drop a random fraction of your food on the ground.
+                ids_to_drop = []
 
-                itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_cosmetic, fraction=cosmetic_fraction, rigor=rigor)  # Drop a random fraction of your unadorned cosmetics on the ground.
+                ids_to_drop.extend(itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_item, fraction=item_fraction, rigor=rigor))  # Drop a random fraction of your items on the ground.
+                ids_to_drop.extend(itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_food, fraction=food_fraction, rigor=rigor))  # Drop a random fraction of your food on the ground.
+                ids_to_drop.extend(itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_weapon, fraction=1, rigor=rigor))
+                ids_to_drop.extend(itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_cosmetic, fraction=cosmetic_fraction, rigor=rigor))  # Drop a random fraction of your unadorned cosmetics on the ground.
                 # bknd_item.item_dedorn_cosmetics(id_server=self.id_server, id_user=self.id_user)  # Unadorn all of your adorned hats.
+                ids_to_drop.extend(itm_utils.die_dropall(user_data=self, item_type=ewcfg.it_relic, kill_method=cause))
+                  # Drop random fraction of your unequipped weapons on the ground.
 
-                itm_utils.die_dropall(user_data=self, item_type=ewcfg.it_relic, kill_method=cause)
-                itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_weapon, fraction=1, rigor=rigor)  # Drop random fraction of your unequipped weapons on the ground.
+
                 ewutils.weaponskills_clear(id_server=self.id_server, id_user=self.id_user, weaponskill=ewcfg.weaponskill_max_onrevive)
 
+                try:
+                    drop_list = [str(element) for element in ids_to_drop]
+                    bknd_core.execute_sql_query(
+                        "UPDATE items SET {id_user} = %s WHERE id_item IN(%s)".format(
+                            id_user=ewcfg.col_id_user
+                        ),
+                        (
+                            self.poi,
+                            drop_list
+                        ))
+
+                except:
+                    ewutils.logMsg('Failed to drop items on death.')
+
+                item_cache = bknd_core.get_cache(obj_type="EwItem")
+                for id in ids_to_drop:
+                    cache_item = item_cache.get_entry(unique_vals={"id_item": id})
+                    cache_item.update({'id_owner':self.poi})
+                    item_cache.set_entry(data=cache_item)
+
             try:
+
+
                 item_cache = bknd_core.get_cache(obj_type = "EwItem")
                 if item_cache is not False:
                     tgt_itms = item_cache.find_entries(criteria={"item_props": {"preserved": self.id_user}})

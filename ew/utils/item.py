@@ -29,6 +29,7 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
     mutations = user_data.get_mutations()
 
     drop_candidates = []
+    end_drops = []
     # safe_items = [ewcfg.item_id_gameguide]
 
     # Filter out Soulbound items.
@@ -66,9 +67,11 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
         for drop in range(number_of_items_to_drop):
             for item in filtered_items:
                 id_item = item.get('id_item')
-                bknd_item.give_item(id_user=user_data.poi, id_server=id_server, id_item=id_item)
+                #bknd_item.give_item(id_user=user_data.poi, id_server=id_server, id_item=id_item)
+                end_drops.append(id_item)
                 filtered_items.pop(0)
                 break
+    return end_drops
     # except:
     #	ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
 
@@ -78,7 +81,8 @@ def die_dropall( #drops all items unless they have been rigor mortissed
         kill_method = '',
         rigor = False
 ):
-
+    result = None
+    end_list = []
     if item_type != '':
         type_filter = 'and item_type = \'{}\''.format(item_type)
         print(type_filter)
@@ -87,26 +91,27 @@ def die_dropall( #drops all items unless they have been rigor mortissed
 
     try:
         if kill_method != ewcfg.cause_suicide and item_type == ewcfg.it_relic:
-            bknd_core.execute_sql_query(
-                "update items set it.id_user = %s WHERE id_user = %s AND id_server = %s and soulbound = 0 {}".format(
+            result = bknd_core.execute_sql_query(
+                "select id_item from items WHERE id_user = %s AND id_server = %s and soulbound = 0 {}".format(
                     type_filter), (
                     user_data.id_killer,
                     user_data.id_user,
                     user_data.id_server
                 ))
         else:
-            bknd_core.execute_sql_query( #this query excludes preserved items
-                "update items it left join items_prop ip on it.id_item = ip.id_item and ip.name = 'preserved' and ip.value = %s set it.id_user = %s WHERE id_user = %s AND id_server = %s and soulbound = 0 and ip.name IS NULL {}".format(type_filter), (
+            result =bknd_core.execute_sql_query( #this query excludes preserved items
+                "select it.id_item from items it left join items_prop ip on it.id_item = ip.id_item and ip.name = 'preserved' and ip.value = %s WHERE id_user = %s AND id_server = %s and soulbound = 0 and ip.name IS NULL {}".format(type_filter), (
                     user_data.id_user,
                     user_data.poi,
                     user_data.id_user,
                     user_data.id_server
                 ))
-
-
-
+        if result is not None:
+            for id in result:
+                end_list.append(id[0])
     except:
         ewutils.logMsg('Failed to drop items for user with id {}'.format(user_data.id_user))
+    return end_list
 
 def get_fingernail_item(cmd):
     item = static_weapons.weapon_map.get(ewcfg.weapon_id_fingernails)
@@ -726,3 +731,59 @@ def item_drop(
         ewutils.logMsg("Failed to drop item {}.".format(id_item))
 
 
+
+def cull_slime_sea(
+        id_server = None
+):
+    if id_server != None:
+        seainv = bknd_item.inventory(
+            id_user='slimesea',
+            id_server=id_server
+        )
+        sea_size = len(seainv)
+        seainv = random.shuffle(seainv)
+        print(seainv)
+        to_delete = []
+
+        if sea_size <= 500:
+            return
+        else:
+            for seaitem in seainv:
+                if sea_size <= 450:
+                    break
+                elif seaitem.get('soulbound'):
+                    sea_size += 1
+                elif seaitem.get('item_type') in [ewcfg.it_book, ewcfg.it_food]:
+                    to_delete.append(seaitem.get('id_item'))
+                elif seaitem.get('name') in static_weapons.weapon_names and seaitem.get('item_type') == ewcfg.it_weapon: #delete non-named weapons
+                    to_delete.append(seaitem.get('id_item'))
+                elif seaitem.get('item_type') == ewcfg.it_item:
+                    item_obj = EwItem(seaitem.get('id_item'))
+                    if item_obj.item_props.get('context') in ['prankitem', ewcfg.context_seedpacket, ewcfg.context_tombstone, ewcfg.context_wrappingpaper, 'batterypack', 'player_bone', 'prankcapsule', 'dye'] or item_obj.item_props.get('id_item') in ewcfg.slimesea_disposables:
+                        to_delete.append(seaitem.get('id_item'))
+                    else:
+                        sea_size += 1
+                elif seaitem.get('item_type') == ewcfg.it_furniture: #non-smelted furniture with a price below 1 mega gets culled
+                    item_obj = EwItem(seaitem.get('id_item'))
+                    mapped = static_items.furniture_map.get(item_obj.item_props.get('id_furniture'))
+                    if (mapped != None and mapped.price < 100000 and mapped.acquisition != ewcfg.acquisition_smelting) or mapped.id_furniture in ewcfg.slimesea_disposables:
+                        to_delete.append(seaitem.get('id_item'))
+                    else:
+                        sea_size += 1
+                elif seaitem.get('item_type') == ewcfg.it_cosmetic:
+                    item_obj = EwItem(seaitem.get('id_item'))
+                    if item_obj.item_props.get('id_cosmetic') in ewcfg.slimesea_disposables:
+                        to_delete.append(seaitem.get('id_item'))
+                else:
+                    sea_size += 1
+                sea_size -= 1
+
+            delete_string = [str(element) for element in to_delete]
+            bknd_core.execute_sql_query("DELETE FROM items WHERE {id_item} IN (%s)".format(id_item=ewcfg.col_id_item), (delete_string))
+
+            item_cache = bknd_core.get_cache(obj_type="EwItem")
+            num = len(to_delete)
+            if item_cache:
+                for itemid in to_delete:
+                    item_cache.entries.pop(itemid)
+            return num
