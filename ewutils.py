@@ -543,8 +543,13 @@ async def editRoles(new_roles, member, cmd):
         new_roles.append(cmd.roles_map[ewcfg.role_terezigang])
     if ewcfg.role_brimstoneprogrammer in usermap:
         new_roles.append(cmd.roles_map[ewcfg.role_brimstoneprogrammer])
+    if ewcfg.role_desperados in usermap:
+        new_roles.append(cmd.roles_map[ewcfg.role_desperados])
+    if ewcfg.role_bpadmin in usermap:
+        new_roles.append(cmd.roles_map[ewcfg.role_bpadmin])
+    if ewcfg.role_bdadmin in usermap:
+        new_roles.append(cmd.roles_map[ewcfg.role_bdadmin])
 
-    print(new_roles)
     await member.edit(roles=new_roles)
 
 

@@ -31,6 +31,9 @@ role_corpse_pvp = "corpsepvp"
 role_kingpin = "kingpin"
 role_terezigang = "terezigang"
 role_brimstoneprogrammer = "brimstoneprogrammer"
+role_bpadmin = 'bpadmin'
+role_desperados = 'brimstonedesperados'
+role_bdadmin = 'bdadmin'
 
 # Faction names
 faction_killers = "killers"
