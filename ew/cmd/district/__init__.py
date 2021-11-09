@@ -16,6 +16,8 @@ cmd_map = {
     # Gankers Vs. Shamblers gang swapping
     # ewcfg.cmd_shamble: cmds.shamble,
     # ewcfg.cmd_rejuvenate: cmds.rejuvenate,
+    ewcfg.cmd_blockparty: districtcmds.blockparty,
+    ewcfg.cmd_hailcab: districtcmds.hailcab,
 
 }
 

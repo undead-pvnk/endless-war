@@ -482,6 +482,12 @@ async def kick(id_server):
 
     client = ewutils.get_client()
 
+    blockparty = EwGamestate(id_server=id_server, id_state='blockparty')
+    party_poi = ''.join([i for i in blockparty.value if not i.isdigit()])
+    if party_poi == 'outsidethe':
+        party_poi = ewcfg.poi_id_711
+
+
     for player in all_living_players:
         try:
             poi = poi_static.id_to_poi[player[0]]
@@ -506,7 +512,7 @@ async def kick(id_server):
 
                 if not inaccessible(user_data=user_data, poi=poi_static.id_to_poi.get(mother_district_chosen)):
 
-                    if user_data.life_state not in [ewcfg.life_state_kingpin, ewcfg.life_state_lucky, ewcfg.life_state_executive] and user_data.id_user != 799933061080416266:
+                    if user_data.poi != party_poi and user_data.life_state not in [ewcfg.life_state_kingpin, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
                         server = ewcfg.server_list[id_server]
                         member_object = server.get_member(id_user)
 

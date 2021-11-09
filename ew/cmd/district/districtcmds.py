@@ -1,4 +1,5 @@
 import asyncio
+from time import time
 
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
@@ -10,6 +11,8 @@ from ew.utils.district import EwDistrict
 from ew.backend.dungeons import EwGamestate
 from ew.backend.item import EwItem
 from ew.backend import item as bknd_item
+
+
 try:
     from ew.cmd import debug as ewdebug
 except:
@@ -512,3 +515,66 @@ async def beam_me_up(cmd):
         await user_data.move_inhabitants(id_poi='ufoufo')
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel,fe_utils.formatMessage(cmd.message.author, response))
+
+async def blockparty(cmd):
+    if not cmd.message.author.guild_permissions.administrator:
+        return
+    else:
+        blockstate = EwGamestate(id_server=cmd.guild.id, id_state='blockparty')
+        if cmd.tokens_count > 1:
+                if cmd.tokens[1] == 'slimegen':
+                    blockstate.bit = 1
+                    blockstate.persist()
+                    response = "Slimegen turned on."
+                elif cmd.tokens[1] == 'close':
+                    blockstate.bit = 0
+                    blockstate.value = ''
+                    blockstate.persist()
+                    response = "OK, closing up."
+                else:
+                    poi_sought = ewutils.flattenTokenListToString(cmd.tokens[1:])
+                    poi = poi_static.id_to_poi.get(poi_sought)
+                    if poi is not None:
+                        time_end = int(time()) + (60 * 60 * 6) # 6 hours
+                        blockstate.value = "{}{}".format(poi.id_poi, time_end)
+                        response = "Block party in {}! Everybody in!".format(poi.str_name)
+                    else:
+                        response = "Never heard of it."
+        else:
+            response = "I see you haven't gotten any smarter. Try !blockparty <setting>. Settings include 'close', 'slimegen', and any POI."
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+def hailcab(cmd):
+    user_data = EwUser(member = cmd.message.author)
+    blockstate = EwGamestate(id_server=cmd.guild.id, id_state='blockparty')
+    poi = ''.join([i for i in blockstate.value if not i.isdigit()])
+    if poi == 'outsidethe':
+        poi = ewcfg.poi_id_711
+
+    if poi != user_data.poi:
+        response = "You can't hail a cab right now. All the cabbies are hiding for cover thanks to all the violence. Good job on that, by the way."
+    else:
+        if user_data.life_state in [ewcfg.life_state_enlisted, ewcfg.life_state_juvenile]:
+            if user_data.faction == ewcfg.faction_rowdys and user_data.life_state == ewcfg.life_state_enlisted:
+                dest = ewcfg.poi_id_rowdyroughhouse
+            elif user_data.faction == ewcfg.faction_killers and user_data.life_state == ewcfg.life_state_enlisted:
+                dest = ewcfg.poi_id_copkilltown
+            else:
+                dest = ewcfg.poi_id_juviesrow
+            asyncio.sleep(5)
+            response = "**TAXI!** You shout into the crowd for a ride home. The drivers don't notice you're a miscreant, and pick you up without a second thought. They got nervous when you asked to return to your gang base, and forgot to ask for any fare. Nice!"
+            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+            ewutils.moves_active[cmd.message.author.id] = 0
+            user_data.poi = dest
+            user_data.persist()
+            await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+            return await user_data.move_inhabitants(id_poi=dest, visitor=user_data.id_user)
+
+        elif user_data.life_state == ewcfg.life_state_corpse:
+            response = "You're already dead. The cabbies unfortunately tend to avoid black people, so you should probably just float back to the sewers."
+        else:
+            response = "The cabbie looks confused. Why would a person like you need a cab?"
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+

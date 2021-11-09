@@ -144,6 +144,8 @@ async def event_tick(id_server):
 async def decaySlimes(id_server = None):
     if id_server != None:
         try:
+
+
             conn_info = bknd_core.databaseConnect()
             conn = conn_info.get('conn')
             cursor = conn.cursor()
@@ -160,6 +162,11 @@ async def decaySlimes(id_server = None):
             users = cursor.fetchall()
             total_decayed = 0
 
+            block_party = EwGamestate(id_state='blockparty', id_server=id_server)
+            block_poi = ''.join([i for i in block_party.value if not i.isdigit()])
+            if block_poi == 'outsidethe':
+                block_poi = ewcfg.poi_id_711
+
             for user in users:
                 user_data = EwUser(id_user=user[0], id_server=id_server)
                 slimes_to_decay = user_data.slimes - (user_data.slimes * (.5 ** (ewcfg.update_market / relicutils.calc_half_life(id_server=id_server, slime=user_data.slimes))))
@@ -169,6 +176,9 @@ async def decaySlimes(id_server = None):
                 if random.random() < remainder:
                     slimes_to_decay += 1
                 slimes_to_decay = int(slimes_to_decay)
+
+                if user_data.poi == block_poi:
+                    slimes_to_decay -= ewcfg.blockparty_slimebonus_per_tick
 
                 if slimes_to_decay >= 1:
                     user_data.change_slimes(n=-slimes_to_decay, source=ewcfg.source_decay)
@@ -212,7 +222,7 @@ async def decaySlimes(id_server = None):
             cursor.close()
             bknd_core.databaseClose(conn_info)
 
-async def release_timed_prisoners(id_server, day):
+async def release_timed_prisoners_and_blockparties(id_server, day):
     if id_server != None:
         users = bknd_core.execute_sql_query("SELECT id_user FROM users WHERE {arrests} <= %s and {arrests} > 0".format(arrests = ewcfg.col_arrested), (day))
 
@@ -221,6 +231,18 @@ async def release_timed_prisoners(id_server, day):
             user_data.arrested = 0
             user_data.poi = ewcfg.poi_id_juviesrow
             user_data.persist()
+
+        blockparty = EwGamestate(id_server=id_server, id_state='blockparty')
+        pre_name = blockparty.value.replace(ewcfg.poi_id_711, '')
+        time_str = ''.join([i for i in pre_name if i.isdigit()])
+        time_int = int(time_str)
+        time_now = int(time.time())
+        if time_now > time_int:
+            blockparty.bit = 0
+            blockparty.value = ''
+            blockparty.persist()
+
+
 
 
 

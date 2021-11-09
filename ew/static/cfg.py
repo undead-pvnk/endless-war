@@ -111,6 +111,9 @@ slimeoid_stat_moxie = 'moxie'
 slimeoid_stat_grit = 'grit'
 slimeoid_stat_chutzpah = 'chutzpah'
 
+blockparty_slimebonus_per_tick = 250000
+
+
 # ID tags for points of interest that are needed in code.
 poi_id_thesewers = "thesewers"
 poi_id_slimeoidlab = "slimeoidlaboratory"
@@ -1211,6 +1214,8 @@ cmd_capture_progress = cmd_prefix + 'progress'
 cmd_changespray = cmd_prefix + 'changespray'
 cmd_changespray_alt1 = cmd_prefix + 'changetag'
 cmd_tag = cmd_prefix + 'tag'
+cmd_blockparty = cmd_prefix + 'blockparty'
+cmd_hailcab = cmd_prefix + 'hailcab'
 cmd_observe = cmd_prefix + 'observe'
 cmd_launch  =cmd_prefix + 'launch'
 cmd_land = cmd_prefix + 'land'
