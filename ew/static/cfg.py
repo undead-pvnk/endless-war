@@ -4385,7 +4385,7 @@ enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_gre
 
 # List of enemies that spawn in the Nuclear Beach
 pre_historic_enemies = [enemy_type_slimeasaurusrex, enemy_type_dinoslime, enemy_type_slimeadactyl, enemy_type_mammoslime]
-
+arctic_enemies = [enemy_type_desertraider, enemy_type_slimeasaurusrex, enemy_type_juvie, enemy_type_unnervingfightingoperator, enemy_type_grey, enemy_type_mammoslime, enemy_type_piloslime]
 slimeoid_trainers = [enemy_type_slimeoidtrainer, enemy_type_ug_slimeoidtrainer]
 
 # List of enemies used in the Gankers Vs. Shamblers event
@@ -4614,7 +4614,8 @@ enemy_data_table = {
         "ai": enemy_ai_coward, "attacktype": enemy_attacktype_unarmed,
         "displayname": "Lost Juvie",
         "raredisplayname": "Shellshocked Juvie",
-        "aliases": ["juvie", "greenman", "lostjuvie", "lost"]
+        "aliases": ["juvie", "greenman", "lostjuvie", "lost", "frost", "frostbitten"],
+        "arcticvariant" : "Frostbitten Juvie"
     },
     enemy_type_dinoslime: {
         "slimerange": [250000, 500000],
@@ -4638,7 +4639,8 @@ enemy_data_table = {
         "attacktype": enemy_attacktype_raiderscythe,
         "displayname": "Desert Raider",
         "raredisplayname": "Desert Warlord",
-        "aliases": ["raider", "scytheboy", "desertraider", "desert"]
+        "aliases": ["raider", "scytheboy", "desertraider", "desert"],
+        "arcticvariant":"Tundra Graverobber"
     },
     enemy_type_mammoslime: {
         "slimerange": [650000, 950000],
@@ -4646,7 +4648,8 @@ enemy_data_table = {
         "attacktype": enemy_attacktype_tusks,
         "displayname": "Mammoslime",
         "raredisplayname": "Territorial Mammoslime",
-        "aliases": ["mammoth", "brunswick"]
+        "aliases": ["mammoth", "brunswick"],
+        "arcticvariant": "Mammoslime"
     },
     enemy_type_microslime: {
         "slimerange": [10000, 50000],
@@ -4662,7 +4665,8 @@ enemy_data_table = {
         "attacktype": enemy_attacktype_graspers,
         "displayname": "Grey Alien",
         "raredisplayname": "Grey with a Burger King Crown On Its Head",
-        "aliases": ["greys", "galien", "unnervingfightingoperator", "unnerving"]
+        "aliases": ["greys", "galien", "unnervingfightingoperator", "unnerving"],
+        "arcticvariant":"Grey Alien"
     },
     enemy_type_tangeloid: {
         "slimerange": [250000, 500000],
@@ -4710,7 +4714,8 @@ enemy_data_table = {
         "attacktype": enemy_attacktype_gunkshot,
         "displayname": "Megaslime",
         "raredisplayname": "Rampaging Megaslime",
-        "aliases": ["mega", "smooze", "muk"]
+        "aliases": ["mega", "smooze", "muk"],
+        "arcticvariant":"Antifreeze Megaslime"
     },
     enemy_type_slimeasaurusrex: {
         "slimerange": [1750000, 3000000],
@@ -4718,7 +4723,8 @@ enemy_data_table = {
         "attacktype": enemy_attacktype_fangs,
         "displayname": "Slimeasaurus Rex",
         "raredisplayname": "Sex Rex",
-        "aliases": ["rex", "trex", "slimeasaurusrex", "slimeasaurus"]
+        "aliases": ["rex", "trex", "slimeasaurusrex", "slimeasaurus"],
+        "arcticvariant": "Slimeasaurus Rex"
     },
     enemy_type_greeneyesslimedragon: {
         "slimerange": [3500000, 5000000],
@@ -4734,7 +4740,8 @@ enemy_data_table = {
         "attacktype": enemy_attacktype_armcannon,
         "displayname": "Unnerving Fighting Operator",
         "raredisplayname": "Unyielding Fierce Operator",
-        "aliases": ["ufo", "alien", "unnervingfightingoperator", "unnerving"]
+        "aliases": ["ufo", "alien", "unnervingfightingoperator", "unnerving"],
+        "arcticvariant":"Unflinching Frozen Operator"
     },
     enemy_type_titanoslime: {
         "slimerange": [5000000, 7000000],
@@ -4758,7 +4765,8 @@ enemy_data_table = {
         "attacktype": enemy_attacktype_tusks,
         "displayname": "Piloslime",
         "raredisplayname": "Shiny Piloslime",
-        "aliases": ["piloswine", "mammoslimejr", "pleboslime", "shinypiloslime"]
+        "aliases": ["piloswine", "mammoslimejr", "pleboslime", "shinypiloslime"],
+        "arcticvariant":"Piloslime"
     },
     enemy_type_spacecarp: {
         "slimerange": [100000, 100000],

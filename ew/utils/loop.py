@@ -818,7 +818,7 @@ async def spawn_enemies(id_server = None, debug = False):
 
     # One in 3 chance of spawning a regular enemy in the outskirts
 
-    if random.randrange(2) == 0 or debug:
+    if random.randrange(3) == 0 or debug:
         weathertype = ewcfg.enemy_weathertype_normal
         # If it's raining, an enemy has  2/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
         if market_data.weather == ewcfg.weather_bicarbonaterain:

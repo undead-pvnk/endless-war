@@ -742,6 +742,7 @@ def spawn_enemy(
     potential_chosen_poi = ""
     threat_level = ""
     boss_choices = []
+    arctic = 0
 
     enemies_count = ewcfg.max_enemies
     try_count = 0
@@ -819,6 +820,11 @@ def spawn_enemy(
             # If the enemy is a raid boss, re-roll it once to make things fair
             if enemytype in ewcfg.raid_bosses:
                 enemytype = random.choice(ewcfg.pre_historic_enemies)
+        elif potential_chosen_poi in [ewcfg.poi_id_maimridge_street_a, ewcfg.poi_id_maimridge_street_b, ewcfg.poi_id_maimridge_street_c]:
+            enemytype = random.choice(ewcfg.arctic_enemies)
+            arctic = 1
+            if enemytype in ewcfg.raid_bosses:
+                enemytype = random.choice(ewcfg.arctic_enemies)
     else:
         if pre_chosen_poi == None:
             return
@@ -827,7 +833,7 @@ def spawn_enemy(
         chosen_poi = pre_chosen_poi
 
     if enemytype != None:
-        enemy = get_enemy_data(enemytype)
+        enemy = get_enemy_data(enemytype, arctic)
 
         # Assign enemy attributes that weren't assigned in get_enemy_data
         enemy.id_server = id_server
@@ -941,7 +947,7 @@ def level_byslime(slime):
 
 
 # Assigns enemies most of their necessary attributes based on their type.
-def get_enemy_data(enemy_type):
+def get_enemy_data(enemy_type, arctic = 0):
     enemy = EwEnemy()
 
     rare_status = 0
@@ -980,6 +986,9 @@ def get_enemy_data(enemy_type):
         enemy.enemyclass = ewcfg.enemy_data_table[enemy_type]["class"]
     except:
         enemy.enemyclass = ewcfg.enemy_class_normal
+
+    if arctic == 1:
+        enemy.display_name = ewcfg.enemy_data_table[enemy_type]["arcticvariant"]
 
     if rare_status == 1:
         enemy.display_name = ewcfg.enemy_data_table[enemy_type]["raredisplayname"]
