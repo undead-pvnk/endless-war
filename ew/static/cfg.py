@@ -5215,101 +5215,118 @@ defined_races = {
         "race_suffix": "",
         "acknowledgement_str": "ENDLESS WAR acknowledges you as a boring humanoid. Your lame and uninspired figure allows you to do nothing but **{cmd}**.",
         "racial_cmd": cmd_exist,
+        "soul_behavior" : "dances around in place, naive and slightly giddy."
     },
     race_amphibian: {
         "race_prefix": "slippery ",
         "race_suffix": "amphibious ",
         "acknowledgement_str": "ENDLESS WAR acknowledges you as some denomination of amphibian. You may now **{cmd}** to let the world hear your fury.",
-        "racial_cmd": cmd_ree
+        "racial_cmd": cmd_ree,
+        "soul_behavior" : "is vibrating and throwing a tantrum."
     },
     race_food: {
         "race_prefix": "",
         "race_suffix": "edible ",
         "acknowledgement_str": "ENDLESS WAR acknowledges you as a member of the food race. If you must, you may now give in to your deepest desires, and **{cmd}**.",
-        "racial_cmd": cmd_autocannibalize
+        "racial_cmd": cmd_autocannibalize,
+        "soul_behavior" : "lazily rolls around on the floor."
     },
     race_skeleton: {
         "race_prefix": "",
         "race_suffix": "skele",
         "acknowledgement_str": "ENDLESS WAR acknowledges you as a being of bone. You may now **{cmd}** to intimidate your enemies or soothe yourself.",
-        "racial_cmd": cmd_rattle
+        "racial_cmd": cmd_rattle,
+        "soul_behavior" : "speeds around, bumping into walls!"
     },
     race_robot: {
         "race_prefix": "silicon-based ",
         "race_suffix": "robo",
         "acknowledgement_str": '\n```python\nplayer_data.race = "robot"	#todo: change to an ID\nplayer_data.unlock_command("{cmd}")```',
-        "racial_cmd": cmd_beep
+        "racial_cmd": cmd_beep,
+        "soul_behavior" : "rotates slowly and ominously."
     },
     race_furry: {
         "race_prefix": "furry ",
         "race_suffix": "",
         "acknowledgement_str": "ENDLESS WAR reluctantly acknowledges you as a furry. Yes, you can **{cmd}** now, but please do it in private.",
-        "racial_cmd": cmd_yiff
+        "racial_cmd": cmd_yiff,
+        "soul_behavior" : "ripples its texture, making odd sounds."
     },
     race_scalie: {
         "race_prefix": "scaly ",
         "race_suffix": "",
         "acknowledgement_str": "ENDLESS WAR acknowledges you as a scalie. You may now **{cmd}** at your enemies as a threat.",
-        "racial_cmd": cmd_hiss
+        "racial_cmd": cmd_hiss,
+        "soul_behavior":"plays around with its shape, contorting its wisps every which way."
     },
     race_slimederived: {
         "race_prefix": "goopy ",
         "race_suffix": "",
         "acknowledgement_str": "ENDLESS WAR acknowledges you as some sort of slime-derived lifeform. **{cmd}** to your heart's content, you goopy bastard.",
-        "racial_cmd": cmd_jiggle
+        "racial_cmd": cmd_jiggle,
+        "soul_behavior":"is giving off a pungent, synthetic smell."
     },
     race_monster: {
         "race_prefix": "monstrous ",
         "race_suffix": "",
         "acknowledgement_str": "ENDLESS WAR acknowledges you as a monstrosity. Go on a **{cmd}**, you absolute beast.",
-        "racial_cmd": cmd_rampage
+        "racial_cmd": cmd_rampage,
+        "soul_behavior":"is looking for another soul it can terrorize."
     },
     race_critter: {
         "race_prefix": "small ",
         "race_suffix": "",
         "acknowledgement_str": "ENDLESS WAR acknowledges you as a little critter. You may **{cmd}**s from others now. Adorable.",
-        "racial_cmd": cmd_request_petting
+        "racial_cmd": cmd_request_petting,
+        "soul_behavior":"...wait, where is it?"
     },
     race_avian: {
         "race_prefix": "feathery ",
         "race_suffix": "",
         "acknowledgement_str": "ENDLESS WAR acknowledges you as some kind of bird creature. You can now **{cmd}** to fly away for a quick escape.",
-        "racial_cmd": cmd_flutter
+        "racial_cmd": cmd_flutter,
+        "soul_behavior":"keeps trying to escape the top of the cylinder."
     },
     race_insectoid: {
         "race_prefix": "chitinny ",
         "race_suffix": "",
         "acknowledgement_str": 'ENDLESS WAR acknowledges you as an insectoid lifeform. You may now **{cmd}** alongside other creepy-crawlies of your ilk.',
-        "racial_cmd": cmd_entomize
+        "racial_cmd": cmd_entomize,
+        "soul_behavior":"is floating around in a weird loop."
     },
     race_other: {
         "race_prefix": "peculiar ",
         "race_suffix": "",
         "acknowledgement_str": 'ENDLESS WAR struggles to categorize you, and files you under "other". Your peculiar form can be used to **{cmd}** those around you.',
-        "racial_cmd": cmd_confuse
+        "racial_cmd": cmd_confuse,
+        "soul_behavior":"rattles seductively through the glass."
     },
     race_shambler: {
         "race_prefix": "",
         "race_suffix": "",
         "acknowledgement_str": 'ENDLESS WAR acknowledges you as one of the dead, is disturbed by your presence. You may now **{cmd}** in the hordes of those like you',
-        "racial_cmd": cmd_shamble
+        "racial_cmd": cmd_shamble,
+        "soul_behavior":"is just happy it's apart from its owner."
     },
     race_forbidden: {
         "race_prefix": "mouthbreathing ",
         "race_suffix": "",
-        "acknowledgement_str": 'In its infinite wisdom, ENDLESS WAR sees past your attempt at being funny and acknowledges you for what you _truly_ are: **a fucking idiot**.'
+        "acknowledgement_str": 'In its infinite wisdom, ENDLESS WAR sees past your attempt at being funny and acknowledges you for what you _truly_ are: **a fucking idiot**.',
+        "soul_behavior":"has melted, and is lying in a puddle on the floor."
     },
     race_cyborg: {
         "race_prefix": "",
         "race_suffix": "cybernetic ",
         "acknowledgement_str": "ENDLESS WAR reluctantly acknowledges your biological trancendence. You can now **{cmd}**. ",
-        "racial_cmd": cmd_netrun
+        "racial_cmd": cmd_netrun,
+        "soul_behavior":"is wearing sunglasses and you don't know how it got them."
     },
     race_demon: {
         "race_prefix": "",
         "race_suffix": "demonic ",
         "acknowledgement_str": "ENDLESS WAR acknowledges you as the hellspawn you are. You can now **{cmd}**. ",
-        "racial_cmd": cmd_strike_deal
+        "racial_cmd": cmd_strike_deal,
+        "soul_behavior":"has established dominance in here."
     }
 }
 

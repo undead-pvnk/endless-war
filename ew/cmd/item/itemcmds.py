@@ -29,6 +29,7 @@ from ew.utils import apt as apt_utils
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
+from . import itemutils as itm_u
 from ew.utils import stats as ewstats
 from ew.utils import loop as loop_utils
 from ew.utils import prank as prank_utils
@@ -684,6 +685,16 @@ async def item_look(cmd):
                 hue = hue_static.hue_map.get(item.item_props.get('hue'))
                 if hue != None:
                     response += " It's been dyed in {} paint.".format(hue.str_name)
+
+                if item.item_props.get('furn_set') == 'collection':
+                    if 'plainlook' in cmd.tokens[0]:
+                        response = response.replace(dict.fromkeys(['{weapon_chest}', '{scalp_inspect}', '{aquarium_inspect}', '{soul_cylinder}'], '{general_collection}'))
+                    response = response.format(
+                        scalp_inspect=itm_u.get_scalp_collection(id_item=item.id_item, id_server=item.id_server),
+                        aquarium_inspect=itm_u.get_fish_collection(id_item=item.id_item, id_server=item.id_server),
+                        soul_cylinder=itm_u.get_soul_collection(id_item=item.id_item, id_server=item.id_server),
+                        weapon_chest = itm_u.get_weapon_collection(id_item=item.id_item, id_server=item.id_server),
+                        general_collection = itm_u.get_general_collection(id_item=item.id_item, id_server=item.id_server))
 
             durability = item.item_props.get('durability')
             if durability != None and item.item_type == ewcfg.it_item:
