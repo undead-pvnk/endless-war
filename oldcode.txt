@@ -3080,3 +3080,1975 @@ cmd_gvs_joinoperation = cmd_prefix + 'joinop'
 cmd_gvs_leaveoperation = cmd_prefix + 'leaveop'
 cmd_gvs_checkoperation = cmd_prefix + 'checkops'
 cmd_gvs_plantgaiaslimeoid = cmd_prefix + 'plant'
+
+    EwGeneralItem(
+        id_item='n12corpse',
+        context='corpse',
+        str_name="N12's Corpse",
+        str_desc="The unzucked corpse of N12. At this point she's hardly recognizable.",
+        alias=[
+            "n12"
+        ]
+    ),
+    EwGeneralItem(
+        id_item='n13corpse',
+        context='corpse',
+        str_name="N13's Corpse",
+        str_desc="The unzucked corpse of N13. The bulb head looks so fragile but it's definitely not breaking anytime soon.",
+        alias=[
+            "n13"
+        ]
+    ),
+        EwGeneralItem(
+        id_item='n6corpse',
+        context='corpse',
+        str_name="N6's Corpse",
+        str_desc="The unzucked corpse of N6. Something is preventing her corpse from entering the Sewers.",
+        alias=[
+            "n6"
+        ]
+    ),
+    EwGeneralItem(
+        id_item='n10corpse',
+        context='corpse',
+        str_name="N10's Corpse",
+        str_desc="The unzucked corpse of N10. Something about lugging this body around feels like a mistake.",
+        alias=[
+            "n10"
+        ]
+    ),
+        EwGeneralItem(
+        id_item="filmreel",
+        str_name="VHS Tape",
+        str_desc="It's a VHS for one of Slimecorp's old training videos.",
+        context="reelkey"
+    ),
+
+
+    enemy_type_gaia_poketubers: {
+        "slimerange": [100, 100],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_gvs_g_explosion,
+        "displayname": "Poketuber",
+        "raredisplayname": "Joybean Poketuber",
+        "aliases": ['tuber'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'primed': 'false',
+            'primecountdown': 3,
+            'setdamage': 500000,
+            'piercing': 'true',
+            'range': 2
+        }
+    },
+    enemy_type_gaia_pulpgourds: {
+        "slimerange": [50000, 50000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_unarmed,
+        "displayname": "Pulp Gourd",
+        "raredisplayname": "Joybean Pulp Gourd",
+        "aliases": ['gourd', 'pulp'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'gourdstorage': 0
+        }
+    },
+    enemy_type_gaia_sourpotatoes: {
+        "slimerange": [100000, 100000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_gvs_g_chompers,
+        "displayname": "Sour Potato",
+        "raredisplayname": "Joybean Sour Potato",
+        "aliases": ['potato', 'sour'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'chewingcountdown': 0,
+            'setdamage': 500000,
+            'range': 2
+        }
+    },
+    enemy_type_gaia_bloodcabbages: {
+        "slimerange": [100000, 100000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_gvs_g_bloodshot,
+        "displayname": "Blood Cabbage",
+        "raredisplayname": "Joybean Blood Cabbage",
+        "aliases": ['blood', 'cabbage'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'setdamage': 20000,
+            'range': 20,
+            'piercing': 'true',
+            'pierceamount': 3
+        }
+    },
+    enemy_type_gaia_joybeans: {
+        "slimerange": [500000, 500000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_unarmed,
+        "displayname": "Joybean",
+        "raredisplayname": "Joybean Fusion!!",
+        "aliases": ['bean', 'uhoh', 'youfriccinmoron'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'noprop': 'noprop'
+        }
+    },
+    enemy_type_gaia_purplekilliflower: {
+        "slimerange": [100000, 100000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_gvs_g_vapecloud,
+        "displayname": "Purple Killiflower",
+        "raredisplayname": "Joybean Purple Killiflower",
+        "aliases": ['purple', 'killiflower', 'cauliflower'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'range': 12,
+            'piercing': 'true',
+            'setdamage': '15000',
+        }
+    },
+    enemy_type_gaia_razornuts: {
+        "slimerange": [200000, 200000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_unarmed,
+        "displayname": "Razornut",
+        "raredisplayname": "Joybean Razornut",
+        "aliases": ['razor', 'nut'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'setdamage': 20000
+        }
+    },
+    enemy_type_gaia_pawpaw: {
+        "slimerange": [200000, 200000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_gvs_g_explosion,
+        "displayname": "Pawpaw",
+        "raredisplayname": "Joybean Pawpaw",
+        "aliases": ['paw'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'setdamage': 500000,
+            'direction': 'ring',
+            'splash': 'true'
+        }
+    },
+    enemy_type_gaia_sludgeberries: {
+        "slimerange": [100, 100],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_unarmed,
+        "displayname": "Sludgeberries",
+        "raredisplayname": "Joybean Sludgeberries",
+        "aliases": ['berries', 'sludge'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'noprop': 'noprop'
+        }
+    },
+    enemy_type_gaia_suganmanuts: {
+        "slimerange": [400000, 400000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_unarmed,  # changes to gvs_g_nuts upon the use of a joybean
+        "displayname": "Suganmanut",
+        "raredisplayname": "Joybean Suganmanut",
+        "aliases": ['cashew', 'nuts'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'setdamage': 20000
+        }
+    },
+    enemy_type_gaia_pinkrowddishes: {
+        "slimerange": [100000, 100000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_gvs_g_fists,
+        "displayname": "Pink Rowddish",
+        "raredisplayname": "Joybean Pink Rowddish",
+        "aliases": ['rowddish', 'raddish'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'range': 3,
+            'direction': 'frontandback',
+            'piercing': 'true',
+            'setdamage': 50000
+        }
+    },
+    enemy_type_gaia_dankwheat: {
+        "slimerange": [50000, 50000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_gvs_g_hotbox,
+        "displayname": "Dankwheat",
+        "raredisplayname": "Joybean Dankwheat",
+        "aliases": ['weed', 'digiweed', 'digibro', 'wheat'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'setdamage': 10000,
+            'direction': 'ring',
+            'piercing': 'true',
+        }
+    },
+    enemy_type_gaia_brightshade: {
+        "slimerange": [50000, 50000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_unarmed,
+        "displayname": "Brightshade",
+        "raredisplayname": "Double Brightshade",
+        "aliases": ['bright', 'shade'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'gaiaslimecountdown': 2
+        }
+    },
+    enemy_type_gaia_blacklimes: {
+        "slimerange": [200000, 200000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_unarmed,
+        "displayname": "Black Lime",
+        "raredisplayname": "Joybean Black Lime",
+        "aliases": ['lime', 'black'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'noprop': 'noprop'
+        }
+    },
+    enemy_type_gaia_phosphorpoppies: {
+        "slimerange": [100000, 100000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_gvs_g_brainwaves,
+        "displayname": "Phosphorpoppy",
+        "raredisplayname": "Joybean Phosphorpoppy",
+        "aliases": ['phosphor', 'poppy'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'setdamage': 10000,
+            'piercing': 'true',
+            'pierceamount': 3
+        }
+    },
+    enemy_type_gaia_direapples: {
+        "slimerange": [100000, 100000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_gvs_g_seeds,
+        "displayname": "Dire Apple",
+        "raredisplayname": "Joybean Dire Apple",
+        "aliases": ['apple', 'dire'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'setdamage': 35000,
+            'splash': 'false'
+            # 'singletilepierce': 'true', JOYBEAN
+            # 'pierceamount': 3
+        }
+    },
+    enemy_type_gaia_rustealeaves: {
+        "slimerange": [200000, 200000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_gvs_g_blades,
+        "displayname": "Rustea Leaves",
+        "raredisplayname": "Joybean Rustea Leaves",
+        "aliases": ['leaves', 'tea'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'range': 1,
+            'direction': 'frontandback',
+            'setdamage': 30000
+        }
+    },
+    enemy_type_gaia_metallicaps: {
+        "slimerange": [500000, 500000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_unarmed,
+        "displayname": "Metallicaps",
+        "raredisplayname": "NULL",
+        "aliases": ['mushrooms', 'shrooms', 'shroomz', 'mushroom'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            # 'setdamage': 30000
+            'noprop': 'noprop'
+        }
+    },
+    enemy_type_gaia_steelbeans: {
+        "slimerange": [200000, 200000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_unarmed,
+        "displayname": "Steel Beans",
+        "raredisplayname": "NULL",
+        "aliases": ['911', 'steel', 'beans'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'noprop': 'noprop'
+        }
+    },
+    enemy_type_gaia_aushucks: {
+        "slimerange": [500000, 500000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_unarmed,
+        "displayname": "Aushucks",
+        "raredisplayname": "NULL",
+        "aliases": ['gold', 'shucks', 'corn'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            # 'gaiaslimecountdown': 4
+            'noprop': 'noprop'
+        }
+    },
+    enemy_type_defaultshambler: {
+        "slimerange": [125000, 125000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_teeth,
+        "displayname": "Default Shambler",
+        "raredisplayname": "NULL",
+        "aliases": ['zombie'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 30000
+        }
+    },
+    enemy_type_bucketshambler: {
+        "slimerange": [175000, 175000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_teeth,
+        "displayname": "KFC Bucket Shambler",
+        "raredisplayname": "NULL",
+        "aliases": ['kfc', 'bucket'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 30000
+        }
+    },
+    enemy_type_juveolanternshambler: {
+        "slimerange": [250000, 250000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_teeth,
+        "displayname": "Juve-O'-Lantern Shambler",
+        "raredisplayname": "NULL",
+        "aliases": ['juveolantern', 'jackolantern'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 30000
+        }
+    },
+    enemy_type_flagshambler: {
+        "slimerange": [125000, 125000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_teeth,
+        "displayname": "Flag Shambler",
+        "raredisplayname": "NULL",
+        "aliases": ['flag'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 30000
+        }
+    },
+    enemy_type_shambonidriver: {
+        "slimerange": [175000, 175000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_shamboni,
+        "displayname": "Shamboni Driver",
+        "raredisplayname": "NULL",
+        "aliases": ['zomboni', 'driver', 'zamboni'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 250000
+        }
+    },
+    enemy_type_mammoshambler: {
+        "slimerange": [250000, 250000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_tusks,
+        "displayname": "Mammoshambler",
+        "raredisplayname": "NULL",
+        "aliases": ['mammoth', 'brunswick'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 100000,
+            'turncountdown': 2
+        }
+    },
+    enemy_type_gigashambler: {
+        "slimerange": [500000, 500000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_cudgel,
+        "displayname": "Gigashambler",
+        "raredisplayname": "NULL",
+        "aliases": ['giga', 'gigachad'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 200000,
+            'turncountdown': 2,
+            'microspawned': 'false'
+        }
+    },
+    enemy_type_microshambler: {
+        "slimerange": [60000, 60000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_teeth,
+        "displayname": "Microshambler",
+        "raredisplayname": "NULL",
+        "aliases": ['micro'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 30000
+        }
+    },
+    enemy_type_shamblersaurusrex: {
+        "slimerange": [250000, 250000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_fangs,
+        "displayname": "Shamblersaurus Rex",
+        "raredisplayname": "NULL",
+        "aliases": ['rex', 'trex', 't-rex', 'shamblersaurus'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 75000,
+            'roarused': False,
+        }
+    },
+    enemy_type_shamblerdactyl: {
+        "slimerange": [100000, 100000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_talons,
+        "displayname": "Shamblerdactyl",
+        "raredisplayname": "NULL",
+        "aliases": ['bird', 'dactyl'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 2000000,
+            'grabcountdown': 3
+        }
+    },
+    enemy_type_dinoshambler: {
+        "slimerange": [150000, 150000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_fangs,
+        "displayname": "Dinoshambler",
+        "raredisplayname": "NULL",
+        "aliases": ['dinosaur', 'dino'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 35000,
+            'jumping': 'true'
+        }
+    },
+    enemy_type_ufoshambler: {
+        "slimerange": [150000, 150000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_grenadecannon,
+        "displayname": "Unnerving Fighting Shambler",
+        "raredisplayname": "NULL",
+        "aliases": ['ufo'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 40000,
+            'turncountdown': 2,
+            'range': 18
+        }
+    },
+    enemy_type_brawldenboomer: {
+        "slimerange": [100000, 100000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_teeth,
+        "displayname": "The Brawlden Boomer",
+        "raredisplayname": "Enraged Brawlden Boomer",
+        "aliases": ['boomer', 'boombox'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 30000,
+            'turncountdown': 2,
+            'boomboxcountdown': 12,
+            'boomboxbroken': 'false',
+            'boomboxhealth': 100000
+        }
+    },
+    enemy_type_juvieshambler: {
+        "slimerange": [150000, 150000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_teeth,
+        "displayname": "Juvie Shambler",
+        "raredisplayname": "NULL",
+        "aliases": ['juvie', 'miner'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 40000,
+            'underground': 'true'
+        }
+    },
+    enemy_type_shambleballplayer: {
+        "slimerange": [250000, 250000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_teeth,
+        "displayname": "Shambleball Player",
+        "raredisplayname": "NULL",
+        "aliases": ['soccerguy', 'football', 'sports'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 40000
+        }
+    },
+    enemy_type_shamblerwarlord: {
+        "slimerange": [300000, 300000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_raiderscythe,
+        "displayname": "Shambler Warlord",
+        "raredisplayname": "NULL",
+        "aliases": ['warlord'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 60000,
+            'summoncountdown': 3  # When it reaches 0, it is dialed back to 6
+        }
+    },
+    enemy_type_shamblerraider: {
+        "slimerange": [100000, 100000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_raiderscythe,
+        "displayname": "Shambler Raider",
+        "raredisplayname": "NULL",
+        "aliases": ['raider'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 30000
+        }
+    },
+    enemy_type_gvs_boss: {
+        "slimerange": [5000000, 5000000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_unarmed,
+        "displayname": "PLACEHOLDER",
+        "raredisplayname": "NULL",
+        "aliases": ['placeholder'],
+        "class": enemy_class_shambler,
+        "props": {
+            'onground': 'true',
+            'setdamage': 100000
+        }
+
+        for enemy in gvs_enemies:
+    enemy_drop_tables[enemy] = [{item_id_slimepoudrin: [100, 1, 1]}]
+
+
+   # List of enemies used in the Gankers Vs. Shamblers event
+gvs_enemies_gaiaslimeoids = [
+    enemy_type_gaia_poketubers,
+    enemy_type_gaia_pulpgourds,
+    enemy_type_gaia_sourpotatoes,
+    enemy_type_gaia_bloodcabbages,
+    enemy_type_gaia_joybeans,
+    enemy_type_gaia_purplekilliflower,
+    enemy_type_gaia_razornuts,
+    enemy_type_gaia_pawpaw,
+    enemy_type_gaia_sludgeberries,
+    enemy_type_gaia_suganmanuts,
+    enemy_type_gaia_pinkrowddishes,
+    enemy_type_gaia_dankwheat,
+    enemy_type_gaia_brightshade,
+    enemy_type_gaia_blacklimes,
+    enemy_type_gaia_phosphorpoppies,
+    enemy_type_gaia_direapples,
+    enemy_type_gaia_rustealeaves,
+    enemy_type_gaia_metallicaps,
+    enemy_type_gaia_steelbeans,
+    enemy_type_gaia_aushucks,
+    enemy_type_gaia_partypoppeppers
+]
+gvs_enemies_shamblers = [
+    enemy_type_defaultshambler,
+    enemy_type_bucketshambler,
+    enemy_type_juveolanternshambler,
+    enemy_type_flagshambler,
+    enemy_type_shambonidriver,
+    enemy_type_mammoshambler,
+    enemy_type_gigashambler,
+    enemy_type_microshambler,
+    enemy_type_shamblersaurusrex,
+    enemy_type_shamblerdactyl,
+    enemy_type_dinoshambler,
+    enemy_type_ufoshambler,
+    enemy_type_brawldenboomer,
+    enemy_type_juvieshambler,
+    enemy_type_shambleballplayer,
+    enemy_type_shamblerwarlord,
+    enemy_type_shamblerraider,
+    enemy_type_gvs_boss,
+]
+gvs_enemies = gvs_enemies_gaiaslimeoids + gvs_enemies_shamblers
+repairable_gaias = [
+    enemy_type_gaia_blacklimes,
+    enemy_type_gaia_razornuts,
+    enemy_type_gaia_suganmanuts,
+    enemy_type_gaia_steelbeans
+]
+
+# Gankers Vs. Shamblers enemies
+enemy_type_gaia_poketubers = "poketubers"
+enemy_type_gaia_pulpgourds = "pulpgourds"
+enemy_type_gaia_sourpotatoes = "sourpotatoes"
+enemy_type_gaia_bloodcabbages = "bloodcabbages"
+enemy_type_gaia_joybeans = "joybeans"
+enemy_type_gaia_purplekilliflower = "purplekilliflower"
+enemy_type_gaia_razornuts = "razornuts"
+enemy_type_gaia_pawpaw = "pawpaw"
+enemy_type_gaia_sludgeberries = "sludgeberries"
+enemy_type_gaia_suganmanuts = "suganmanuts"
+enemy_type_gaia_pinkrowddishes = "pinkrowddishes"
+enemy_type_gaia_dankwheat = "dankwheat"
+enemy_type_gaia_brightshade = "brightshade"
+enemy_type_gaia_blacklimes = "blacklimes"
+enemy_type_gaia_phosphorpoppies = "phosphorpoppies"
+enemy_type_gaia_direapples = "direapples"
+enemy_type_gaia_rustealeaves = "rustealeaves"
+enemy_type_gaia_metallicaps = "metallicaps"
+enemy_type_gaia_steelbeans = "steelbeans"
+enemy_type_gaia_aushucks = "aushucks"
+# Smearg wanted this for flavor to keep the list complete UwU
+enemy_type_gaia_partypoppeppers = "partypoppeppers"
+
+enemy_type_defaultshambler = "defaultshambler"
+enemy_type_bucketshambler = "bucketshambler"
+enemy_type_juveolanternshambler = "juveolanternshambler"
+enemy_type_flagshambler = "flagshambler"
+enemy_type_shambonidriver = "shambonidriver"
+enemy_type_mammoshambler = "mammoshambler"
+enemy_type_gigashambler = "gigashambler"
+enemy_type_microshambler = "microshambler"
+enemy_type_shamblersaurusrex = "shamblesaurusrex"
+enemy_type_shamblerdactyl = "shamblerdactyl"
+enemy_type_dinoshambler = "dinoshambler"
+enemy_type_ufoshambler = "ufoshambler"
+enemy_type_brawldenboomer = "brawldenboomer"
+enemy_type_juvieshambler = "juvieshambler"
+enemy_type_shambleballplayer = "shambleballplayer"
+enemy_type_shamblerwarlord = "shamblerwarlord"
+enemy_type_shamblerraider = "shamblerraider"
+enemy_type_gvs_boss = "blueeyesshamblerdragon"
+
+enemy_attacktype_gvs_g_seeds = 'g_seeds'
+enemy_attacktype_gvs_g_appleacid = 'g_appleacid'
+enemy_attacktype_gvs_g_bloodshot = 'g_bloodshot'
+enemy_attacktype_gvs_g_nuts = 'g_nuts'
+enemy_attacktype_gvs_g_chompers = 'g_chompers'
+enemy_attacktype_gvs_g_fists = 'g_fists'
+enemy_attacktype_gvs_g_brainwaves = 'g_brainwaves'
+enemy_attacktype_gvs_g_vapecloud = 'g_vapecloud'
+enemy_attacktype_gvs_g_hotbox = 'g_hotbox'
+enemy_attacktype_gvs_g_blades = 'g_blades'
+enemy_attacktype_gvs_g_explosion = 'g_explosion'
+
+enemy_attacktype_gvs_s_shamboni = 's_shamboni'
+enemy_attacktype_gvs_s_teeth = 's_teeth'
+enemy_attacktype_gvs_s_tusks = 's_tusks'
+enemy_attacktype_gvs_s_fangs = 's_fangs'
+enemy_attacktype_gvs_s_talons = 's_talons'
+enemy_attacktype_gvs_s_molotovbreath = 's_molotovbreath'
+enemy_attacktype_gvs_s_raiderscythe = 's_scythe'
+enemy_attacktype_gvs_s_cudgel = 's_cudgel'
+enemy_attacktype_gvs_s_grenadecannon = 's_grenadecannon'
+
+def sh_check_coord_for_gaia(enemy_data, sh_range, direction):
+    current_coord = enemy_data.gvs_coord
+    gaias_in_coord = []
+
+    if current_coord not in ewcfg.gvs_coords_end:
+
+        for sh_row in ewcfg.gvs_valid_coords_shambler:
+
+            if current_coord in sh_row:
+                index = sh_row.index(current_coord)
+                checked_coord = gvs_grid_gather_coords(enemy_data.enemyclass, sh_range, direction, sh_row, index)[0]
+
+                for gaia_row in ewcfg.gvs_valid_coords_gaia:
+                    if checked_coord in gaia_row:
+                        # Check coordinate for gaiaslimeoids in front of the shambler.
+                        gaia_data = bknd_core.execute_sql_query(
+                            "SELECT {id_enemy}, {enemytype} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} = %s AND {poi} = %s AND {id_server} = %s AND NOT ({life_state} = {life_state_dead})".format(
+                                id_enemy=ewcfg.col_id_enemy,
+                                enemyclass=ewcfg.col_enemy_class,
+                                enemytype=ewcfg.col_enemy_type,
+                                gvs_coord=ewcfg.col_enemy_gvs_coord,
+                                poi=ewcfg.col_poi,
+                                id_server=ewcfg.col_id_server,
+                                life_state=ewcfg.col_life_state,
+                                life_state_dead=ewcfg.enemy_lifestate_dead,
+                            ), (
+                                ewcfg.enemy_class_gaiaslimeoid,
+                                checked_coord,
+                                enemy_data.poi,
+                                enemy_data.id_server
+                            ))
+
+                        # print(len(gaia_data))
+                        if len(gaia_data) > 0:
+
+                            low_attack_priority = [ewcfg.enemy_type_gaia_rustealeaves]
+                            high_attack_priority = [ewcfg.enemy_type_gaia_steelbeans]
+                            mid_attack_priority = []
+                            for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
+                                if enemy_id not in low_attack_priority and enemy_id not in high_attack_priority:
+                                    mid_attack_priority.append(enemy_id)
+
+                            gaia_types = {}
+                            for gaia in gaia_data:
+                                gaia_types[gaia[1]] = gaia[0]
+
+                            # Rustea Leaves only have a few opposing shamblers that can damage them
+                            if ewcfg.enemy_type_gaia_rustealeaves in gaia_types.keys() and enemy_data.enemytype not in [
+                                ewcfg.enemy_type_gigashambler, ewcfg.enemy_type_shambonidriver,
+                                ewcfg.enemy_type_ufoshambler]:
+                                del gaia_types[ewcfg.enemy_type_gaia_rustealeaves]
+
+                            for target in high_attack_priority:
+                                if target in gaia_types.keys():
+                                    gaias_in_coord.append(gaia_types[target])
+
+                            for target in mid_attack_priority:
+                                if target in gaia_types.keys():
+                                    gaias_in_coord.append(gaia_types[target])
+
+                            for target in low_attack_priority:
+                                if target in gaia_types.keys():
+                                    gaias_in_coord.append(gaia_types[target])
+
+                # print('shambler in coord {} found gaia in coord {} in {}.'.format(current_coord, checked_coord, enemy_data.poi))
+
+    return gaias_in_coord
+
+
+def gvs_grid_gather_coords(enemyclass, gr_range, direction, row, index):
+    checked_coords = []
+
+    if enemyclass == ewcfg.enemy_class_shambler:
+        index_change = -2
+        if direction == 'right':
+            index_change *= -1
+
+        try:
+            checked_coords.append(row[index + index_change])
+        except:
+            pass
+
+    else:
+
+        index_changes = []
+
+        # Default if range is 1, only reaches 0.5 and 1 full tile ahead
+        for i in range(gr_range):
+            index_changes.append(i + 1)
+
+        # If it reaches backwards with a range of 1, reflect current index changes
+        if direction == 'left':
+            new_index_changes = []
+
+            for change in index_changes:
+                change *= -1
+                new_index_changes.append(change)
+
+            index_changes = new_index_changes
+
+        # If it reaches both directions with a range of 1, add in opposite tiles.
+        elif direction == 'frontandback':
+            new_index_changes = []
+
+            for change in index_changes:
+                change *= -1
+                new_index_changes.append(change)
+
+            index_changes += new_index_changes
+
+        # If it attacks in a ring formation around itself, there are no coord changes.
+        # The proper coordinates will be fetched later as 'splash' damage.
+        elif direction == 'ring':
+            index_changes = [0]
+
+        # Catch exceptions when necessary
+        for index_change in index_changes:
+            try:
+                checked_coords.append(row[index + index_change])
+            except:
+                pass
+
+    # print(index_changes)
+
+    # print(gr_range)
+    # print(checked_coords)
+    # print(enemyclass)
+
+    return checked_coords
+
+
+def gvs_find_nearest_shambler(checked_coords, detected_shamblers, pierceamount = 1, singletilepierce = 'false'):
+    pierceattempts = 0
+    current_dict = {}
+    chosen_coord = ''
+
+    for coord in checked_coords:
+        for shambler in detected_shamblers.keys():
+            if detected_shamblers[shambler] == coord:
+                current_dict[shambler] = coord
+
+                if singletilepierce == 'true':
+                    chosen_coord = coord
+                    for shambler in detected_shamblers.keys():
+                        if detected_shamblers[shambler] == chosen_coord:
+                            current_dict[shambler] = chosen_coord
+                        pierceattempts += 1
+                        if pierceattempts == pierceamount:
+                            return current_dict
+
+            pierceattempts += 1
+            if pierceattempts == pierceamount:
+                return current_dict
+
+
+def gvs_get_splash_coords(checked_splash_coords):
+    # Grab any random coordinate from the supplied splash coordinates, then get the row that it's in.
+    plucked_coord = checked_splash_coords[0]
+    plucked_row = plucked_coord[0]
+    top_row = None
+    middle_row = None
+    bottom_row = None
+
+    extra_top_row = None  # Joybean Pawpaw
+    extra_bottom_row = None  # Joybean Pawpaw
+    row_range = 5  # Joybean Dankwheat = 9
+    row_backpedal = 2  # Joybean Dankwheat = 4
+
+    current_index = 0
+
+    all_splash_coords = []
+    if plucked_row == 'A':
+        middle_row = 0
+        bottom_row = 1
+    elif plucked_row == 'B':
+        top_row = 0
+        middle_row = 1
+        bottom_row = 2
+    elif plucked_row == 'C':
+        top_row = 1
+        middle_row = 2
+        bottom_row = 3
+    elif plucked_row == 'D':
+        top_row = 2
+        middle_row = 3
+        bottom_row = 4
+    elif plucked_row == 'E':
+        top_row = 3
+        middle_row = 4
+
+    for coord in checked_splash_coords:
+        for sh_row in ewcfg.gvs_valid_coords_shambler:
+            if coord in sh_row:
+                current_index = sh_row.index(coord)
+                break
+
+        if top_row != None:
+            for i in range(row_range):
+                try:
+                    all_splash_coords.append(
+                        ewcfg.gvs_valid_coords_shambler[top_row][current_index - row_backpedal + i])
+                except:
+                    pass
+        if bottom_row != None:
+            for i in range(row_range):
+                try:
+                    all_splash_coords.append(
+                        ewcfg.gvs_valid_coords_shambler[bottom_row][current_index - row_backpedal + i])
+                except:
+                    pass
+
+        for i in range(row_range):
+            try:
+                all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[middle_row][current_index - row_backpedal + i])
+            except:
+                pass
+
+    return all_splash_coords
+
+
+    def ga_check_coord_for_shambler(enemy_data, ga_range, direction, piercing, splash, pierceamount, singletilepierce):
+    current_coord = enemy_data.gvs_coord
+    detected_shamblers = {}
+
+    for sh_row in ewcfg.gvs_valid_coords_shambler:
+
+        if current_coord in sh_row:
+            index = sh_row.index(current_coord)
+            checked_coords = gvs_grid_gather_coords(enemy_data.enemyclass, int(ga_range), direction, sh_row, index)
+
+            # print('GAIA -- CHECKED COORDS FOR {} WITH ID {}: {}'.format(enemy_data.enemytype, enemy_data.id_enemy, checked_coords))
+
+            # Check coordinate for shamblers in range of gaiaslimeoid.
+            shambler_data = bknd_core.execute_sql_query(
+                "SELECT {id_enemy}, {enemytype} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} IN %s AND {poi} = %s AND {id_server} = %s AND NOT ({life_state} = {life_state_dead} OR {life_state} = {life_state_unactivated})".format(
+                    id_enemy=ewcfg.col_id_enemy,
+                    enemyclass=ewcfg.col_enemy_class,
+                    enemytype=ewcfg.col_enemy_type,
+                    gvs_coord=ewcfg.col_enemy_gvs_coord,
+                    poi=ewcfg.col_poi,
+                    id_server=ewcfg.col_id_server,
+                    life_state=ewcfg.col_life_state,
+                    life_state_dead=ewcfg.enemy_lifestate_dead,
+                    life_state_unactivated=ewcfg.enemy_lifestate_unactivated,
+                ), (
+                    ewcfg.enemy_class_shambler,
+                    tuple(checked_coords),
+                    enemy_data.poi,
+                    enemy_data.id_server
+                ))
+
+            # print(len(shambler_data))
+            if len(shambler_data) > 0:
+
+                for shambler in shambler_data:
+
+                    current_shambler_data = EwEnemyBase(id_enemy=shambler[0], id_server=enemy_data.id_server)
+                    detected_shamblers[current_shambler_data.id_enemy] = current_shambler_data.gvs_coord
+
+                    if shambler[1] in [ewcfg.enemy_type_juvieshambler] and current_shambler_data.enemy_props.get(
+                            'underground') == 'true':
+                        del detected_shamblers[current_shambler_data.id_enemy]
+
+                if piercing == 'false':
+                    detected_shamblers = gvs_find_nearest_shambler(checked_coords, detected_shamblers)
+                elif int(pierceamount) > 0:
+                    detected_shamblers = gvs_find_nearest_shambler(checked_coords, detected_shamblers, pierceamount,
+                                                                   singletilepierce)
+
+            # print('gaia in coord {} found shambler in coords {} in {}.'.format(current_coord, checked_coords, enemy_data.poi))
+
+            if splash == 'true':
+
+                if detected_shamblers == {}:
+                    checked_splash_coords = checked_coords
+                else:
+                    checked_splash_coords = []
+                    for shambler in detected_shamblers.keys():
+                        checked_splash_coords.append(detected_shamblers[shambler])
+
+                splash_coords = gvs_get_splash_coords(checked_splash_coords)
+
+                splash_shambler_data = bknd_core.execute_sql_query(
+                    "SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} IN %s AND {poi} = %s AND {id_server} = %s".format(
+                        id_enemy=ewcfg.col_id_enemy,
+                        enemyclass=ewcfg.col_enemy_class,
+                        enemytype=ewcfg.col_enemy_type,
+                        gvs_coord=ewcfg.col_enemy_gvs_coord,
+                        poi=ewcfg.col_poi,
+                        id_server=ewcfg.col_id_server,
+                    ), (
+                        ewcfg.enemy_class_shambler,
+                        tuple(splash_coords),
+                        enemy_data.poi,
+                        enemy_data.id_server
+                    ))
+
+                for splashed_shambler in splash_shambler_data:
+                    detected_shamblers[splashed_shambler[0]] = splashed_shambler[2]
+            break
+
+    return detected_shamblers
+
+def gvs_create_gaia_grid_mapping(user_data):
+    grid_map = {}
+
+    # Grid print mapping and shambler targeting use different priority lists. Don't get these mixed up
+    printgrid_low_priority = [ewcfg.enemy_type_gaia_rustealeaves]
+    printgrid_mid_priority = [ewcfg.enemy_type_gaia_steelbeans]
+    printgrid_high_priority = []
+    for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
+        if enemy_id not in printgrid_low_priority and enemy_id not in printgrid_mid_priority:
+            printgrid_high_priority.append(enemy_id)
+
+    gaias = bknd_core.execute_sql_query(
+        "SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1 AND {enemyclass} = %s".format(
+            id_enemy=ewcfg.col_id_enemy,
+            enemytype=ewcfg.col_enemy_type,
+            poi=ewcfg.col_enemy_poi,
+            life_state=ewcfg.col_enemy_life_state,
+            gvs_coord=ewcfg.col_enemy_gvs_coord,
+            enemyclass=ewcfg.col_enemy_class,
+        ), (
+            user_data.id_server,
+            user_data.poi,
+            ewcfg.enemy_class_gaiaslimeoid
+        ))
+
+    grid_conditions = bknd_core.execute_sql_query(
+        "SELECT coord, grid_condition FROM gvs_grid_conditions WHERE district = %s".format(
+        ), (
+            user_data.poi,
+        ))
+
+    for condition in grid_conditions:
+        grid_map[condition[0]] = condition[1]
+
+    for gaia in gaias:
+        try:
+            gaia_in_coord = grid_map[gaia[2]]
+            # No key error: Gaia is in coord already, check for priority
+            is_filled = True
+        except KeyError:
+            gaia_in_coord = ''
+            # Key error: Gaia was not in coord
+            is_filled = False
+
+        if is_filled:
+            if gaia_in_coord in printgrid_low_priority and (gaia[1] in printgrid_mid_priority or gaia[1] in printgrid_high_priority):
+                grid_map[gaia[2]] = gaia[1]
+            if gaia_in_coord in printgrid_mid_priority and gaia[1] in printgrid_high_priority:
+                grid_map[gaia[2]] = gaia[1]
+        else:
+            grid_map[gaia[2]] = gaia[1]
+
+    return grid_map
+
+
+def gvs_create_gaia_lane_mapping(user_data, row_used):
+    # Grid print mapping and shambler targeting use different priority lists. Don't get these mixed up
+    printlane_low_priority = [ewcfg.enemy_type_gaia_rustealeaves]
+    printlane_mid_priority = []
+    printlane_high_priority = [ewcfg.enemy_type_gaia_steelbeans]
+    for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
+        if enemy_id not in printlane_low_priority and enemy_id not in printlane_high_priority:
+            printlane_mid_priority.append(enemy_id)
+
+    gaias = bknd_core.execute_sql_query(
+        "SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1 AND {enemyclass} = %s AND {gvs_coord} IN %s".format(
+            id_enemy=ewcfg.col_id_enemy,
+            enemytype=ewcfg.col_enemy_type,
+            poi=ewcfg.col_enemy_poi,
+            life_state=ewcfg.col_enemy_life_state,
+            gvs_coord=ewcfg.col_enemy_gvs_coord,
+            enemyclass=ewcfg.col_enemy_class,
+        ), (
+            user_data.id_server,
+            user_data.poi,
+            ewcfg.enemy_class_gaiaslimeoid,
+            tuple(row_used)
+        ))
+
+    grid_conditions = bknd_core.execute_sql_query(
+        "SELECT coord, grid_condition FROM gvs_grid_conditions WHERE district = %s AND coord IN %s".format(
+        ), (
+            user_data.poi,
+            tuple(row_used)
+        ))
+
+    coord_sets = []
+
+    for coord in row_used:
+        current_coord_set = []
+        for enemy in printlane_low_priority:
+            for gaia in gaias:
+                if gaia[1] == enemy and gaia[2] == coord:
+                    current_coord_set.append(gaia[0])
+
+        for enemy in printlane_mid_priority:
+            for gaia in gaias:
+                if gaia[1] == enemy and gaia[2] == coord:
+                    current_coord_set.append(gaia[0])
+
+        for enemy in printlane_high_priority:
+            for gaia in gaias:
+                if gaia[1] == enemy and gaia[2] == coord:
+                    current_coord_set.append(gaia[0])
+
+        for condition in grid_conditions:
+            if condition[0] == coord:
+                if condition[1] == 'frozen':
+                    current_coord_set.append('frozen')
+
+        coord_sets.append(current_coord_set)
+
+    return coord_sets
+
+
+def gvs_check_gaia_protected(enemy_data):
+    is_protected = False
+
+    low_attack_priority = [ewcfg.enemy_type_gaia_rustealeaves]
+    high_attack_priority = [ewcfg.enemy_type_gaia_steelbeans]
+    mid_attack_priority = []
+    for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
+        if enemy_id not in low_attack_priority and enemy_id not in high_attack_priority:
+            mid_attack_priority.append(enemy_id)
+
+    checked_coords = []
+    enemy_coord = enemy_data.gvs_coord
+    for row in ewcfg.gvs_valid_coords_gaia:
+        if enemy_coord in row:
+            index = row.index(enemy_coord)
+            row_length = len(ewcfg.gvs_valid_coords_gaia)
+            for i in range(index + 1, row_length):
+                checked_coords.append(ewcfg.gvs_valid_coords_gaia[i])
+
+    gaias_in_front_coords = bknd_core.execute_sql_query(
+        "SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE {life_state} = 1 AND {enemyclass} = %s AND {gvs_coord} IN %s".format(
+            id_enemy=ewcfg.col_id_enemy,
+            enemytype=ewcfg.col_enemy_type,
+            life_state=ewcfg.col_enemy_life_state,
+            gvs_coord=ewcfg.col_enemy_gvs_coord,
+            enemyclass=ewcfg.col_enemy_class,
+        ), (
+            ewcfg.enemy_class_gaiaslimeoid,
+            tuple(checked_coords)
+        ))
+
+    if len(gaias_in_front_coords) > 0:
+        is_protected = True
+    else:
+        gaias_in_same_coord = bknd_core.execute_sql_query(
+            "SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE {life_state} = 1 AND {enemyclass} = %s AND {gvs_coord} = %s".format(
+                id_enemy=ewcfg.col_id_enemy,
+                enemytype=ewcfg.col_enemy_type,
+                life_state=ewcfg.col_enemy_life_state,
+                gvs_coord=ewcfg.col_enemy_gvs_coord,
+                enemyclass=ewcfg.col_enemy_class,
+            ), (
+                ewcfg.enemy_class_gaiaslimeoid,
+                enemy_coord
+            ))
+        if len(gaias_in_same_coord) > 1:
+            same_coord_gaias_types = []
+            for gaia in gaias_in_same_coord:
+                same_coord_gaias_types.append(gaia[1])
+
+            for type in same_coord_gaias_types:
+                if enemy_data.enemy_type in high_attack_priority:
+                    is_protected = False
+                    break
+                elif enemy_data.enemy_type in mid_attack_priority and type in high_attack_priority:
+                    is_protected = True
+                    break
+                elif enemy_data.enemy_type in low_attack_priority and (type in mid_attack_priority or type in high_attack_priority):
+                    is_protected = True
+                    break
+
+        else:
+            is_protected = False
+
+    return is_protected
+
+
+def gvs_check_operation_duplicate(id_user, district, enemytype, faction):
+    entry = None
+
+    if faction == ewcfg.psuedo_faction_gankers:
+        entry = bknd_core.execute_sql_query(
+            "SELECT * FROM gvs_ops_choices WHERE id_user = %s AND district = %s AND enemytype = %s AND faction = %s".format(
+            ), (
+                id_user,
+                district,
+                enemytype,
+                faction
+            ))
+    elif faction == ewcfg.psuedo_faction_shamblers:
+        entry = bknd_core.execute_sql_query(
+            "SELECT * FROM gvs_ops_choices WHERE district = %s AND enemytype = %s AND faction = %s".format(
+            ), (
+                district,
+                enemytype,
+                faction
+            ))
+
+    if len(entry) > 0:
+        return True
+    else:
+        return False
+
+
+def gvs_check_operation_limit(id_user, district, enemytype, faction):
+    limit_hit = False
+    tombstone_limit = 0
+
+    if faction == ewcfg.psuedo_faction_gankers:
+        data = bknd_core.execute_sql_query(
+            "SELECT id_user FROM gvs_ops_choices WHERE id_user = %s AND district = %s AND faction = %s".format(
+            ), (
+                id_user,
+                district,
+                faction
+            ))
+
+        if len(data) >= 6:
+            limit_hit = True
+        else:
+            limit_hit = False
+
+    elif faction == ewcfg.psuedo_faction_shamblers:
+        sh_data = bknd_core.execute_sql_query(
+            "SELECT enemytype FROM gvs_ops_choices WHERE district = %s AND faction = %s".format(
+            ), (
+                district,
+                faction
+            ))
+
+        gg_data = bknd_core.execute_sql_query(
+            "SELECT id_user FROM gvs_ops_choices WHERE district = %s AND faction = %s".format(
+            ), (
+                district,
+                enemytype,
+            ))
+
+        gg_id_list = []
+        for gg in gg_data:
+            gg_id_list.append(gg[0])
+
+        gg_id_set = set(gg_id_list)  # Remove duplicate user IDs
+
+        if len(gg_id_set) == 0:
+            tombstone_limit = 3
+        elif len(gg_id_set) <= 3:
+            tombstone_limit = 6
+        elif len(gg_id_set) <= 6:
+            tombstone_limit = 10
+        else:
+            tombstone_limit = 12
+
+        if len(sh_data) >= tombstone_limit:
+            limit_hit = True
+        else:
+            limit_hit = False
+
+    return limit_hit, tombstone_limit
+
+
+def gvs_check_if_in_operation(user_data):
+    op_data = bknd_core.execute_sql_query(
+        "SELECT id_user, district FROM gvs_ops_choices WHERE id_user = %s".format(
+        ), (
+            user_data.id_user,
+        ))
+
+    if len(op_data) > 0:
+        return True, op_data[0][1]
+    else:
+        return False, None
+
+
+def gvs_get_gaias_from_coord(poi, checked_coord):
+    gaias = bknd_core.execute_sql_query(
+        "SELECT id_enemy, enemytype FROM enemies WHERE poi = %s AND gvs_coord = %s".format(
+        ), (
+            poi,
+            checked_coord
+        ))
+
+    gaias_id_to_type_map = {}
+
+    for gaia in gaias:
+        if gaia[1] in ewcfg.gvs_enemies_gaiaslimeoids:
+            gaias_id_to_type_map[gaia[0]] = gaia[1]
+
+    return gaias_id_to_type_map
+
+
+# If there are no player operations, spawn in ones that the bot uses
+def gvs_insert_bot_ops(id_server, district, enemyfaction):
+    bot_id = 56709
+
+    if enemyfaction == ewcfg.psuedo_faction_gankers:
+        possible_bot_types = [
+            ewcfg.enemy_type_gaia_pinkrowddishes,
+            ewcfg.enemy_type_gaia_purplekilliflower,
+            ewcfg.enemy_type_gaia_poketubers,
+            ewcfg.enemy_type_gaia_razornuts
+        ]
+        for type in possible_bot_types:
+            bknd_core.execute_sql_query("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
+                ewcfg.col_id_user,
+                ewcfg.col_district,
+                ewcfg.col_enemy_type,
+                ewcfg.col_faction,
+                ewcfg.col_id_item,
+                ewcfg.col_shambler_stock,
+            ), (
+                bot_id,
+                district,
+                type,
+                enemyfaction,
+                -1,
+                0,
+            ))
+
+            # To increase the challenge, a column of suganmanuts is placed down.
+            for coord in ['A6', 'B6', 'C6', 'D6', 'E6']:
+                spawn_enemy(
+                    id_server=id_server,
+                    pre_chosen_type=ewcfg.enemy_type_gaia_suganmanuts,
+                    pre_chosen_level=50,
+                    pre_chosen_poi=district,
+                    pre_chosen_identifier='',
+                    pre_chosen_faction=ewcfg.psuedo_faction_gankers,
+                    pre_chosen_owner=bot_id,
+                    pre_chosen_coord=coord,
+                    manual_spawn=True,
+                )
+
+    elif enemyfaction == ewcfg.psuedo_faction_shamblers:
+        possible_bot_types = [
+            ewcfg.enemy_type_defaultshambler,
+            ewcfg.enemy_type_bucketshambler,
+        ]
+        for type in possible_bot_types:
+            bknd_core.execute_sql_query("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
+                ewcfg.col_id_user,
+                ewcfg.col_district,
+                ewcfg.col_enemy_type,
+                ewcfg.col_faction,
+                ewcfg.col_id_item,
+                ewcfg.col_shambler_stock,
+            ), (
+                bot_id,
+                district,
+                type,
+                enemyfaction,
+                -1,
+                20,
+            ))
+
+
+# This function takes care of all win conditions within Gankers Vs. Shamblers.
+# It also handles turn counters, including gaiaslime generation, as well as spawning in shamblers
+async def gvs_update_gamestate(id_server):
+    op_districts = bknd_core.execute_sql_query("SELECT district FROM gvs_ops_choices GROUP BY district")
+    for op_district in op_districts:
+        district = op_district[0]
+
+        graveyard_ops = bknd_core.execute_sql_query(
+            "SELECT id_user, enemytype, shambler_stock FROM gvs_ops_choices WHERE faction = 'shamblers' AND district = '{}' AND shambler_stock > 0".format(
+                district))
+        bot_garden_ops = bknd_core.execute_sql_query(
+            "SELECT id_user, enemytype FROM gvs_ops_choices WHERE faction = 'gankers' AND district = '{}' AND id_user = 56709".format(
+                district))
+        op_district_data = EwDistrict(district=district, id_server=id_server)
+
+        # Generate Gaiaslime passively over time, but in small amounts
+        op_district_data.gaiaslime += 5
+        op_district_data.persist()
+
+        victor = None
+        time_now = int(time.time())
+
+        op_poi = poi_static.id_to_poi.get(district)
+        client = ewutils.get_client()
+        server = client.get_guild(id_server)
+        channel = fe_utils.get_channel(server, op_poi.channel)
+
+        if len(bot_garden_ops) > 0:
+            if random.randrange(25) == 0:
+
+                # random_op = random.choice(bot_garden_ops)
+                # random_op_data = EwOperationData(id_user=random_op[0], district=district, enemytype=random_op[1])
+
+                possible_bot_types = [
+                    ewcfg.enemy_type_gaia_suganmanuts,
+                    ewcfg.enemy_type_gaia_pinkrowddishes,
+                    ewcfg.enemy_type_gaia_purplekilliflower,
+                    ewcfg.enemy_type_gaia_poketubers,
+                    ewcfg.enemy_type_gaia_razornuts
+                ]
+
+                possible_bot_coords = [
+                    'A1', 'A2', 'A3', 'A4', 'A5',
+                    'B1', 'B2', 'B3', 'B4', 'B5',
+                    'C1', 'C2', 'C3', 'C4', 'C5',
+                    'D1', 'D2', 'D3', 'D4', 'D5',
+                    'E1', 'E2', 'E3', 'E4', 'E5'
+                ]
+
+                for i in range(5):
+                    chosen_type = random.choice(possible_bot_types)
+                    chosen_coord = random.choice(possible_bot_coords)
+
+                    existing_gaias = gvs_get_gaias_from_coord(district, chosen_coord)
+
+                    # If the coordinate is completely empty, spawn a gaiaslimeoid there.
+                    # Otherwise, make up to 5 attempts when choosing random coordinates
+                    if len(existing_gaias) == 0:
+                        resp_cont = spawn_enemy(
+                            id_server=id_server,
+                            pre_chosen_type=chosen_type,
+                            pre_chosen_level=50,
+                            pre_chosen_poi=district,
+                            pre_chosen_identifier='',
+                            pre_chosen_faction=ewcfg.psuedo_faction_gankers,
+                            pre_chosen_owner=56709,
+                            pre_chosen_coord=chosen_coord,
+                            manual_spawn=True,
+                        )
+                        await resp_cont.post()
+
+                        break
+
+        if len(graveyard_ops) > 0:
+
+            # The chance for a shambler to spawn is inversely proportional to the amount of shamblers left in stock
+            # The less shamblers there are left, the more likely they are to spawn
+            current_stock = 0
+            full_stock = 0
+
+            for op in graveyard_ops:
+                current_stock += op[2]
+                full_stock += static_items.tombstone_fullstock_map[op[1]]
+
+            # Example: If full_stock is 50, and current_stock is 20, then the spawn chance is 70%
+            # ((1 - (20 / 50)) * 100) + 10 = 70
+
+            shambler_spawn_chance = int(((1 - (current_stock / full_stock)) * 100) + 10)
+            if random.randrange(100) + 1 < shambler_spawn_chance:
+
+                random_op = random.choice(graveyard_ops)
+                random_op_data = EwOperationData(id_user=random_op[0], district=district, enemytype=random_op[1])
+
+                # Don't spawn if there aren't available identifiers
+                if len(op_district_data.get_enemies_in_district(classes=[ewcfg.enemy_class_shambler])) < 26:
+                    resp_cont = spawn_enemy(
+                        id_server=id_server,
+                        pre_chosen_type=random_op_data.enemytype,
+                        pre_chosen_level=50,
+                        pre_chosen_poi=district,
+                        pre_chosen_faction=ewcfg.psuedo_faction_shamblers,
+                        pre_chosen_owner=random_op_data.id_user,
+                        pre_chosen_coord=random.choice(ewcfg.gvs_coords_start),
+                        manual_spawn=True
+                    )
+
+                    random_op_data.shambler_stock -= 1
+                    random_op_data.persist()
+
+                    if random_op_data.shambler_stock == 0:
+                        breakdown_response = "The tombstone spawning in {}s breaks down and collapses!".format(
+                            random_op_data.enemytype.capitalize())
+                        resp_cont.add_channel_response(channel, breakdown_response)
+                    else:
+                        random_op_data.persist()
+
+                    await resp_cont.post()
+        else:
+            shamblers = bknd_core.execute_sql_query(
+                "SELECT id_enemy FROM enemies WHERE enemyclass = '{}' AND poi = '{}'".format(ewcfg.enemy_class_shambler,
+                                                                                             district))
+            if len(shamblers) == 0:
+                # No more stocked tombstones, and no more enemy shamblers. Garden Gankers win!
+                victor = ewcfg.psuedo_faction_gankers
+
+        op_juvies = bknd_core.execute_sql_query(
+            "SELECT id_user FROM gvs_ops_choices WHERE faction = 'gankers' AND district = '{}' AND id_user != 56709 GROUP BY id_user".format(
+                district))
+
+        # No more Garden Gankers left. Shamblers win?
+        if len(op_juvies) == 0:
+
+            # Check if the shamblers are fighting against the bot.
+            # If they are, they can only win if at least one shambler has reached the back.
+            if len(bot_garden_ops) > 0:
+                back_shamblers = bknd_core.execute_sql_query(
+                    "SELECT id_enemy FROM enemies WHERE gvs_coord IN {}".format(tuple(ewcfg.gvs_coords_end)))
+                if len(back_shamblers) > 0:
+                    # Shambler reached the back while no juveniles were around to help the bot. Shamblers win!
+                    victor = ewcfg.psuedo_faction_shamblers
+            else:
+                # No juveniles left in the district, and there were no bot operations. Shamblers win!
+                victor = ewcfg.psuedo_faction_shamblers
+
+        all_garden_ops = bknd_core.execute_sql_query(
+            "SELECT id_user FROM gvs_ops_choices WHERE faction = 'gankers' AND district = '{}'".format(district))
+        # No garden ops at all. Shamblers win!
+        if len(all_garden_ops) == 0:
+            victor = ewcfg.psuedo_faction_shamblers
+
+        if victor != None:
+            if victor == ewcfg.psuedo_faction_gankers:
+                response = "***All tombstones have been emptied out! The Garden Gankers take victory!\nThe district is rejuvenated completely!!***"
+
+                for juvie in op_juvies:
+                    ewutils.active_restrictions[juvie[0]] = 0
+
+                op_district_data.gaiaslime = 0
+                op_district_data.degradation = 0
+                op_district_data.time_unlock = time_now + 3600
+                op_district_data.persist()
+            else:
+                response = "***The shamblers have eaten the brainz of the Garden Gankers and take control of the district!\nIt's shambled completely!!***"
+                op_district_data.gaiaslime = 0
+                op_district_data.degradation = ewcfg.district_max_degradation
+                op_district_data.time_unlock = time_now + 3600
+                op_district_data.persist()
+
+            bknd_core.execute_sql_query("DELETE FROM gvs_ops_choices WHERE district = '{}'".format(district))
+            await bknd_hunt.delete_all_enemies(cmd=None, query_suffix="AND poi = '{}'".format(district), id_server_sent=id_server)
+            return await fe_utils.send_message(client, channel, response)
+
+
+# Certain conditions may prevent a shambler from acting.
+def check_enemy_can_act(enemy_data):
+    enemy_props = enemy_data.enemy_props
+
+    turn_countdown = enemy_props.get('turncountdown')
+    dank_countdown = enemy_props.get('dankcountdown')
+    sludge_countdown = enemy_props.get('sludgecountdown')
+    hardened_sludge_countdown = enemy_props.get('hardsludgecountdown')
+
+    waiting = False
+    stoned = False
+    sludged = False
+    hardened = False
+
+    if turn_countdown != None:
+        if int(turn_countdown) > 0:
+            waiting = True
+            enemy_props['turncountdown'] -= 1
+        else:
+            waiting = False
+
+    if dank_countdown != None:
+        if int(dank_countdown) > 0:
+            # If the countdown number is even, they can act. Otherwise, they cannot.
+            if dank_countdown % 2 == 0:
+                stoned = False
+            else:
+                stoned = True
+
+            enemy_props['dankcountdown'] -= 1
+        else:
+            stoned = False
+
+    # Regular sludge only slows a shambler down every other turn. Hardened sludge immobilizes them completely.
+    if sludge_countdown != None:
+        if int(sludge_countdown) > 0:
+            # If the countdown number is even, they can act. Otherwise, they cannot.
+            if sludge_countdown % 2 == 0:
+                sludged = False
+            else:
+                sludged = True
+
+            enemy_props['sludgecountdown'] -= 1
+        else:
+            sludged = False
+
+    if hardened_sludge_countdown != None:
+        if int(hardened_sludge_countdown) > 0:
+            hardened = True
+            enemy_props['hardsludgecountdown'] -= 1
+        else:
+            hardened = False
+
+    enemy_data.persist()
+
+    if not waiting and not stoned and not sludged and not hardened:
+        return True
+    else:
+        return False
+
+
+def handle_turn_timers(enemy_data):
+    response = ""
+
+    # Handle specific turn counters of all GvS enemies.
+    if enemy_data.enemytype == ewcfg.enemy_type_gaia_brightshade:
+        countdown = enemy_data.enemy_props.get('gaiaslimecountdown')
+
+        if countdown != None:
+            int_countdown = int(countdown)
+
+            if int_countdown == 0:
+
+                gaiaslime_amount = 0
+
+                enemy_data.enemy_props['gaiaslimecountdown'] = 2
+                district_data = EwDistrict(district=enemy_data.poi, id_server=enemy_data.id_server)
+
+                if enemy_data.enemy_props.get('joybean') != None:
+                    if enemy_data.enemy_props.get('joybean') == 'true':
+                        gaiaslime_amount = 50
+                    else:
+                        gaiaslime_amount = 25
+                else:
+                    gaiaslime_amount = 25
+
+                district_data.gaiaslime += gaiaslime_amount
+                district_data.persist()
+
+                response = "{} ({}) produced {} gaiaslime!".format(enemy_data.display_name, enemy_data.gvs_coord,
+                                                                   gaiaslime_amount)
+
+            else:
+                enemy_data.enemy_props['gaiaslimecountdown'] = int_countdown - 1
+
+            enemy_data.persist()
+            return response
+
+    elif enemy_data.enemytype == ewcfg.enemy_type_gaia_poketubers:
+
+        countdown = enemy_data.enemy_props.get('primecountdown')
+
+        if countdown != None:
+            int_countdown = int(countdown)
+
+            if enemy_data.enemy_props.get('primed') != 'true':
+
+                if int_countdown == 0:
+                    enemy_data.enemy_props['primed'] = 'true'
+
+                    response = "{} ({}) is primed and ready.".format(enemy_data.display_name, enemy_data.gvs_coord)
+
+                else:
+                    enemy_data.enemy_props['primecountdown'] = int_countdown - 1
+
+                enemy_data.persist()
+                return response
+
+
+async def sh_move(enemy_data):
+    current_coord = enemy_data.gvs_coord
+    has_moved = False
+    index = None
+    row = None
+    new_coord = None
+
+    if current_coord in ewcfg.gvs_coords_start and enemy_data.enemytype == ewcfg.enemy_type_juvieshambler:
+        bknd_hunt.delete_enemy(enemy_data)
+
+    if current_coord not in ewcfg.gvs_coords_end:
+        for row in ewcfg.gvs_valid_coords_shambler:
+
+            if current_coord in row:
+                index = row.index(current_coord)
+                new_coord = row[index - 1]
+                # print(new_coord)
+                break
+
+        if new_coord == None:
+            return
+
+        enemy_data.gvs_coord = new_coord
+        enemy_data.persist()
+
+        for gaia_row in ewcfg.gvs_valid_coords_gaia:
+            if new_coord in gaia_row and index != None and row != None:
+                poi_channel = poi_static.id_to_poi.get(enemy_data.poi).channel
+
+                try:
+                    previous_gaia_coord = row[index - 2]
+                except:
+                    break
+
+                response = "The {} moved from {} to {}!".format(enemy_data.display_name, new_coord, previous_gaia_coord)
+                client = ewutils.get_client()
+                server = client.get_guild(enemy_data.id_server)
+                channel = fe_utils.get_channel(server, poi_channel)
+
+                await fe_utils.send_message(client, channel, response)
+
+    # print('shambler moved from {} to {} in {}.'.format(current_coord, new_coord, enemy_data.poi))
+
+    return has_moved
+ # If str_trauma and str_trauma_self make a return, consider filling GvS attacktypes out in these attributes.
+    EwAttackType(  # GvS - 1
+        id_type="g_seeds",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_enemy}'s seeds completely miss {name_target}!",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="{name_enemy}'s seeds land right inside {name_target}'s skull, killing them instantly. {emote_skull}",
+        str_killdescriptor="seeded",
+        str_damage="{name_target} is pummeled with seeds on their {hitzone}!",
+        str_groupattack="{name_target} pummels a whole group of shamblers with their seeds!",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 1.5
+        id_type="g_appleacid",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_enemy}'s acid completely misses {name_target}!",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="{name_enemy} hurls a glob of acid straight onto {name_target}'s chest, melting down their insides. {emote_skull}",
+        str_killdescriptor="melted down to the bone",
+        str_damage="{name_target} is drenched with acid on their {hitzone}!",
+        str_groupattack="{name_target} drenches a group of shamblers with their acid!",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 2
+        id_type="g_bloodshot",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_enemy}'s bloodshot dissipates in mid-air as it fails to seek out {name_target}!",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="{name_enemy} turns {name_target} into a shriveled up husk! {emote_skull}",
+        str_killdescriptor="drained",
+        str_damage="{name_target} has their life essence drained away by {name_enemy}!",
+        str_groupattack="{name_enemy} sucks the life force out of a group of shamblers!",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 3
+        id_type="g_nuts",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_enemy}'s nuts don't even come close to hitting {name_target}!",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="{name_enemy}'s nuts knock {name_target}'s head clean off! {emote_skull}",
+        str_killdescriptor="conked on the head",
+        str_damage="{name_enemy}'s nuts bonk {name_target} on their {hitzone}!",
+        str_groupattack="{name_enemy}'s nuts richochet off of a group of shamblers!",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 4
+        id_type="g_chompers",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_enemy}'s gaping maw snaps shut!",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="**CHOMP!** {name_enemy} devours {name_target}, killing them instantly. {emote_skull}",
+        str_killdescriptor="chomped",
+        str_damage="{name_enemy}'s chompers take a bite out of {name_target}!",
+        str_groupattack="{name_enemy} is running wild!! Their chompers lay waste to a group of shamblers!",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 5
+        id_type="g_fists",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_enemy} thrashes about, but fails to hit {name_target}.",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="{name_enemy} deals a devastating strike to {name_target}! The impact causes their heart to stop. {emote_skull}",
+        str_killdescriptor="punched to death",
+        str_damage="{name_enemy}'s fists deal savage blows to {name_target}!",
+        str_groupattack="{name_enemy} rushes down a group of shamblers with their fists!",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 6
+        id_type="g_brainwaves",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_enemy}'s Binaural Brainwaves completely miss {name_target}!",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="{name_enemy} hypnotizes {name_target} into walking off of the Slime's End cliffs. {emote_skull}",
+        str_killdescriptor="mind broken",
+        str_damage="{name_enemy}'s Binaural Brainwaves give {name_target} a massive headache!",
+        str_groupattack="{name_enemy} is firing on all cylinders! Their Binaural Brainwaves impact multiple shamblers!",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 7
+        id_type="g_vapecloud",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_target} completely avoids {name_enemy}'s vape cloud!",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="{name_target} has inhaled too much of {name_enemy}'s toxic vape cloud! {emote_skull}",
+        str_killdescriptor="vaped to death",
+        str_damage="{name_enemy} completely covers {name_target} in a toxic vape cloud!",
+        str_groupattack="{name_enemy} spreads its toxic vape cloud to a group of shamblers!",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 8
+        id_type="g_hotbox",
+        str_crit="NULL",
+        str_miss="**MISS!** weed",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill=" {emote_skull}",
+        str_killdescriptor="forced to smoke too much weed",
+        str_damage="weed",
+        str_groupattack="weed",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 9
+        id_type="g_blades",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_target} manages to avoid getting cut on {name_enemy}'s blades!",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="**SHINK!!** {name_enemy}'s blades sink deep into {name_target}! {emote_skull}",
+        str_killdescriptor="cut and stabbed",
+        str_damage="{name_enemy} cuts {name_target} with their sharpened blades!",
+        str_groupattack="{name_enemy} slices and dices a group of shamblers with their blades!",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 10
+        id_type="g_explosion",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_enemy}'s explosion doesn't even come close to hitting {name_target}!",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="**KABOOM!!** {name_enemy} sacrifices itself to blow {name_target} apart! {emote_skull}",
+        str_killdescriptor="blown to smithereens",
+        str_damage="*BOOM!* {name_enemy}'s explosion puts a dent into {name_target}!",
+        str_groupattack="{name_enemy} takes down a group of shamblers with it!",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 11
+        id_type="s_shamboni",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_enemy} drives right past {name_target}!",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="{name_enemy}'s wheels completely flatten {name_target}! {emote_skull}",
+        str_killdescriptor="run over",
+        str_damage="{name_enemy}'s wheels run over {name_target}!",
+        str_groupattack="{name_enemy} runs over a group of gaiaslimeoids!",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 12
+        id_type="s_teeth",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_enemy}'s bite doesn't even graze {name_target}!",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="**CRUNCH!** {name_enemy} devours {name_target} with their teeth! {emote_skull}",
+        str_killdescriptor="bitten all over",
+        str_damage="{name_enemy} bites {name_target} on their {hitzone}!",
+        str_groupattack="{name_enemy}'s appetite knows no bounds! They bite into several gaiaslimeoids!",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 13
+        id_type="s_tusks",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_targets}'s tusks fail to hit {name_target}, and give a loud *THUD* as they strike the ground!",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="**SLAM!** {name_target} is flattened by {name_enemy}'s tusks. {emote_skull}",
+        str_killdescriptor="slammed into the ground",
+        str_damage="{name_enemy} bashes {name_target}'s {hitzone} with their tusks!",
+        str_groupattack="{name_enemy} slams its tusks into several gaiaslimeoids!",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 14
+        id_type="s_fangs",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_enemy}'s jaws snap shut! It failed to eat {name_target}!",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="**GULP!** {name_enemy} swallows {name_target} whole! {emote_skull}",
+        str_killdescriptor="vored to death",
+        str_damage="",
+        str_groupattack="NULL",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 15
+        id_type="s_talons",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_enemy} couldn't get a grip on {name_target}!",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="**YOINK!** {name_enemy} picks up {name_target} and carries them off into the sunset... {emote_skull}",
+        str_killdescriptor="spirited away",
+        str_damage="**SLASH!** {name_enemy} couldn't carry {name_target} away, but scratched them up nonetheless!",
+        str_groupattack="{name_enemy} attacks a group of gaiaslimeoids with their talons!",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 16
+        id_type="s_molotovbreath",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_target} managed to avoid {name_enemy}'s hellfire!",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="**FWOOOOOOOSHHHHH!!** {name_enemy} burns {name_target} to a crisp! {emote_skull}",
+        str_killdescriptor="burnt to ash",
+        str_damage="{name_enemy} spits a ball of fire at {name_target} and burns their {hitzone}!",
+        str_groupattack="{name_enemy} absolutely incinerates a group of gaiaslimeoids with their molotov breath!",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 17
+        id_type="s_cudgel",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_enemy}'s cudgel misses {name_target} and goes down with a *THUD*.",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="**OOF!!** {name_enemy}'s cudgel whacks {name_target} so hard, it buries them far beneath the ground. {emote_skull}",
+        str_killdescriptor="flattened",
+        str_damage="**BAM!** {name_enemy} strikes {name_target}'s {hitzone} with their cudgel!",
+        str_groupattack="NULL",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 18
+        id_type="s_raiderscythe",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_enemy}'s scythe breezes past {name_target}!",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="{name_enemy} cleaves {name_target} in two. {emote_skull}",
+        str_killdescriptor="cut in twain",
+        str_damage="{name_enemy} slices {name_target} with its scythe!",
+        str_groupattack="{name_enemy} slashes a group of gaiaslimeoids with its scythe!",
+        fn_effect=atf_gvs_basic
+    ),
+    EwAttackType(  # GvS - 19
+        id_type="s_grenadecannon",
+        str_crit="NULL",
+        str_miss="**MISS!** {name_enemy} couldn't land a hit on {name_target} with its grenade cannon!",
+        # str_trauma_self = "NULL",
+        # str_trauma = "NULL,
+        str_kill="**KABAM!!** {name_enemy}'s grenade cannon lands a direct hit on {name_target}! {emote_skull}",
+        str_killdescriptor="blown apart",
+        str_damage="{name_target} is caught in the blast zone of {name_enemy}'s grenades!",
+        str_groupattack="{name_enemy} blows up a group of gaiaslimeoids with its grenades!",
+        fn_effect=atf_gvs_basic
+    ),
+
+    gvs_valid_coords_gaia = [
+    ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9'],
+    ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9'],
+    ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9'],
+    ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9'],
+    ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9']
+]
+
+gvs_valid_coords_shambler = [
+    ['A0', 'A0.5', 'A1', 'A1.5', 'A2', 'A2.5', 'A3', 'A3.5', 'A4', 'A4.5', 'A5', 'A5.5', 'A6', 'A6.5', 'A7', 'A7.5', 'A8', 'A8.5', 'A9', 'A9.5', 'A-S'],
+    ['B0', 'B0.5', 'B1', 'B1.5', 'B2', 'B2.5', 'B3', 'B3.5', 'B4', 'B4.5', 'B5', 'B5.5', 'B6', 'B6.5', 'B7', 'B7.5', 'B8', 'B8.5', 'B9', 'B9.5', 'B-S'],
+    ['C0', 'C0.5', 'C1', 'C1.5', 'C2', 'C2.5', 'C3', 'C3.5', 'C4', 'C4.5', 'C5', 'C5.5', 'C6', 'C6.5', 'C7', 'C7.5', 'C8', 'C8.5', 'C9', 'C9.5', 'C-S'],
+    ['D0', 'D0.5', 'D1', 'D1.5', 'D2', 'D2.5', 'D3', 'D3.5', 'D4', 'D4.5', 'D5', 'D5.5', 'D6', 'D6.5', 'D7', 'D7.5', 'D8', 'D8.5', 'D9', 'D9.5', 'D-S'],
+    ['E0', 'E0.5', 'E1', 'E1.5', 'E2', 'E2.5', 'E3', 'E3.5', 'E4', 'E4.5', 'E5', 'E5.5', 'E6', 'E6.5', 'E7', 'E7.5', 'E8', 'E8.5', 'E9', 'E9.5', 'E-S']
+]
+
+gvs_coords_end = ['A0', 'B0', 'C0', 'D0', 'E0']
+
+gvs_coords_start = ['A-S', 'B-S', 'C-S', 'D-S', 'E-S']
+
+gvs_enemy_emote_map = {
+    enemy_type_gaia_poketubers: emote_poketubers,
+    enemy_type_gaia_pulpgourds: emote_pulpgourds,
+    enemy_type_gaia_sourpotatoes: emote_sourpotatoes,
+    enemy_type_gaia_bloodcabbages: emote_bloodcabbages,
+    enemy_type_gaia_joybeans: emote_joybeans,
+    enemy_type_gaia_purplekilliflower: emote_killiflower,
+    enemy_type_gaia_razornuts: emote_razornuts,
+    enemy_type_gaia_pawpaw: emote_pawpaw,
+    enemy_type_gaia_sludgeberries: emote_sludgeberries,
+    enemy_type_gaia_suganmanuts: emote_suganmanuts,
+    enemy_type_gaia_pinkrowddishes: emote_pinkrowddishes,
+    enemy_type_gaia_dankwheat: emote_dankwheat,
+    enemy_type_gaia_brightshade: emote_brightshade,
+    enemy_type_gaia_blacklimes: emote_blacklimes,
+    enemy_type_gaia_phosphorpoppies: emote_phosphorpoppies,
+    enemy_type_gaia_direapples: emote_direapples,
+    enemy_type_gaia_rustealeaves: emote_rustealeaves,
+    enemy_type_gaia_metallicaps: emote_metallicaps,
+    enemy_type_gaia_steelbeans: emote_steelbeans,
+    enemy_type_gaia_aushucks: emote_aushucks,
+    'frozen': emote_frozentile,
+}
+
+gvs_enemy_emote_map_debug = {
+    enemy_type_gaia_poketubers: ':potato:',
+    enemy_type_gaia_pulpgourds: ':lemon:',
+    enemy_type_gaia_sourpotatoes: ':sweet_potato:',
+    enemy_type_gaia_bloodcabbages: ':tomato:',
+    enemy_type_gaia_joybeans: ':rainbow:',
+    enemy_type_gaia_purplekilliflower: ':broccoli:',
+    enemy_type_gaia_razornuts: ':chestnut:',
+    enemy_type_gaia_pawpaw: ':pear:',
+    enemy_type_gaia_sludgeberries: ':grapes:',
+    enemy_type_gaia_suganmanuts: ':peanuts:',
+    enemy_type_gaia_pinkrowddishes: ':strawberry:',
+    enemy_type_gaia_dankwheat: ':herb:',
+    enemy_type_gaia_brightshade: ':hibiscus:',
+    enemy_type_gaia_blacklimes: ':garlic:',
+    enemy_type_gaia_phosphorpoppies: ':blossom:',
+    enemy_type_gaia_direapples: ':apple:',
+    enemy_type_gaia_rustealeaves: ':fallen_leaf:',
+    enemy_type_gaia_metallicaps: ':mushroom:',
+    enemy_type_gaia_steelbeans: ':shield:',
+    enemy_type_gaia_aushucks: ':corn:',
+    'frozen': ':snowflake:',
+}

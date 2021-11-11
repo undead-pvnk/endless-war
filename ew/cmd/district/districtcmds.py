@@ -545,7 +545,7 @@ async def blockparty(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-def hailcab(cmd):
+async def hailcab(cmd):
     user_data = EwUser(member = cmd.message.author)
     blockstate = EwGamestate(id_server=cmd.guild.id, id_state='blockparty')
     poi = ''.join([i for i in blockstate.value if not i.isdigit()])
@@ -562,7 +562,7 @@ def hailcab(cmd):
                 dest = ewcfg.poi_id_copkilltown
             else:
                 dest = ewcfg.poi_id_juviesrow
-            asyncio.sleep(5)
+            await asyncio.sleep(5)
             response = "**TAXI!** You shout into the crowd for a ride home. The drivers don't notice you're a miscreant, and pick you up without a second thought. They got nervous when you asked to return to your gang base, and forgot to ask for any fare. Nice!"
             await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 

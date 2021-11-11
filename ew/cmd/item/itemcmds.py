@@ -1926,4 +1926,93 @@ async def manual_transfer(cmd):
         response = "Can't move that. It's !moveitem <item id> <destination>"
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+async def collect(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    poi = poi_static.id_to_poi.get(user_data.poi)
 
+    if cmd.tokens_count != 3:
+        response = "You need to specify the item and the collection. Try !collect \"collection\" \"item\"."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    collection_seek = cmd.tokens[1]
+    item_sought_col = bknd_item.find_item(item_search=collection_seek, id_user=user_data.id_user, id_server=user_data.id_server)
+    if not item_sought_col:
+        item_sought_col = bknd_item.find_item(item_search=collection_seek, id_user="{}{}".format(user_data.id_user, "decorate"),id_server=user_data.id_server)
+
+    item_seek = cmd.tokens[2]
+    item_sought_item = bknd_item.find_item(item_search=item_seek, id_user=user_data.id_user, id_server=user_data.id_server)
+
+
+    if not poi.is_apartment:
+        response = "Nobody can know about your shameful hoarding habits. Add to your collections in your apartment."
+    elif not item_sought_item:
+        response = "Ah, a collector of imaginary objects. Too bad your brain is one of them. Pick a real item."
+    elif not collection_seek:
+        response = "You must specify a collection item."
+    else:
+        item = EwItem(id_item=item_sought_item.get('id_item'))
+        collection = EwItem(id_item=item_sought_col.get('id_item'))
+        collectiontype = collection.item_props.get('id_furniture')
+
+        collection_inventory = bknd_item.inventory(id_user='{}collection'.format(item_sought_col.get('id_item')), id_server=cmd.guild.id)
+
+        if collection.item_props.get('furn_set') != 'collection':
+            response = "You can't just shove anything into anything. A {} isn't gonna fit in a {}.".format(item.item_props.get('str_name'), collection.item_props.get('str_name'))
+        elif (collectiontype == 'weaponchest' and item.item_type != ewcfg.it_weapon) or (collectiontype == 'soulcylinder' and item.item_props.get('id_cosmetic') != 'soul') or (collectiontype == 'scalpcollection' and item.item_props.get('id_cosmetic') != 'scalp') or (collectiontype == 'largeaquarium' and item.item_props.get('acquisition') != ewcfg.acquisition_fishing):
+            response = "You've got the wrong item type. It's a {}, try and guess what it's for.".format(collection.item_props.get('str_name'))
+        elif len(collection_inventory) >= 50 or (len(collection_inventory) >= 10 and collectiontype=='generalcollection'):
+            response= "You collection's full. You really stuffed that sucker, goddamn."
+        elif item.soulbound:
+            response = "If you try to collect a soulbound item you'll basically be collecting yourself. You decide not to trap yourself in the {}.".format(item.item_props.get('str_name'))
+        else:
+
+            response = "You drop the {} into the {}.".format(item.item_props.get('str_name'), collection.item_props.get('str_name'))
+            item.id_owner = "{}collection"
+            item.persist()
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+async def remove_from_collection(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    poi = poi_static.id_to_poi.get(user_data.poi)
+    price = 100000
+
+    if user_data.poi == ewcfg.poi_id_bazaar:
+        response = "You don't actually know how to get stuff out of this. Better find a specialist in the Bazaar."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    elif cmd.tokens_count != 3:
+        response = "You need to specify the item and the collection. Try !extract \"collection\" \"item\"."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    collection_seek = ewutils.flattenTokenListToString(cmd.tokens[1])
+    item_sought_col = bknd_item.find_item(item_search=collection_seek, id_user=user_data.id_user, id_server=user_data.id_server)
+    item_seek = cmd.tokens[2]
+    item_sought_item = bknd_item.find_item(item_search=item_seek, id_user=user_data.id_user, id_server=user_data.id_server)
+
+    if not item_sought_col:
+        response = "That's not a real collection. Remember, it's !extract \"collection\" \"item\"."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    elif not item_sought_item:
+        response = "Wait, that's not in this collection. That's not even a real thing."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    collection = EwItem(id_item=item_sought_col.get('id_item'))
+    item = EwItem(id_item=item_sought_item.get('id_item'))
+
+
+
+    if collection.item_props.get('furn_set') != 'collection':
+        response = "Trying to pull shit out of random objects? Yeah, I did meth once too."
+    elif 'collection' == item.id_owner[-10:]:
+        response = "That's not in your collection. Can't remove what isn't there."
+    elif user_data.poi != ewcfg.poi_id_bazaar:
+        response = "These things are lodged in here tight. You'll need to find a specialist at the Bazaar to get them taken out."
+    elif user_data.slimes < 100000:
+        response = "These fucking prices... The removal fee is {price} slime.".format(price = price)
+    else:
+        item.id_owner = user_data.id_user
+        item.persist()
+        user_data.change_slimes(n=-price, source=ewcfg.source_spending)
+        user_data.persist()
+        response = "You somehow find a specialist in the smoky kiosks that can get your precious belongings out of the {} you forced them into. You hand over 100,000 slime, and he walks into the tent behind his stall. \n\nBefore you can figure you what it is he's doing, {}. Eventually, you find your way back to the stall. The specialist hands you the item and collection, fully separated. Maybe someday you'll figure out how to do it...".format(collection.item_props.get('str_name'), random.choice(ewcfg.bazaar_distractions))
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

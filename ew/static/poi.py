@@ -3158,6 +3158,7 @@ poi_list = [
         permissions = {'the-museum': ['read', 'send', 'connect'], 'relic-exhibits': ['read'], 'aquarium': ['read'], 'art-exhibits': ['read']},
         pvp = False,
         is_subzone = True,
+        vendors = [ewcfg.vendor_giftshop],
         mother_districts = ['oozegardens'],
         neighbors = {'oozegardens': 20},
     ),

@@ -774,48 +774,12 @@ item_list = [
         ]
     ),
     EwGeneralItem(
-        id_item='n6corpse',
-        context='corpse',
-        str_name="N6's Corpse",
-        str_desc="The unzucked corpse of N6. Something is preventing her corpse from entering the Sewers.",
-        alias=[
-            "n6"
-        ]
-    ),
-    EwGeneralItem(
-        id_item='n10corpse',
-        context='corpse',
-        str_name="N10's Corpse",
-        str_desc="The unzucked corpse of N10. Something about lugging this body around feels like a mistake.",
-        alias=[
-            "n10"
-        ]
-    ),
-    EwGeneralItem(
         id_item='n11corpse',
         context='corpse',
         str_name="N11's Corpse",
         str_desc="The unzucked corpse of N11. You're having a rough time carrying it.",
         alias=[
             "n11"
-        ]
-    ),
-    EwGeneralItem(
-        id_item='n12corpse',
-        context='corpse',
-        str_name="N12's Corpse",
-        str_desc="The unzucked corpse of N12. At this point she's hardly recognizable.",
-        alias=[
-            "n12"
-        ]
-    ),
-    EwGeneralItem(
-        id_item='n13corpse',
-        context='corpse',
-        str_name="N13's Corpse",
-        str_desc="The unzucked corpse of N13. The bulb head looks so fragile but it's definitely not breaking anytime soon.",
-        alias=[
-            "n13"
         ]
     ),
     EwGeneralItem(
@@ -1610,12 +1574,6 @@ item_list = [
         str_name="Cabinet Key",
         str_desc="It's a tiny key. Some idiot must've left this in the middle of the street, it's weathered down right out of the box.",
         context="cabinetkey"
-    ),
-    EwGeneralItem(
-        id_item="filmreel",
-        str_name="VHS Tape",
-        str_desc="It's a VHS for one of Slimecorp's old training videos.",
-        context="reelkey"
     ),
     EwGeneralItem(
         id_item="coordinatesheet",
@@ -3387,7 +3345,7 @@ furniture_list = [
         str_name = "ornate chair",
         str_desc = "It's an immaculately carved wooden chair. It looks rustic, and must've cost a fortune.",
         rarity = "Plebeian",
-        acquisition = "Patrician",
+        acquisition = "smelting",
         price = 100000000,
         furniture_place_desc = "You carefully set the chair down. Wouldn't want to scratch the varnish on it, now.",
         furniture_look_desc = "There's an immaculate -*HUE*- chair set up.",
@@ -3620,6 +3578,61 @@ furniture_list = [
         rarity = "Patrician",
         furniture_place_desc = "You set the organic trophy in the middle of your room, a shining centerpiece of your stunning success.",
         furniture_look_desc = "A trophy covered with vines and lichen is posed as the centerpiece of the room.",
+    ),
+    EwFurniture(
+        id_furniture="scalpcollection",
+        str_name="scalp collection",
+        str_desc="{scalp_inspect}",
+        rarity = 'Plebeian',
+        price=1000000,
+        vendors=[ewcfg.vendor_giftshop],
+        furniture_place_desc = "You hang the scalp display on the wall. Look at everyone you've bagged...",
+        furniture_look_desc = "A scalp collection hangs on the wall.",
+        furn_set='collection'
+    ),
+    EwFurniture(
+        id_furniture="largeaquarium",
+        str_name="large aquarium",
+        str_desc="{aquarium_inspect}",
+        rarity = 'Plebeian',
+        price=1000000,
+        vendors=[ewcfg.vendor_giftshop],
+        furniture_place_desc = "You carefully place the giant aquarium against the wall.",
+        furniture_look_desc = "A giant aquarium stands against the far wall.",
+        furn_set='collection'
+    ),
+    EwFurniture(
+        id_furniture="soulcylinder",
+        str_name="soul cylinder",
+        str_desc="{soul_cylinder}",
+        rarity = 'Plebeian',
+        price=1000000,
+        vendors=[ewcfg.vendor_giftshop],
+        furniture_place_desc = "You drop the glass cylinder into the room. The souls inside panic and bounce around.",
+        furniture_look_desc = "A soul cylinder is set up.",
+        furn_set='collection'
+    ),
+    EwFurniture(
+        id_furniture="weaponchest",
+        str_name="weapon chest",
+        str_desc="{weapon_chest}",
+        rarity = 'Plebeian',
+        price=1000000,
+        vendors=[ewcfg.vendor_giftshop],
+        furniture_place_desc = "You affix the weapon rack to the wall.",
+        furniture_look_desc = "A weapon rack is in the apartment.",
+        furn_set='collection'
+    ),
+    EwFurniture(
+        id_furniture="generalcollection",
+        str_name="general collection",
+        str_desc="{general_collection}",
+        rarity = 'Plebeian',
+        price=5000000,
+        vendors=[ewcfg.vendor_giftshop],
+        furniture_place_desc = "You drop the display box down. Now the robbers will know what to go after!",
+        furniture_look_desc = "A large display case rests neat the center of the room.",
+        furn_set='collection'
     ),
 ]
 
