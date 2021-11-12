@@ -18,7 +18,6 @@ ew/cmd/debugr
 ew/cmd/rstatic.py
 
 ew/utils/rutils.py
-ew/static/debugr.py
 
 cfg_exporter.py
 .idea

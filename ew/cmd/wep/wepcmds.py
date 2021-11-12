@@ -320,8 +320,38 @@ async def attack(cmd):
             if ctn.vax and target.life_state == ewcfg.life_state_shambler:
                 shambler_resp = "\nYour purified slime seeps into and emulsifies in their mangled corpse, healing their degraded body. When they revive, they’ll be a normal slimeboi like the rest of us. A pure, homogenous race of ENDLESS WAR fearing juveniles. It brings a tear to your eye."
 
-            # Lets throw a little scalp creation in here
-            if target.life_state != ewcfg.life_state_shambler:
+            if random.randint(0, 99) == 0 and target.gender != 'gorl':
+                foreskin = True
+            else:
+                foreskin = False
+
+            # Lets throw a little scalp and/or foreskin creation in here
+            if foreskin and target.life_state != ewcfg.life_state_shambler:
+                bknd_item.item_create(
+                    item_type=ewcfg.it_cosmetic,
+                    id_user=attacker_member.id,
+                    id_server=cmd.guild.id,
+                    item_props={
+                        'id_cosmetic': 'foreskin',
+                        'cosmetic_name': "{}'s foreskin".format(target_member.display_name),
+                        'cosmetic_desc': "A foreskin.{}".format(attacker_weapon.str_scalp),
+                        'str_onadorn': ewcfg.str_generic_onadorn,
+                        'str_unadorn': ewcfg.str_generic_unadorn,
+                        'str_onbreak': ewcfg.str_generic_onbreak,
+                        'rarity': ewcfg.rarity_patrician,
+                        'attack': 0,
+                        'defense': 0,
+                        'speed': 3,
+                        'ability': None,
+                        'durability': int(ewutils.slime_bylevel(target.slimelevel) / 4),
+                        'original_durability': int(ewutils.slime_bylevel(target.slimelevel) / 4),
+                        'size': 1,
+                        'fashion_style': ewcfg.style_tough,
+                        'freshness': 10,
+                        'adorned': 'false'
+                    }
+                )
+            elif target.life_state != ewcfg.life_state_shambler:
                 bknd_item.item_create(
                     item_type=ewcfg.it_cosmetic,
                     id_user=attacker_member.id,

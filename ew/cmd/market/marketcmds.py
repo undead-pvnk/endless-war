@@ -34,7 +34,7 @@ async def invest(cmd):
     time_now = round(time.time())
     market_data = EwMarket(id_server = cmd.message.author.guild.id)
 
-    if cmd.message.channel.name != ewcfg.channel_stockexchange: # or user_data.poi != ewcfg.poi_id_downtown:
+    if cmd.message.channel.name not in [ewcfg.channel_stockexchange, ewcfg.channel_stockexchange_p]: # or user_data.poi != ewcfg.poi_id_downtown:
         # Only allowed in the stock exchange.
         response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "invest")
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -149,7 +149,7 @@ async def withdraw(cmd):
         response = ewcfg.str_exchange_closed
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-    if cmd.message.channel.name != ewcfg.channel_stockexchange:  #or user_data.poi != ewcfg.poi_id_downtown:
+    if cmd.message.channel.name not in [ewcfg.channel_stockexchange, ewcfg.channel_stockexchange_p]:  #or user_data.poi != ewcfg.poi_id_downtown:
         # Only allowed in the stock exchange.
         response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "withdraw")
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -239,7 +239,7 @@ async def redeem(cmd):
     if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
         response = ewcfg.str_exchange_busy.format(action = "redeem")
 
-    if cmd.message.channel.name != ewcfg.channel_stockexchange:  #or user_data.poi != ewcfg.poi_id_downtown:
+    if cmd.message.channel.name  not in [ewcfg.channel_stockexchange, ewcfg.channel_stockexchange_p]:  #or user_data.poi != ewcfg.poi_id_downtown:
         # Only allowed in the stock exchange.
         response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "redeem")
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -593,7 +593,7 @@ async def xfer(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-    if cmd.message.channel.name != ewcfg.channel_stockexchange:
+    if cmd.message.channel.name  not in [ewcfg.channel_stockexchange, ewcfg.channel_stockexchange_p]:
         # Only allowed in the stock exchange.
         response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "transfer")
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -700,7 +700,7 @@ async def rate(cmd):
 
     response = ""
 
-    if cmd.message.channel.name != ewcfg.channel_stockexchange:
+    if cmd.message.channel.name  not in [ewcfg.channel_stockexchange, ewcfg.channel_stockexchange_p]:
         # Only allowed in the stock exchange.
         response = "You must go to the Slime Stock Exchange to check the current stock exchange rates ."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -767,7 +767,7 @@ async def stocks(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-    if cmd.message.channel.name != ewcfg.channel_stockexchange:
+    if cmd.message.channel.name  not in [ewcfg.channel_stockexchange, ewcfg.channel_stockexchange_p]:
         # Only allowed in the stock exchange.
         response = "You must go to the Slime Stock Exchange to check the currently available stocks."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

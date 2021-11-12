@@ -3,7 +3,7 @@ import os
 
 from ..model.item import EwCosmeticItem
 
-unique_smeltables = ['skinsuit', 'eldritchsoul']
+unique_smeltables = ['skinsuit', 'eldritchsoul', 'programmersocks']
 
 cosmetic_items_list = [
     EwCosmeticItem(
@@ -1314,6 +1314,16 @@ cosmetic_items_list = [
         str_onbreak = "Whaaaa-? Your Corn Earrings shatter on your ears! Shards of jewels get scattered into your ear, causing you to bleed profusely.",
         durability = 2500000,
         style = "beautiful",
+        freshness = 10,
+    ),
+    EwCosmeticItem(
+        id_cosmetic = "programmersocks",
+        str_name = "Programmer Socks",
+        str_desc = "Long stripey socks that programmers wear when they inevitably come out as trans. Oddly rare around here...",
+        str_onadorn = "You slip on the programmer socks. This better not be Stotle using these...",
+        str_unadorn = "You take off the programmer socks. Please, do us all a favor and do not post pics of your feet.",
+        str_onbreak = "FREEDOM! The socks rip apart!",
+        durability = 2500000,
         freshness = 10,
     )
 ]

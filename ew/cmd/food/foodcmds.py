@@ -16,7 +16,7 @@ from ew.static import items as static_items
 from ew.static import poi as poi_static
 from ew.static import vendors
 from ew.static import weapons as static_weapons
-from ew.static import debugr as static_relic
+from ew.static import rstatic as static_relic
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils

@@ -1521,10 +1521,10 @@ async def help(cmd):
         elif cmd.message.channel.name in poi_static.transport_stops_ch:
             # transportation help
             response = ewcfg.help_responses['transportation']
-        elif cmd.message.channel.name in ewcfg.channel_stockexchange:
+        elif cmd.message.channel.name in [ewcfg.channel_stockexchange, ewcfg.channel_stockexchange_p]:
             # stock exchange help
             response = ewcfg.help_responses['stocks']
-        elif cmd.message.channel.name in ewcfg.channel_casino:
+        elif cmd.message.channel.name in [ewcfg.channel_casino, ewcfg.channel_casino_p]:
             # casino help
             response = ewcfg.help_responses['casino']
         elif cmd.message.channel.name in ewcfg.channel_sewers:

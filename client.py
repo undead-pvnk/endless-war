@@ -45,7 +45,7 @@ import ew.utils.transport as transport_utils
 import ew.utils.weather as bknd_weather
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
-import ew.utils.rutils as relic_utils
+
 
 import ew.backend.core as bknd_core
 import ew.backend.farm as bknd_farm
@@ -66,9 +66,7 @@ import ew.static.cosmetics as cosmetics
 import ew.static.food as static_food
 import ew.static.items as static_items
 import ew.static.poi as poi_static
-import ew.static.vendors as vendors
-import ew.static.weather as weather_static
-import ew.static.rstatic as static_relic
+
 
 
 import ew.static.cfg as ewcfg

@@ -375,3 +375,68 @@ class EwSmeltingRecipe:
         self.alias = alias
         self.ingredients = ingredients
         self.products = products
+
+class EwRelic:
+    item_type = "relic"
+
+    #The proper name of the relic
+    id_relic = ""
+
+    #The string name of the relic
+    str_name = ""
+
+    #The text displayed when you look at it
+    str_desc = ""
+
+    #How rare the item is, either plebeian, patrician, or princeps
+    rarity = ""
+
+    #Cost in slime to buy
+    price = 0
+
+    #Vendors selling the item
+    vendors = []
+
+    # How you received this item
+    acquisition = ""
+
+    # The dialogue you get at the museum
+    str_museum = ""
+
+    # The dialogue when the relic is used
+    str_use = ""
+
+    #The amount the relic is appraised for
+    amount_yield = 0
+
+    #Whether the relic has an effect or not
+    has_effect = 0
+
+
+    def __init__(
+            self,
+            id_relic = "",
+            str_name = "",
+            str_desc = "",
+            rarity = "",
+            price = 0,
+            vendors = [],
+            acquisition = "",
+            str_museum = "",
+            str_use = "",
+            amount_yield = 0,
+            has_effect = False
+
+
+    ):
+        self.id_relic = id_relic
+        self.str_name = str_name
+        self.str_desc = str_desc
+        self.rarity = rarity
+        self.price = price
+        self.vendors = vendors
+        self.acquisition = acquisition
+        self.str_museum = str_museum
+        self.str_use = str_use
+        self.amount_yield = amount_yield
+        self.has_effect = has_effect

@@ -262,6 +262,7 @@ async def update_stocks(id_server = None):
                 s.timestamp = int(time.time())
                 market_response = await stock_market_tick(s, id_server)
                 resp_cont.add_channel_response(ewcfg.channel_stockexchange, market_response)
+                resp_cont.add_channel_response(ewcfg.channel_stockexchange_p, market_response)
         await resp_cont.post()
                 
 

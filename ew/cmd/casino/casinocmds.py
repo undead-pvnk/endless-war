@@ -161,7 +161,7 @@ async def pachinko(cmd):
 
     if last_used + 10 > time_now:
         response = "**ENOUGH**"
-    elif cmd.message.channel.name != ewcfg.channel_casino:
+    elif cmd.message.channel.name not in [ewcfg.channel_casino, ewcfg.channel_casino_p]:
         # Only allowed in the slime casino.
         response = "You must go to the Casino to gamble your {}.".format(currency_used)
     else:
@@ -291,7 +291,7 @@ async def craps(cmd):
         currency_used = ewcfg.currency_soul
     if last_used + 2 > time_now:
         response = "**ENOUGH**"
-    elif cmd.message.channel.name != ewcfg.channel_casino:
+    elif cmd.message.channel.name not in [ewcfg.channel_casino, ewcfg.channel_casino_p]:
         # Only allowed in the slime casino.
         response = "You must go to the Casino to gamble your {}.".format(currency_used)
     else:
@@ -438,7 +438,7 @@ async def slots(cmd):
     if last_used + 30 > time_now:
         # Rate limit slot machine action.
         response = "**ENOUGH**"
-    elif cmd.message.channel.name != ewcfg.channel_casino:
+    elif cmd.message.channel.name  not in [ewcfg.channel_casino, ewcfg.channel_casino_p]:
         # Only allowed in the slime casino.
         response = "You must go to the Casino to gamble your {}.".format(currency_used)
     else:
@@ -629,7 +629,7 @@ async def roulette(cmd):
 
     if last_used + 5 > time_now:
         response = "**ENOUGH**"
-    elif cmd.message.channel.name != ewcfg.channel_casino:
+    elif cmd.message.channel.name  not in [ewcfg.channel_casino, ewcfg.channel_casino_p]:
         # Only allowed in the slime casino.
         response = "You must go to the #{} to gamble your {}.".format(ewcfg.channel_casino, currency_used)
     else:
@@ -846,7 +846,7 @@ async def baccarat(cmd):
         currency_used = ewcfg.currency_soul
     if last_used + 2 > time_now:
         response = "**ENOUGH**"
-    elif cmd.message.channel.name != ewcfg.channel_casino:
+    elif cmd.message.channel.name not in [ewcfg.channel_casino, ewcfg.channel_casino_p]:
         # Only allowed in the slime casino.
         response = "You must go to the Casino to gamble your {}.".format(currency_used)
         await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
@@ -1502,7 +1502,7 @@ async def skat(cmd):
     except:
         multiplier = 1
 
-    if cmd.message.channel.name != ewcfg.channel_casino:
+    if cmd.message.channel.name  not in [ewcfg.channel_casino, ewcfg.channel_casino_p]:
         # Only at the casino
         response = "You can only play slime skat at the casino."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
