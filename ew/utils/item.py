@@ -15,7 +15,8 @@ from ..static import cfg as ewcfg
 from ..static import hue as hue_static
 from ..static import items as static_items
 from ..static import weapons as static_weapons
-
+from ..static import poi as static_poi
+from ..static.rstatic import relic_list
 
 """
     Drop some of a player's non-soulbound items into their district.
@@ -787,3 +788,66 @@ def cull_slime_sea(
                 for itemid in to_delete:
                     item_cache.entries.pop(itemid)
             return num
+
+def get_root_owner(id_item):
+    item = EwItem(id_item=id_item)
+    if 'collection' in item.id_owner:
+        root_item = EwItem(id_item=item.id_owner.replace('collection', ''))
+        return root_item.id_owner
+    elif 'stand' in item.id_owner:
+        data = bknd_core.execute_sql_query('SELECT id_item from items_prop where name = \'acquisition\' and value = %s', (item.id_item))
+        orig_item = int(data[0][0])
+        orig_obj = EwItem(id_item=orig_item)
+        return orig_obj.id_owner
+    else:
+        return item.id_owner
+
+async def move_relics(id_server):
+    relic_stash = bknd_item.inventory(
+            id_server=id_server,
+            item_type_filter=ewcfg.it_relic
+        )
+    #this code sucks but it only runs once a day so fuck it
+    owner_list = []
+
+
+
+    for relic in relic_stash:
+        relic_item = EwItem(id_item=relic.get('id_user'))
+        if relic_item.id_owner == 'slimesea':
+            relic_item.id_owner = random.choice(static_poi.capturable_districts)
+            relic_item.persist()
+            continue
+
+        owner_condensed = relic_item.id_owner.replace('decorate', '').replace('fridge', '').replace('closet', '').replace('bookshelf', '')
+        if 'collection' in owner_condensed or 'stand' in owner_condensed:
+            owner_condensed = get_root_owner(relic_item.id_item)
+
+        if not owner_condensed.isalpha():
+            owner_list.append(owner_condensed)
+    totals = len(relic_list)
+    mean_relics = max(set(owner_list), key=owner_list.count)
+    if owner_list.count(mean_relics) > min(totals * 0.5, 20):
+        iterator = int(owner_list.count(mean_relics) * .4)
+        for relic in relic_stash:
+            relic_item = EwItem(id_item=relic.get('id_user'))
+            if relic_item.id_owner == mean_relics:
+                relic_item.id_owner = random.choice(static_poi.capturable_districts)
+                relic_item.persist()
+                iterator -= 1
+                if iterator <= 0:
+                    break
+        client = ewcfg.get_client()
+        server = client.get_guild(id_server)
+        user = EwUser(id_server=id_server, id_user=mean_relics)
+        player = EwPlayer(id_user=user.id_user, id_server=id_server)
+        user_poi = static_poi.id_to_poi.get(user.poi)
+        channel = fe_utils.get_channel(server=server, channel_name=user_poi.channel)
+
+        return await fe_utils.send_message(client, channel, "Oh fuck! {} just got graverobbed! Relics have been scattered!".format(player.display_name))
+
+
+
+
+
+

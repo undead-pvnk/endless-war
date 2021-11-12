@@ -935,3 +935,4 @@ def total_size(o, verbose=False):
         return s
 
     return sizeof(o)
+
