@@ -1289,13 +1289,21 @@ async def store_item(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
+    multistow = 1
+    startparse = 1
+    if cmd.tokens[1].isnumeric():
+        startparse = 2
+        multistow = int(cmd.tokens[1])
+
+
+
     check_poi = poi_static.id_to_poi.get(usermodel.poi)
     if not (check_poi.is_apartment and (cmd.message.guild is None or check_poi.channel == cmd.message.channel.name)):
         return await apt_utils.lobbywarning(cmd)
 
     user_mutations = usermodel.get_mutations()
     apt_model = EwApartment(id_server=playermodel.id_server, id_user=cmd.message.author.id)
-    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[startparse:])
     item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
     if usermodel.visiting != ewcfg.location_id_empty:
@@ -1348,43 +1356,72 @@ async def store_item(cmd):
 
         items_stored = bknd_item.inventory(id_user=recipient + destination, id_server=playermodel.id_server)
 
-        if len(items_stored) >= storage_limit_base * 2 and destination == ewcfg.compartment_id_closet:
-            response = "The closet is bursting at the seams. Fearing the consequences of opening the door, you decide to hold on to the {}.".format(name_string)
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        poud_offset = 0
 
-        elif len(items_stored) >= storage_limit_base and destination == ewcfg.compartment_id_fridge:
-            response = "The fridge is so full it's half open, leaking 80's era CFCs into the flat. You decide to hold on to the {}.".format(name_string)
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        if destination == ewcfg.compartment_id_closet:
+            for item in items_stored:
+                if item.get('name') == "Slime Poudrin" and item.get('item_type') == ewcfg.it_item:
+                    poud_offset += 1 #poudrins don't count toward closet totals
+            if len(items_stored) - poud_offset >= storage_limit_base:
+                response = "The closet is bursting at the seams. Fearing the consequences of opening the door, you decide to hold on to the {}.".format(name_string)
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            elif storage_limit_base - len(items_stored) < multistow:
+                multistow = storage_limit_base - len(items_stored)
 
-        elif len(items_stored) >= int(storage_limit_base * 1.5) and destination == ewcfg.compartment_id_decorate:
-            response = "You have a lot of furniture here already. Hoarding is unladylike, so you decide to hold on to the {}.".format(name_string)
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        elif destination == ewcfg.compartment_id_fridge:
+            if len(items_stored) >= storage_limit_base:
+                response = "The fridge is so full it's half open, leaking 80's era CFCs into the flat. You decide to hold on to the {}.".format(name_string)
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            elif storage_limit_base - len(items_stored) < multistow:
+                multistow = storage_limit_base - len(items_stored)
 
-        elif len(items_stored) >= int(storage_limit_base * 3) and destination == ewcfg.compartment_id_bookshelf:
-            response = "Quite frankly, you doubt you wield the physical ability to cram another zine onto your bookshelf, so you decided to hold on to the {}.".format(name_string)
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        elif destination == ewcfg.compartment_id_decorate:
+            if len(items_stored) >= int(storage_limit_base * 1.5):
+                response = "You have a lot of furniture here already. Hoarding is unladylike, so you decide to hold on to the {}.".format(name_string)
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            elif storage_limit_base * 1.5 - len(items_stored) < multistow:
+                multistow = storage_limit_base * 1.5 - len(items_stored)
 
-        if item.item_type == ewcfg.it_food and destination == ewcfg.compartment_id_fridge:
-            item.item_props["time_fridged"] = time.time()
-            item.persist()
 
-        elif item.item_type == ewcfg.it_weapon:
-            if usermodel.weapon == item.id_item:
-                if usermodel.weaponmarried:
-                    response = "If only it were that easy. But you can't just shove your lover in a {}.".format(destination)
-                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-                usermodel.weapon = -1
-                usermodel.persist()
-            elif usermodel.sidearm == item.id_item:
-                usermodel.sidearm = -1
-                usermodel.persist()
+        elif destination == ewcfg.compartment_id_bookshelf:
+            if len(items_stored) >= int(storage_limit_base * 3):
+                response = "Quite frankly, you doubt you wield the physical ability to cram another zine onto your bookshelf, so you decided to hold on to the {}.".format(name_string)
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            elif storage_limit_base * 3 - len(items_stored) < multistow:
+                multistow = storage_limit_base * 3 - len(items_stored)
 
-        elif item.item_type == ewcfg.it_cosmetic:
-            item.item_props["adorned"] = 'false'
-            item.item_props["slimeoid"] = 'false'
-            item.persist()
 
-        bknd_item.give_item(id_item=item.id_item, id_server=playermodel.id_server, id_user=recipient + destination)
+
+        items_had = 0
+
+        while multistow > 0 and item_sought:
+            if item.item_type == ewcfg.it_food and destination == ewcfg.compartment_id_fridge:
+                item.item_props["time_fridged"] = time.time()
+                item.persist()
+
+            elif item.item_type == ewcfg.it_weapon:
+                if usermodel.weapon == item.id_item:
+                    if usermodel.weaponmarried:
+                        response = "If only it were that easy. But you can't just shove your lover in a {}.".format(destination)
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    usermodel.weapon = -1
+                    usermodel.persist()
+                elif usermodel.sidearm == item.id_item:
+                    usermodel.sidearm = -1
+                    usermodel.persist()
+
+            elif item.item_type == ewcfg.it_cosmetic:
+                item.item_props["adorned"] = 'false'
+                item.item_props["slimeoid"] = 'false'
+                item.persist()
+
+            items_had += 1
+            multistow -= 1
+            bknd_item.give_item(id_item=item.id_item, id_server=playermodel.id_server, id_user=recipient + destination)
+            item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
+        if items_had > 1:
+            name_string = "{}(x{})".format(name_string, items_had)
 
         if (destination == ewcfg.compartment_id_decorate):
             response = item.item_props['furniture_place_desc']
@@ -1431,7 +1468,15 @@ async def remove_item(cmd):
 
     else:
         recipient = str(cmd.message.author.id)
-    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+    multisnag = 1
+    startparse = 1
+
+    if cmd.tokens[1].isnumeric():
+        startparse = 2
+        multisnag = int(cmd.tokens[1])
+
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[startparse:])
 
     aptmodel = EwApartment(id_user=recipient, id_server=playermodel.id_server)
     key_1 = EwItem(id_item=aptmodel.key_1)
@@ -1441,97 +1486,121 @@ async def remove_item(cmd):
         response = "Burglary takes finesse. You are but a lowly gangster, who takes money the old fashioned way."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-    # if the command is "take", we need to determine where the item might be
-    if dest == "apartment":
-        item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_bookshelf, id_server=playermodel.id_server)
-        if not item_sought:
-            item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_fridge, id_server=playermodel.id_server)
+    items_snagged = 0
+    hatrack = False
+    while multisnag > 0:
+        item_sought = None
+        # if the command is "take", we need to determine where the item might be
+        if dest == "apartment":
+            item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_bookshelf, id_server=playermodel.id_server)
             if not item_sought:
-                item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_closet, id_server=playermodel.id_server)
+                item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_fridge, id_server=playermodel.id_server)
                 if not item_sought:
-                    item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_decorate, id_server=playermodel.id_server)
+                    item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_closet, id_server=playermodel.id_server)
+                    if not item_sought:
+                        item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_decorate, id_server=playermodel.id_server)
+                    else:
+                        destination = ewcfg.compartment_id_closet
                 else:
-                    destination = ewcfg.compartment_id_closet
+                    destination = ewcfg.compartment_id_fridge
             else:
-                destination = ewcfg.compartment_id_fridge
+                destination = ewcfg.compartment_id_bookshelf
+
+        elif dest == ewcfg.compartment_id_fridge:
+            item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_fridge, id_server=playermodel.id_server)
+
+        elif dest == ewcfg.compartment_id_closet:
+            item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_closet, id_server=playermodel.id_server)
+
+        elif dest == ewcfg.compartment_id_decorate:
+            item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_decorate, id_server=playermodel.id_server)
+            destination = "apartment"
+
+        elif dest == ewcfg.compartment_id_bookshelf:
+            item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_bookshelf, id_server=playermodel.id_server)
+
+        if not item_sought:
+            break
         else:
-            destination = ewcfg.compartment_id_bookshelf
+            name_string = item_sought.get('name')
+            item = EwItem(id_item=item_sought.get('id_item'))
+            item_search = item_sought.get('name')
 
-    elif dest == ewcfg.compartment_id_fridge:
-        item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_fridge, id_server=playermodel.id_server)
+            if items_snagged == 0: #handle item limits only on the first pass
+                if destination == "closet" and item_sought.get('item_type') == ewcfg.it_cosmetic:
+                    hatrack_obj = bknd_item.find_item(id_server=playermodel.id_server, id_user=str(playermodel.id_user) + "decorate", item_search="hatstand")
+                    map_obj = cosmetics.cosmetic_map.get(item.item_props.get('id_cosmetic'))
+                    if map_obj != None:
+                        if map_obj.is_hat == True and hatrack_obj:
+                            hatrack = True
 
-    elif dest == ewcfg.compartment_id_closet:
-        item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_closet, id_server=playermodel.id_server)
+                if item_sought.get('item_type') == ewcfg.it_food:
+                    food_items = bknd_item.inventory(
+                        id_user=cmd.message.author.id,
+                        id_server=playermodel.id_server,
+                        item_type_filter=ewcfg.it_food
+                    )
+                    if len(food_items) >= usermodel.get_food_capacity():
+                        del food_items
+                        response = "You can't carry any more food."
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    elif usermodel.get_food_capacity() - len(food_items) < multisnag:
+                        multisnag = usermodel.get_food_capacity() - len(food_items)
+                        del food_items
+                elif item_sought.get('item_type') == ewcfg.it_weapon:
+                    wep_items = bknd_item.inventory(
+                        id_user=cmd.message.author.id,
+                        id_server=playermodel.id_server,
+                        item_type_filter=ewcfg.it_weapon
+                    )
+                    if len(wep_items) >= usermodel.get_weapon_capacity():
+                        del wep_items
+                        response = "You can't carry any more weapons."
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    elif usermodel.get_weapon_capacity() - len(wep_items) < multisnag:
+                        multisnag = usermodel.get_weapon_capacity() - len(wep_items)
+                        del wep_items
 
-    elif dest == ewcfg.compartment_id_decorate:
-        item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_decorate, id_server=playermodel.id_server)
-        destination = "apartment"
+                else:
+                    other_items = bknd_item.inventory(
+                        id_user=cmd.message.author.id,
+                        id_server=playermodel.id_server,
+                        item_type_filter=item_sought.get('item_type')
+                    )
+                    if len(other_items) >= ewcfg.generic_inv_limit:
+                        del other_items
+                        response = ewcfg.str_generic_inv_limit.format(item_sought.get('item_type'))
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    elif ewcfg.generic_inv_limit - len(other_items) < multisnag:
+                        multisnag = ewcfg.generic_inv_limit - len(other_items)
+                        del other_items
 
-    elif dest == ewcfg.compartment_id_bookshelf:
-        item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_bookshelf, id_server=playermodel.id_server)
+            if item_sought.get('item_type') == ewcfg.it_food and destination == ewcfg.compartment_id_fridge:
+                # the formula is: expire time = expire time + current time - time frozen
+                if int(float(item.item_props.get('time_fridged'))) != 0:
+                    item.item_props['time_expir'] = str(int(float(item.item_props.get('time_expir'))) + (int(time.time()) - int(float(item.item_props.get('time_fridged')))))
+                else:
+                    item.item_props['time_expir'] = str(int(float(item.item_props.get('time_fridged'))) + 43200)
+                item.time_expir = int(float(item.item_props.get('time_expir')))
+                item.item_props['time_fridged'] = '0'
+                item.persist()
+            items_snagged += 1
+            multisnag -= 1
+            bknd_item.give_item(id_item=item.id_item, id_server=playermodel.id_server, id_user=cmd.message.author.id)
 
-    if item_sought:
-        name_string = item_sought.get('name')
-        item = EwItem(id_item=item_sought.get('id_item'))
-
-        if item_sought.get('item_type') == ewcfg.it_food:
-            food_items = bknd_item.inventory(
-                id_user=cmd.message.author.id,
-                id_server=playermodel.id_server,
-                item_type_filter=ewcfg.it_food
-            )
-            if len(food_items) >= usermodel.get_food_capacity():
-                del food_items
-                response = "You can't carry any more food."
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        elif item_sought.get('item_type') == ewcfg.it_weapon:
-            wep_items = bknd_item.inventory(
-                id_user=cmd.message.author.id,
-                id_server=playermodel.id_server,
-                item_type_filter=ewcfg.it_weapon
-            )
-            if len(wep_items) >= usermodel.get_weapon_capacity():
-                del wep_items
-                response = "You can't carry any more weapons."
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-        else:
-            other_items = bknd_item.inventory(
-                id_user=cmd.message.author.id,
-                id_server=playermodel.id_server,
-                item_type_filter=item_sought.get('item_type')
-            )
-            if len(other_items) >= ewcfg.generic_inv_limit:
-                del other_items
-                response = ewcfg.str_generic_inv_limit.format(item_sought.get('item_type'))
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-        if item_sought.get('item_type') == ewcfg.it_food and destination == ewcfg.compartment_id_fridge:
-            # the formula is: expire time = expire time + current time - time frozen
-            if int(float(item.item_props.get('time_fridged'))) != 0:
-                item.item_props['time_expir'] = str(int(float(item.item_props.get('time_expir'))) + (int(time.time()) - int(float(item.item_props.get('time_fridged')))))
-            else:
-                item.item_props['time_expir'] = str(int(float(item.item_props.get('time_fridged'))) + 43200)
-            item.time_expir = int(float(item.item_props.get('time_expir')))
-            item.item_props['time_fridged'] = '0'
-            item.persist()
-
-        bknd_item.give_item(id_item=item.id_item, id_server=playermodel.id_server, id_user=cmd.message.author.id)
-
-        response = "You take the {} from the {}.".format(name_string, destination)
-
-        hatrack = bknd_item.find_item(id_server=playermodel.id_server, id_user=str(playermodel.id_user) + "decorate", item_search="hatstand")
-        if destination == "closet" and item_sought.get('item_type') == ewcfg.it_cosmetic:
-            map_obj = cosmetics.cosmetic_map.get(item.item_props.get('id_cosmetic'))
-            if map_obj != None:
-                if map_obj.is_hat == True and hatrack:
-                    response = "You take the {} off the rack.".format(name_string)
-
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-    else:
+    if items_snagged > 1:
+        name_string = "{}(x{})".format(name_string, items_snagged)
+    elif items_snagged <= 0:
         response = "Are you sure you have that item?"
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    response = "You take the {} from the {}.".format(name_string, destination)
+    if hatrack:
+        response = "You take the {} off the rack.".format(name_string)
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
 
 
 async def watch(cmd):
