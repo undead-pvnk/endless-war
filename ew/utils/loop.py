@@ -222,27 +222,6 @@ async def decaySlimes(id_server = None):
             cursor.close()
             bknd_core.databaseClose(conn_info)
 
-async def release_timed_prisoners_and_blockparties(id_server, day):
-    if id_server != None:
-        users = bknd_core.execute_sql_query("SELECT id_user FROM users WHERE {arrests} <= %s and {arrests} > 0".format(arrests = ewcfg.col_arrested), (day))
-
-        for user in users:
-            user_data = EwUser(id_server=id_server, id_user=user)
-            user_data.arrested = 0
-            user_data.poi = ewcfg.poi_id_juviesrow
-            user_data.persist()
-
-        blockparty = EwGamestate(id_server=id_server, id_state='blockparty')
-        pre_name = blockparty.value.replace(ewcfg.poi_id_711, '')
-        time_str = ''.join([i for i in pre_name if i.isdigit()])
-        time_int = int(time_str)
-        time_now = int(time.time())
-        if time_now > time_int:
-            blockparty.bit = 0
-            blockparty.value = ''
-            blockparty.persist()
-
-
 
 
 
@@ -900,6 +879,27 @@ async def enemy_action_tick_loop(id_server):
             await cmbt_utils.enemy_perform_action(id_server)
 
 
+async def release_timed_prisoners_and_blockparties(id_server, day):
+    if id_server != None:
+        users = bknd_core.execute_sql_query("SELECT id_user FROM users WHERE {arrests} <= %s and {arrests} > 0".format(arrests = ewcfg.col_arrested), (day,))
+
+        for user in users:
+            user_data = EwUser(id_server=id_server, id_user=user)
+            user_data.arrested = 0
+            user_data.poi = ewcfg.poi_id_juviesrow
+            user_data.persist()
+
+        blockparty = EwGamestate(id_server=id_server, id_state='blockparty')
+        pre_name = blockparty.value.replace(ewcfg.poi_id_711, '')
+        time_str = ''.join([i for i in pre_name if i.isdigit()])
+        if time_str != '':
+            time_int = int(time_str)
+            time_now = int(time.time())
+            if time_now > time_int:
+                blockparty.bit = 0
+                blockparty.value = ''
+                blockparty.persist()
+
 async def gvs_gamestate_tick_loop(id_server):
     interval = ewcfg.gvs_gamestate_tick_length
     # Causes various events to occur during a Garden or Graveyard ops in Gankers Vs. Shamblers
@@ -1385,7 +1385,7 @@ async def clock_tick_loop(id_server = None, force_active = False):
                         await leaderboard_utils.post_leaderboards(client=client, server=server)
 
                         ewutils.logMsg("Releasing timed prisoners...")
-                        await release_timed_prisoners(id_server=id_server, day=market_data.day)
+                        await release_timed_prisoners_and_blockparties(id_server=id_server, day=market_data.day)
                         ewutils.logMsg("Released timed prisoners.")
 
 
@@ -1407,3 +1407,7 @@ async def clock_tick_loop(id_server = None, force_active = False):
                 await asyncio.sleep(60)
     except:
         ewutils.logMsg('An error occurred in the scheduled slime market update task. Fix that.')
+
+
+
+

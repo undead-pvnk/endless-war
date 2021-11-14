@@ -112,5 +112,6 @@ apt_dm_cmd_map = {
     ewcfg.cmd_releaseprop: itemcmds.releaseprop,
     ewcfg.cmd_aquarium: itemcmds.aquarium,
     ewcfg.cmd_releasefish: itemcmds.releasefish,
+    ewcfg.cmd_collect:itemcmds.collect,
 
 }

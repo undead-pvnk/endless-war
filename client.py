@@ -523,9 +523,12 @@ async def on_message_delete(message):
 async def debugHandling(message, cmd, cmd_obj):
     # Test item creation
     time_now = int(time.time())
+    market = EwMarket(id_server=cmd_obj.guild.id)
     if cmd == (ewcfg.cmd_prefix + 'enemytick'):
         await loop_utils.spawn_enemies(id_server=message.guild.id, debug=True)
 
+    elif cmd == (ewcfg.cmd_prefix + 'releaseprisoners'):
+        await loop_utils.release_timed_prisoners_and_blockparties(market.id_server, market.day)
     elif cmd == (ewcfg.cmd_prefix + 'createtestitem'):
         item_id = bknd_item.item_create(
             item_type='medal',

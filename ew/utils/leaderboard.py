@@ -68,13 +68,10 @@ async def post_leaderboards(client = None, server = None):
         topkpdonated = make_statdata_board(server=server.id, category=ewcfg.stat_lifetime_kingpin_slimes, title=ewcfg.leaderboard_kingpindonated)
         resp_cont.add_channel_response(leaderboard_channel, topkpdonated)
 
-        # topfestivity = make_slimernalia_board(server = serve.id, title = ewcfg.leaderboard_slimernalia)
-        # resp_cont.add_channel_response(leaderboard_channel, topfestivity)
-
-        # topdonated = make_userdata_board(server=server.id, category=ewcfg.col_splattered_slimes, title=ewcfg.leaderboard_donated)
-        # resp_cont.add_channel_response(leaderboard_channel, topdonated)
-
-    if ewcfg.dh_stage == 2 and ewcfg.dh_active:
+    if ewcfg.slimernalia_active:
+        topfestivity = make_slimernalia_board(server = server.id, title = ewcfg.leaderboard_slimernalia)
+        resp_cont.add_channel_response(leaderboard_channel, topfestivity)
+    elif ewcfg.dh_stage == 2 and ewcfg.dh_active:
         topfavor = make_statdata_board(server=server.id, category='sacrificerate', title =ewcfg.leaderboard_sacrificial)
         resp_cont.add_channel_response(leaderboard_channel, topfavor)
 
@@ -250,43 +247,7 @@ def make_slimeoids_top_board(server = None):
 
     return board
 
-"""
-def make_sacrificed_top_board(server = None):
-    board = "🗡 ▓▓▓▓▓ SACRIFICIAL LAMBS ▓▓▓▓▓ 🗡"
 
-
-    try:
-        conn_info = bknd_core.databaseConnect()
-        conn = conn_info.get('conn')
-        cursor = conn.cursor()
-
-        cursor.execute((
-            "SELECT p.display_name, s.stat_value, u.faction"
-        "FROM stats as s"
-        "INNER JOIN players p ON p.id_user = s.id_user"
-        "inner join users u on u.id_user = s.id_user"
-        "WHERE s.id_server = 604390365230792716 AND stat_metric = 'sacrificerate'"
-        "ORDER BY s.stat_value DESC LIMIT 5"
-        ), (
-            server,
-        ))
-
-        data = cursor.fetchall()
-        if data != None:
-            for row in data:
-                board += "\n{} `{:_>3} | {} by {}`".format(
-                    ewcfg.emote_blank,
-                    row[2],
-                    row[0].replace("`", ""),
-                    row[1].replace("`", "")
-                )
-    finally:
-        # Clean up the database handles.
-        cursor.close()
-        bknd_core.databaseClose(conn_info)
-
-    return board
-"""
 
 def make_zines_top_board(server = None):
     board = "{zine} ▓▓▓▓▓ BESTSELLING ZINES ▓▓▓▓▓ {zine}".format(
@@ -463,7 +424,7 @@ def make_relics_found_board(id_server, title):
     relic_count_donated = int(relic_count_state.value)
 
 
-    allrelics = ['TOTAL', existing_relics]
+    allrelics = ['TOTAL', existing_relics - 1]
     donatedrelics = ['DONATED', relic_count_donated]
 
     return format_board(

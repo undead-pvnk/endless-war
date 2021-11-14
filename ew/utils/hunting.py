@@ -208,11 +208,7 @@ def spawn_enemy(
 
         if enemytype not in ewcfg.raid_bosses:
 
-            if enemytype in ewcfg.gvs_enemies_gaiaslimeoids:
-                response = "**A {} has been planted in {}!!**".format(enemy.display_name, enemy.gvs_coord)
-            elif enemytype in ewcfg.gvs_enemies_shamblers:
-                response = "**A {} creeps forward!!** It spawned in {}!".format(enemy.display_name, enemy.gvs_coord)
-            elif enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman:
+            if enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman:
                 response = "***BEHOLD!!!***  The {} has arrived to challenge thee! He is of {} slime, and {} in level. Happy Double Halloween, you knuckleheads!".format(
                     enemy.display_name, enemy.slimes, enemy.level)
 
@@ -255,7 +251,7 @@ def get_enemy_data(enemy_type, arctic = 0):
     enemy = EwEnemy()
 
     rare_status = 0
-    if random.randrange(5) == 0 and enemy_type not in ewcfg.overkill_enemies and enemy_type not in ewcfg.gvs_enemies:
+    if random.randrange(5) == 0 and enemy_type not in ewcfg.overkill_enemies:
         rare_status = 1
 
     enemy.id_server = -1

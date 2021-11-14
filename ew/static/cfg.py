@@ -1208,6 +1208,7 @@ cmd_object_alt1 = cmd_prefix + 'protest'
 cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_scavenge_alt1 = cmd_prefix + 'lookbetweenthecushions'
 cmd_scavenge_alt2 = cmd_prefix + 'dumpsterdive'
+cmd_scrub = cmd_prefix + 'scrub'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
 cmd_spray = cmd_prefix + 'annex'
@@ -1323,6 +1324,7 @@ cmd_pot = cmd_prefix + 'pot'
 cmd_propstand = cmd_prefix + 'propstand'
 cmd_releaseprop = cmd_prefix + 'unstand'
 cmd_releasefish = cmd_prefix + 'releasefish'
+cmd_collect = cmd_prefix + 'collect'
 cmd_unpot = cmd_prefix + 'unpot'
 cmd_wash = cmd_prefix + 'wash'
 cmd_browse = cmd_prefix + 'browse'
@@ -1573,7 +1575,9 @@ offline_cmds = [
     # cmd_scrutinize
 ]
 
-client_debug_commands =['!enemytick',
+client_debug_commands =[
+ '!enemytick',
+ '!releaseprisoners',
  '!createtestitem',
  '!createpoudrin',
  '!damage',

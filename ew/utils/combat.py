@@ -2116,20 +2116,12 @@ def check_raidboss_movecooldown(enemy_data):
     time_now = int(time.time())
 
     if enemy_data.enemytype in ewcfg.raid_bosses:
-        if enemy_data.enemytype in ewcfg.gvs_enemies:
-            if enemy_data.time_lastenter <= time_now - 600:
-                # Raid boss can move
-                return True
-            elif enemy_data.time_lastenter > time_now - 600:
-                # Raid boss can't move yet
-                return False
-        else:
-            if enemy_data.time_lastenter <= time_now - ewcfg.time_raidboss_movecooldown:
-                # Raid boss can move
-                return True
-            elif enemy_data.time_lastenter > time_now - ewcfg.time_raidboss_movecooldown:
-                # Raid boss can't move yet
-                return False
+        if enemy_data.time_lastenter <= time_now - ewcfg.time_raidboss_movecooldown:
+            # Raid boss can move
+            return True
+        elif enemy_data.time_lastenter > time_now - ewcfg.time_raidboss_movecooldown:
+            # Raid boss can't move yet
+            return False
 
 
 # Selects which non-ghost user to attack based on certain parameters.

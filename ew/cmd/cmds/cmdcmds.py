@@ -20,6 +20,7 @@ from ew.static import mutations as static_mutations
 from ew.static import poi as poi_static
 from ew.static import status as se_static
 from ew.static import vendors
+from ew.backend.player import EwPlayer
 from ew.static import weapons as static_weapons
 from ew.utils import cmd as cmd_utils
 from ew.utils import combat as cmbt_utils
@@ -2490,7 +2491,7 @@ async def arrest(cmd):
     if cmd.mentions_count == 1:
         member = cmd.mentions[0]
         if 0 < ewrolemgr.checkClearance(member=member) < 4:
-            response = "I'm sorry, {}. I can't let you do that.".format(member.display_name)
+            response = "I'm sorry, {}. I can't let you do that.".format(cmd.message.author)
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         if cmd.tokens_count == 3 and cmd.tokens[2].isnumeric():
@@ -2539,56 +2540,112 @@ async def release(cmd):
 async def dual_key_ban(cmd):
     if not 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
         return await cmd_utils.fake_failed_command(cmd)
+    final_ban_text = ""
+
+    player = None
+    if cmd.tokens_count == 2:
+        if '<@!' in cmd.tokens[1]:
+            userid = cmd.tokens[1][3:-1]
+            player = EwPlayer(id_user=int(userid))
 
     if cmd.mentions_count == 1:
         member = cmd.mentions[0]
         if 0 < ewrolemgr.checkClearance(member=member) < 4:
-            response = "I'm sorry, {}. I can't let you do that.".format(member.display_name)
+            response = "I'm sorry, {}. I can't let you do that.".format(cmd.message.author.display_name)
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        target_data = EwUser(member=member)
 
+    if player is not None:
+        target_data = EwUser(id_user=player.id_user, id_server=player.id_server)
+
+        bannedalready = False
         for ban in target_data.get_bans():
             if 'dualkey' in ban:
-                trimmed = ban[7:]
-                if int(trimmed) == cmd.message.author.id:
-                    response = "You already banned them."
-                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                if int(ban[7:]) == cmd.message.author.id:
+                    bannedalready =True
                 else:
-                    target_data.ban(faction="dualkey{}").format(cmd.message.author.id)
-                    response = "You banish {} into the torturous depths of somewhere else. They're in a better place now. What a shame.".format(member.display_name)
-                    member.ban(reason="Dual key banned.")
+                    yourban = "dualkey{}".format(cmd.message.author.id)
+                    if yourban not in target_data.get_bans():
+                        target_data.ban(faction="dualkey{}".format(cmd.message.author.id))
+                    response = "You banish {} into the torturous depths of somewhere else. They're in a better place now. What a shame.".format(player.display_name)
+                    final_ban_text = "{} is now banned.".format(player.display_name)
+                    try:
+                        await member.ban(reason="Dual key banned.")
+                    except:
+                        response = "Ban failed. Were they out of the server? Either way, your key's in."
+                        leak_channel = fe_utils.get_channel(server=cmd.guild, channel_name='squickyleaks')
+                        await fe_utils.send_message(cmd.client, leak_channel, "{} has turned their key to ban {}, but they left the server already.".format(cmd.message.author.display_name, player.display_name, final_ban_text))
+
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+                    leak_channel = fe_utils.get_channel(server=cmd.guild, channel_name='squickyleaks')
+                    await fe_utils.send_message(cmd.client, leak_channel, "{} has turned their key to ban {}. They are now banned.".format(cmd.message.author.display_name, member.display_name, final_ban_text))
+
                     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        target_data.ban(faction="dualkey{}").format(cmd.message.author.id)
-        response = "You turn your key. {} is just one step away from banishment..."
+        if bannedalready:
+            response = "You already banned them, but nobody else has."
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+        target_data.ban(faction="dualkey{}".format(cmd.message.author.id))
+
+        leak_channel = fe_utils.get_channel(server=cmd.guild, channel_name='squickyleaks')
+        await fe_utils.send_message(cmd.client, leak_channel, "{} has turned their key to ban {}.".format(cmd.message.author.display_name, player.display_name, final_ban_text))
+
+        response = "You turn your key. {} is just one step away from banishment...".format(player.display_name)
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    else:
+        response = "Either your syntax is wrong or they're out of the server. It's !dualkeyban @player."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def dual_key_release(cmd):
     if not 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
         return await cmd_utils.fake_failed_command(cmd)
     response = ""
-    if cmd.mentions_count == 1:
-        member = cmd.mentions[0]
-        target_data = EwUser(member=member)
+    final_unban_text = ""
+    print(cmd.tokens)
+    player = None
+    if cmd.tokens_count == 2:
+        if '<@!' in cmd.tokens[1]:
+            userid = cmd.tokens[1][3:-1]
+            player = EwPlayer(id_user=int(userid))
+
+
+    if player is not None:
+        target_data = EwUser(id_user=int(player.id_user), id_server = cmd.guild.id)
 
         bans = target_data.get_bans()
         key = 'dualkey{}'.format(cmd.message.author.id)
-        response = "You never banned then to begin with."
+        response = "You never banned them to begin with. "
+        print("{} - Key".format(key))
 
         if key in bans:
+            print('taken')
             target_data.unban(faction=key)
-            response = "You take your ban key out of the slot."
+            response = "You take your ban key out of the slot. "
             bans.remove(key)
 
         ban_count = 0
         for ban in bans:
             if 'dualkey' in ban:
                 ban_count += 1
+        print('madestart{}'.format(target_data.id_user))
+        if ban_count < 2:
 
-        if ban_count == 1:
-            member.unban()
-            response += "{} is unbanned!".format(member.display_name)
+            banned_users = await cmd.guild.bans()
+            for ban in banned_users:
+                print(ban.user.id)
+                if ban.user.id == player.id_user:
+                    await cmd.guild.unban(ban.user)
+                    final_unban_text = "{} is unbanned!".format(player.display_name)
+            response += final_unban_text
+
+        if "You never banned them to begin with." not in response:
+            leak_channel = fe_utils.get_channel(server=cmd.guild, channel_name='squickyleaks')
+            await fe_utils.send_message(cmd.client, leak_channel, "{} has undone their key to ban {}.{}".format(cmd.message.author.display_name, player.display_name, final_unban_text))
 
         return await fe_utils.send_message(cmd.client, cmd.message.channel,fe_utils.formatMessage(cmd.message.author, response))
+    else:
+        response = "They haven't been in the server before or your syntax is wrong. It's !dualkeyrelease <@player>."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 

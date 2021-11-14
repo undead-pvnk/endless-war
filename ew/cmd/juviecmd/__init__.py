@@ -21,6 +21,7 @@ cmd_map = {
     ewcfg.cmd_scavenge: juviecmds.scavenge,
     ewcfg.cmd_scavenge_alt1: juviecmds.scavenge,
     ewcfg.cmd_scavenge_alt2: juviecmds.scavenge,
+    ewcfg.cmd_scrub: juviecmds.scrub,
 
     # gender??? OMG???
     ewcfg.cmd_identify: juviecmds.identify,

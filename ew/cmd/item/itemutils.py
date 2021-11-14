@@ -113,9 +113,12 @@ def get_soul_collection(id_item, id_server):
     for soul in soul_inv:
         soul_item = EwItem(id_item=soul.get('id_item'))
         soul_user = EwUser(id_server=id_server, id_user=soul_item.item_props.get('user_id'))
+        if soul_user.race is None or soul_user.race == '':
+            soul_user.race = ewcfg.race_humanoid #do not persist this!
+
         soul_text = ewcfg.defined_races.get(soul_user.race).get('soul_behavior')
         soul_name = soul_item.item_props.get('cosmetic_name')
-        response += "{} {} ".format(soul_name, soul_text)
+        response += "{} {}\n".format(soul_name, soul_text)
 
     return response
 

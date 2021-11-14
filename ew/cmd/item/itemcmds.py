@@ -682,19 +682,27 @@ async def item_look(cmd):
                     response += " It's been dyed in {} paint.".format(hue.str_name)
 
             if item.item_type == ewcfg.it_furniture:
+                furnlist = static_items.furniture_map
+                furn_obj = furnlist.get(item.item_props.get('id_furniture'))
                 hue = hue_static.hue_map.get(item.item_props.get('hue'))
                 if hue != None:
                     response += " It's been dyed in {} paint.".format(hue.str_name)
 
-                if item.item_props.get('furn_set') == 'collection':
+                if furn_obj.furn_set == 'collection':
+
+                    print('cool no boi!')
                     if 'plainlook' in cmd.tokens[0]:
                         response = response.replace(dict.fromkeys(['{weapon_chest}', '{scalp_inspect}', '{aquarium_inspect}', '{soul_cylinder}'], '{general_collection}'))
-                    response = response.format(
-                        scalp_inspect=itm_u.get_scalp_collection(id_item=item.id_item, id_server=item.id_server),
-                        aquarium_inspect=itm_u.get_fish_collection(id_item=item.id_item, id_server=item.id_server),
-                        soul_cylinder=itm_u.get_soul_collection(id_item=item.id_item, id_server=item.id_server),
-                        weapon_chest = itm_u.get_weapon_collection(id_item=item.id_item, id_server=item.id_server),
-                        general_collection = itm_u.get_general_collection(id_item=item.id_item, id_server=item.id_server))
+                    if 'scalp_inspect' in response:
+                        response = response.format(scalp_inspect=itm_u.get_scalp_collection(id_item=item.id_item, id_server=item.id_server))
+                    if 'aquarium_inspect' in response:
+                        response = response.format(aquarium_inspect=itm_u.get_fish_collection(id_item=item.id_item, id_server=item.id_server))
+                    if 'soul_cylinder' in response:
+                        response = response.format(soul_cylinder=itm_u.get_soul_collection(id_item=item.id_item, id_server=item.id_server))
+                    if 'weapon_chest' in response:
+                        response = response.format(weapon_chest = itm_u.get_weapon_collection(id_item=item.id_item, id_server=item.id_server))
+                    if 'general_collection' in response:
+                        response = response.format(general_collection = itm_u.get_general_collection(id_item=item.id_item, id_server=item.id_server))
 
             durability = item.item_props.get('durability')
             if durability != None and item.item_type == ewcfg.it_item:
@@ -1961,14 +1969,16 @@ async def collect(cmd):
     elif not collection_seek:
         response = "You must specify a collection item."
     else:
+        furn_list = static_items.furniture_map
         item = EwItem(id_item=item_sought_item.get('id_item'))
         collection = EwItem(id_item=item_sought_col.get('id_item'))
         collectiontype = collection.item_props.get('id_furniture')
+        collect_map = furn_list.get(collectiontype)
 
         collection_inventory = bknd_item.inventory(id_user='{}collection'.format(item_sought_col.get('id_item')), id_server=cmd.guild.id)
 
-        if collection.item_props.get('furn_set') != 'collection':
-            response = "You can't just shove anything into anything. A {} isn't gonna fit in a {}.".format(item.item_props.get('str_name'), collection.item_props.get('str_name'))
+        if collect_map is None or collect_map.furn_set != 'collection':
+            response = "You can't just shove anything into anything. A {} isn't gonna fit in a {}.".format(item_sought_item.get('name'), item_sought_col.get('name'))
         elif (collectiontype == 'weaponchest' and item.item_type != ewcfg.it_weapon) or (collectiontype == 'soulcylinder' and item.item_props.get('id_cosmetic') != 'soul') or (collectiontype == 'scalpcollection' and item.item_props.get('id_cosmetic') != 'scalp') or (collectiontype == 'largeaquarium' and item.item_props.get('acquisition') != ewcfg.acquisition_fishing):
             response = "You've got the wrong item type. It's a {}, try and guess what it's for.".format(collection.item_props.get('str_name'))
         elif len(collection_inventory) >= 50 or (len(collection_inventory) >= 10 and collectiontype=='generalcollection'):
@@ -1977,10 +1987,10 @@ async def collect(cmd):
             response = "If you try to collect a soulbound item you'll basically be collecting yourself. You decide not to trap yourself in the {}.".format(item.item_props.get('str_name'))
         else:
 
-            response = "You drop the {} into the {}.".format(item.item_props.get('str_name'), collection.item_props.get('str_name'))
-            item.id_owner = "{}collection"
+            response = "You drop the {} into the {}.".format(item_sought_item.get('name'), item_sought_col.get('name'))
+            item.id_owner = "{}collection".format(collection.id_item)
             item.persist()
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def remove_from_collection(cmd):
     user_data = EwUser(member=cmd.message.author)

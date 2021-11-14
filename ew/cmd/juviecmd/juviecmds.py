@@ -890,9 +890,12 @@ async def scrub(cmd):
     elif district.all_neighbors_friendly():
         response = "You're too deep into enemy territory. Scrub here and you might wet yourself."
     else:
-        district.change_capture_points(progress=-1, actor=ewcfg.actor_decay)
+        if random.randint(0, 2) == 0:
+            print('yes')
+            district.change_capture_points(progress=-1, actor=ewcfg.actor_decay)
+            district.persist()
         if user_data.crime >= 1:
-            user_data.crime -= 1
+            user_data.change_crime(n = -1)
             user_data.persist()
         response = "-"
 
