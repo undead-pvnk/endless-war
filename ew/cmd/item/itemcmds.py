@@ -688,20 +688,20 @@ async def item_look(cmd):
                 if hue != None:
                     response += " It's been dyed in {} paint.".format(hue.str_name)
 
-                if furn_obj.furn_set == 'collection':
+                if furn_obj is not None and furn_obj.furn_set == 'collection':
 
                     print('cool no boi!')
-                    if 'plainlook' in cmd.tokens[0]:
-                        response = response.replace(dict.fromkeys(['{weapon_chest}', '{scalp_inspect}', '{aquarium_inspect}', '{soul_cylinder}'], '{general_collection}'))
+                    if 'contents' in cmd.tokens[0]:
+                        response = response.format(scalp_inspect = '{general_collection}', aquarium_inspect = '{general_collection}', soul_cylinder = '{general_collection}', weapon_chest = '{general_collection}')
                     if 'scalp_inspect' in response:
                         response = response.format(scalp_inspect=itm_u.get_scalp_collection(id_item=item.id_item, id_server=item.id_server))
-                    if 'aquarium_inspect' in response:
+                    elif 'aquarium_inspect' in response:
                         response = response.format(aquarium_inspect=itm_u.get_fish_collection(id_item=item.id_item, id_server=item.id_server))
-                    if 'soul_cylinder' in response:
+                    elif 'soul_cylinder' in response:
                         response = response.format(soul_cylinder=itm_u.get_soul_collection(id_item=item.id_item, id_server=item.id_server))
-                    if 'weapon_chest' in response:
+                    elif 'weapon_chest' in response:
                         response = response.format(weapon_chest = itm_u.get_weapon_collection(id_item=item.id_item, id_server=item.id_server))
-                    if 'general_collection' in response:
+                    elif 'general_collection' in response:
                         response = response.format(general_collection = itm_u.get_general_collection(id_item=item.id_item, id_server=item.id_server))
 
             durability = item.item_props.get('durability')
@@ -1936,7 +1936,7 @@ async def manual_transfer(cmd):
         target = EwUser(member=cmd.mentions[0])
         destination = str(target.id_user)
     item_sought = EwItem(id_item=item_id)
-    print(item_sought.item_props)
+
     if item_sought:
         item_sought.id_owner = destination
         response = "OK, item moved."
@@ -1980,7 +1980,7 @@ async def collect(cmd):
         if collect_map is None or collect_map.furn_set != 'collection':
             response = "You can't just shove anything into anything. A {} isn't gonna fit in a {}.".format(item_sought_item.get('name'), item_sought_col.get('name'))
         elif (collectiontype == 'weaponchest' and item.item_type != ewcfg.it_weapon) or (collectiontype == 'soulcylinder' and item.item_props.get('id_cosmetic') != 'soul') or (collectiontype == 'scalpcollection' and item.item_props.get('id_cosmetic') != 'scalp') or (collectiontype == 'largeaquarium' and item.item_props.get('acquisition') != ewcfg.acquisition_fishing):
-            response = "You've got the wrong item type. It's a {}, try and guess what it's for.".format(collection.item_props.get('str_name'))
+            response = "You've got the wrong item type. It's a {}, try and guess what it's for.".format(item_sought_col.get('name'))
         elif len(collection_inventory) >= 50 or (len(collection_inventory) >= 10 and collectiontype=='generalcollection'):
             response= "You collection's full. You really stuffed that sucker, goddamn."
         elif item.soulbound:
@@ -1988,8 +1988,7 @@ async def collect(cmd):
         else:
 
             response = "You drop the {} into the {}.".format(item_sought_item.get('name'), item_sought_col.get('name'))
-            item.id_owner = "{}collection".format(collection.id_item)
-            item.persist()
+            bknd_item.give_item(id_user="{}collection".format(collection.id_item), id_server=item.id_server, id_item=item.id_item)
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def remove_from_collection(cmd):
@@ -1997,7 +1996,7 @@ async def remove_from_collection(cmd):
     poi = poi_static.id_to_poi.get(user_data.poi)
     price = 100000
 
-    if user_data.poi == ewcfg.poi_id_bazaar:
+    if user_data.poi != ewcfg.poi_id_bazaar:
         response = "You don't actually know how to get stuff out of this. Better find a specialist in the Bazaar."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     elif cmd.tokens_count != 3:
@@ -2006,34 +2005,33 @@ async def remove_from_collection(cmd):
 
     collection_seek = ewutils.flattenTokenListToString(cmd.tokens[1])
     item_sought_col = bknd_item.find_item(item_search=collection_seek, id_user=user_data.id_user, id_server=user_data.id_server)
-    item_seek = cmd.tokens[2]
-    item_sought_item = bknd_item.find_item(item_search=item_seek, id_user=user_data.id_user, id_server=user_data.id_server)
-
     if not item_sought_col:
         response = "That's not a real collection. Remember, it's !extract \"collection\" \"item\"."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    elif not item_sought_item:
+
+    item_seek = cmd.tokens[2]
+    item_sought_item = bknd_item.find_item(item_search=item_seek, id_user='{}collection'.format(item_sought_col.get('id_item')), id_server=user_data.id_server)
+
+    if not item_sought_item:
         response = "Wait, that's not in this collection. That's not even a real thing."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+    furnlist = static_items.furniture_map
     collection = EwItem(id_item=item_sought_col.get('id_item'))
     item = EwItem(id_item=item_sought_item.get('id_item'))
+    collection_list = furnlist.get(collection.item_props.get('id_furniture'))
 
 
-
-    if collection.item_props.get('furn_set') != 'collection':
+    if collection_list is None or collection_list.furn_set != 'collection':
         response = "Trying to pull shit out of random objects? Yeah, I did meth once too."
-    elif 'collection' == item.id_owner[-10:]:
+    elif 'collection' != item.id_owner[-10:]:
         response = "That's not in your collection. Can't remove what isn't there."
-    elif user_data.poi != ewcfg.poi_id_bazaar:
-        response = "These things are lodged in here tight. You'll need to find a specialist at the Bazaar to get them taken out."
     elif user_data.slimes < 100000:
         response = "These fucking prices... The removal fee is {price} slime.".format(price = price)
     else:
-        item.id_owner = user_data.id_user
-        item.persist()
+        bknd_item.give_item(id_user=user_data.id_user, id_server=int(item.id_server), id_item=item_sought_item.get('id_item'))
         user_data.change_slimes(n=-price, source=ewcfg.source_spending)
         user_data.persist()
-        response = "You somehow find a specialist in the smoky kiosks that can get your precious belongings out of the {} you forced them into. You hand over 100,000 slime, and he walks into the tent behind his stall. \n\nBefore you can figure you what it is he's doing, {}. Eventually, you find your way back to the stall. The specialist hands you the item and collection, fully separated. Maybe someday you'll figure out how to do it...".format(collection.item_props.get('str_name'), random.choice(ewcfg.bazaar_distractions))
+        response = "You somehow find a specialist in the smoky kiosks that can get your precious belongings out of the {} you forced them into. You hand over 100,000 slime, and he walks into the tent behind his stall. \n\nBefore you can figure you what it is he's doing, {}. Eventually, you find your way back to the stall. The specialist hands you the item and collection, fully separated. Maybe someday you'll figure out how to do it...".format(item_sought_col.get('name'), random.choice(ewcfg.bazaar_distractions))
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

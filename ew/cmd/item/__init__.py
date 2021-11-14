@@ -19,6 +19,7 @@ cmd_map = {
     # get an item's description
     ewcfg.cmd_inspect: itemcmds.item_look,
     ewcfg.cmd_inspect_alt1: itemcmds.item_look,
+    ewcfg.cmd_plainlook: itemcmds.item_look,
 
     # use an item
     ewcfg.cmd_use: itemcmds.item_use,
@@ -66,9 +67,12 @@ cmd_map = {
 
 
     ewcfg.cmd_manualsoulbind: itemcmds.manual_soulbind,
+    ewcfg.cmd_collect: itemcmds.collect,
+    ewcfg.cmd_extract: itemcmds.remove_from_collection,
 
     # SLIMERNALIA
     ewcfg.cmd_unwrap: itemcmds.unwrap,
+
 
 }
 
@@ -87,7 +91,7 @@ dm_cmd_map = {
     # !inspect
     ewcfg.cmd_inspect: itemcmds.item_look,
     ewcfg.cmd_inspect_alt1: itemcmds.item_look,
-
+    ewcfg.cmd_plainlook: itemcmds.item_look,
 }
 
 apt_dm_cmd_map = {

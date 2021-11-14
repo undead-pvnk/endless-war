@@ -1319,9 +1319,9 @@ async def store_item(cmd):
             response = "You can't just put away soulbound items. You have to keep them in your pants at least until the Rapture hits."
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-        elif item_sought.get('item_type') == ewcfg.it_furniture and (dest != ewcfg.compartment_id_decorate and dest != "store"):
-            response = "The fridge and closet don't have huge spaces for furniture storage. Try !decorate or !stow instead."
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        #elif item_sought.get('item_type') == ewcfg.it_furniture and (dest != ewcfg.compartment_id_decorate and dest != "store"):
+            #response = "The fridge and closet don't have huge spaces for furniture storage. Try !decorate or !stow instead."
+            #return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         elif item_sought.get('item_type') != ewcfg.it_furniture and (dest == ewcfg.compartment_id_decorate):
             response = "Are you going to just drop items on the ground like a ruffian? Store them in your fridge or closet instead."
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -1362,7 +1362,7 @@ async def store_item(cmd):
             for item in items_stored:
                 if item.get('name') == "Slime Poudrin" and item.get('item_type') == ewcfg.it_item:
                     poud_offset += 1 #poudrins don't count toward closet totals
-            if len(items_stored) - poud_offset >= storage_limit_base:
+            if len(items_stored) - poud_offset >= storage_limit_base * 2:
                 response = "The closet is bursting at the seams. Fearing the consequences of opening the door, you decide to hold on to the {}.".format(name_string)
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
             elif storage_limit_base - len(items_stored) < multistow:

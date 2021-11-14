@@ -65,7 +65,7 @@ def get_fish_collection(id_item, id_server):
             length = float((ewcfg.fish_size_range.get(fish_item.item_props.get('size'))[0] + ewcfg.fish_size_range.get(fish_item.item_props.get('size'))[1]) / 2)
             fish_item.item_props['length'] = length
             fish_item.persist()
-        fish_arr.append("a {}({} in)".format(fish_item.item_props.get('str_name'), length))
+        fish_arr.append("a {} ({} in)".format(fish.get('name'), length))
 
     response += "{}{}".format(ewutils.formatNiceList(names=fish_arr), ".")
     return response
@@ -78,7 +78,7 @@ def get_scalp_collection(id_item, id_server):
     id_item_col = "{}collection".format(id_item)
 
     scalp_inv = bknd_item.inventory(id_server=id_server, id_user=id_item_col)
-    response = "SHIT LIST:"
+    response = "You take a gander at all these marks.\n             __**SHIT LIST**__:"
 
     if len(scalp_inv) == 0:
         return "Soon. This board will fill someday."
@@ -91,7 +91,7 @@ def get_scalp_collection(id_item, id_server):
             if weapon.str_scalp == victim_death:
                 victim_death = "{}{}".format(weapon.str_killdescriptor.capitalize(), '.')
                 break
-        response += "\n~~{}~~ {}".format(victim_name, victim_death)
+        response += "\n~~{}~~     *{}*".format(victim_name, victim_death)
 
     return response
 
@@ -142,8 +142,8 @@ def get_weapon_collection(id_item, id_server):
         if kills is None:
             kills = 0
         name = weapon_item.item_props.get('weapon_name')
-        if name is None:
-            name = 'A generic {}'.format(weapon_item.item_props.get('weapon_type'))
+        if name is None or name == '':
+            name = 'Generic {}'.format(weapon_item.item_props.get('weapon_type'))
 
         response += "{}: {} KILLS\n".format(name, kills)
 
@@ -164,7 +164,8 @@ def get_general_collection(id_item, id_server):
     item_arr = []
 
     for gen_item in item_inv:
-        gen_item = EwItem(id_item=gen_item.get('id_item'))
-        item_arr.append("a {}({})".format(gen_item.item_props.get('str_name'), gen_item.id_item))
+        item_arr.append("a {} ({})".format(gen_item.get('name'), gen_item.get('id_item')))
 
     response += "{}{}".format(ewutils.formatNiceList(names=item_arr), ".")
+
+    return response
