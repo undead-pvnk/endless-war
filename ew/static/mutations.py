@@ -84,7 +84,7 @@ mutations = [
         incompatible = {
             ewcfg.mutation_id_airlock : '"Nope, you already have that mutation, its even got a little extra tacked on."'
         },
-        str_transplant="You decide to get the liposuction deluxe package. Once in the OR, you are prodded on all sides with a surgical vacuum, sucking out whatever looks unneccesary. She takes a couple kidneys and you gallbladder though, so maybe the word necessary is a bit subjective. All is forgiven though; your new flabby frame gives flying squirrels a run for their money.\n\nYou have developed the mutation **Light As A Feather**. Double movement speed while weather is windy.",
+        str_transplant="You decide to get the liposuction deluxe package. Once in the OR, you are prodded on all sides with a surgical vacuum, sucking out whatever looks unneccesary. She takes a couple kidneys and your gallbladder though, so maybe the word necessary is a bit subjective. All is forgiven though; your new flabby frame gives flying squirrels a run for their money.\n\nYou have developed the mutation **Light As A Feather**. Double movement speed while weather is windy.",
     ),
     EwMutationFlavor(
         id_mutation=ewcfg.mutation_id_whitenationalist,

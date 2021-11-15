@@ -5,6 +5,7 @@ from ew.backend.item import EwItem
 from ew.backend.market import EwStock
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
+import ew.static.items as static_items
 from ew.utils import frontend as fe_utils
 from ew.utils import market as market_utils
 from ew.utils.combat import EwUser
@@ -36,7 +37,7 @@ def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
     if item_obj.item_props.get('id_furniture') == 'sord':
         response = "You toss the sord off the cliff, but for whatever reason, the damn thing won't go down. It just keeps going up and up, as though gravity itself blocked this piece of shit jpeg artifact on Twitter. It eventually goes out of sight, where you assume it flies into the sun."
         bknd_item.item_delete(id_item=id_item)
-    elif random.randrange(500) < 125 or item_obj.item_type in([ewcfg.it_questitem, item_obj.item_type == ewcfg.it_medal, ewcfg.it_relic])  or item_obj.item_props.get('rarity') == ewcfg.rarity_princeps or item_obj.item_props.get('id_cosmetic') == "soul" or item_obj.item_props.get('id_furniture') == "propstand" :
+    elif random.randrange(500) < 125 or item_obj.item_type in([ewcfg.it_questitem, item_obj.item_type == ewcfg.it_medal, ewcfg.it_relic])  or item_obj.item_props.get('rarity') == ewcfg.rarity_princeps or item_obj.item_props.get('id_cosmetic') == "soul" or item_obj.item_props.get('id_furniture') == "propstand" or item_obj.item_props.get('id_furniture') in static_items.furniture_collection:
         response = "You toss the {} off the cliff. It sinks into the ooze disappointingly.".format(item_name)
         if item_obj.item_props.get('id_item') in [ewcfg.item_id_oldboot, ewcfg.item_id_seaweed, ewcfg.item_id_tincan, ewcfg.item_id_slimepoudrin] or item_obj.item_props.get('acquisition') == ewcfg.acquisition_fishing:
             bknd_item.item_delete(id_item=id_item)

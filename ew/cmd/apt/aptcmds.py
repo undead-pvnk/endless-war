@@ -1376,7 +1376,7 @@ async def store_item(cmd):
                 multistow = storage_limit_base - len(items_stored)
 
         elif destination == ewcfg.compartment_id_decorate:
-            if len(items_stored) >= int(storage_limit_base * 1.5):
+            if len(items_stored) >= int(storage_limit_base * .75):
                 response = "You have a lot of furniture here already. Hoarding is unladylike, so you decide to hold on to the {}.".format(name_string)
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
             elif storage_limit_base * 1.5 - len(items_stored) < multistow:

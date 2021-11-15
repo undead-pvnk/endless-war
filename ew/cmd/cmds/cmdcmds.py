@@ -1332,12 +1332,12 @@ async def recycle(cmd):
                 user_data.sidearm = -1
                 user_data.persist()
 
-            elif item.item_type == ewcfg.it_relic:
-                relic_mapped = rstatic.relic_map.get(item.item_props.get('id_relic'))
-                if relic_mapped.has_effect or item.item_props.get('donated') is None or item.item_props.get('donated') == 0:
-                    response = "You reach into your pocket to dispose of this sacrosanct piece of history, but you can't find it! Damn, you've been pickpocketed!"
-                    bknd_item.give_item(id_server=cmd.guild.id, id_user='slimesea', id_item=item.id_item)
-                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            #elif item.item_type == ewcfg.it_relic: i need to learn to let things go and adapt.
+            #    relic_mapped = rstatic.relic_map.get(item.item_props.get('id_relic'))
+            #    if relic_mapped.has_effect or item.item_props.get('donated') is None or item.item_props.get('donated') == 0:
+            #        response = "You reach into your pocket to dispose of this sacrosanct piece of history, but you can't find it! Damn, you've been pickpocketed!"
+            #        bknd_item.give_item(id_server=cmd.guild.id, id_user='slimesea', id_item=item.id_item)
+            #        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
             bknd_item.item_delete(id_item=item.id_item)
 
             pay = int(random.random() * 10 ** random.randrange(2, 6))

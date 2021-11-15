@@ -3651,6 +3651,7 @@ furniture_seventies = []
 furniture_shitty = []
 furniture_instrument = []
 furniture_specialhue = []
+furniture_collection = []
 
 for furniture in furniture_list:
     furniture_map[furniture.id_furniture] = furniture
@@ -3679,3 +3680,5 @@ for furniture in furniture_list:
         furniture_instrument.append(furniture.id_furniture)
     elif furniture.furn_set == "specialhue":
         furniture_specialhue.append(furniture.id_furniture)
+    elif furniture.furn_set == "collection":
+        furniture_collection.append(furniture.id_furniture)

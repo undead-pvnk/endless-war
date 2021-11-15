@@ -29,6 +29,7 @@ from ew.utils import apt as apt_utils
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
+from ew.backend.apt import EwApartment
 from . import itemutils as itm_u
 from ew.utils import stats as ewstats
 from ew.utils import loop as loop_utils
@@ -1961,13 +1962,14 @@ async def collect(cmd):
     item_seek = cmd.tokens[2]
     item_sought_item = bknd_item.find_item(item_search=item_seek, id_user=user_data.id_user, id_server=user_data.id_server)
 
-
-    if not poi.is_apartment:
+    if not poi.is_apartment or user_data.visiting != ewcfg.location_id_empty:
         response = "Nobody can know about your shameful hoarding habits. Add to your collections in your apartment."
     elif not item_sought_item:
         response = "Ah, a collector of imaginary objects. Too bad your brain is one of them. Pick a real item."
     elif not collection_seek:
         response = "You must specify a collection item."
+    elif item_sought_item.get('soulbound') == True:
+        response = "That's bound to your soul. You can't collect it any harder if you wanted to."
     else:
         furn_list = static_items.furniture_map
         item = EwItem(id_item=item_sought_item.get('id_item'))
@@ -1979,7 +1981,7 @@ async def collect(cmd):
 
         if collect_map is None or collect_map.furn_set != 'collection':
             response = "You can't just shove anything into anything. A {} isn't gonna fit in a {}.".format(item_sought_item.get('name'), item_sought_col.get('name'))
-        elif (collectiontype == 'weaponchest' and item.item_type != ewcfg.it_weapon) or (collectiontype == 'soulcylinder' and item.item_props.get('id_cosmetic') != 'soul') or (collectiontype == 'scalpcollection' and item.item_props.get('id_cosmetic') != 'scalp') or (collectiontype == 'largeaquarium' and item.item_props.get('acquisition') != ewcfg.acquisition_fishing):
+        elif (collectiontype == 'weaponchest' and item.item_type != ewcfg.it_weapon) or (collectiontype == 'soulcylinder' and item.item_props.get('id_cosmetic') != 'soul') or (collectiontype == 'scalpcollection' and item.item_props.get('id_cosmetic') != 'scalp') or (collectiontype == 'largeaquarium' and item.item_props.get('acquisition') != ewcfg.acquisition_fishing or item.item_props.get('id_furniture') in static_items.furniture_collection):
             response = "You've got the wrong item type. It's a {}, try and guess what it's for.".format(item_sought_col.get('name'))
         elif len(collection_inventory) >= 50 or (len(collection_inventory) >= 10 and collectiontype=='generalcollection'):
             response= "You collection's full. You really stuffed that sucker, goddamn."
