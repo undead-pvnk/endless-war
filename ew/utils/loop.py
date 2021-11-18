@@ -145,7 +145,6 @@ async def decaySlimes(id_server = None):
     if id_server != None:
         try:
 
-
             conn_info = bknd_core.databaseConnect()
             conn = conn_info.get('conn')
             cursor = conn.cursor()
@@ -166,7 +165,6 @@ async def decaySlimes(id_server = None):
             block_poi = ''.join([i for i in block_party.value if not i.isdigit()])
             if block_poi == 'outsidethe':
                 block_poi = ewcfg.poi_id_711
-
             for user in users:
                 user_data = EwUser(id_user=user[0], id_server=id_server)
                 slimes_to_decay = user_data.slimes - (user_data.slimes * (.5 ** (ewcfg.update_market / relicutils.calc_half_life(id_server=id_server, slime=user_data.slimes))))
@@ -184,6 +182,9 @@ async def decaySlimes(id_server = None):
                     user_data.change_slimes(n=-slimes_to_decay, source=ewcfg.source_decay)
                     user_data.persist()
                     total_decayed += slimes_to_decay
+                elif slimes_to_decay < 1:
+                    user_data.change_slimes(n=-slimes_to_decay, source=ewcfg.source_blockparty)
+                    user_data.persist()
 
             cursor.execute("SELECT district FROM districts WHERE id_server = %s AND {slimes} > 1".format(
                 slimes=ewcfg.col_district_slimes
@@ -834,7 +835,7 @@ async def spawn_enemies(id_server = None, debug = False):
         resp_list.append(hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_weather=weathertype, pre_chosen_type=chosen_type, pre_chosen_poi=chosen_POI))
     # One in two chance of spawning a slimeoid trainer in either the Battle Arena or Subway
     # Why did I make this into incredibly hacky code? Because.
-    if random.randrange(2) == 0:
+    if random.randrange(4) == 0:
             if random.randrange(2) == 0:
                 resp_list.append(hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_type=ewcfg.enemy_type_slimeoidtrainer))
             else:

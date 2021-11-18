@@ -1,6 +1,7 @@
 import asyncio
 import random
 import time
+from copy import deepcopy
 
 from ew.backend import item as bknd_item
 from ew.backend.apt import EwApartment
@@ -1150,41 +1151,89 @@ async def apt_look(cmd):
     resp_cont.add_channel_response(cmd.message.channel, furn_response)
 
     response = ""
-    iterate = 0
     frids = bknd_item.inventory(id_user=lookObject + ewcfg.compartment_id_fridge, id_server=playermodel.id_server)
-
-    if (len(frids) > 0):
-        response += "\n\nThe fridge contains: "
-        fridge_pile = []
-        for frid in frids:
-            fridge_pile.append(frid.get('name'))
-        response += ewutils.formatNiceList(fridge_pile)
-        response = response + '.'
     closets = bknd_item.inventory(id_user=lookObject + ewcfg.compartment_id_closet, id_server=playermodel.id_server)
+
+    #if (len(frids) > 0):
+    #
+    #    fridge_pile = []
+    #    for frid in frids:
+    #        fridge_pile.append(frid.get('name'))
+    #    response += ewutils.formatNiceList(fridge_pile)
+    #    response = response + '.'
+
 
     resp_cont.add_channel_response(cmd.message.channel, response)
     response = ""
+    if (len(frids) > 0):
+        fridge_resp = ""
+        response += "\n\nThe fridge contains: "
+
+        stacked_fridge_map = {}
+        for frid in frids:
+            if frid.get("name") in stacked_fridge_map:
+                stacked_item = stacked_fridge_map.get(frid.get("name"))
+                stacked_item["quantity"] += frid.get("quantity")
+            else:
+                stacked_fridge_map[frid.get("name")] = deepcopy(frid)
+        item_names = stacked_fridge_map.keys()
+        for item_name in item_names:
+            # Get the stack's item data
+            item = stacked_fridge_map.get(item_name)
+            item_obj = EwItem(id_item=item.get('id_item'))
+
+            # Generate the stack's line in the response
+            response_part = "{soulbound_style}{name}{soulbound_style}{quantity}, ".format(
+                name=item.get('name'),
+                soulbound_style=("**" if item.get('soulbound') else ""),
+                quantity=(" **x{:,}**".format(item.get("quantity")) if (item.get("quantity") > 0) else "")
+            )
+            fridge_resp += response_part
+
+        response += fridge_resp + '.'
 
     if (len(closets) > 0):
-        closet_pile = []
-        hatstand_pile = []
+        closet_resp = ""
+        hatstand_resp = ""
+        #
+        stacked_closet_map = {}
         for closet in closets:
-            closet_obj = EwItem(id_item=closet.get('id_item'))
-            map_obj = cosmetics.cosmetic_map.get(closet_obj.item_props.get('id_cosmetic'))
-            if has_hat_stand and map_obj and map_obj.is_hat == True:
-                hatstand_pile.append(closet.get('name'))
+            if closet.get("name") in stacked_closet_map:
+                stacked_item = stacked_closet_map.get(closet.get("name"))
+                stacked_item["quantity"] += closet.get("quantity")
             else:
-                closet_pile.append(closet.get('name'))
-        if len(closet_pile) > 0:
-            response += "\n\nThe closet contains: "
-            response += ewutils.formatNiceList(closet_pile)
-            response = response + '.'
-            resp_cont.add_channel_response(cmd.message.channel, response)
+                stacked_closet_map[closet.get("name")] = deepcopy(closet)
+        item_names = stacked_closet_map.keys()
+        for item_name in item_names:
+            # Get the stack's item data
+            item = stacked_closet_map.get(item_name)
+            item_obj = EwItem(id_item=item.get('id_item'))
+            map_obj = cosmetics.cosmetic_map.get(item_obj.item_props.get('id_cosmetic'))
+            # Generate the stack's line in the response
+            response_part = "{soulbound_style}{name}{soulbound_style}{quantity}, ".format(
+                name=item.get('name'),
+                soulbound_style=("**" if item.get('soulbound') else ""),
+                quantity=(" **x{:,}**".format(item.get("quantity")) if (item.get("quantity") > 0) else "")
+            )
+            if map_obj is not None and map_obj.is_hat == True:
+                hatstand_resp += response_part
+            else:
+                closet_resp += response_part
 
-        if len(hatstand_pile) > 0:
+        #for closet in closets:
+        #    closet_obj = EwItem(id_item=closet.get('id_item'))
+        #    map_obj = cosmetics.cosmetic_map.get(closet_obj.item_props.get('id_cosmetic'))
+        #    if has_hat_stand and map_obj and map_obj.is_hat == True:
+        #        hatstand_pile.append(closet.get('name'))
+        #    else:
+        #        closet_pile.append(closet.get('name'))
+        if len(closet_resp) > 0:
+            response += "\n\nThe closet contains: "
+            response += closet_resp + '.'
+            resp_cont.add_channel_response(cmd.message.channel, response)
+        if len(hatstand_resp) > 0:
             response = "\n\nThe hat stand holds: "
-            response += ewutils.formatNiceList(hatstand_pile)
-            response = response + '.'
+            response += hatstand_resp + '.'
             resp_cont.add_channel_response(cmd.message.channel, response)
 
     shelves = bknd_item.inventory(id_user=lookObject + ewcfg.compartment_id_bookshelf, id_server=playermodel.id_server)
@@ -1289,6 +1338,9 @@ async def store_item(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
+    if cmd.tokens[1] == 'all':
+        cmd.tokens[1] = '4000'
+
     multistow = 1
     startparse = 1
     if cmd.tokens[1].isnumeric():
@@ -1314,6 +1366,7 @@ async def store_item(cmd):
         recipient = str(cmd.message.author.id)
 
     if item_sought:
+        item_search = ewutils.flattenTokenListToString(item_sought.get('name'))
         item = EwItem(id_item=item_sought.get('id_item'))
         if item_sought.get('soulbound') and EwItem(id_item=item_sought.get('id_item')).item_props.get("context") != "housekey":
             response = "You can't just put away soulbound items. You have to keep them in your pants at least until the Rapture hits."
@@ -1359,14 +1412,15 @@ async def store_item(cmd):
         poud_offset = 0
 
         if destination == ewcfg.compartment_id_closet:
-            for item in items_stored:
-                if item.get('name') == "Slime Poudrin" and item.get('item_type') == ewcfg.it_item:
+            for item_cnt in items_stored:
+                if item_cnt.get('name') == "Slime Poudrin" and item_cnt.get('item_type') == ewcfg.it_item:
                     poud_offset += 1 #poudrins don't count toward closet totals
-            if len(items_stored) - poud_offset >= storage_limit_base * 2:
+            #print("{}, {}, {}".format(poud_offset, len(items_stored), storage_limit_base * 2))
+            if len(items_stored) - poud_offset >= storage_limit_base * 2 and not(item_sought.get('name') == 'Slime Poudrin' and item_sought.get('item_type') == ewcfg.it_item):
                 response = "The closet is bursting at the seams. Fearing the consequences of opening the door, you decide to hold on to the {}.".format(name_string)
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-            elif storage_limit_base - len(items_stored) < multistow:
-                multistow = storage_limit_base - len(items_stored)
+            elif storage_limit_base * 2 - (len(items_stored)-poud_offset) < multistow and (item_sought.get('name') != 'Slime Poudrin' or item.item_type != ewcfg.it_item):
+                multistow = storage_limit_base * 2 - (len(items_stored)-poud_offset)
 
         elif destination == ewcfg.compartment_id_fridge:
             if len(items_stored) >= storage_limit_base:
@@ -1379,8 +1433,8 @@ async def store_item(cmd):
             if len(items_stored) >= int(storage_limit_base * .75):
                 response = "You have a lot of furniture here already. Hoarding is unladylike, so you decide to hold on to the {}.".format(name_string)
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-            elif storage_limit_base * 1.5 - len(items_stored) < multistow:
-                multistow = storage_limit_base * 1.5 - len(items_stored)
+            elif storage_limit_base * .75 - len(items_stored) < multistow:
+                multistow = storage_limit_base * .75 - len(items_stored)
 
 
         elif destination == ewcfg.compartment_id_bookshelf:
@@ -1393,8 +1447,9 @@ async def store_item(cmd):
 
 
         items_had = 0
-
-        while multistow > 0 and item_sought:
+        loop_sought = item_sought.copy()
+        while multistow > 0 and loop_sought is not None:
+            item = EwItem(id_item=loop_sought.get('id_item'))
             if item.item_type == ewcfg.it_food and destination == ewcfg.compartment_id_fridge:
                 item.item_props["time_fridged"] = time.time()
                 item.persist()
@@ -1418,13 +1473,16 @@ async def store_item(cmd):
             items_had += 1
             multistow -= 1
             bknd_item.give_item(id_item=item.id_item, id_server=playermodel.id_server, id_user=recipient + destination)
-            item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+            loop_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
 
         if items_had > 1:
             name_string = "{}(x{})".format(name_string, items_had)
 
         if (destination == ewcfg.compartment_id_decorate):
             response = item.item_props['furniture_place_desc']
+            if items_had > 1:
+                response += "(x{})".format(items_had)
 
         else:
             response = "You store the {} in the {}.".format(name_string, destination)
@@ -1434,7 +1492,6 @@ async def store_item(cmd):
                 if map_obj != None:
                     if map_obj.is_hat == True and hatrack:
                         response = "You hang the {} on the rack.".format(name_string)
-
     else:
         response = "Are you sure you have that item?"
 
@@ -1471,6 +1528,8 @@ async def remove_item(cmd):
 
     multisnag = 1
     startparse = 1
+    if cmd.tokens[1] == 'all':
+        cmd.tokens[1] = '4000'
 
     if cmd.tokens[1].isnumeric():
         startparse = 2
@@ -1499,10 +1558,13 @@ async def remove_item(cmd):
                     item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_closet, id_server=playermodel.id_server)
                     if not item_sought:
                         item_sought = bknd_item.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_decorate, id_server=playermodel.id_server)
+                        dest = ewcfg.compartment_id_decorate
                     else:
                         destination = ewcfg.compartment_id_closet
+                        dest = ewcfg.compartment_id_closet
                 else:
                     destination = ewcfg.compartment_id_fridge
+                    dest = ewcfg.compartment_id_fridge
             else:
                 destination = ewcfg.compartment_id_bookshelf
 
@@ -1524,7 +1586,7 @@ async def remove_item(cmd):
         else:
             name_string = item_sought.get('name')
             item = EwItem(id_item=item_sought.get('id_item'))
-            item_search = item_sought.get('name')
+            item_search = ewutils.flattenTokenListToString(item_sought.get('name'))
 
             if items_snagged == 0: #handle item limits only on the first pass
                 if destination == "closet" and item_sought.get('item_type') == ewcfg.it_cosmetic:

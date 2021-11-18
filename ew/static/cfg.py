@@ -1604,7 +1604,8 @@ client_debug_commands =[
  '!hourforward',
  '!postleaderboard',
  '!genslimeoid',
- '!massgenslimeoidnames']
+ '!massgenslimeoidnames',
+ '!decaytick']
 
 # Maximum amount of slime juveniles can have before being killable
 # max_safe_slime = 100000
@@ -2756,6 +2757,7 @@ source_crush = 16
 source_casino = 17
 source_slimeoid_betting = 18
 source_ghost_contract = 19
+source_blockparty = 20
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0

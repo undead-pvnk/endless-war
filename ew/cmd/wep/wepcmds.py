@@ -178,6 +178,7 @@ async def attack(cmd):
                 else:
                     # Attacking other combatants sends half to kingpin, 1/4 to bleed, and 1/4 to splatter
                     to_kingpin = ctn.slimes_damage/2
+                    print('zulu {}'.format(to_kingpin))
                     to_bleed = ctn.slimes_damage/4
                     to_district = ctn.slimes_damage/4
 
@@ -261,14 +262,16 @@ async def attack(cmd):
                     ewstats.increment_stat(user=attacker, metric=ewcfg.stat_lifetime_ganks)
                 elif attacker.slimelevel < target.slimelevel:
                     ewstats.increment_stat(user=attacker, metric=ewcfg.stat_lifetime_takedowns)
-                if to_kingpin > 0:
-                    ewstats.change_stat(user=attacker, metric=ewcfg.stat_lifetime_king, n=to_kingpin)
                 if target.life_state == ewcfg.life_state_shambler:
                     ewstats.increment_stat(user=attacker, metric=ewcfg.stat_shamblers_killed)
                 end = time.perf_counter()
                 print("{} seconds to run attack ln 252 stat updates".format(end-start))
             else:
                 attacker.change_crime(n=ewcfg.cr_assault_points)
+                print('hulu {}'.format(to_kingpin))
+                if to_kingpin > 0:
+                    ewstats.change_stat(user=attacker, metric=ewcfg.stat_lifetime_kingpin_slimes, n=to_kingpin)
+                    print("{} wee mama".format(to_kingpin))
         """ Flavortext Generation """
 
         # Generate slimeoid based flavor for the whistle, and get possession status

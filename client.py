@@ -589,6 +589,11 @@ async def debugHandling(message, cmd, cmd_obj):
             10 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier)  # ten times slime spent, multiplied by both multipliers
         await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, "{}".format(slimes_damage)))
 
+    elif cmd == ewcfg.cmd_prefix + 'decaytick':
+        #await loop_utils.decaySlimes(id_server=cmd_obj.guild.id)
+        #await loop_utils.release_timed_prisoners_and_blockparties(id_server=cmd_obj.guild.id,day = market.day)
+        await move_utils.kick(id_server=cmd_obj.guild.id)
+
         # Gives the user some slime
     elif cmd == (ewcfg.cmd_prefix + 'getslime'):
         user_data = EwUser(member=message.author)

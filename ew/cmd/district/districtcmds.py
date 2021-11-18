@@ -411,6 +411,7 @@ async def blockparty(cmd):
                     if poi is not None:
                         time_end = int(time()) + (60 * 60 * 6) # 6 hours
                         blockstate.value = "{}{}".format(poi.id_poi, time_end)
+                        blockstate.persist()
                         response = "Block party in {}! Everybody in!".format(poi.str_name)
                     else:
                         response = "Never heard of it."

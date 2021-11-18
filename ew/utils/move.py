@@ -518,6 +518,7 @@ async def kick(id_server):
 
                         user_data.poi = mother_district_chosen
                         user_data.time_lastenter = int(time.time())
+                        user_data.change_crime(n=50) # loitering:punishable by death
                         user_data.persist()
                         await ewrolemgr.updateRoles(client=client, member=member_object)
                         await user_data.move_inhabitants(id_poi=mother_district_chosen)

@@ -276,7 +276,7 @@ async def inventory_print(cmd):
     sort_by_name = False
     sort_by_id = False
 
-    stacking = False
+    stacking = True
     search = False
     item_type = None
 
@@ -296,8 +296,8 @@ async def inventory_print(cmd):
             sort_by_id = True
 
         # Stack items of same name
-        if 'stack' in lower_token_list:
-            stacking = True
+        if 'nostack' in lower_token_list:
+            stacking = False
 
         # Filter to general items
         if 'general' in lower_token_list:

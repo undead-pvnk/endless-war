@@ -1089,7 +1089,7 @@ async def trade(cmd):
     if user_trade != None and len(user_trade) > 0:
         if user_trade.get("state") > ewcfg.trade_state_proposed:
 
-            stacking = True if 'stack' in ewutils.flattenTokenListToString(cmd.tokens[1:]).lower() else False
+            stacking = False if 'nostack' in ewutils.flattenTokenListToString(cmd.tokens[1:]).lower() else True
             sort_by_name = True if 'name' in ewutils.flattenTokenListToString(cmd.tokens[1:]).lower() else False
 
             stacked_item_map = {}
