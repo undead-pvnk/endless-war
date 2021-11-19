@@ -1605,7 +1605,9 @@ client_debug_commands =[
  '!postleaderboard',
  '!genslimeoid',
  '!massgenslimeoidnames',
- '!decaytick']
+ '!decaytick',
+'!moverelics',
+'!quickrevive']
 
 # Maximum amount of slime juveniles can have before being killable
 # max_safe_slime = 100000
@@ -4581,7 +4583,8 @@ enemy_data_table = {
         "attacktype": enemy_attacktype_fangs,
         "displayname": "Dinoslime",
         "raredisplayname": "Voracious Dinoslime",
-        "aliases": ["dino", "slimeasaur"]
+        "aliases": ["dino", "slimeasaur"],
+        "arcticvariant":"Sabertooth Tigerslime"
     },
     enemy_type_slimeadactyl: {
         "slimerange": [500000, 750000],
@@ -4690,7 +4693,8 @@ enemy_data_table = {
         "attacktype": enemy_attacktype_molotovbreath,
         "displayname": "Green Eyes Slime Dragon",
         "raredisplayname": "Green Eyes JPEG Dragon",
-        "aliases": ["dragon", "greeneyes", "greeneyesslimedragon", "green"]
+        "aliases": ["dragon", "greeneyes", "greeneyesslimedragon", "green"],
+        "arcticvariant": "Green Eyes Slime Dragon"
     },
     enemy_type_unnervingfightingoperator: {
         "slimerange": [1000000, 3000000],

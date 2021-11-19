@@ -527,6 +527,19 @@ async def debugHandling(message, cmd, cmd_obj):
     if cmd == (ewcfg.cmd_prefix + 'enemytick'):
         await loop_utils.spawn_enemies(id_server=message.guild.id, debug=True)
 
+    elif cmd == (ewcfg.cmd_prefix + 'quickrevive'):
+        if cmd.mentions_count == 1 and cmd.tokens_count == 3:
+            member = cmd.mentions[0]
+            user = EwUser(member = member)
+            cmd_fnc =  cmd_map.get('!revive')
+            await cmd_fnc(cmd=cmd_obj, player_auto = member.id)
+            cmd_fnc =  cmd_map.get('!tpp')
+            await cmd_fnc(cmd=cmd_obj)
+
+
+    elif cmd ==  (ewcfg.cmd_prefix + 'moverelics'):
+        await itm_utils.move_relics(id_server=cmd_obj.guild.id)
+
     elif cmd == (ewcfg.cmd_prefix + 'releaseprisoners'):
         await loop_utils.release_timed_prisoners_and_blockparties(market.id_server, market.day)
     elif cmd == (ewcfg.cmd_prefix + 'createtestitem'):

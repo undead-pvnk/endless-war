@@ -45,19 +45,22 @@ async def negaslime(cmd):
 """ revive yourself from the dead. """
 
 
-async def revive(cmd):
+async def revive(cmd, player_auto = None):
     time_now = int(time.time())
     response = ""
 
-    if cmd.message.channel.name != ewcfg.channel_endlesswar and cmd.message.channel.name != ewcfg.channel_sewers:
+    if cmd.message.channel.name != ewcfg.channel_endlesswar and cmd.message.channel.name != ewcfg.channel_sewers and player_auto is None:
         response = "Come to me. I hunger. #{}.".format(ewcfg.channel_sewers)
     else:
-        player_data = EwUser(member=cmd.message.author)
+        if player_auto:
+            player_data = EwUser(id_server=cmd.guild.id, id_user=player_auto)
+        else:
+            player_data = EwUser(member=cmd.message.author)
 
         # time_until_revive = (player_data.time_lastdeath + 600) - time_now
         time_until_revive = (player_data.time_lastdeath) - time_now
 
-        if time_until_revive > 0:
+        if time_until_revive > 0 and player_auto is None:
             response = "ENDLESS WAR is not ready to {} you yet ({}s).".format(cmd.tokens[0], time_until_revive)
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
