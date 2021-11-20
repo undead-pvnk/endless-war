@@ -16,13 +16,19 @@ from ew.static import items as static_items
 from ew.static import poi as poi_static
 from ew.static import vendors
 from ew.static import weapons as static_weapons
-from ew.static import rstatic as static_relic
+try:
+    import ew.static.rstatic as static_relic
+except:
+    import ew.static.rstatic_dummy as static_relic
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
 from ew.utils import loop as loop_utils
 from ew.utils import poi as poi_utils
-from ew.utils import rutils as relic_utils
+try:
+    from ew.utils import rutils as relic_utils
+except:
+    from ew.utils import rutils_dummy as relic_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 

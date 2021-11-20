@@ -9,7 +9,12 @@ from ..backend.player import EwPlayer
 from ..utils.frontend import EwResponseContainer
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
-import ew.static.rstatic as static_relic
+
+try:
+    import ew.static.rstatic as static_relic
+except:
+    import ew.static.rstatic_dummy as static_relic
+
 from ew.backend.dungeons import EwGamestate
 
 async def post_leaderboards(client = None, server = None):
