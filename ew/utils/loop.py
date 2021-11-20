@@ -18,7 +18,10 @@ from . import leaderboard as leaderboard_utils
 from . import weather as weather_utils
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
-from . import rutils as relicutils
+try:
+    from ew.utils import rutils as relicutils
+except:
+    from ew.utils import rutils_dummy as relicutils
 from .combat import EwEnemy
 from .combat import EwUser
 from .district import EwDistrict

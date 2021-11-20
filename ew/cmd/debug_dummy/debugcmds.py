@@ -46,3 +46,12 @@ async def change_gamestate(cmd):
 
 async def display_states(cmd):
     return
+
+async def debug12(cmd):
+    return
+
+def bazaarTurnout():
+    return 1
+
+async def contentCheck():
+    return

@@ -48,7 +48,6 @@ from .cmdsutils import mutation_commands
 
 from .cmdsutils import get_crime_level
 from .cmdsutils import holiday_commands
-from ew.static import rstatic
 from .. import item as ewitem
 from ..apt import aptcmds as apt_cmds
 from ..faction import factioncmds as faction_cmds

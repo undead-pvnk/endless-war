@@ -20,7 +20,10 @@ from ew.utils import market as market_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
-from ew.static import rstatic as relic_static
+try:
+    import ew.static.rstatic as relic_static
+except:
+    import ew.static.rstatic_dummy as relic_static
 
 
 

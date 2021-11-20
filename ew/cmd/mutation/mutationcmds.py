@@ -622,12 +622,22 @@ async def devour(cmd):
     item_sought = bknd_item.find_item(id_server=cmd.message.guild.id, id_user=cmd.message.author.id, item_search=item_search)
     mutations = user_data.get_mutations()
     is_brick = 0
+    time_now = int(time.time())
+    mutation_data = EwMutation(id_user=user_data.id_user, id_server=user_data.id_server, id_mutation=ewcfg.mutation_id_trashmouth)
+
+    if len(mutation_data.data) > 0:
+        time_lastuse = int(mutation_data.data)
+    else:
+        time_lastuse = 0
+
 
     if ewcfg.mutation_id_trashmouth not in mutations:
         response = "Wait, what? Quit trying to put everything in your mouth."
     elif item_sought:
         item_obj = EwItem(id_item=item_sought.get('id_item'))
-        if (item_obj.item_type not in [ewcfg.it_cosmetic, ewcfg.it_furniture, ewcfg.it_food] and item_obj.item_props.get('id_item') != 'slimepoudrin') or item_obj.item_props.get('id_cosmetic') == 'soul':
+        if time_lastuse + 60 > time_now:
+            response = "You're still picking stuff out of your teeth from the last weird shit you ate. Try again in {} seconds.".format(time_lastuse + 60 - time_now)
+        elif (item_obj.item_type not in [ewcfg.it_cosmetic, ewcfg.it_furniture, ewcfg.it_food] and item_obj.item_props.get('id_item') != 'slimepoudrin') or item_obj.item_props.get('id_cosmetic') == 'soul':
             response = "You swallow the {} whole, but after realizing this might be a mistake, you cough it back up.".format(item_sought.get('name'))
         elif item_obj.soulbound == True:
             response = "You attempt to consume the {}, but you realize it's soulbound and that you were about to eat your own existnece. Your life flashes before your eyes, so you decide to stop.".format(item_sought.get('name'))
@@ -694,6 +704,8 @@ async def devour(cmd):
                 'time_fridged': 0,
                 'perishable': True,
             }
+            if item_obj.item_type != ewcfg.it_food:
+                mutation_data.data = '{}'.format(time_now)
             if is_brick == 0:
                 response = user_data.eat(item_obj)
             user_data.persist()

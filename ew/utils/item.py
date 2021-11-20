@@ -7,7 +7,10 @@ from . import frontend as fe_utils
 from . import stats as ewstats
 from ..backend import core as bknd_core
 from ..backend import item as bknd_item
-from . import rutils as relic_utils
+try:
+    from ew.utils import rutils as relic_utils
+except:
+    from ew.utils import rutils_dummy as relic_utils
 from ..backend.item import EwItem
 from ..backend.player import EwPlayer
 from ..backend.user import EwUserBase as EwUser
@@ -16,7 +19,10 @@ from ..static import hue as hue_static
 from ..static import items as static_items
 from ..static import weapons as static_weapons
 from ..static import poi as static_poi
-from ..static.rstatic import relic_list
+try:
+    from ..static.rstatic import relic_list
+except:
+    from ..static.rstatic_dummy import relic_list
 
 """
     Drop some of a player's non-soulbound items into their district.

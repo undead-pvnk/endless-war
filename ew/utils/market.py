@@ -18,8 +18,18 @@ try:
     from ew.cmd import debug as ewdebug
 except:
     from ew.cmd import debug_dummy as ewdebug
-import ew.static.rstatic as static_relic
-import ew.utils.rutils as relic_utils
+
+
+
+try:
+    import ew.static.rstatic as static_relic
+except:
+    import ew.static.rstatic_dummy as static_relic
+
+try:
+    from ew.utils import rutils as relic_utils
+except:
+    from ew.utils import rutils_dummy as relic_utils
 """ update stock values according to market activity """
 
 

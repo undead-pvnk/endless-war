@@ -7,7 +7,10 @@ from ..static import hue as hue_static
 from ..static import items as static_items
 from ..static import weapons as static_weapons
 from ..utils import core as ewutils
-from ..utils import rutils as ewrelicutils
+try:
+    from ..utils import rutils as ewrelicutils
+except:
+    from ..utils import rutils_dummy as ewrelicutils
 
 """
 	EwItem is the instance of an item (described by EwItemDef, linked by
