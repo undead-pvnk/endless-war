@@ -163,19 +163,6 @@ poi_id_thebreakroom = "thebreakroom"
 poi_id_underworld = "underworld"
 poi_id_themuseum = "themuseum"
 
-poi_id_sc_n12_office = "n12office"
-poi_id_sc_n10_office = "n10office"
-poi_id_sc_elevator = "elevator"
-poi_id_watercooler = "watercooler"
-poi_id_sc_n13_office = "n13office"
-poi_id_sc_n8_office = "n8office"
-poi_id_sc_n2_office = "n2office"
-poi_id_sc_n6_office = "n6office"
-poi_id_sc_n11_office = "n11office"
-poi_id_sc_n5_office = "n5office"
-poi_id_sc_n7_office = "n7office"
-poi_id_sc_n9_office = "n9office"
-poi_id_sc_moon_penthouse = "moonpenthouse"
 poi_id_themoon = "themoon"
 
 # transports
@@ -308,163 +295,6 @@ poi_id_apt_crookline = "aptcrookline"
 poi_id_apt_dreadford = "aptdreadford"
 poi_id_apt_maimridge = "aptmaimridge"
 
-# The streets -- There are 123 of them, to be exact
-poi_id_copkilltown_street_a = "copkilltownstreeta"  # NOT USED
-poi_id_rowdyroughhouse_street_a = "rowdyroughhousestreeta"  # NOT USED
-poi_id_juviesrow_street_a = "juviesrowstreeta"  # NOT USED
-
-poi_id_downtown_street_a = "downtownstreeta"
-poi_id_downtown_street_b = "downtownstreetb"
-poi_id_downtown_street_c = "downtownstreetc"
-poi_id_downtown_street_d = "downtownstreetd"
-poi_id_downtown_street_e = "downtownstreete"
-poi_id_downtown_street_f = "downtownstreetf"
-
-poi_id_krakbay_street_a = "krakbaystreeta"
-poi_id_krakbay_street_b = "krakbaystreetb"
-poi_id_krakbay_street_c = "krakbaystreetc"
-poi_id_krakbay_street_d = "krakbaystreetd"
-poi_id_krakbay_street_e = "krakbaystreete"
-poi_id_krakbay_street_f = "krakbaystreetf"
-
-poi_id_poudrinalley_street_a = "poudrinalleystreeta"
-poi_id_poudrinalley_street_b = "poudrinalleystreetb"
-poi_id_poudrinalley_street_c = "poudrinalleystreetc"
-poi_id_poudrinalley_street_d = "poudrinalleystreetd"
-poi_id_poudrinalley_street_e = "poudrinalleystreete"
-
-poi_id_cratersville_street_a = "cratersvillestreeta"
-poi_id_cratersville_street_b = "cratersvillestreetb"
-poi_id_cratersville_street_c = "cratersvillestreetc"
-
-poi_id_wreckington_street_a = "wreckingtonstreeta"
-poi_id_wreckington_street_b = "wreckingtonstreetb"
-
-poi_id_oozegardens_street_a = "oozegardensstreeta"
-poi_id_oozegardens_street_b = "oozegardensstreetb"
-poi_id_oozegardens_street_c = "oozegardensstreetc"
-poi_id_oozegardens_street_d = "oozegardensstreetd"
-
-poi_id_southsleezeborough_street_a = "southsleezeboroughstreeta"
-poi_id_southsleezeborough_street_b = "southsleezeboroughstreetb"
-poi_id_southsleezeborough_street_c = "southsleezeboroughstreetc"
-poi_id_southsleezeborough_street_d = "southsleezeboroughstreetd"
-
-poi_id_northsleezeborough_street_a = "northsleezeboroughstreeta"
-poi_id_northsleezeborough_street_b = "northsleezeboroughstreetb"
-poi_id_northsleezeborough_street_c = "northsleezeboroughstreetc"
-poi_id_northsleezeborough_street_d = "northsleezeboroughstreetd"
-poi_id_northsleezeborough_street_e = "northsleezeboroughstreete"
-
-poi_id_glocksbury_street_a = "glocksburystreeta"
-poi_id_glocksbury_street_b = "glocksburystreetb"
-poi_id_glocksbury_street_c = "glocksburystreetc"
-poi_id_glocksbury_street_d = "glocksburystreetd"
-poi_id_glocksbury_street_e = "glocksburystreete"
-
-poi_id_westglocksbury_street_a = "westglocksburystreeta"
-poi_id_westglocksbury_street_b = "westglocksburystreetb"
-poi_id_westglocksbury_street_c = "westglocksburystreetc"
-poi_id_westglocksbury_street_d = "westglocksburystreetd"
-
-poi_id_jaywalkerplain_street_a = "jaywalkerplainstreeta"
-poi_id_jaywalkerplain_street_b = "jaywalkerplainstreetb"
-poi_id_jaywalkerplain_street_c = "jaywalkerplainstreetc"
-poi_id_jaywalkerplain_street_d = "jaywalkerplainstreetd"
-poi_id_jaywalkerplain_street_e = "jaywalkerplainstreete"
-
-poi_id_crookline_street_a = "crooklinestreeta"
-poi_id_crookline_street_b = "crooklinestreetb"
-poi_id_crookline_street_c = "crooklinestreetc"
-poi_id_crookline_street_d = "crooklinestreetd"
-
-poi_id_dreadford_street_a = "dreadfordstreeta"
-poi_id_dreadford_street_b = "dreadfordstreetb"
-
-poi_id_vandalpark_street_a = "vandalparkstreeta"
-poi_id_vandalpark_street_b = "vandalparkstreetb"
-poi_id_vandalpark_street_c = "vandalparkstreetc"
-poi_id_vandalpark_street_d = "vandalparkstreetd"
-
-poi_id_poloniumhill_street_a = "poloniumhillstreeta"
-poi_id_poloniumhill_street_b = "poloniumhillstreetb"
-poi_id_poloniumhill_street_c = "poloniumhillstreetc"
-poi_id_poloniumhill_street_d = "poloniumhillstreetd"
-poi_id_poloniumhill_street_e = "poloniumhillstreete"
-
-poi_id_charcoalpark_street_a = "charcoalparkstreeta"
-poi_id_charcoalpark_street_b = "charcoalparkstreetb"
-
-poi_id_toxington_street_a = "toxingtonstreeta"
-poi_id_toxington_street_b = "toxingtonstreetb"
-poi_id_toxington_street_c = "toxingtonstreetc"
-poi_id_toxington_street_d = "toxingtonstreetd"
-poi_id_toxington_street_e = "toxingtonstreete"
-
-poi_id_gatlingsdale_street_a = "gatlingsdalestreeta"
-poi_id_gatlingsdale_street_b = "gatlingsdalestreetb"
-poi_id_gatlingsdale_street_c = "gatlingsdalestreetc"
-poi_id_gatlingsdale_street_d = "gatlingsdalestreetd"
-poi_id_gatlingsdale_street_e = "gatlingsdalestreete"
-
-poi_id_astatineheights_street_a = "astatineheightsstreeta"
-poi_id_astatineheights_street_b = "astatineheightsstreetb"
-poi_id_astatineheights_street_c = "astatineheightsstreetc"
-poi_id_astatineheights_street_d = "astatineheightsstreetd"
-poi_id_astatineheights_street_e = "astatineheightsstreete"
-poi_id_astatineheights_street_f = "astatineheightsstreetf"
-
-poi_id_smogsburg_street_a = "smogsburgstreeta"
-poi_id_smogsburg_street_b = "smogsburgstreetb"
-poi_id_smogsburg_street_c = "smogsburgstreetc"
-poi_id_smogsburg_street_d = "smogsburgstreetd"
-poi_id_smogsburg_street_e = "smogsburgstreete"
-
-poi_id_arsonbrook_street_a = "arsonbrookstreeta"
-poi_id_arsonbrook_street_b = "arsonbrookstreetb"
-poi_id_arsonbrook_street_c = "arsonbrookstreetc"
-poi_id_arsonbrook_street_d = "arsonbrookstreetd"
-poi_id_arsonbrook_street_e = "arsonbrookstreete"
-
-poi_id_maimridge_street_a = "maimridgestreeta"
-poi_id_maimridge_street_b = "maimridgestreetb"
-poi_id_maimridge_street_c = "maimridgestreetc"
-
-poi_id_brawlden_street_a = "brawldenstreeta"
-poi_id_brawlden_street_b = "brawldenstreetb"
-poi_id_brawlden_street_c = "brawldenstreetc"
-poi_id_brawlden_street_d = "brawldenstreetd"
-
-poi_id_littlechernobyl_street_a = "littlechernobylstreeta"
-poi_id_littlechernobyl_street_b = "littlechernobylstreetb"
-poi_id_littlechernobyl_street_c = "littlechernobylstreetc"
-
-poi_id_oldnewyonkers_street_a = "oldnewyonkersstreeta"
-poi_id_oldnewyonkers_street_b = "oldnewyonkersstreetb"
-poi_id_oldnewyonkers_street_c = "oldnewyonkersstreetc"
-poi_id_oldnewyonkers_street_d = "oldnewyonkersstreetd"
-poi_id_oldnewyonkers_street_e = "oldnewyonkersstreete"
-
-poi_id_newnewyonkers_street_a = "newnewyonkersstreeta"
-poi_id_newnewyonkers_street_b = "newnewyonkersstreetb"
-poi_id_newnewyonkers_street_c = "newnewyonkersstreetc"
-poi_id_newnewyonkers_street_d = "newnewyonkersstreetd"
-
-poi_id_assaultflatsbeach_street_a = "assaultflatsbeachstreeta"
-poi_id_assaultflatsbeach_street_b = "assaultflatsbeachstreetb"
-
-poi_id_vagrantscorner_street_a = "vagrantscornerstreeta"
-poi_id_vagrantscorner_street_b = "vagrantscornerstreetb"
-poi_id_vagrantscorner_street_c = "vagrantscornerstreetc"
-poi_id_vagrantscorner_street_d = "vagrantscornerstreetd"
-poi_id_vagrantscorner_street_e = "vagrantscornerstreete"
-poi_id_vagrantscorner_street_f = "vagrantscornerstreetf"
-
-poi_id_greenlightdistrict_street_a = "greenlightdistrictstreeta"
-poi_id_greenlightdistrict_street_b = "greenlightdistrictstreetb"
-poi_id_greenlightdistrict_street_c = "greenlightdistrictstreetc"
-
-poi_id_slimesend_street_a = "slimesendstreeta"
 
 # Tutorial zones
 poi_id_tutorial_classroom = "classroom"
@@ -800,133 +630,6 @@ channel_downpourlaboratory = "downpour-laboratory"
 channel_prankfeed = "prank-feed"
 channel_slimefest = "slimefest"
 
-# Placeholders
-channel_copkilltown_street_a = "cop-killtown-street-a"
-channel_rowdyroughhouse_street_a = "rowdy-roughhouse-street-a"
-channel_juviesrow_street_a = "juvies-row-street-a"
-channel_downtown_street_a = "downtown-street-a"
-channel_downtown_street_b = "downtown-street-b"
-channel_downtown_street_c = "downtown-street-c"
-channel_downtown_street_d = "downtown-street-d"
-channel_downtown_street_e = "downtown-street-e"
-channel_downtown_street_f = "downtown-street-f"
-channel_krakbay_street_a = "krak-bay-street-a"
-channel_krakbay_street_b = "krak-bay-street-b"
-channel_krakbay_street_c = "krak-bay-street-c"
-channel_krakbay_street_d = "krak-bay-street-d"
-channel_krakbay_street_e = "krak-bay-street-e"
-channel_krakbay_street_f = "krak-bay-street-f"
-channel_poudrinalley_street_a = "poudrin-alley-street-a"
-channel_poudrinalley_street_b = "poudrin-alley-street-b"
-channel_poudrinalley_street_c = "poudrin-alley-street-c"
-channel_poudrinalley_street_d = "poudrin-alley-street-d"
-channel_poudrinalley_street_e = "poudrin-alley-street-e"
-channel_cratersville_street_a = "cratersville-street-a"
-channel_cratersville_street_b = "cratersville-street-b"
-channel_cratersville_street_c = "cratersville-street-c"
-channel_wreckington_street_a = "wreckington-street-a"
-channel_wreckington_street_b = "wreckington-street-b"
-channel_oozegardens_street_a = "ooze-gardens-street-a"
-channel_oozegardens_street_b = "ooze-gardens-street-b"
-channel_oozegardens_street_c = "ooze-gardens-street-c"
-channel_oozegardens_street_d = "ooze-gardens-street-d"
-channel_southsleezeborough_street_a = "south-sleezeborough-street-a"
-channel_southsleezeborough_street_b = "south-sleezeborough-street-b"
-channel_southsleezeborough_street_c = "south-sleezeborough-street-c"
-channel_southsleezeborough_street_d = "south-sleezeborough-street-d"
-channel_northsleezeborough_street_a = "north-sleezeborough-street-a"
-channel_northsleezeborough_street_b = "north-sleezeborough-street-b"
-channel_northsleezeborough_street_c = "north-sleezeborough-street-c"
-channel_northsleezeborough_street_d = "north-sleezeborough-street-d"
-channel_northsleezeborough_street_e = "north-sleezeborough-street-e"
-channel_glocksbury_street_a = "glocksbury-street-a"
-channel_glocksbury_street_b = "glocksbury-street-b"
-channel_glocksbury_street_c = "glocksbury-street-c"
-channel_glocksbury_street_d = "glocksbury-street-d"
-channel_glocksbury_street_e = "glocksbury-street-e"
-channel_westglocksbury_street_a = "west-glocksbury-street-a"
-channel_westglocksbury_street_b = "west-glocksbury-street-b"
-channel_westglocksbury_street_c = "west-glocksbury-street-c"
-channel_westglocksbury_street_d = "west-glocksbury-street-d"
-channel_jaywalkerplain_street_a = "jaywalker-plain-street-a"
-channel_jaywalkerplain_street_b = "jaywalker-plain-street-b"
-channel_jaywalkerplain_street_c = "jaywalker-plain-street-c"
-channel_jaywalkerplain_street_d = "jaywalker-plain-street-d"
-channel_jaywalkerplain_street_e = "jaywalker-plain-street-e"
-channel_crookline_street_a = "crookline-street-a"
-channel_crookline_street_b = "crookline-street-b"
-channel_crookline_street_c = "crookline-street-c"
-channel_crookline_street_d = "crookline-street-d"
-channel_dreadford_street_a = "dreadford-street-a"
-channel_dreadford_street_b = "dreadford-street-b"
-channel_vandalpark_street_a = "vandal-park-street-a"
-channel_vandalpark_street_b = "vandal-park-street-b"
-channel_vandalpark_street_c = "vandal-park-street-c"
-channel_vandalpark_street_d = "vandal-park-street-d"
-channel_poloniumhill_street_a = "polonium-hill-street-a"
-channel_poloniumhill_street_b = "polonium-hill-street-b"
-channel_poloniumhill_street_c = "polonium-hill-street-c"
-channel_poloniumhill_street_d = "polonium-hill-street-d"
-channel_poloniumhill_street_e = "polonium-hill-street-e"
-channel_charcoalpark_street_a = "charcoal-park-street-a"
-channel_charcoalpark_street_b = "charcoal-park-street-b"
-channel_toxington_street_a = "toxington-street-a"
-channel_toxington_street_b = "toxington-street-b"
-channel_toxington_street_c = "toxington-street-c"
-channel_toxington_street_d = "toxington-street-d"
-channel_toxington_street_e = "toxington-street-e"
-channel_gatlingsdale_street_a = "gatlingsdale-street-a"
-channel_gatlingsdale_street_b = "gatlingsdale-street-b"
-channel_gatlingsdale_street_c = "gatlingsdale-street-c"
-channel_gatlingsdale_street_d = "gatlingsdale-street-d"
-channel_gatlingsdale_street_e = "gatlingsdale-street-e"
-channel_astatineheights_street_a = "astatine-heights-street-a"
-channel_astatineheights_street_b = "astatine-heights-street-b"
-channel_astatineheights_street_c = "astatine-heights-street-c"
-channel_astatineheights_street_d = "astatine-heights-street-d"
-channel_astatineheights_street_e = "astatine-heights-street-e"
-channel_astatineheights_street_f = "astatine-heights-street-f"
-channel_smogsburg_street_a = "smogsburg-street-a"
-channel_smogsburg_street_b = "smogsburg-street-b"
-channel_smogsburg_street_c = "smogsburg-street-c"
-channel_smogsburg_street_d = "smogsburg-street-d"
-channel_smogsburg_street_e = "smogsburg-street-e"
-channel_arsonbrook_street_a = "arsonbrook-street-a"
-channel_arsonbrook_street_b = "arsonbrook-street-b"
-channel_arsonbrook_street_c = "arsonbrook-street-c"
-channel_arsonbrook_street_d = "arsonbrook-street-d"
-channel_arsonbrook_street_e = "arsonbrook-street-e"
-channel_maimridge_street_a = "maimridge-street-a"
-channel_maimridge_street_b = "maimridge-street-b"
-channel_maimridge_street_c = "maimridge-street-c"
-channel_brawlden_street_a = "brawlden-street-a"
-channel_brawlden_street_b = "brawlden-street-b"
-channel_brawlden_street_c = "brawlden-street-c"
-channel_brawlden_street_d = "brawlden-street-d"
-channel_littlechernobyl_street_a = "little-chernobyl-street-a"
-channel_littlechernobyl_street_b = "little-chernobyl-street-b"
-channel_littlechernobyl_street_c = "little-chernobyl-street-c"
-channel_oldnewyonkers_street_a = "old-new-yonkers-street-a"
-channel_oldnewyonkers_street_b = "old-new-yonkers-street-b"
-channel_oldnewyonkers_street_c = "old-new-yonkers-street-c"
-channel_oldnewyonkers_street_d = "old-new-yonkers-street-d"
-channel_oldnewyonkers_street_e = "old-new-yonkers-street-e"
-channel_newnewyonkers_street_a = "new-new-yonkers-street-a"
-channel_newnewyonkers_street_b = "new-new-yonkers-street-b"
-channel_newnewyonkers_street_c = "new-new-yonkers-street-c"
-channel_newnewyonkers_street_d = "new-new-yonkers-street-d"
-channel_assaultflatsbeach_street_a = "assault-flats-beach-street-a"
-channel_assaultflatsbeach_street_b = "assault-flats-beach-street-b"
-channel_vagrantscorner_street_a = "vagrants-corner-street-a"
-channel_vagrantscorner_street_b = "vagrants-corner-street-b"
-channel_vagrantscorner_street_c = "vagrants-corner-street-c"
-channel_vagrantscorner_street_d = "vagrants-corner-street-d"
-channel_vagrantscorner_street_e = "vagrants-corner-street-e"
-channel_vagrantscorner_street_f = "vagrants-corner-street-f"
-channel_greenlightdistrict_street_a = "green-light-district-street-a"
-channel_greenlightdistrict_street_b = "green-light-district-street-b"
-channel_greenlightdistrict_street_c = "green-light-district-street-c"
-channel_slimesend_street_a = "slimes-end-street-a"
 
 channel_slimetwitter = "slime-twitter"
 channel_artexhibits = "art-exhibits"
@@ -1850,15 +1553,6 @@ event_tick_length = 5
 # slimeball tick length
 slimeball_tick_length = 5
 
-# how often to refresh sap
-sap_tick_length = 5
-
-# the amount of sap crushed by !piss
-sap_crush_piss = 3
-
-# the amount of sap spent on !piss'ing on someone
-sap_spend_piss = 1
-
 # farming
 crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
 reap_gain = 100000
@@ -1910,23 +1604,6 @@ cd_gvs_searchforbrainz = 300
 
 # in relation to time of death
 time_to_manifest = 24 * 60 * 60  # a day
-
-# PvP timer pushouts
-time_pvp_kill = 30 * 60  # NOT USED
-time_pvp_attack = 10 * 60  # NOT USED
-time_pvp_annex = 10 * 60  # NOT USED
-time_pvp_mine = 5 * 60
-time_pvp_withdraw = 30 * 60  # NOT USED
-time_pvp_scavenge = 10 * 60
-time_pvp_fish = 10 * 60
-time_pvp_farm = 30 * 60
-time_pvp_chemo = 10 * 60
-time_pvp_spar = 5 * 60  # NOT USED
-time_pvp_enlist = 5 * 60  # NOT USED
-time_pvp_knock = 1 * 60  # temp fix. will probably add spam prevention or something funny like restraining orders later
-time_pvp_duel = 3 * 60  # NOT USED
-time_pvp_pride = 1 * 60  # NOT USED
-time_pvp_vulnerable_districts = 1 * 60  # NOT USED
 
 # time to get kicked out of subzone. 
 time_kickout = 60 * 60  # 1 hour
@@ -2134,16 +1811,6 @@ symbol_map_ms = {
     -2: "+",
     2: "+",
     3: "X"
-}
-
-symbol_map_pokemine = {
-    -1: "_",
-    0: "~",
-    1: "X",
-    11: ";",
-    12: "/",
-    13: "#"
-
 }
 
 number_emote_map = {
@@ -3485,39 +3152,6 @@ moans = [
 time_movesubway = 10
 time_embark = 2
 
-# landlocked_destinations ={
-#    poi_id_maimridge_street_c:poi_id_oozegardens_street_a, #Colloid->Festival
-#    poi_id_oozegardens_street_a:poi_id_maimridge_street_c, #Festival->Colloid
-#    poi_id_maimridge_street_b:poi_id_cratersville_street_a, #Ski Lodges->End Lines
-#    poi_id_cratersville_street_a:poi_id_maimridge_street_b, #End Lines->Ski Lodges
-#    poi_id_arsonbrook_street_c:poi_id_cratersville_street_c, #Tilly -> Dynamite
-#    poi_id_cratersville_street_c:poi_id_arsonbrook_street_c, #Dynamite->Tilly
-#    poi_id_arsonbrook_street_d:poi_id_oozegardens_street_d, #Crassus->Zoo
-#    poi_id_oozegardens_street_d:poi_id_arsonbrook_street_d, #Zoo->Crassus
-#    poi_id_crookline_street_a:poi_id_newnewyonkers_street_a, #Doxy->Concrete
-#    poi_id_newnewyonkers_street_a:poi_id_crookline_street_a, #Concrete->Doxy
-#    poi_id_newnewyonkers_street_b:poi_id_crookline_street_b, #Broadway->MacGuffin
-#    poi_id_crookline_street_b:poi_id_newnewyonkers_street_b, #MacGuffin->Broadway
-#    poi_id_brawlden_street_b:poi_id_southsleezeborough_street_a, #Brownstone->China
-#    poi_id_southsleezeborough_street_a:poi_id_brawlden_street_b, #China->Brownstone
-#    poi_id_assaultflatsbeach_street_b:poi_id_dreadford_street_b, #Beachfront->Hangem
-#    poi_id_dreadford_street_b:poi_id_assaultflatsbeach_street_b, #Hangem->Beachfront
-#    poi_id_vagrantscorner_street_a:poi_id_westglocksbury_street_c, #Wharf->Goosh
-#    poi_id_westglocksbury_street_c:poi_id_vagrantscorner_street_a,#Goosh->Wharf
-#    poi_id_poloniumhill_street_d:poi_id_ferry, #Sawdust->Ferry
-#    poi_id_ferry:poi_id_poloniumhill_street_d, #Ferry->Sawdust
-#    poi_id_slimesendcliffs:poi_id_poloniumhill_street_c, #Cliffs->Geller
-#    poi_id_poloniumhill_street_c:poi_id_slimesendcliffs, #Geller->Cliffs
-#    poi_id_wreckington_street_b:poi_id_toxington_street_c,#Scrapyard->Quarantined
-#    poi_id_toxington_street_c:poi_id_wreckington_street_b,#Quarantined->Scrapyard
-#    poi_id_brawlden_street_a:poi_id_southsleezeborough_street_a, #Abandoned->China
-#    poi_id_westglocksbury_street_d:poi_id_vagrantscorner_street_a, #Highway->Wharf
-#    poi_id_jaywalkerplain_street_d:poi_id_vagrantscorner_street_a, #Qoute->Wharf
-#    poi_id_toxington_street_d:poi_id_ferry, #Carcinogen->Ferry
-#    poi_id_dreadford_street_a:poi_id_assaultflatsbeach_street_b, #Scaffold->Beachfront
-#    poi_id_charcoalpark_street_a:poi_id_wreckington_street_b, #Church->Scrapyard
-#    poi_id_charcoalpark_street_b:poi_id_cratersville_street_a, #Veteran->Endline
-# }
 
 # Marriage Ceremony Text
 marriage_ceremony_text = [
@@ -4239,6 +3873,12 @@ bazaar_distractions = [
     "*clunk*. A brick hits you on the head. It stuns you for a good 2 minutes. Dammit, someone must be dropping bricks from the blimp.",
     "you hesitate for a moment. Ah, fuck it. You sneak into the stall and peek behind the curtain. Suddenly, you spot something you never expected. Next to the specialist, hard at work, is his child, wailing for food his father can't afford. You're so wracked with empathy that you can't focus on the target of your espionage. Uh oh, he's coming. Better duck out! "
 ]
+
+jump_responses = {
+    'thesummit':'*Gnarly, bro!* Time to get on your board and feel that classic mountain high! Oh, what\'s that? No board? No experience boarding? No actual sloped surface, just a 2000 foot drop into the outskirts? Ah, my mistake. {} is sent plummeting off the edge.',
+    'limecorp3f':'Well, it looks like {} is finally going to end it. The Slime and Punishment 500 index dropped into the -500s and they became an evil version of themselves, and now the only thing left to do is liquidating their assets, aka their internal organs. OK, salaryman RP over. FOR STOCKS!!',
+    'blimp':'The blimp driver has served {} expired peanuts for the last time. And they\'re starting to think nobody has read those Yelp reviews they keep leaving. Time for a protest suicide. DIVE BOMB!',
+}
 
 
 sea_scavenge_responses = [
@@ -5082,16 +4722,6 @@ zine_commands = [
 ]
 # lock states between two specific districts
 lock_states = {
-    "n13door": ["n13office", "n4office"],
-    "n2door": ["n2office", "n4office"],
-    "n3door": ["n3office", "n4office"],
-    "n5door": ["n5office", "n4office"],
-    "n7door": ["n7office", "n4office"],
-    "n8door": ["n8office", "n4office"],
-    "n9door": ["n9office", "n4office"],
-    "n10door": ["n10office", "n4office"],
-    "n11door": ["n11office", "n4office"],
-    "groundfloordoor": ["slimecorphq", "n10office"],
     "shipstate": ["ufoufo", "westoutskirts"]
 }
 

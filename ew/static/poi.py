@@ -2313,6 +2313,7 @@ poi_list = [
         default_stop = "dreadfordblimptower",
         neighbors = {},
         wikipage = "https://rfck.miraheze.org/wiki/Public_Transportation#The_Blimp",
+        jump_dest='blimpland'
     ),
     EwPoi(
         id_poi = "aptdowntown",
@@ -3175,7 +3176,8 @@ poi_list = [
         is_subzone = True,
         father_district = "downtown",
         neighbors = {'limecorp2f': 20},
-        isSplit= 'limecorp1f'
+        isSplit= 'limecorp1f',
+        jump_dest='downtown'
     ),
     EwPoi(
         id_poi = "limecorp2f",
@@ -3221,7 +3223,8 @@ poi_list = [
         is_outskirts = True,
         neighbors = {'temple': 20, 'maimridgestreetb': 20},
         wikipage = "https://rfck.miraheze.org/wiki/Maimridge#The_Summit",
-        isSplit= 'maimridgestreetc'
+        isSplit= 'maimridgestreetc',
+        jump_dest='northoutskirtsedge'
     ),
     EwPoi(
         id_poi = "maimridgestreetb",

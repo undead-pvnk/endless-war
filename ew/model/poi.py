@@ -140,6 +140,9 @@ class EwPoi:
     #check to split POI
     isSplit = ""
 
+    #if !jump will take you anywhere
+    jump_dest = ""
+
     def __init__(
             self,
             id_poi = "unknown",
@@ -187,7 +190,8 @@ class EwPoi:
             neighbors = None,
             topic = "",
             wikipage = "",
-            isSplit = ""
+            isSplit = "",
+            jump_dest = ""
     ):
         self.id_poi = id_poi
         self.alias = alias
@@ -234,6 +238,7 @@ class EwPoi:
         self.topic = topic
         self.wikipage = wikipage
         self.isSplit = isSplit
+        self.jump_dest = jump_dest
 
         self.neighbors = neighbors
         if self.neighbors == None:

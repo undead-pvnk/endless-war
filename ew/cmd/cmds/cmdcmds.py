@@ -13,6 +13,7 @@ from ew.backend.market import EwMarket
 from ew.backend.status import EwEnemyStatusEffect
 from ew.backend.status import EwStatusEffect
 from ew.backend.worldevent import EwWorldEvent
+from ew.utils.transport import EwTransport
 from ew.static import cfg as ewcfg
 from ew.static import hue as hue_static
 from ew.static import items as static_items
@@ -758,6 +759,8 @@ async def toss_off_cliff(cmd):
 
 async def jump(cmd):
     user_data = EwUser(member=cmd.message.author)
+    poi = poi_static.id_to_poi.get(user_data.poi)
+    poi_dest = poi_static.id_to_poi.get(user_data.poi)
 
     if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
         response = "You bonk your head on the shaft's ceiling."
@@ -782,13 +785,32 @@ async def jump(cmd):
                     wafflehouse_poi = poi_static.id_to_poi.get(ewcfg.poi_id_thevoid)
                     response = "You do a backflip on the way down, bounce on the trampoline a few times to reduce your momentum, and climb down a ladder from the roof, down to the ground. You find yourself standing next to {}, in {}.".format(wafflehouse_poi.str_name, void_poi.str_name)
                     await fe_utils.send_message(cmd.client, fe_utils.get_channel(cmd.guild, void_poi.channel), fe_utils.formatMessage(cmd.message.author, response), 20)
-                    # await asyncio.sleep(20)
-                    # try:
-                    # await msg.delete()
-                    # pass
-                    # except:
-                    # pass
                     return
+
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "You're already dead. You'd just ghost hover above the drop."
+    elif user_data.life_state == ewcfg.life_state_kingpin:
+        response = "You try to end things right here. Sadly, the gangster sycophants that kiss the ground you walk on grab your ankles in desperation and prevent you from suicide. Oh, the price of fame."
+
+    elif poi.jump_dest != '':
+        resp_cont = EwResponseContainer(client=cmd.client, id_server=user_data.id_server)
+
+        user_data.poi = poi.jump_dest
+        if user_data.poi == 'blimpland':
+            blimp_obj = EwTransport(id_server=user_data.id_server, poi = poi.id_poi)
+            user_data.poi = blimp_obj.current_stop
+
+        if ewcfg.mutation_id_lightasafeather not in user_data.get_mutations():
+            user_data.trauma = ewcfg.trauma_id_environment
+            die_resp = user_data.die(cause=ewcfg.cause_falling)
+            resp_cont.add_response_container(die_resp)
+
+        user_data.persist()
+        response = ewcfg.jump_responses.get(poi.id_poi).format(cmd.message.author.display_name)
+        response_dest = "SPLAT! A body collides with the asphalt with such force, that it is utterly annihilated, covering bystanders in blood and slime and guts."
+        resp_cont.add_channel_response(channel=poi.channel, response=response)
+        resp_cont.add_channel_response(channel=poi_dest.channel, response=response_dest)
+        await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
     elif cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
         roll = random.randrange(25)
@@ -796,10 +818,6 @@ async def jump(cmd):
             response = "You start running and taking momentum to then make the fucking highest jump you've ever done. When you reach the ground, you somehow manage to do a sommersault landing. Damn, guess you were good at parkour in the end!"
         else:
             response = "You jump. Nope. Still not good at parkour."
-    elif user_data.life_state == ewcfg.life_state_corpse:
-        response = "You're already dead. You'd just ghost hover above the cliff."
-    elif user_data.life_state == ewcfg.life_state_kingpin:
-        response = "You try to end things right here. Sadly, the gangster sycophants that kiss the ground you walk on grab your ankles in desperation and prevent you from suicide. Oh, the price of fame."
     else:
         response = "Hmm. The cliff looks safe enough. You imagine, with the proper diving posture, you'll be able to land in the slime unharmed. You steel yourself for the fall, run along the cliff, and swan dive off its steep edge. Of course, you forgot that the Slime Sea is highly corrosive, there are several krakens there, and you can't swim. Welp, time to die."
 
@@ -2873,3 +2891,5 @@ async def cockdraw(cmd):
 
     response = "You {} {}! It's {} inches long!".format(action, object, size)
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
