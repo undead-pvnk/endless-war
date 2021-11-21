@@ -1070,7 +1070,7 @@ poi_list = [
         pvp = False,
         is_subzone = True,
         mother_districts = ['astatineheights'],
-        neighbors = {'astatineheights': 20},
+        neighbors = {'astatineheights': 20, 'themuseum':20},
         wikipage = "https://rfck.miraheze.org/wiki/Astatine_Heights#The_Cinema",
     ),
     EwPoi(
@@ -3161,7 +3161,7 @@ poi_list = [
         is_subzone = True,
         vendors = [ewcfg.vendor_giftshop],
         mother_districts = ['oozegardens'],
-        neighbors = {'oozegardens': 20},
+        neighbors = {'oozegardens': 20, 'nlacakanmcinemas':20},
     ),
     EwPoi(
         id_poi = "limecorp3f",
