@@ -514,7 +514,7 @@ async def item_look(cmd):
         user_data = EwUser(id_user=user_data.visiting, id_server=server)
 
     item_dest = []
-
+    collection_inv = bknd_item.inventory(id_user=str(user_data.id_user) + ewcfg.compartment_id_decorate, id_server=user_data.id_server, item_type_filter=ewcfg.it_furniture)
     item_sought_inv = bknd_item.find_item(item_search=item_search, id_user=author.id, id_server=server)
     item_dest.append(item_sought_inv)
 
@@ -529,6 +529,12 @@ async def item_look(cmd):
         item_sought_decorate = bknd_item.find_item(item_search=item_search,
                                                    id_user=str(user_data.id_user) + ewcfg.compartment_id_decorate,
                                                    id_server=server)
+
+
+        for collected in collection_inv:
+            if collected.get('name') in ['large aquarium', 'soul cylinder', 'weapon chest', 'scalp collection', 'general collection'] and collected.get('item_type') == ewcfg.it_furniture:
+                item_sought_collection = bknd_item.find_item(item_search=item_search, id_user='{}collection'.format(collected.get('id_item')), id_server=server)
+                item_dest.append(item_sought_collection)
 
         item_dest.append(item_sought_closet)
         item_dest.append(item_sought_fridge)
@@ -697,8 +703,8 @@ async def item_look(cmd):
 
                 if furn_obj is not None and furn_obj.furn_set == 'collection':
 
-                    print('cool no boi!')
-                    if 'contents' in cmd.tokens[0]:
+
+                    if 'contents' in cmd.tokens[0] and 'general_collection' not in response:
                         response = response.format(scalp_inspect = '{general_collection}', aquarium_inspect = '{general_collection}', soul_cylinder = '{general_collection}', weapon_chest = '{general_collection}')
                     if 'scalp_inspect' in response:
                         response = response.format(scalp_inspect=itm_u.get_scalp_collection(id_item=item.id_item, id_server=item.id_server))
@@ -1961,15 +1967,15 @@ async def collect(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     collection_seek = cmd.tokens[1]
-    item_sought_col = bknd_item.find_item(item_search=collection_seek, id_user=user_data.id_user, id_server=user_data.id_server)
-    if not item_sought_col:
-        item_sought_col = bknd_item.find_item(item_search=collection_seek, id_user="{}{}".format(user_data.id_user, "decorate"),id_server=user_data.id_server)
+    item_sought_col = bknd_item.find_item(item_search=collection_seek, id_user="{}{}".format(user_data.id_user, "decorate"),id_server=user_data.id_server)
 
     item_seek = cmd.tokens[2]
     item_sought_item = bknd_item.find_item(item_search=item_seek, id_user=user_data.id_user, id_server=user_data.id_server)
 
     if not poi.is_apartment or user_data.visiting != ewcfg.location_id_empty:
         response = "Nobody can know about your shameful hoarding habits. Add to your collections in your apartment."
+    elif not item_sought_col:
+        response = "You need a collection stowed in your apartment."
     elif not item_sought_item:
         response = "Ah, a collector of imaginary objects. Too bad your brain is one of them. Pick a real item."
     elif not collection_seek:

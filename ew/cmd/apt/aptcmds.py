@@ -1343,7 +1343,7 @@ async def store_item(cmd):
 
     multistow = 1
     startparse = 1
-    if cmd.tokens[1].isnumeric():
+    if cmd.tokens[1].isnumeric() and cmd.tokens_count > 2:
         startparse = 2
         multistow = int(cmd.tokens[1])
 

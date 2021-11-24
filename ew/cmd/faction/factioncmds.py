@@ -67,37 +67,59 @@ async def store(cmd):
             response = "Get real, asshole. You haven't even enlisted into this gang yet, so it's not like they'd trust you with a key to their valubles."
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    if cmd.tokens[1] == 'all':
+        cmd.tokens[1] = '4000'
+
+    multistow = 1
+    startparse = 1
+    if cmd.tokens[1].isnumeric() and cmd.tokens_count > 2:
+        startparse = 2
+        multistow = int(cmd.tokens[1])
+
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[startparse:])
 
     item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
 
     if item_sought:
-        item = EwItem(id_item=item_sought.get("id_item"))
 
-        if not item.soulbound:
-            if item.item_type == ewcfg.it_weapon:
-                if user_data.weapon >= 0 and item.id_item == user_data.weapon:
-                    if user_data.weaponmarried:
-                        weapon = static_weapons.weapon_map.get(item.item_props.get("weapon_type"))
-                        response = "Your cuckoldry is appreciated, but your {} will always remain faithful to you.".format(item_sought.get('name'))
-                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-                    else:
-                        user_data.weapon = -1
+        if not item_sought.get('soulbound'):
+            items_had = 0
+            loop_sought = item_sought.copy()
+            while multistow > 0 and loop_sought is not None:
+                item = EwItem(id_item=loop_sought.get("id_item"))
+                item_search = ewutils.flattenTokenListToString(loop_sought.get('name'))
+                if item.item_type == ewcfg.it_weapon:
+                    if user_data.weapon >= 0 and item.id_item == user_data.weapon:
+                        if user_data.weaponmarried:
+                            weapon = static_weapons.weapon_map.get(item.item_props.get("weapon_type"))
+                            response = "Your cuckoldry is appreciated, but your {} will always remain faithful to you.".format(item_sought.get('name'))
+                            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                        else:
+                            user_data.weapon = -1
+                            user_data.persist()
+                    elif item.id_item == user_data.sidearm:
+                        user_data.sidearm = -1
                         user_data.persist()
-                elif item.id_item == user_data.sidearm:
-                    user_data.sidearm = -1
-                    user_data.persist()
 
-            if item.item_type == ewcfg.it_cosmetic:
-                if "adorned" in item.item_props:
-                    item.item_props["adorned"] = "false"
-                if "slimeoid" in item.item_props:
-                    item.item_props["slimeoid"] = "false"
+                if item.item_type == ewcfg.it_cosmetic:
+                    if "adorned" in item.item_props:
+                        item.item_props["adorned"] = "false"
+                    if "slimeoid" in item.item_props:
+                        item.item_props["slimeoid"] = "false"
 
-            item.persist()
-            bknd_item.give_item(id_item=item.id_item, id_server=item.id_server, id_user=poi.community_chest)
+                item.persist()
+                bknd_item.give_item(id_item=loop_sought.get('id_item'), id_server=item.id_server, id_user=poi.community_chest)
+                loop_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
+                items_had += 1
+                multistow -= 1
 
-            response = "You store your {} in the community chest.".format(item_sought.get("name"))
+            if items_had > 1:
+                name_string = "{}(x{})".format(item_sought.get("name"), items_had)
+            else:
+                name_string = item_sought.get("name")
+
+
+            response = "You store your {} in the community chest.".format(name_string)
 
         else:
             response = "You can't {} soulbound items.".format(cmd.tokens[0])
@@ -130,53 +152,86 @@ async def take(cmd):
             response = "Get real, asshole. You haven't even enlisted into this gang yet, so it's not like they'd trust you with a key to their valubles."
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    multisnag = 1
+    startparse = 1
+    if cmd.tokens[1] == 'all':
+        cmd.tokens[1] = '4000'
+
+    if cmd.tokens[1].isnumeric() and cmd.tokens_count > 2:
+        startparse = 2
+        multisnag = int(cmd.tokens[1])
+
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[startparse:])
 
     item_sought = bknd_item.find_item(item_search=item_search, id_user=poi.community_chest, id_server=cmd.guild.id if cmd.guild is not None else None, admin = admin)
 
+    items_snagged = 0
+
     if item_sought:
-        if item_sought.get('item_type') == ewcfg.it_food:
-            food_items = bknd_item.inventory(
-                id_user=cmd.message.author.id,
-                id_server=cmd.guild.id,
-                item_type_filter=ewcfg.it_food
-            )
+        item_search = ewutils.flattenTokenListToString(item_sought.get('name'))
+        loop_sought = item_sought.copy()
+        while multisnag > 0 and loop_sought is not None:
+            if items_snagged == 0:
+                if loop_sought.get('item_type') == ewcfg.it_food:
+                    food_items = bknd_item.inventory(
+                        id_user=cmd.message.author.id,
+                        id_server=cmd.guild.id,
+                        item_type_filter=ewcfg.it_food
+                    )
 
-            if len(food_items) >= user_data.get_food_capacity():
-                del food_items
-                response = "You can't carry any more food items."
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    if len(food_items) >= user_data.get_food_capacity():
+                        del food_items
+                        response = "You can't carry any more food items."
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    elif user_data.get_food_capacity() - len(food_items) < multisnag:
+                        multisnag = user_data.get_food_capacity() - len(food_items)
+                        del food_items
+                elif loop_sought.get('item_type') == ewcfg.it_weapon:
+                    weapons_held = bknd_item.inventory(
+                        id_user=cmd.message.author.id,
+                        id_server=cmd.guild.id,
+                        item_type_filter=ewcfg.it_weapon
+                    )
 
-        elif item_sought.get('item_type') == ewcfg.it_weapon:
-            weapons_held = bknd_item.inventory(
-                id_user=cmd.message.author.id,
-                id_server=cmd.guild.id,
-                item_type_filter=ewcfg.it_weapon
-            )
+                    if user_data.life_state == ewcfg.life_state_corpse:
+                        del weapons_held
+                        response = "Ghosts can't hold weapons."
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    elif user_data.get_weapon_capacity() - len(weapons_held) < multisnag:
+                        multisnag = user_data.get_weapon_capacity() - len(weapons_held)
+                        del weapons_held
 
-            if user_data.life_state == ewcfg.life_state_corpse:
-                del weapons_held
-                response = "Ghosts can't hold weapons."
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-            elif len(weapons_held) >= user_data.get_weapon_capacity():
-                del weapons_held
-                response = "You can't carry any more weapons."
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    elif len(weapons_held) >= user_data.get_weapon_capacity():
+                        del weapons_held
+                        response = "You can't carry any more weapons."
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+                else:
+                    other_items = bknd_item.inventory(
+                        id_user=cmd.message.author.id,
+                        id_server=user_data.id_server,
+                        item_type_filter=loop_sought.get('item_type')
+                    )
+                    if len(other_items) >= ewcfg.generic_inv_limit:
+                        del other_items
+                        response = ewcfg.str_generic_inv_limit.format(loop_sought.get('item_type'))
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    elif ewcfg.generic_inv_limit - len(other_items) < multisnag:
+                        multisnag = ewcfg.generic_inv_limit - len(other_items)
+                        del other_items
+
+            items_snagged += 1
+            multisnag -= 1
+            print(loop_sought.get('id_item'))
+            bknd_item.give_item(id_item=loop_sought.get('id_item'), id_server=user_data.id_server, id_user=user_data.id_user)
+            loop_sought = bknd_item.find_item(item_search=item_search, id_user=poi.community_chest, id_server=cmd.guild.id if cmd.guild is not None else None, admin=admin)
+
+        if items_snagged > 1:
+            name_string = "{}(x{})".format(item_sought.get("name"), items_snagged)
         else:
-            other_items = bknd_item.inventory(
-                id_user=cmd.message.author.id,
-                id_server=user_data.id_server,
-                item_type_filter=item_sought.get('item_type')
-            )
-            if len(other_items) >= ewcfg.generic_inv_limit:
-                del other_items
-                response = ewcfg.str_generic_inv_limit.format(item_sought.get('item_type'))
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            name_string = item_sought.get('name')
 
-        bknd_item.give_item(id_item=item_sought.get('id_item'), id_server=user_data.id_server, id_user=user_data.id_user)
-
-        response = "You retrieve a {} from the community chest.".format(item_sought.get("name"))
+        response = "You retrieve a {} from the community chest.".format(name_string)
 
         del item_sought
 

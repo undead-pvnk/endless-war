@@ -295,6 +295,9 @@ poi_id_apt_crookline = "aptcrookline"
 poi_id_apt_dreadford = "aptdreadford"
 poi_id_apt_maimridge = "aptmaimridge"
 
+poi_id_maimridge_street_a = "maimridgestreeta"
+poi_id_maimridge_street_b = "maimridgestreetb"
+poi_id_maimridge_street_c = "maimridgestreetc"
 
 # Tutorial zones
 poi_id_tutorial_classroom = "classroom"

@@ -34,7 +34,7 @@ def item_drop(
 
 def get_fish_collection(id_item, id_server):
     item = EwItem(id_item=id_item)
-    if 'decorate' not in item.id_owner:
+    if 'decorate' not in str(item.id_owner):
         return 'It\'s a large aquarium, built for whole schools of fish. You can\'t see what\'s inside because you\'re nearly killing yourself carrying it.'
 
     id_item_col = "{}collection".format(id_item)
@@ -72,7 +72,7 @@ def get_fish_collection(id_item, id_server):
 
 def get_scalp_collection(id_item, id_server):
     item = EwItem(id_item=id_item)
-    if 'decorate' not in item.id_owner:
+    if 'decorate' not in str(item.id_owner):
         return 'It\'s a scalp board, detailing the people you\'ve eliminated. Somehow, show and tell in public seems like a bad idea.'
 
     id_item_col = "{}collection".format(id_item)
@@ -99,7 +99,7 @@ def get_scalp_collection(id_item, id_server):
 
 def get_soul_collection(id_item, id_server):
     item = EwItem(id_item=id_item)
-    if 'decorate' not in item.id_owner:
+    if 'decorate' not in str(item.id_owner):
         return 'It\'s a soul cylinder. You can\'t really tell whose soul is whose. You\'ve been carrying this thing around and all the souls are jostled and queasy.'
 
     id_item_col = "{}collection".format(id_item)
@@ -125,7 +125,7 @@ def get_soul_collection(id_item, id_server):
 
 def get_weapon_collection(id_item, id_server):
     item = EwItem(id_item=id_item)
-    if 'decorate' not in item.id_owner:
+    if 'decorate' not in str(item.id_owner):
         return "It's a weapon rack. You can't admire its splendor while it's on your back, though."
 
     id_item_col = "{}collection".format(id_item)
@@ -151,7 +151,7 @@ def get_weapon_collection(id_item, id_server):
 
 def get_general_collection(id_item, id_server):
     item = EwItem(id_item=id_item)
-    if 'decorate' not in item.id_owner:
+    if 'decorate' not in str(item.id_owner):
         return "It's a multi-item display case. Best viewed when placed."
 
     id_item_col = "{}collection".format(id_item)
@@ -160,7 +160,7 @@ def get_general_collection(id_item, id_server):
     if len(item_inv) == 0:
         return "There's nothing in here at the moment."
 
-    response = "You examine your preserved collection. Inside is a "
+    response = "You examine your preserved collection. Inside is "
     item_arr = []
 
     for gen_item in item_inv:

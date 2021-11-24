@@ -3260,7 +3260,7 @@ poi_list = [
     ),
     EwPoi(
         id_poi = "temple",
-        alias = ['mountaintemple', 'shangri', 'larceny', 'shangrilarceny', 'sl'],
+        alias = ['mountaintemple', 'shangri', 'larceny', 'shangrilarceny', 'sl', 'shangri-larceny'],
         str_name = "Shangri-Larceny",
         str_desc = "You stand in the roomy echo-filled main chamber of Shangri-Larceny Temple. It's way too dark in here, and you can hear the howling mountain winds outside. Decades worth of tourist-groping has weathered the once-ornate walls into a patchy mess, and every once in awhile you step on a discarded Dorito's bag someone left here like 23 years ago. As ancient temples go, you've seen better. The valuables that gave the place its name have already been nabbed, save for whatever is behind the colossal door that has remained closed for millennia. Well, boys, you know what that means. Time to get lockpicking.",
         channel = "shangri-larceny",

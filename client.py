@@ -983,7 +983,7 @@ async def on_message(message):
     re_awoo = re_awoo_g
     re_moan = re_moan_g
     re_measure = re_measure_g
-    
+
     # update the player's time_last_action which is used for kicking AFK players out of subzones
     if message.guild != None:
 
@@ -1053,7 +1053,6 @@ async def on_message(message):
         mentions_count = len(mentions)
 
 
-
         if message.guild == None:
             guild_used = ewcfg.server_list[playermodel.id_server]
             admin_permissions = False
@@ -1082,7 +1081,9 @@ async def on_message(message):
         if ewdebug.debug_content_1 in content_tolower:
             usermodel.persist()
             await ewdebug.contentCheck(cmd=cmd_obj, line=content_tolower)
+
             usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
+
         # if the message wasn't a command, we can stop here
         if not message.content.startswith(ewcfg.cmd_prefix):
             return
@@ -1156,12 +1157,12 @@ async def on_message(message):
         if usermodel.poi in ewdebug.act_pois.keys():
             if content_tolower in ewdebug.act_pois.get(usermodel.poi).keys():
                 function = ewdebug.act_pois.get(usermodel.poi).get(content_tolower)
-                return await function(cmd=cmd_obj)
+                await function(cmd=cmd_obj)
 
         #if usermodel.poi in poi_static.tutorial_pois:
         #    return await ewdungeons.tutorial_cmd(cmd_obj)
 
-        elif cmd_fn != None:
+        if cmd_fn != None:
             # Execute found command
             return await cmd_fn(cmd_obj)
 

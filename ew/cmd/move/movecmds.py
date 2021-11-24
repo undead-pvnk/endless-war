@@ -46,7 +46,6 @@ async def move(cmd = None, isApt = False, isSplit = 0):
     player_data = EwPlayer(id_user=cmd.message.author.id)
     user_data = EwUser(id_user=cmd.message.author.id, id_server=player_data.id_server, data_level=1)
     poi_current = poi_static.id_to_poi.get(user_data.poi)
-
     time_move_start = int(time.time())
 
 

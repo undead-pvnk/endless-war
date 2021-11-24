@@ -23585,9 +23585,6 @@ poi_id_arsonbrook_street_c = "arsonbrookstreetc"
 poi_id_arsonbrook_street_d = "arsonbrookstreetd"
 poi_id_arsonbrook_street_e = "arsonbrookstreete"
 
-poi_id_maimridge_street_a = "maimridgestreeta"
-poi_id_maimridge_street_b = "maimridgestreetb"
-poi_id_maimridge_street_c = "maimridgestreetc"
 
 poi_id_brawlden_street_a = "brawldenstreeta"
 poi_id_brawlden_street_b = "brawldenstreetb"
