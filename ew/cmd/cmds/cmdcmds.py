@@ -759,7 +759,6 @@ async def toss_off_cliff(cmd):
 async def jump(cmd):
     user_data = EwUser(member=cmd.message.author)
     poi = poi_static.id_to_poi.get(user_data.poi)
-    poi_dest = poi_static.id_to_poi.get(user_data.poi)
 
     if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
         response = "You bonk your head on the shaft's ceiling."
@@ -795,6 +794,7 @@ async def jump(cmd):
         resp_cont = EwResponseContainer(client=cmd.client, id_server=user_data.id_server)
 
         user_data.poi = poi.jump_dest
+        poi_dest = poi_static.id_to_poi.get(poi.jump_dest)
         if user_data.poi == 'blimpland':
             blimp_obj = EwTransport(id_server=user_data.id_server, poi = poi.id_poi)
             user_data.poi = blimp_obj.current_stop
@@ -803,13 +803,17 @@ async def jump(cmd):
             user_data.trauma = ewcfg.trauma_id_environment
             die_resp = user_data.die(cause=ewcfg.cause_falling)
             resp_cont.add_response_container(die_resp)
-
+            response_dest = "SPLAT! A body collides with the asphalt with such force, that it is utterly annihilated, covering bystanders in blood and slime and guts."
+        else:
+            response_dest = "{} floats in from above!".format(cmd.message.author.display_name)
         user_data.persist()
         response = ewcfg.jump_responses.get(poi.id_poi).format(cmd.message.author.display_name)
-        response_dest = "SPLAT! A body collides with the asphalt with such force, that it is utterly annihilated, covering bystanders in blood and slime and guts."
+
         resp_cont.add_channel_response(channel=poi.channel, response=response)
         resp_cont.add_channel_response(channel=poi_dest.channel, response=response_dest)
         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+        return await resp_cont.post()
+
 
     elif cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
         roll = random.randrange(25)

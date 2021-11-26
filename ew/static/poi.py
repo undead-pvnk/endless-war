@@ -599,7 +599,7 @@ poi_list = [
         id_poi = "maimridge",
         alias = ['maim', 'ridge', 'mr', 'mario'],
         str_name = "Maimridge",
-        str_desc = "In front of you rests the formidable mountain range of Mt. Srxek, known for having freezing temperatures during even the summer months, and for having the highest peaks in the county. Snow falls near the tops of these mountains basically all year ‘round, and as such a community of suicidal winter sport enthusiasts and adventurous explorers have set up shop across the range, establishing lodging and tacky souvenir shops in and around ancient Native American burial grounds, because it's not like they were using the place anymore. Unfortunately, or perhaps fortunately for the thrill seekers *Among Us*, the mountains here are far too steep for anyone to actually ski down without a death wish to attempt them. Seriously, there are just a series of ninety degree drops in some places, and that's not even to mention the yetis, don't even get me started on the yetis. Of course, none of this stops the locals, who eagerly careen off the side of cliffs and then take the lift back up for seconds after they revive. If you want to down some cheap instant hot cocoa before flying off the summit of a fucking mountain, then this district is for you. Maimridge used to be considered part of the outskirts, but recently it has grown enough of a stable population to be considered a real district. Its claim to fame is, of course, the impressive mountains in its borders. To the south is Astatine Heights. Toxington is to the west, Arsonbrook to the east, and the Northwest Outskirts are to the north. Go up Mt. SXrek and you'll arrive at Colloid Springs.",
+        str_desc = "In front of you rests the formidable mountain range of Mt. Srxek, known for having freezing temperatures during even the summer months, and for having the highest peaks in the county. Snow falls near the tops of these mountains basically all year ‘round, and as such a community of suicidal winter sport enthusiasts and adventurous explorers have set up shop across the range, establishing lodging and tacky souvenir shops in and around ancient Native American burial grounds, because it's not like they were using the place anymore. Unfortunately, or perhaps fortunately for the thrill seekers *Among Us*, the mountains here are far too steep for anyone to actually ski down without a death wish to attempt them. Seriously, there are just a series of ninety degree drops in some places, and that's not even to mention the yetis, don't even get me started on the yetis. Of course, none of this stops the locals, who eagerly careen off the side of cliffs and then take the lift back up for seconds after they revive. If you want to down some cheap instant hot cocoa before flying off the summit of a fucking mountain, then this district is for you. Maimridge used to be considered part of the outskirts, but recently it has grown enough of a stable population to be considered a real district. Its claim to fame is, of course, the impressive mountains in its borders. To the south is Astatine Heights. Toxington is to the west, Arsonbrook to the east, and the Northwest Outskirts are to the north. Go up Mt. SRxek and you'll arrive at Colloid Springs.",
         channel = "maimridge",
         major_role = "maimridge_major",
         minor_role = "maimridge_minor",
@@ -1728,7 +1728,7 @@ poi_list = [
     ),
     EwPoi(
         id_poi = "copkilltownsubwaystation",
-        alias = ['copkilltownsubway', 'copkilltownsub', 'copkilltownstation', 'copkillsubwaystation', 'copkillsubway', 'copkillsub', 'copkillstation', 'cksubwaystation', 'cksubway', 'cksub', 'ckstation', 'copkills', 'cks', 'cs'],
+        alias = ['copkilltownsubway', 'copkilltownsub', 'copkilltownstation', 'copkillsubwaystation', 'copkillsubway', 'copkillsub', 'copkillstation', 'cksubwaystation', 'cksubway', 'cksub', 'ckstation', 'copkills', 'cks'],
         str_name = "The Cop Killtown Subway Station",
         str_desc = "This sparsely decorated terminal replicates the feeling of riding on a Red Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Red Line train be late. Still doesn't make you like being on one though.\n\nExits into Cop Killtown.",
         channel = "cop-killtown-subway-station",
@@ -3165,7 +3165,7 @@ poi_list = [
     ),
     EwPoi(
         id_poi = "limecorp3f",
-        alias = ['809231f', 'n11', 'humanresources', 'limecorp3f', '3f', 'lc3f', 'floor3', 'limecorpfloor3', 'limecorpbuilding3f'],
+        alias = ['809231f', 'n11', 'humanresources', 'limecorp3f', '3f', 'lc3f', 'floor3', 'limecorpfloor3', 'limecorpbuilding3f', 'limecorp3', 'lc3'],
         str_name = "Limecorp Offices 3f",
         str_desc = "This used to be N11's office? Sure has seen better days. The furniture's practically sawdust now, and the decoration-only brick walls aren't doing much better. There's that, plus you can feel the building swaying precariously in the breeze. Are those the winds of change, ushering in a new future with Limecorp at the helm? Well sure, if getting crushed inside a fallen building is your idea of change. Limecorp's doomed if this is the best office they could find.\n\nLimecorp 2F is below you.",
         channel = "limecorp-3f",
@@ -3181,7 +3181,7 @@ poi_list = [
     ),
     EwPoi(
         id_poi = "limecorp2f",
-        alias = ['limecorp2f', '2f', 'lc2f', 'floor2', 'limecorpfloor2', 'limecorpbuilding2f'],
+        alias = ['limecorp2f', '2f', 'lc2f', 'floor2', 'limecorpfloor2', 'limecorpbuilding2f', 'limecorp2', 'lc2'],
         str_name = "Limecorp Offices 2f",
         str_desc = "Limecorp Floor 2 hasn't been looted quite so thoroughly yet. Most people are afraid to come up here; since this building has no foundation it would probably tip over pretty easily. More knocked-over cubicles and Windows 7 licenses for you then! It's a tragedy, but since Slimecorp more or less died, most of these scattered documents aren't valuable anymore. And you're not about to lawyer up and find the ones that are. Maybe you can **sift** through the wreckage and do some office work? Nah, that's stupid. \n\nLimecorp 1F is below, and Limecorp 3F is above you.",
         channel = "limecorp-2f",
@@ -3196,7 +3196,7 @@ poi_list = [
     ),
     EwPoi(
         id_poi = "limecorp1f",
-        alias = ['limecorp1f', '1f', 'lc1f', 'floor1', 'limecorpfloor1', 'limecorp', 'limes', 'lime', 'limecorpbuilding'],
+        alias = ['limecorp1f', '1f', 'lc1f', 'floor1', 'limecorpfloor1', 'limecorp', 'limes', 'lime', 'limecorpbuilding', 'limecorp1', 'lc1'],
         str_name = "Limecorp Offices 1f",
         str_desc = "The locals have taken to calling this place the Limecorp building. The S in Slimecorp's logo fell off on this half of the tower, so the name stuck. The inside had all the broken glass cleared out but apart from that it's still pretty torn up. It was originally a chem lab for research and manufacture of Slimecorp plastics, so if you took the time you might be able to salvage some neat stuff. Maybe you could be the first to discover the recipe for turning water into slime...\n\nThis area exits to Downtown, and you can climb up to Limecorp 2F.",
         channel = "limecorp-1f",
@@ -3211,7 +3211,7 @@ poi_list = [
     ),
     EwPoi(
         id_poi = "maimridgestreeta",
-        alias = ['thesummit', 'summit', 'mtsxrek', 'sxrek'],
+        alias = ['thesummit', 'summit', 'mtsxrek', 'sxrek', 'mtsrxek', 'srxek', 'mountain', 'mountain1'],
         str_name = "The Summit",
         str_desc = "This is the highest peak in the county. You can see the entire city from here, large swathes of the outskirts, and of course the eye-searing slime sea. You think you can even make out the light pollution from other settlements on the sea in the distance, but they're too far away to tell for sure. Intriguing, huh? You should ask a merchant in Vagrant's Corner just who it is they're trading with all the time and what their cities are like. Do they have rampant gang violence too? Who am I kidding, of course they do.",
         channel = "the-summit",
@@ -3228,7 +3228,7 @@ poi_list = [
     ),
     EwPoi(
         id_poi = "maimridgestreetb",
-        alias = ['skilodges', 'ski'],
+        alias = ['skilodges', 'ski', 'mountain2'],
         str_name = "Ski Lodges",
         str_desc = "This cozy community of ski lodges and other warm buildings is the perfect respite from the cold, rugged mountainside. Of course, you can't let your enemies take advantage of this hospitality, so you gotta stand guard outside and bash their skull in before they can take their shoes off inside. In other words, you're rejuvenating them first. ",
         channel = "ski-lodges",
@@ -3244,7 +3244,7 @@ poi_list = [
     ),
     EwPoi(
         id_poi = "maimridgestreetc",
-        alias = ['colloidsprings', 'colloid'],
+        alias = ['colloidsprings', 'colloid', 'mountain3', 'cs'],
         str_name = "Colloid Springs",
         str_desc = "These natural hot springs can be found throughout Maimridge, both inside and outside a set of cave systems that they occupy halfway up the mountain. You don't have to be an archaeologist to know that these things were a major attraction, even in the past, judging by the staggering amount of ancient ruins that surround them. It's not surprising that they've ended up as another one of Maimridge's tourist traps, but there are rumors of patrons taking a dip and not coming back up. Perhaps something sinister lurks within them…",
         channel = "colloid-springs",

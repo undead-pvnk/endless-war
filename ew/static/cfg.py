@@ -3878,7 +3878,7 @@ bazaar_distractions = [
 ]
 
 jump_responses = {
-    'thesummit':'*Gnarly, bro!* Time to get on your board and feel that classic mountain high! Oh, what\'s that? No board? No experience boarding? No actual sloped surface, just a 2000 foot drop into the outskirts? Ah, my mistake. {} is sent plummeting off the edge.',
+    'maimridgestreeta':'*Gnarly, bro!* Time to get on your board and feel that classic mountain high! Oh, what\'s that? No board? No experience boarding? No actual sloped surface, just a 2000 foot drop into the outskirts? Ah, my mistake. {} is sent plummeting off the edge.',
     'limecorp3f':'Well, it looks like {} is finally going to end it. The Slime and Punishment 500 index dropped into the -500s and they became an evil version of themselves, and now the only thing left to do is liquidating their assets, aka their internal organs. OK, salaryman RP over. FOR STOCKS!!',
     'blimp':'The blimp driver has served {} expired peanuts for the last time. And they\'re starting to think nobody has read those Yelp reviews they keep leaving. Time for a protest suicide. DIVE BOMB!',
 }
