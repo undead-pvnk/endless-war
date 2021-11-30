@@ -110,11 +110,11 @@ async def restoreRoleNames(cmd):
 
 	member = cmd.message.author
 	
-	if not member.server_permissions.administrator:
+	if not member.guild_permissions.administrator:
 		return
 	
 	client = cmd.client
-	server = member.server
+	server = member.guild
 	for poi in ewcfg.poi_list:
 		try:
 			role_data = EwRole(id_server = server.id, name = poi.role)
@@ -144,7 +144,7 @@ async def updateRoles(
 	if member == None:
 		return ewutils.logMsg("error: member was not supplied for updateRoles")
 
-	#roles_map = ewutils.getRoleMap(member.server.roles)
+	#roles_map = ewutils.getRoleMap(member.guild.roles)
 	roles_map_user = ewutils.getRoleIdMap(member.roles)
 
 	if user_data.life_state != ewcfg.life_state_kingpin and ewcfg.role_kingpin in roles_map_user:
@@ -266,7 +266,7 @@ async def updateRoles(
 	#ewutils.logMsg('looking for {} roles to replace'.format(len(role_ids)))
 	replacement_roles = []
 
-	for role in member.server.roles:
+	for role in member.guild.roles:
 		if role.id in role_ids:
 			#ewutils.logMsg('found role {} with id {}'.format(role.name, role.id))
 			replacement_roles.append(role)

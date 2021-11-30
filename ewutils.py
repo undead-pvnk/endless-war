@@ -291,7 +291,7 @@ def databaseConnect():
 	if conn_info == None:
 		db_pool_id += 1
 		conn_info = {
-			'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = "rfck", charset = "utf8"),
+			'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = "rfck_s2", charset = "utf8"),
 			'created': int(time.time()),
 			'count': 1,
 			'closed': False
@@ -718,7 +718,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 	weaponskills = {}
 
 	if member != None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server != None and id_user != None:
@@ -753,7 +753,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 """ Set an individual weapon skill value for a player. """
 def weaponskills_set(id_server = None, id_user = None, member = None, weapon = None, weaponskill = 0):
 	if member != None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server != None and id_user != None and weapon != None:
@@ -783,7 +783,7 @@ def weaponskills_set(id_server = None, id_user = None, member = None, weapon = N
 """ Clear all weapon skills for a player (probably called on death). """
 def weaponskills_clear(id_server = None, id_user = None, member = None, weaponskill = None):
 	if member != None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server != None and id_user != None:
@@ -1030,7 +1030,7 @@ def get_client():
 """
 async def send_message(client, channel, text):
 	try:
-		return await client.send_message(channel, text)
+		return await channel.send(content= text)
 	except:
 		logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))
 

@@ -124,7 +124,7 @@ async def create(cmd):
 	}
 
 	new_item_id = ewitem.item_create(
-		id_server = cmd.message.server.id,
+		id_server = cmd.message.guild.id,
 		id_user = recipient.id,
 		item_type = ewcfg.it_cosmetic,
 		item_props = item_props

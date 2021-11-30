@@ -1085,7 +1085,7 @@ async def teleport(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	mutations = user_data.get_mutations()
 	response = ""
-	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
+	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.guild.id)
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 	poi = ewcfg.id_to_poi.get(target_name)
@@ -1157,7 +1157,7 @@ async def teleport_player(cmd):
 	author = cmd.message.author
 	user_data = EwUser(member=author)
 	
-	if author.server_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
+	if author.guild_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
 		pass
 	else:
 		return
@@ -1197,7 +1197,7 @@ async def look(cmd):
 	slimes_resp = get_slimes_resp(district_data)
 	players_resp = get_players_look_resp(user_data, district_data)
 	enemies_resp = get_enemies_look_resp(district_data)
-	slimeoids_resp = get_slimeoids_resp(cmd.message.server.id, poi)
+	slimeoids_resp = get_slimeoids_resp(cmd.message.guild.id, poi)
 
 	if slimeoids_resp != "":
 		slimeoids_resp = "\n" + slimeoids_resp
@@ -1225,8 +1225,8 @@ async def look(cmd):
 				slimeoids_resp,
 				enemies_resp,
 				("\n\n{}".format(
-					ewcmd.weather_txt(cmd.message.server.id)
-				) if cmd.message.server != None else "")
+					ewcmd.weather_txt(cmd.message.guild.id)
+				) if cmd.message.guild != None else "")
 			)
 		))
 
@@ -1238,7 +1238,7 @@ async def survey(cmd):
 	slimes_resp = get_slimes_resp(district_data)
 	players_resp = get_players_look_resp(user_data, district_data)
 	enemies_resp = get_enemies_look_resp(district_data)
-	slimeoids_resp = get_slimeoids_resp(cmd.message.server.id, poi)
+	slimeoids_resp = get_slimeoids_resp(cmd.message.guild.id, poi)
 
 	if slimeoids_resp != "":
 		slimeoids_resp = "\n" + slimeoids_resp
@@ -1259,8 +1259,8 @@ async def survey(cmd):
 				slimeoids_resp,
 				enemies_resp,
 				("\n\n{}".format(
-					ewcmd.weather_txt(cmd.message.server.id)
-				) if cmd.message.server != None else "")
+					ewcmd.weather_txt(cmd.message.guild.id)
+				) if cmd.message.guild != None else "")
 			)
 		))
 	
@@ -1274,7 +1274,7 @@ async def scout(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
 	user_poi = ewcfg.id_to_poi.get(user_data.poi)
-	market_data = EwMarket(id_server = cmd.message.server.id)
+	market_data = EwMarket(id_server = cmd.message.guild.id)
 	mutations = user_data.get_mutations()
 
 	if user_data.life_state == ewcfg.life_state_corpse:

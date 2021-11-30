@@ -93,7 +93,7 @@ class EwFood:
 async def menu(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
-	market_data = EwMarket(id_server = cmd.message.server.id)
+	market_data = EwMarket(id_server = cmd.message.guild.id)
 
 	if poi == None or len(poi.vendors) == 0:
 		# Only allowed in the food court.
@@ -155,7 +155,7 @@ async def menu(cmd):
 async def order(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
-	market_data = EwMarket(id_server = cmd.message.server.id)
+	market_data = EwMarket(id_server = cmd.message.guild.id)
 
 	if poi == None or len(poi.vendors) == 0:
 		# Only allowed in the food court.
@@ -251,7 +251,7 @@ async def order(cmd):
 					if item_type == ewcfg.it_food:
 						food_items = ewitem.inventory(
 							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
+							id_server = cmd.message.guild.id,
 							item_type_filter = ewcfg.it_food
 						)
 
@@ -263,7 +263,7 @@ async def order(cmd):
 					elif item_type == ewcfg.it_weapon:
 						weapons_held = ewitem.inventory(
 							id_user = user_data.id_user,
-							id_server = cmd.message.server.id,
+							id_server = cmd.message.guild.id,
 							item_type_filter = ewcfg.it_weapon
 						)
 
@@ -308,7 +308,7 @@ async def order(cmd):
 					ewitem.item_create(
 						item_type = item_type,
 						id_user = cmd.message.author.id,
-						id_server = cmd.message.server.id,
+						id_server = cmd.message.guild.id,
 						stack_max = 20 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else -1,
 						stack_size = 1 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else 0,
 						item_props = item_props

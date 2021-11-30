@@ -157,7 +157,7 @@ async def renounce(cmd):
 
 """ mine for slime (or endless rocks) """
 async def mine(cmd):
-	market_data = EwMarket(id_server = cmd.message.author.server.id)
+	market_data = EwMarket(id_server = cmd.message.author.guild.id)
 	user_data = EwUser(member = cmd.message.author)
 	mutations = user_data.get_mutations()
 	time_now = int(time.time())
@@ -316,7 +316,7 @@ async def mine(cmd):
 					ewitem.item_create(
 						item_type = item.item_type,
 						id_user = cmd.message.author.id,
-						id_server = cmd.message.server.id,
+						id_server = cmd.message.guild.id,
 						item_props = item_props
 					)
 
@@ -372,7 +372,7 @@ async def mine(cmd):
 
 """ flag or unflag a slime vein as dangerous """
 async def flag(cmd):
-	market_data = EwMarket(id_server = cmd.message.author.server.id)
+	market_data = EwMarket(id_server = cmd.message.author.guild.id)
 	user_data = EwUser(member = cmd.message.author)
 	mutations = user_data.get_mutations()
 	time_now = int(time.time())
@@ -517,7 +517,7 @@ async def mismine(cmd, user_data, cause):
 
 """ scavenge for slime """
 async def scavenge(cmd):
-	market_data = EwMarket(id_server = cmd.message.author.server.id)
+	market_data = EwMarket(id_server = cmd.message.author.guild.id)
 	user_data = EwUser(member = cmd.message.author)
 	mutations = user_data.get_mutations()
 
@@ -542,7 +542,7 @@ async def scavenge(cmd):
 		if user_data.hunger >= user_data.get_hunger_max():
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You are too exhausted to scrounge up scraps of slime off the street! Go get some grub!"))
 		else:
-			district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.author.server.id)
+			district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.author.guild.id)
 
 			user_initial_level = user_data.slimelevel
 			# add scavenged slime to user
@@ -654,7 +654,7 @@ async def print_grid(cmd):
 	grid_str = ""
 	user_data = EwUser(member = cmd.message.author)
 	poi = user_data.poi
-	id_server = cmd.message.server.id
+	id_server = cmd.message.guild.id
 	time_now = int(time.time())
 	if poi in mines_map:
 		grid_map = mines_map.get(poi)
@@ -731,7 +731,7 @@ async def crush(cmd):
 	response = ""
 	crush_slimes = ewcfg.crush_slimes
 	
-	poudrin = ewitem.find_item(item_search="slimepoudrin", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
+	poudrin = ewitem.find_item(item_search="slimepoudrin", id_user=cmd.message.author.id, id_server=cmd.message.guild.id if cmd.message.guild is not None else None)
 	
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "Alas, you try to shatter the hardened slime crystal, but your ghostly form cannot firmly grasp it."

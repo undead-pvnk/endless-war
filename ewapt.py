@@ -1031,7 +1031,7 @@ async def cancel(cmd):
 			usermodel.persist()
 			aptmodel.persist()
 
-			await toss_squatters(cmd.message.author.id, cmd.message.server.id)
+			await toss_squatters(cmd.message.author.id, cmd.message.guild.id)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
@@ -1100,7 +1100,7 @@ async def aquarium(cmd):
 			placedesc = "You carefully place the aquarium on your shelf. The {} inside silently heckles you each time your clumsy ass nearly drops it.".format(item.item_props.get('food_name'))
 			ewitem.item_create(
 				id_user=cmd.message.author.id,
-				id_server=cmd.message.server.id,
+				id_server=cmd.message.guild.id,
 				item_type=ewcfg.it_furniture,
 				item_props={
 					'furniture_name': fname,
@@ -1113,7 +1113,7 @@ async def aquarium(cmd):
 				}
 			)
 
-			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "aqu", id_server=cmd.message.server.id)
+			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "aqu", id_server=cmd.message.guild.id)
 			#ewitem.item_delete(id_item=item_sought.get('id_item'))
 
 		else:
@@ -1155,7 +1155,7 @@ async def propstand(cmd):
 
 			ewitem.item_create(
 				id_user=cmd.message.author.id,
-				id_server=cmd.message.server.id,
+				id_server=cmd.message.guild.id,
 				item_type=ewcfg.it_furniture,
 				item_props={
 					'furniture_name': fname,
@@ -1167,7 +1167,7 @@ async def propstand(cmd):
 					'furniture_look_desc': lookdesc
 				}
 			)
-			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "stand", id_server=cmd.message.server.id)
+			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "stand", id_server=cmd.message.guild.id)
 			#ewitem.item_delete(id_item=item_sought.get('id_item'))
 
 	else:
@@ -1187,7 +1187,7 @@ async def releasefish(cmd):
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		if item.item_type == ewcfg.it_furniture:
 			if item.item_props.get('id_furniture') == "aquarium" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
-				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.message.guild.id)
 				response = "You let the fish out of its tank."
 				ewitem.item_delete(id_item=item_sought.get('id_item'))
 			elif item.item_props.get('acquisition') == ewcfg.acquisition_smelting:
@@ -1209,7 +1209,7 @@ async def releaseprop(cmd):
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		if item.item_type == ewcfg.it_furniture:
 			if item.item_props.get('id_furniture') == "propstand" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
-				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.message.guild.id)
 				response = "After a bit of tugging, you pry the item of its stand."
 				ewitem.item_delete(id_item=item_sought.get('id_item'))
 			elif item.item_props.get('acquisition') == ewcfg.acquisition_smelting:
@@ -1347,7 +1347,7 @@ async def aptCommands(cmd):
 		return await browse(cmd=cmd)
 	# from here, all commands are prebuilt and just set to work in DMs
 	cmd.message.author = member_object
-	cmd.message.server = server
+	cmd.message.guild = server
 	if cmd_text == ewcfg.cmd_use:
 		return await ewitem.item_use(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_releaseprop:
