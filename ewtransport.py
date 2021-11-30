@@ -285,7 +285,7 @@ async def embark(cmd):
 
 						response = "You enter the {}.".format(transport_data.transport_type)
 						await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-						return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, transport_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+						return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.guild, transport_poi.channel), ewutils.formatMessage(cmd.message.author, response))
 					else:
 						response = "The {} starts moving just as you try to get on.".format(transport_data.transport_type)
 						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -380,7 +380,7 @@ async def disembark(cmd):
 			user_data.persist()
 			response = "You enter {}".format(stop_poi.str_name)
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-			return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, stop_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+			return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.guild, stop_poi.channel), ewutils.formatMessage(cmd.message.author, response))
 		return await resp_cont.post()
 	else:
 		response = "You are not currently riding any transport."

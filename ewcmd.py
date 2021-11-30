@@ -112,7 +112,7 @@ async def score(cmd):
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member = cmd.message.author)
 
-		poudrin_amount = ewitem.find_poudrin(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+		poudrin_amount = ewitem.find_poudrin(id_user = cmd.message.author.id, id_server = cmd.message.guild.id)
 
 		# return my score
 		response = "You currently have {:,} slime{}.".format(user_data.slimes, (" and {} slime poudrin{}".format(poudrin_amount, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
@@ -121,7 +121,7 @@ async def score(cmd):
 		member = cmd.mentions[0]
 		response = gen_score_text(
 			id_user = member.id,
-			id_server = member.server.id,
+			id_server = member.guild.id,
 			display_name = member.display_name
 		)
 
@@ -248,7 +248,7 @@ async def data(cmd):
 	response = ""
 	user_data = None
 	member = None
-	resp_cont = ewutils.EwResponseContainer(id_server=cmd.message.server.id)
+	resp_cont = ewutils.EwResponseContainer(id_server=cmd.message.guild.id)
 
 	if len(cmd.tokens) > 1 and cmd.mentions_count == 0:
 		user_data = EwUser(member = cmd.message.author)
@@ -273,7 +273,7 @@ async def data(cmd):
 
 		cosmetics = ewitem.inventory(
 			id_user = cmd.message.author.id,
-			id_server = cmd.message.server.id,
+			id_server = cmd.message.guild.id,
 			item_type_filter = ewcfg.it_cosmetic
 		)
 		adorned_cosmetics = []
@@ -372,7 +372,7 @@ async def data(cmd):
 		member = cmd.mentions[0]
 		resp_cont = gen_data_text(
 			id_user = member.id,
-			id_server = member.server.id,
+			id_server = member.guild.id,
 			display_name = member.display_name,
 			channel_name = cmd.message.channel.name
 		)
@@ -422,7 +422,7 @@ def weather_txt(id_server):
 
 """ time and weather information """
 async def weather(cmd):
-	response = weather_txt(cmd.message.server.id)
+	response = weather_txt(cmd.message.guild.id)
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -489,7 +489,7 @@ async def help(cmd):
 		response = ewcfg.generic_help_response
 	else:
 		# checks if user is in a college or if they have a game guide
-		gameguide = ewitem.find_item(item_search="gameguide", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
+		gameguide = ewitem.find_item(item_search="gameguide", id_user=cmd.message.author.id, id_server=cmd.message.guild.id if cmd.message.guild is not None else None)
 
 		if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu or gameguide:
 			if not len(cmd.tokens) > 1:
@@ -670,7 +670,7 @@ async def arrest(cmd):
 
 	author = cmd.message.author
 	
-	if not author.server_permissions.administrator:
+	if not author.guild_permissions.administrator:
 		return
 	
 	if cmd.mentions_count == 1:
@@ -692,7 +692,7 @@ async def release(cmd):
 
 	author = cmd.message.author
 	
-	if not author.server_permissions.administrator:
+	if not author.guild_permissions.administrator:
 		return
 	
 	if cmd.mentions_count == 1:
@@ -712,7 +712,7 @@ async def promote(cmd):
 
 	author = cmd.message.author
 	
-	if not author.server_permissions.administrator:
+	if not author.guild_permissions.administrator:
 		return
 	
 	if cmd.mentions_count == 1:
@@ -740,7 +740,7 @@ async def piss(cmd):
 async def fursuit(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	mutations = user_data.get_mutations()
-	market_data = EwMarket(id_server=cmd.message.server.id)
+	market_data = EwMarket(id_server=cmd.message.guild.id)
 
 	if ewcfg.mutation_id_organicfursuit in mutations:
 		days_until = -market_data.day % 31
@@ -762,7 +762,7 @@ async def recycle(cmd):
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None)
 	
 	if item_sought:
 		item = EwItem(id_item = item_sought.get("id_item"))
@@ -789,7 +789,7 @@ async def recycle(cmd):
 				ewitem.item_create(
 					item_type = item_reward.item_type,
 					id_user = cmd.message.author.id,
-					id_server = cmd.message.server.id,
+					id_server = cmd.message.guild.id,
 					item_props = item_props
 				)
 

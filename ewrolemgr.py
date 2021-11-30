@@ -69,7 +69,7 @@ class EwRole:
 """
 def setupRoles(client = None, id_server = ""):
 	
-	roles_map = ewutils.getRoleMap(client.get_server(id_server).roles)
+	roles_map = ewutils.getRoleMap(client.get_guild(id_server).roles)
 	for poi in ewcfg.poi_list:
 		if poi.role in roles_map:
 			try:
@@ -93,7 +93,7 @@ def setupRoles(client = None, id_server = ""):
 """
 async def hideRoleNames(client = None, id_server = ""):
 	
-	server = client.get_server(id_server)
+	server = client.get_guild(id_server)
 	roles_map = ewutils.getRoleMap(server.roles)
 	for poi in ewcfg.poi_list:
 		try:

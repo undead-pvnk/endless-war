@@ -383,8 +383,8 @@ async def attack(cmd):
 	deathreport = ""
 	levelup_response = ""
 	coinbounty = 0
-	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
-	market_data = EwMarket(id_server = cmd.message.server.id)
+	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.guild.id)
+	market_data = EwMarket(id_server = cmd.message.guild.id)
 
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
@@ -416,7 +416,7 @@ async def attack(cmd):
 		user_mutations = user_data.get_mutations()
 		shootee_mutations = shootee_data.get_mutations()
 
-		district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
+		district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.guild.id)
 
 		miss = False
 		crit = False
@@ -480,7 +480,7 @@ async def attack(cmd):
 			if deathreport != "":
 				resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
 
-			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.server.get_member(shootee_data.id_user))
+			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.guild.get_member(shootee_data.id_user))
 
 		else:
 			#hunger drain
@@ -656,7 +656,7 @@ async def attack(cmd):
 			if ewcfg.mutation_id_dressedtokill in user_mutations:
 				items = ewitem.inventory(
 					id_user = cmd.message.author.id,
-					id_server = cmd.message.server.id,
+					id_server = cmd.message.guild.id,
 					item_type_filter = ewcfg.it_cosmetic
 				)
 
@@ -707,7 +707,7 @@ async def attack(cmd):
 					else:
 						slimes_damage = max(shootee_data.slimes - shootee_data.bleed_storage, 0)
 
-				sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.message.server.id)
+				sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.message.guild.id)
 				# move around slime as a result of the shot
 				if was_juvenile or user_data.faction == shootee_data.faction:
 					slimes_drained = int(3 * slimes_damage / 4) # 3/4
@@ -774,7 +774,7 @@ async def attack(cmd):
 					ewitem.item_create(
 						item_type = ewcfg.it_cosmetic,
 						id_user = cmd.message.author.id,
-						id_server = cmd.message.server.id,
+						id_server = cmd.message.guild.id,
 						item_props = {
 							'id_cosmetic': 'scalp',
 							'cosmetic_name': "{}'s scalp".format(shootee_name),
@@ -921,7 +921,7 @@ async def attack(cmd):
 			# Team kills don't award slime to the kingpin.
 			if user_data.faction != shootee_data.faction:
 				# Give slimes to the boss if possible.
-				kingpin = ewutils.find_kingpin(id_server = cmd.message.server.id, kingpin_role = role_boss)
+				kingpin = ewutils.find_kingpin(id_server = cmd.message.guild.id, kingpin_role = role_boss)
 
 				if kingpin:
 					kingpin.change_slimes(n = boss_slimes)
@@ -1079,7 +1079,7 @@ async def suicide(cmd):
 				response = "You can't do that now."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)) 
 				
-			district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
+			district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.guild.id)
 			district_data.change_slimes(n = user_data.slimes + user_data.bleed_storage, source = ewcfg.source_killing)
 			district_data.persist()
 
@@ -1101,7 +1101,7 @@ async def suicide(cmd):
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	if deathreport != "":
-		sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
+		sewerchannel = ewutils.get_channel(cmd.message.guild, ewcfg.channel_sewers)
 		await ewutils.send_message(cmd.client, sewerchannel, deathreport)
 
 """ Damage all players in a district; Exploding weapon's effect """
@@ -1120,7 +1120,7 @@ async def weapon_explosion(user_data = None, shootee_data = None, district_data 
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
 		client = ewutils.get_client()
-		server = client.get_server(user_data.id_server)
+		server = client.get_guild(user_data.id_server)
 		
 		channel = ewcfg.id_to_poi.get(user_data.poi).channel
 
@@ -1454,7 +1454,7 @@ async def equip(cmd):
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None)
 
 	if item_sought:
 		item = EwItem(id_item = item_sought.get("id_item"))
@@ -1483,10 +1483,10 @@ async def annoint(cmd):
 		else:
 			user_data = EwUser(member = cmd.message.author)
 
-			poudrin = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+			poudrin = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None)
 
 			all_weapons = ewitem.inventory(
-				id_server = cmd.message.server.id,
+				id_server = cmd.message.guild.id,
 				item_type_filter = ewcfg.it_weapon
 			)
 			for weapon in all_weapons:
@@ -1737,7 +1737,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 	user_mutations = user_data.get_mutations()
 
-	district_data = EwDistrict(district=user_data.poi, id_server=cmd.message.server.id)
+	district_data = EwDistrict(district=user_data.poi, id_server=cmd.message.guild.id)
 
 	miss = False
 	crit = False
@@ -1960,7 +1960,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	if ewcfg.mutation_id_dressedtokill in user_mutations:
 		items = ewitem.inventory(
 			id_user=cmd.message.author.id,
-			id_server=cmd.message.server.id,
+			id_server=cmd.message.guild.id,
 			item_type_filter=ewcfg.it_cosmetic
 		)
 
@@ -1992,7 +1992,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		else:
 			slimes_damage = max(enemy_data.slimes - enemy_data.bleed_storage, 0)
 
-	sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=cmd.message.server.id)
+	sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=cmd.message.guild.id)
 	# move around slime as a result of the shot
 	slimes_drained = int(3 * slimes_damage / 4)  # 3/4
 
@@ -2181,7 +2181,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		killfeed_resp = "*{}*: {}".format(cmd.message.author.display_name, old_response)
 		killfeed_resp += "\n`-------------------------`{}".format(ewcfg.emote_megaslime)
 
-		killfeed_resp_cont = ewutils.EwResponseContainer(id_server=cmd.message.server.id)
+		killfeed_resp_cont = ewutils.EwResponseContainer(id_server=cmd.message.guild.id)
 		killfeed_resp_cont.add_channel_response(ewcfg.channel_killfeed, killfeed_resp)
 		await killfeed_resp_cont.post()
 

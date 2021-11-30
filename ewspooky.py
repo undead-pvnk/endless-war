@@ -30,7 +30,7 @@ async def revive(cmd):
 		slimeoid = EwSlimeoid(member = cmd.message.author)
 
 		if player_data.life_state == ewcfg.life_state_corpse:
-			market_data = EwMarket(id_server = cmd.message.server.id)
+			market_data = EwMarket(id_server = cmd.message.guild.id)
 
 			# Endless War collects his fee.
 			#fee = (player_data.slimecoin / 10)
@@ -60,13 +60,13 @@ async def revive(cmd):
 			market_data.persist()
 
 			# Shower every district in the city with slime from the sewers.
-			sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.message.server.id)
+			sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.message.guild.id)
 			# the amount of slime showered is divided equally amongst the districts
 			districts_amount = len(ewcfg.capturable_districts)
 			geyser_amount = int(0.5 * sewer_data.slimes / districts_amount)
 			# Get a list of all the districts
 			for poi in ewcfg.capturable_districts:
-				district_data = EwDistrict(district = poi, id_server = cmd.message.server.id)
+				district_data = EwDistrict(district = poi, id_server = cmd.message.guild.id)
 
 
 				district_data.change_slimes(n = geyser_amount)
@@ -92,7 +92,7 @@ async def revive(cmd):
 			slimeoid_name = slimeoid.name
 			)
 			new_poi = ewcfg.id_to_poi.get(player_data.poi)
-			revivechannel = ewutils.get_channel(cmd.message.server, new_poi.channel)
+			revivechannel = ewutils.get_channel(cmd.message.guild, new_poi.channel)
 			reunite = ewutils.formatMessage(cmd.message.author, reunite)
 			await ewutils.send_message(cmd.client, revivechannel, reunite)
 
@@ -104,7 +104,7 @@ async def revive(cmd):
 async def haunt(cmd):
 	time_now = int(time.time())
 	response = ""
-	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
+	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.guild.id)
 
 	if cmd.mentions_count > 1:
 		response = "You can only spook one person at a time. Who do you think you are, the Lord of Ghosts?"
@@ -114,7 +114,7 @@ async def haunt(cmd):
 
 		member = cmd.mentions[0]
 		haunted_data = EwUser(member = member)
-		market_data = EwMarket(id_server = cmd.message.server.id)
+		market_data = EwMarket(id_server = cmd.message.guild.id)
 
 		if user_data.life_state != ewcfg.life_state_corpse:
 			# Only dead players can haunt.
@@ -185,7 +185,7 @@ async def haunt(cmd):
 
 async def negaslime(cmd):
 	# Add persisted negative slime.
-	market_data = EwMarket(id_server = cmd.message.server.id)
+	market_data = EwMarket(id_server = cmd.message.guild.id)
 	negaslime = market_data.negaslime
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The dead have amassed {:,} negative slime.".format(negaslime)))
@@ -215,7 +215,7 @@ async def summon_negaslimeoid(cmd):
 		if len(negaslimeoid_name) > 32:
 			response = "That name is too long. ({:,}/32)".format(len(negaslimeoid_name))
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		market_data = EwMarket(id_server = cmd.message.author.server.id)
+		market_data = EwMarket(id_server = cmd.message.author.guild.id)
 
 		if market_data.negaslime >= 0:
 			response = "The dead haven't amassed any negaslime yet."

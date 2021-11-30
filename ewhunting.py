@@ -306,7 +306,7 @@ class EwEnemy:
 			target_player = EwPlayer(id_user=target_data.id_user)
 			target_slimeoid = EwSlimeoid(id_user=target_data.id_user)
 
-			server = client.get_server(target_data.id_server)
+			server = client.get_guild(target_data.id_server)
 			# server = discord.Server(id=target_data.id_server)
 			# print(target_data.id_server)
 			# channel = discord.utils.get(server.channels, name=ch_name)
@@ -696,7 +696,7 @@ class EwEnemyEffectContainer:
 async def summon_enemy(cmd):
 	author = cmd.message.author
 
-	if not author.server_permissions.administrator:
+	if not author.guild_permissions.administrator:
 		return
 
 	time_now = int(time.time())

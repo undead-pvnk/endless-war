@@ -115,7 +115,7 @@ async def smelt(cmd):
 					ewitem.item_create(
 						item_type = ewcfg.it_cosmetic,
 						id_user = cmd.message.author.id,
-						id_server = cmd.message.server.id,
+						id_server = cmd.message.guild.id,
 						item_props = {
 							'id_cosmetic': item.id_cosmetic,
 							'cosmetic_name': item.str_name,
@@ -164,7 +164,7 @@ async def smelt(cmd):
 					ewitem.item_create(
 						item_type = item.item_type,
 						id_user = cmd.message.author.id,
-						id_server = cmd.message.server.id,
+						id_server = cmd.message.guild.id,
 						item_props = item_props
 					)
 

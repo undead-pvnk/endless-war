@@ -300,7 +300,7 @@ class EwCompany:
 async def invest(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	time_now = round(time.time())
-	market_data = EwMarket(id_server = cmd.message.author.server.id)
+	market_data = EwMarket(id_server = cmd.message.author.guild.id)
 
 	if user_data.poi != ewcfg.poi_id_stockexchange:
 		# Only allowed in the stock exchange.
@@ -348,7 +348,7 @@ async def invest(cmd):
 		if value != None:
 			if stock != None:
 
-				stock = EwStock(id_server = cmd.message.server.id, stock = stock)
+				stock = EwStock(id_server = cmd.message.guild.id, stock = stock)
 				# basic exchange rate / 1000 = 1 share
 				exchange_rate = (stock.exchange_rate / 1000.0)
 
@@ -400,7 +400,7 @@ async def invest(cmd):
 async def withdraw(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	time_now = round(time.time())
-	market_data = EwMarket(id_server = cmd.message.author.server.id)
+	market_data = EwMarket(id_server = cmd.message.author.guild.id)
 
 	if market_data.clock < 6 or market_data.clock >= 20:
 		response = ewcfg.str_exchange_closed
@@ -430,7 +430,7 @@ async def withdraw(cmd):
 
 
 		if stock != None:
-			stock = EwStock(id_server = cmd.message.server.id, stock = stock)
+			stock = EwStock(id_server = cmd.message.guild.id, stock = stock)
 
 			total_shares = getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
 
@@ -507,7 +507,7 @@ async def donate(cmd):
 				user_data.persist()
 				# Assign the corpse role to the player. He dead.
 				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-				sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
+				sewerchannel = ewutils.get_channel(cmd.message.guild, ewcfg.channel_sewers)
 				await ewutils.send_message(cmd.client, sewerchannel, "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, "You have died in a medical mishap. {}".format(ewcfg.emote_slimeskull)))
 			else:
 				# Do the transfer if the player can afford it.
@@ -526,7 +526,7 @@ async def donate(cmd):
 			response = ewcfg.str_exchange_specify.format(currency = "slime", action = "donate")
 
 	elif user_data.poi == ewcfg.poi_id_slimeoidlab:
-		poudrins = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+		poudrins = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None)
 
 		if poudrins == None:
 			response = "You have to own a poudrin in order to donate a poudrin. Duh."
@@ -579,7 +579,7 @@ async def xfer(cmd):
 		response = "You can't transfer SlimeCoin to a known criminal warlord."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	market_data = EwMarket(id_server = cmd.message.author.server.id)
+	market_data = EwMarket(id_server = cmd.message.author.guild.id)
 
 	if cmd.message.author.id == member.id:
 		user_data.id_killer = cmd.message.author.id
@@ -642,11 +642,11 @@ async def rate(cmd):
 			stock = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 		if stock in ewcfg.stocks:
-			stock = EwStock(id_server = cmd.message.server.id, stock = stock)
+			stock = EwStock(id_server = cmd.message.guild.id, stock = stock)
 			response = "The current value of {stock} stocks is {cred:,} SlimeCoin per 1000 Shares.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred = stock.exchange_rate)
 		elif stock == "":
 			for stock in ewcfg.stocks:
-				stock = EwStock(id_server = cmd.message.server.id, stock = stock)
+				stock = EwStock(id_server = cmd.message.guild.id, stock = stock)
 				response += "\nThe current value of {stock} stocks is {cred:,} SlimeCoin per 1000 Shares.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred = stock.exchange_rate)
 
 		else:
@@ -984,7 +984,7 @@ async def quarterlyreport(cmd):
 		# Display the progress towards the current Quarterly Goal, whatever that may be.
 		cursor.execute("SELECT {metric} FROM markets WHERE id_server = %s".format(
 			metric = ewcfg.col_splattered_slimes
-		), (cmd.message.server.id, ))
+		), (cmd.message.guild.id, ))
 
 		result = cursor.fetchone();
 

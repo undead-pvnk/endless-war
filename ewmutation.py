@@ -161,7 +161,7 @@ async def reroll_last_mutation(cmd):
 			last_mutation = id_mutation
 
 
-	poudrin = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	poudrin = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None)
 
 	if poudrin == None:
 		response = "You need a slime poudrin to replace a mutation."
@@ -205,7 +205,7 @@ async def clear_mutations(cmd):
 		response = "You have not developed any specialized mutations yet."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poudrin = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	poudrin = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None)
 
 	if poudrin == None:
 		response = "You need a slime poudrin to replace a mutation."

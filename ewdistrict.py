@@ -129,7 +129,7 @@ class EwDistrict:
 			max_slimes = math.inf
 		):
 		client = ewutils.get_client()
-		server = client.get_server(self.id_server)
+		server = client.get_guild(self.id_server)
 		if server == None:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return []
@@ -162,7 +162,7 @@ class EwDistrict:
 		):
 
 		client = ewutils.get_client()
-		server = client.get_server(self.id_server)
+		server = client.get_guild(self.id_server)
 		if server == None:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return []

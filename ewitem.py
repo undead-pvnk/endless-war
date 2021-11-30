@@ -535,7 +535,7 @@ def item_lootrandom(id_server = None, id_user = None):
 """
 def item_destroyall(id_server = None, id_user = None, member = None):
 	if member != None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server != None and id_user != None:
@@ -572,7 +572,7 @@ def item_loot(
 		return
 
 	try:
-		target_data = EwUser(id_user = id_user_target, id_server = member.server.id)
+		target_data = EwUser(id_user = id_user_target, id_server = member.guild.id)
 		source_data = EwUser(member = member)
 
 		# Transfer adorned cosmetics
@@ -584,7 +584,7 @@ def item_loot(
 			")"
 		,(
 			member.id,
-			member.server.id,
+			member.guild.id,
 			ewcfg.it_cosmetic
 		))
 
@@ -1048,7 +1048,7 @@ async def item_look(cmd):
 async def item_use(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	author = cmd.message.author
-	server = cmd.message.server
+	server = cmd.message.guild
 
 	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
@@ -1109,7 +1109,7 @@ def give_item(
 ):
 
 	if id_user is None and id_server is None and member is not None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server is not None and id_user is not None and id_item is not None:
@@ -1225,7 +1225,7 @@ def find_poudrin(id_user = None, id_server = None):
 async def give(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	author = cmd.message.author
-	server = cmd.message.server
+	server = cmd.message.guild
 
 	if cmd.mentions:  # if they're not empty
 		recipient = cmd.mentions[0]
@@ -1314,7 +1314,7 @@ async def discard(cmd):
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	item_sought = find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None)
 
 	if item_sought:
 		item = EwItem(id_item = item_sought.get("id_item"))

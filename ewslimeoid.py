@@ -51,7 +51,7 @@ class EwSlimeoid:
 		user_data = None
 		if member != None:
 			id_user = member.id
-			id_server = member.server.id
+			id_server = member.guild.id
 
 		#	user_data = EwUser(member = member)
 

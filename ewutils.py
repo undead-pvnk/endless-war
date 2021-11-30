@@ -109,7 +109,7 @@ class EwResponseContainer:
 			logMsg("Couldn't find client")
 			return messages
 			
-		server = self.client.get_server(self.id_server)
+		server = self.client.get_guild(self.id_server)
 		if server == None:
 			logMsg("Couldn't find server with id {}".format(self.id_server))
 			return messages
@@ -410,7 +410,7 @@ async def bleedSlimes(id_server = None):
 	if id_server != None:
 		try:
 			client = get_client()
-			server = client.get_server(id_server)
+			server = client.get_guild(id_server)
 			conn_info = databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
@@ -578,7 +578,7 @@ async def burnSlimes(id_server = None):
 	if id_server != None:
 		time_now = int(time.time())
 		client = get_client()
-		server = client.get_server(id_server)
+		server = client.get_guild(id_server)
 
 		results = {}
 
@@ -663,7 +663,7 @@ def removeExpiredStatuses(id_server = None):
 		time_now = int(time.time())
 
 		#client = get_client()
-		#server = client.get_server(id_server)
+		#server = client.get_guild(id_server)
 
 		statuses = execute_sql_query("SELECT {id_status},{id_user} FROM status_effects WHERE id_server = %s AND {time_expire} < %s".format(
 			id_status = ewcfg.col_id_status,
@@ -856,7 +856,7 @@ def execute_sql_query(sql_query = None, sql_replacements = None):
 """
 async def post_in_channels(id_server, message, channels = None):
 	client = get_client()
-	server = client.get_server(id = id_server)
+	server = client.get_guild(id = id_server)
 
 	if channels is None and server is not None:
 		channels = server.channels
@@ -1141,7 +1141,7 @@ async def explode(damage = 0, district_data = None):
 	poi = district_data.name
 
 	client = get_client()
-	server = client.get_server(id_server)
+	server = client.get_guild(id_server)
 
 	resp_cont = EwResponseContainer(id_server = id_server)
 	response = ""
