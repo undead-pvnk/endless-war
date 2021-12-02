@@ -804,7 +804,7 @@ async def move(cmd = None, isApt = False):
 	poi = ewcfg.id_to_poi.get(target_name)
 	if poi_current.is_apartment == True:
 		isApt = True
-	server_data = ewcfg.server_list[user_data.id_server]
+	server_data = ewcfg.server_list[int(user_data.id_server)]
 	client = ewutils.get_client()
 	member_object = server_data.get_member(player_data.id_user)
 
@@ -1461,7 +1461,7 @@ async def kick(id_server):
 			# checks if the player should be kicked from the subzone and kicks them if they should.
 			if poi.is_subzone and not inaccessible(user_data = user_data, poi = ewcfg.id_to_poi.get(poi.mother_district)):
 				if user_data.life_state not in [ewcfg.life_state_kingpin, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
-					server = ewcfg.server_list[id_server]
+					server = ewcfg.server_list[int(id_server)]
 					member_object = server.get_member(id_user)
 
 					user_data.poi = poi.mother_district

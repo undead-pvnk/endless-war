@@ -339,7 +339,7 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 	#isgoto checks if this is part of a goto command.
 
 	client = ewutils.get_client()
-	server = ewcfg.server_list[user_data.id_server]
+	server = ewcfg.server_list[int(user_data.id_server)]
 	member_object = server.get_member(player.id_user)
 
 	if not poi_source.is_apartment:
@@ -419,7 +419,7 @@ async def rent_time(id_server = None):
 					if(user_poi.is_apartment and user_data.visiting == ewcfg.location_id_empty):
 						user_data.poi = user_data.apt_zone #toss out player
 						user_data.persist()
-						server = ewcfg.server_list[user_data.id_server]
+						server = ewcfg.server_list[int(user_data.id_server)]
 						member_object = server.get_member(owner_id_user)
 
 						await ewrolemgr.updateRoles(client = client, member=member_object)
@@ -1059,7 +1059,7 @@ async def toss_squatters(user_id = None, server_id = None):
 
 			for squatter in squatters:
 				sqt_data = EwUser(id_user=squatter[0], id_server=player_info.id_server)
-				server = ewcfg.server_list[sqt_data.id_server]
+				server = ewcfg.server_list[int(sqt_data.id_server)]
 				member_object = server.get_member(squatter[0])
 				sqt_data.poi = sqt_data.poi[3:]
 				sqt_data.visiting = ewcfg.location_id_empty
@@ -1302,7 +1302,7 @@ async def aptCommands(cmd):
 	cmd_text = cmd.tokens[0].lower() if tokens_count >= 1 else ""
 	player = EwPlayer(id_user=cmd.message.author.id)
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=player.id_server)
-	server = ewcfg.server_list[user_data.id_server]
+	server = ewcfg.server_list[int(user_data.id_server)]
 	member_object = server.get_member(player.id_user)
 
 	if cmd_text == ewcfg.cmd_depart or cmd_text == ewcfg.cmd_retire:

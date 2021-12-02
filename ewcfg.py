@@ -642,6 +642,7 @@ cmd_piss = cmd_prefix + 'piss'
 cmd_fursuit = cmd_prefix + 'fursuit'
 cmd_recycle = cmd_prefix + 'recycle'
 cmd_recycle_alt1 = cmd_prefix + 'incinerate'
+cmd_recreateroles = cmd_prefix + 'recreateroles'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -13160,7 +13161,7 @@ server_list = {}
 	store a server in a dictionary
 """
 def update_server_list(server):
-	server_list[server.id] = server
+	server_list[int(server.id)] = server
 
 
 client_ref = None

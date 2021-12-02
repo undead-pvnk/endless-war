@@ -285,7 +285,7 @@ async def mine(cmd):
 			if user_data.weapon >= 0:
 				weapon_item = EwItem(id_item = user_data.weapon)
 				weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-				if weapon.id_weapon == ewcfg.weapon_id_pickaxe:
+				if weapon is not None and weapon.id_weapon == ewcfg.weapon_id_pickaxe:
 					has_pickaxe = True
 
 			# Determine if an item is found.

@@ -375,6 +375,7 @@ cmd_map = {
 	# recycle your trash at the slimecorp recycling plant
 	ewcfg.cmd_recycle: ewcmd.recycle,
 	ewcfg.cmd_recycle_alt1: ewcmd.recycle,
+	ewcfg.cmd_recreateroles:ewrolemgr.recreateRoles,
 
 	# kill all players in your district; could be re-used for a future raid boss
 	#ewcfg.cmd_writhe: ewraidboss.writhe,
@@ -577,7 +578,7 @@ async def on_ready():
 	ewutils.logMsg("finished landmark precomputation")
 
 	try:
-		await client.change_presence(game = discord.Game(name = "EW " + ewcfg.version))
+		await client.change_presence(activity = discord.Game(name = "EW " + ewcfg.version))
 	except:
 		ewutils.logMsg("Failed to change_presence!")
 

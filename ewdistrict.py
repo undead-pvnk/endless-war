@@ -365,7 +365,7 @@ class EwDistrict:
 		factions = ["", ewcfg.faction_killers, ewcfg.faction_rowdys]
 
 		if new_owner in factions:
-			server = ewcfg.server_list[self.id_server]
+			server = ewcfg.server_list[int(self.id_server)]
 			channel_str = ewcfg.id_to_poi[self.name].channel
 			channel = ewutils.get_channel(server = server, channel_name = channel_str)
 
@@ -465,7 +465,7 @@ async def capture_tick(id_server):
 
 
 	if len(all_districts) > 0:  # if all_districts isn't empty
-		server = ewcfg.server_list[id_server]
+		server = ewcfg.server_list[int(id_server)]
 		time_old = time.time()
 
 		for district in all_districts:

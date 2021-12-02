@@ -250,9 +250,10 @@ def getRoleMap(roles):
 """ turn a list of Roles into a map of id = >Role """
 def getRoleIdMap(roles):
 	roles_map = {}
-
+	print(roles)
 	for role in roles:
-		roles_map[mapRoleName(role.id)] = role
+		print(role)
+		roles_map[role.id] = role
 
 	return roles_map
 
@@ -1039,7 +1040,7 @@ async def send_message(client, channel, text):
 """
 async def edit_message(client, message, text):
 	try:
-		return await client.edit_message(message, text)
+		return await message.edit(content=text)
 	except:
 		logMsg('Failed to edit message. Updated text would have been:\n{}'.format(text))
 
