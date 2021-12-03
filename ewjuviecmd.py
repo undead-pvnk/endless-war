@@ -186,41 +186,37 @@ async def mine(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You've exhausted yourself from mining. You'll need some refreshment before getting back to work."))
 
 		else:
-			printgrid = False
-			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
-			extra = hunger_cost_mod - int(hunger_cost_mod)  # extra is the fractional part of hunger_cost_mod
-
 			if user_data.poi not in mines_map:
 				response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			elif user_data.id_server not in mines_map.get(user_data.poi):
 				init_grid(user_data.poi, user_data.id_server)
-				printgrid = True
 			grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
 			grid = grid_cont.grid
 
-			#minesweeper = False
+			minesweeper = False
 			if cmd.tokens_count < 2:
-				response = "Please specify which vein to mine."
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid(cmd)
+			#	response = "Please specify which vein to mine."
+			#	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			#	return await print_grid(cmd)
+				grid_multiplier = 1
 
 			else:
-				#minesweeper = True
-				#grid_multiplier = grid_cont.cells_mined ** 0.4
-				#flag = False
+				minesweeper = True
+				grid_multiplier = grid_cont.cells_mined ** 0.4
+				flag = False
 				row = -1
 				col = -1
 				for token in cmd.tokens[1:]:
 				
 					if token.lower() == "reset":
-						user_data.hunger += ewcfg.hunger_perminereset * int(hunger_cost_mod)
-						if random.random() < extra:
-							user_data.hunger += ewcfg.hunger_perminereset
-						user_data.persist()
 						init_grid(user_data.poi, user_data.id_server)
 						return await print_grid(cmd)
 
+					if token.lower() == "flag":
+						flag = True
+				
+	
 					if row < 1 or col < 1:
 						coords = token.lower()
 					
@@ -237,48 +233,54 @@ async def mine(cmd):
 
 				row -= 1
 			
-				if row not in range(len(grid)) or col not in range(len(grid[row])):
+				if row not in range(len(grid)):
+					response = "Invalid vein."
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					return await print_grid(cmd)
+				if col not in range(len(grid[row])):
 					response = "Invalid vein."
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 					return await print_grid(cmd)
 
-				mining_yield = 0
-				mining_accident = False
-				
-				slimes_pertile = ewcfg.slimes_pertile
-				for current_row in range(max(0,row-1), min(row+2, len(grid))):
-					for current_col in range(max(0,col-1), min(col+2, len(grid[current_row]))):
-						symbol_prev = get_cell_symbol(grid[current_row][current_col])
-						slimes_fromtile = slimes_pertile
-						if current_row == row and current_col == col:
-							slimes_fromtile *= 2
-						mining_yield += max(0, min(slimes_fromtile, grid[current_row][current_col]))
-						grid[current_row][current_col] -= slimes_fromtile
-						if grid[current_row][current_col] < -60 * ewcfg.slimes_pertile:
-							mining_accident = True
-						if get_cell_symbol(grid[current_row][current_col]) != symbol_prev:
-							printgrid = True
-
-				if mining_accident:
-					user_data.change_slimes(n = -(user_data.slimes * 0.5))
-					user_data.persist()
-
-					init_grid(user_data.poi, user_data.id_server)
-					response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
-
+				if grid[row][col] in [ewcfg.cell_empty_marked, ewcfg.cell_mine_marked]:
+					if flag:
+						if grid[row][col] == ewcfg.cell_empty_marked:
+							grid[row][col] = ewcfg.cell_empty
+						elif grid[row][col] == ewcfg.cell_mine_marked:
+							grid[row][col] = ewcfg.cell_mine
+					else:
+						response = "This vein has been flagged as dangerous. Remove the flag to mine here."
+						await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					return await print_grid(cmd)
+				if grid[row][col] == ewcfg.cell_empty_open:
+					response = "This vein has already been mined dry."
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 					return await print_grid(cmd)
 
-				if mining_yield == 0:
-					user_data.hunger += ewcfg.hunger_permine * int(hunger_cost_mod)
-					user_data.persist()
-					response = "This vein has already been mined dry."
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-					if printgrid:
-						return await print_grid(cmd)
+				if grid[row][col] == ewcfg.cell_mine:
+					if flag:
+						grid[row][col] = ewcfg.cell_mine_marked
 					else:
-						return
+						user_data.change_slimes(n = -(user_data.slimes * 0.01 * grid_multiplier))
+						user_data.persist()
 
+						if grid_multiplier > 0:
+							response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
+						else:
+							response = "You have barely avoided getting caught in a mining accident."
+
+						await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						grid[row][col] = ewcfg.cell_mine_open
+						await print_grid(cmd)
+						init_grid(user_data.poi, user_data.id_server)
+					return await print_grid(cmd)
+
+				if flag:
+					grid[row][col] = ewcfg.cell_empty_marked
+					return await print_grid(cmd)
+				else:
+					grid[row][col] = ewcfg.cell_empty_open
+					grid_cont.cells_mined += 1
 
 			has_pickaxe = False
 
@@ -301,6 +303,7 @@ async def mine(cmd):
 			if ewcfg.mutation_id_lucky in mutations:
 				unearthed_item_chance *= 1.33
 
+			unearthed_item_chance *= grid_multiplier
 
 			if random.random() < unearthed_item_chance:
 				unearthed_item = True
@@ -310,15 +313,52 @@ async def mine(cmd):
 				# If there are multiple possible products, randomly select one.
 				item = random.choice(ewcfg.mine_results)
 
-				item_props = ewitem.gen_item_props(item)
+				if hasattr(item, 'id_item'):
+					for creation in range(unearthed_item_amount):
+						ewitem.item_create(
+							item_type = ewcfg.it_item,
+							id_user = cmd.message.author.id,
+							id_server = cmd.message.server.id,
+							item_props = {
+								'id_item': item.id_item,
+								'context': item.context,
+								'item_name': item.str_name,
+								'item_desc': item.str_desc,
+							}
+						),
 
-				for creation in range(unearthed_item_amount):
-					ewitem.item_create(
-						item_type = item.item_type,
-						id_user = cmd.message.author.id,
-						id_server = cmd.message.guild.id,
-						item_props = item_props
-					)
+				elif hasattr(item, 'id_food'):
+					for creation in range(unearthed_item_amount):
+						ewitem.item_create(
+							item_type = ewcfg.it_food,
+							id_user = cmd.message.author.id,
+							id_server = cmd.message.server.id,
+							item_props = {
+								'id_food': item.id_food,
+								'food_name': item.str_name,
+								'food_desc': item.str_desc,
+								'recover_hunger': item.recover_hunger,
+								'inebriation': item.inebriation,
+								'str_eat': item.str_eat,
+								'time_expir': time.time() + ewcfg.farm_food_expir
+							}
+						),
+
+				elif hasattr(item, 'id_cosmetic'):
+					for creation in range(unearthed_item_amount):
+						ewitem.item_create(
+							item_type = ewcfg.it_cosmetic,
+							id_user = cmd.message.author.id,
+							id_server = cmd.message.server.id,
+							item_props = {
+								'id_cosmetic': item.id_cosmetic,
+								'cosmetic_name': item.str_name,
+								'cosmetic_desc': item.str_desc,
+								'rarity': item.rarity,
+								'adorned': 'false'
+							}
+						),
+
 
 				if unearthed_item_amount == 1:
 					response = "You unearthed a {}! ".format(item.str_name)
@@ -335,15 +375,18 @@ async def mine(cmd):
 			# Add mined slime to the user.
 			slime_bylevel = ewutils.slime_bylevel(user_data.slimelevel)
 
-			#mining_yield = math.floor((slime_bylevel / 10) + 1)
-			#alternate_yield = math.floor(200 + slime_bylevel ** (1 / math.e))
+			mining_yield = math.floor((slime_bylevel / 10) + 1)
+			alternate_yield = math.floor(200 + slime_bylevel ** (1 / math.e))
 
-			#mining_yield = min(mining_yield, alternate_yield)
+			mining_yield = min(mining_yield, alternate_yield)
+			mining_yield *= grid_multiplier
 
 			if has_pickaxe == True:
 				mining_yield *= 2
 
 			# Fatigue the miner.
+			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
+			extra = hunger_cost_mod - int(hunger_cost_mod)  # extra is the fractional part of hunger_cost_mod
 
 			user_data.hunger += ewcfg.hunger_permine * int(hunger_cost_mod)
 			if extra > 0:  # if hunger_cost_mod is not an integer
@@ -361,7 +404,7 @@ async def mine(cmd):
 
 			user_data.persist()
 
-			if printgrid:
+			if minesweeper:
 				await print_grid(cmd)
 
 	else:
@@ -405,14 +448,14 @@ async def flag(cmd):
 				response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			elif user_data.id_server not in mines_map.get(user_data.poi):
-				init_grid_ms(user_data.poi, user_data.id_server)
+				init_grid(user_data.poi, user_data.id_server)
 			grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
 			grid = grid_cont.grid
 
 			if cmd.tokens_count < 2:
 				response = "Please specify which vein to mine."
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid_ms(cmd)
+				return await print_grid(cmd)
 
 
 			grid_multiplier = grid_cont.cells_mined ** 0.4
@@ -439,29 +482,29 @@ async def flag(cmd):
 			if row not in range(len(grid)):
 				response = "Invalid vein."
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid_ms(cmd)
+				return await print_grid(cmd)
 			if col not in range(len(grid[row])):
 				response = "Invalid vein."
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid_ms(cmd)
+				return await print_grid(cmd)
 
 			if grid[row][col] in [ewcfg.cell_empty_marked, ewcfg.cell_mine_marked]:
 				if grid[row][col] == ewcfg.cell_empty_marked:
 					grid[row][col] = ewcfg.cell_empty
 				elif grid[row][col] == ewcfg.cell_mine_marked:
 					grid[row][col] = ewcfg.cell_mine
-				return await print_grid_ms(cmd)
+				return await print_grid(cmd)
 			if grid[row][col] == ewcfg.cell_empty_open:
 				response = "This vein has already been mined dry."
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid_ms(cmd)
+				return await print_grid(cmd)
 
 			if grid[row][col] == ewcfg.cell_mine:
 				grid[row][col] = ewcfg.cell_mine_marked
-				return await print_grid_ms(cmd)
+				return await print_grid(cmd)
 
 			grid[row][col] = ewcfg.cell_empty_marked
-			return await print_grid_ms(cmd)
+			return await print_grid(cmd)
 
 
 	else:
@@ -614,21 +657,15 @@ async def scavenge(cmd):
 
 def init_grid(poi, id_server):
 	grid = []
-	slime_grid = []
 	num_rows = 15
 	num_cols = 15
 	for i in range(num_rows):
 		row = []
-		slime_row = []
 		for j in range(num_cols):
-			row.append(0)
-			slime_row.append(0)
+			row.append(-1)
 		grid.append(row)
-		slime_grid.append(slime_row)
 
-	num_mines = 5
-
-	base_slime = ewcfg.slimes_invein
+	num_mines = 30
 
 	row = random.randrange(num_rows)
 	col = random.randrange(num_cols)
@@ -637,17 +674,9 @@ def init_grid(poi, id_server):
 			row = random.randrange(num_rows)
 			col = random.randrange(num_cols)
 		grid[row][col] = 1
-		
-	
-		for i in range(len(grid)):
-			for j in range(len(grid[i])):
-				distance = abs(row - i) + abs(col - j)
-				slime = base_slime * 0.7 ** distance
-				slime_grid[i][j] += slime
-
 			
 	if poi in mines_map:
-		grid_cont = EwMineGrid(grid = slime_grid)
+		grid_cont = EwMineGrid(grid = grid)
 		mines_map.get(poi)[id_server] = grid_cont
 
 async def print_grid(cmd):
@@ -659,7 +688,7 @@ async def print_grid(cmd):
 	if poi in mines_map:
 		grid_map = mines_map.get(poi)
 		if id_server not in grid_map:
-			init_grid_ms(poi, id_server)
+			init_grid(poi, id_server)
 		grid_cont = grid_map.get(id_server)
 
 		grid = grid_cont.grid
@@ -676,7 +705,18 @@ async def print_grid(cmd):
 			grid_str += "{} ".format(i+1)
 			for j in range(len(row)):
 				cell = row[j]
-				cell_str = get_cell_symbol(cell)
+				cell_str = ""
+				if cell == ewcfg.cell_empty_open:
+					neighbor_mines = 0
+					for ci in range(max(0, i-1), min(len(grid), i+2)):
+						for cj in range(max(0, j-1), min(len(row), j+2)):
+							if grid[ci][cj] > 0:
+								neighbor_mines += 1
+					cell_str = str(neighbor_mines)
+					#cell_str = ewcfg.number_emote_map.get(neighbor_mines)
+
+				else:
+					cell_str = ewcfg.symbol_map.get(cell)
 				grid_str += cell_str + " "
 			grid_str += "{}".format(i+1)
 			grid_str += "\n"
@@ -704,6 +744,7 @@ async def print_grid(cmd):
 			grid_cont.wall_message = msg_handles[0]
 		else:
 			await ewutils.edit_message(cmd.client, grid_cont.wall_message, grid_edit)
+
 
 def get_cell_symbol(cell):
 	cell_str = " "
@@ -750,3 +791,4 @@ async def crush(cmd):
 		
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+

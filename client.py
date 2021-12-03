@@ -125,7 +125,7 @@ cmd_map = {
 	ewcfg.cmd_mine: ewjuviecmd.mine,
 
 	# flags a vein as dangerous
-	#ewcfg.cmd_flag: ewjuviecmd.flag,
+	ewcfg.cmd_flag: ewjuviecmd.flag,
 
 	# Show the current slime score of a player.
 	ewcfg.cmd_score: ewcmd.score,
