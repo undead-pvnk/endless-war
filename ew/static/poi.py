@@ -607,7 +607,7 @@ poi_list = [
         property_class = "b",
         is_district = True,
         is_capturable = True,
-        neighbors = {'toxington': 60, 'astatineheights': 60, 'arsonbrook': 60, 'northwestoutskirtsedge': 120, 'maimridgestreetc': 20},
+        neighbors = {'toxington': 60, 'astatineheights': 60, 'arsonbrook': 60, 'northwestoutskirtsedge': 120, 'colloidsprings': 20},
         topic = "NLACakaNM's frigid, untamed crown jewel. Site of Mt. Srxek.",
         wikipage = "https://rfck.miraheze.org/wiki/Maimridge",
     ),
@@ -3210,7 +3210,7 @@ poi_list = [
         isSplit= ''
     ),
     EwPoi(
-        id_poi = "maimridgestreeta",
+        id_poi = "thesummit",
         alias = ['thesummit', 'summit', 'mtsxrek', 'sxrek', 'mtsrxek', 'srxek', 'mountain', 'mountain1'],
         str_name = "The Summit",
         str_desc = "This is the highest peak in the county. You can see the entire city from here, large swathes of the outskirts, and of course the eye-searing slime sea. You think you can even make out the light pollution from other settlements on the sea in the distance, but they're too far away to tell for sure. Intriguing, huh? You should ask a merchant in Vagrant's Corner just who it is they're trading with all the time and what their cities are like. Do they have rampant gang violence too? Who am I kidding, of course they do.",
@@ -3221,13 +3221,13 @@ poi_list = [
         father_district = "maimridge",
         mother_districts = [],
         is_outskirts = True,
-        neighbors = {'temple': 20, 'maimridgestreetb': 20},
+        neighbors = {'temple': 20, 'skilodges': 20},
         wikipage = "https://rfck.miraheze.org/wiki/Maimridge#The_Summit",
-        isSplit= 'maimridgestreetc',
+        isSplit= 'colloidsprings',
         jump_dest='northoutskirtsedge'
     ),
     EwPoi(
-        id_poi = "maimridgestreetb",
+        id_poi = "skilodges",
         alias = ['skilodges', 'ski', 'mountain2'],
         str_name = "Ski Lodges",
         str_desc = "This cozy community of ski lodges and other warm buildings is the perfect respite from the cold, rugged mountainside. Of course, you can't let your enemies take advantage of this hospitality, so you gotta stand guard outside and bash their skull in before they can take their shoes off inside. In other words, you're rejuvenating them first. ",
@@ -3236,14 +3236,14 @@ poi_list = [
         minor_role = "nullminorrole",
         permissions = {'ski-lodges': ['read', 'send', 'connect']},
         father_district = "maimridge",
-        mother_districts = ['maimridgestreetc'],
+        mother_districts = ['colloidsprings'],
         is_outskirts = True,
-        neighbors = {'maimridgestreeta': 20, 'maimridgestreetc': 20},
+        neighbors = {'thesummit': 20, 'colloidsprings': 20},
         wikipage = "https://rfck.miraheze.org/wiki/Maimridge#Ski_Lodges",
-        isSplit= 'maimridgestreetc'
+        isSplit= 'colloidsprings'
     ),
     EwPoi(
-        id_poi = "maimridgestreetc",
+        id_poi = "colloidsprings",
         alias = ['colloidsprings', 'colloid', 'mountain3', 'cs'],
         str_name = "Colloid Springs",
         str_desc = "These natural hot springs can be found throughout Maimridge, both inside and outside a set of cave systems that they occupy halfway up the mountain. You don't have to be an archaeologist to know that these things were a major attraction, even in the past, judging by the staggering amount of ancient ruins that surround them. It's not surprising that they've ended up as another one of Maimridge's tourist traps, but there are rumors of patrons taking a dip and not coming back up. Perhaps something sinister lurks within them…",
@@ -3254,7 +3254,7 @@ poi_list = [
         father_district = "maimridge",
         mother_districts = ['maimridge'],
         is_outskirts = True,
-        neighbors = {'maimridge': 20, 'maimridgestreetb': 20},
+        neighbors = {'maimridge': 20, 'skilodges': 20},
         wikipage = "https://rfck.miraheze.org/wiki/Maimridge#Colloid_Springs",
         isSplit= ''
     ),
@@ -3267,11 +3267,11 @@ poi_list = [
         major_role = "nullmajorrole",
         minor_role = "nullminorrole",
         permissions = {'temple': ['read', 'send', 'connect']},
-        mother_districts = ['maimridgestreeta'],
+        mother_districts = ['thesummit'],
         father_district = "maimridge",
         is_outskirts = False,
-        neighbors = {'maimridgestreeta': 20},
-        isSplit= 'maimridgestreetc'
+        neighbors = {'thesummit': 20},
+        isSplit= 'colloidsprings'
     ),
     EwPoi(
         id_poi = "rpcity",

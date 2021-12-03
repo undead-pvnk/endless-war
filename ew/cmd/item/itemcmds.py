@@ -1968,11 +1968,13 @@ async def collect(cmd):
 
     collection_seek = cmd.tokens[1]
     item_sought_col = bknd_item.find_item(item_search=collection_seek, id_user="{}{}".format(user_data.id_user, "decorate"),id_server=user_data.id_server)
+    if item_sought_col is None and ewcfg.mutation_id_packrat in user_data.get_mutations():
+        item_sought_col = bknd_item.find_item(item_search=collection_seek, id_user=user_data.id_user, id_server=user_data.id_server)
 
     item_seek = cmd.tokens[2]
     item_sought_item = bknd_item.find_item(item_search=item_seek, id_user=user_data.id_user, id_server=user_data.id_server)
 
-    if not poi.is_apartment or user_data.visiting != ewcfg.location_id_empty:
+    if not poi.is_apartment or user_data.visiting != ewcfg.location_id_empty and ewcfg.mutation_id_packrat not in user_data.get_mutations():
         response = "Nobody can know about your shameful hoarding habits. Add to your collections in your apartment."
     elif not item_sought_col:
         response = "You need a collection stowed in your apartment."
@@ -1990,6 +1992,7 @@ async def collect(cmd):
         collect_map = furn_list.get(collectiontype)
 
         collection_inventory = bknd_item.inventory(id_user='{}collection'.format(item_sought_col.get('id_item')), id_server=cmd.guild.id)
+
 
         if collect_map is None or collect_map.furn_set != 'collection':
             response = "You can't just shove anything into anything. A {} isn't gonna fit in a {}.".format(item_sought_item.get('name'), item_sought_col.get('name'))

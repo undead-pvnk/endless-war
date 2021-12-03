@@ -220,7 +220,7 @@
         property_class = "a",
         is_street = True,
         father_district = "astatineheights",
-        neighbors = {'astatineheights': 20, 'astatineheightsstreetb': 20, 'astatineheightsstreetd': 20, 'maimridgestreeta': 20},
+        neighbors = {'astatineheights': 20, 'astatineheightsstreetb': 20, 'astatineheightsstreetd': 20, 'thesummit': 20},
         wikipage = "https://rfck.miraheze.org/wiki/Astatine_Heights#Mountain_Condos",
     ),
         EwPoi(

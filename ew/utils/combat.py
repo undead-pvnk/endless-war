@@ -2461,6 +2461,7 @@ class EwUser(EwUserBase):
                 ids_to_drop = []
 
                 ids_to_drop.extend(itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_item, fraction=item_fraction, rigor=rigor))  # Drop a random fraction of your items on the ground.
+
                 ids_to_drop.extend(itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_food, fraction=food_fraction, rigor=rigor))  # Drop a random fraction of your food on the ground.
                 ids_to_drop.extend(itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_weapon, fraction=1, rigor=rigor))
                 ids_to_drop.extend(itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_cosmetic, fraction=cosmetic_fraction, rigor=rigor))  # Drop a random fraction of your unadorned cosmetics on the ground.
@@ -2472,14 +2473,16 @@ class EwUser(EwUserBase):
                 ewutils.weaponskills_clear(id_server=self.id_server, id_user=self.id_user, weaponskill=ewcfg.weaponskill_max_onrevive)
 
                 try:
-                    drop_list = [str(element) for element in ids_to_drop]
+
+                    drop_list = ','.join(map(str, ids_to_drop))
+
                     bknd_core.execute_sql_query(
-                        "UPDATE items SET {id_user} = %s WHERE id_item IN(%s)".format(
-                            id_user=ewcfg.col_id_user
+                        "UPDATE items SET {id_user} = %s WHERE id_item IN({drop_list})".format(
+                            id_user=ewcfg.col_id_user,
+                        drop_list = drop_list
                         ),
                         (
-                            self.poi,
-                            drop_list
+                            [self.poi]
                         ))
 
                 except:
