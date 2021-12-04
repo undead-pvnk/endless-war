@@ -504,6 +504,7 @@ async def reel(cmd):
 			fisher.current_size = ""
 			fisher.fishing = False
 			fisher.pier = ""
+			fisher.persist()
 			response = "You reeled in too early! Nothing was caught."
 
 		# On successful reel.
@@ -670,7 +671,7 @@ async def reel(cmd):
 				fisher.current_fish = ""
 				fisher.current_size = ""
 				fisher.pier = ""
-				
+				fisher.persist()
 				user_data.persist()
 				
 	else:

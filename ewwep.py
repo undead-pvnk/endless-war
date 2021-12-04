@@ -480,7 +480,7 @@ async def attack(cmd):
 			if deathreport != "":
 				resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
 
-			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.guild.get_member(shootee_data.id_user))
+			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.guild.get_member(int(shootee_data.id_user)))
 
 		else:
 			#hunger drain

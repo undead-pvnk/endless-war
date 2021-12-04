@@ -144,14 +144,13 @@ class EwDistrict:
 
 		filtered_players = []
 		for player in players:
-			if server.get_member(player[0]) != None:
+			if server.get_member(int(player[0])) != None:
 				user_data = EwUser(id_user = player[0], id_server = self.id_server)
 				if max_level >= user_data.slimelevel >= min_level \
 				and max_slimes >= user_data.slimes >= min_slimes \
 				and (len(life_states) == 0 or user_data.life_state in life_states) \
 				and (len(factions) == 0 or user_data.faction in factions):
 					filtered_players.append(user_data.id_user)
-
 		return filtered_players
 
 	def get_enemies_in_district(self,
@@ -458,7 +457,6 @@ async def capture_tick(id_server):
 	# the variables might apparently be accessed before assignment if i didn't declare them here
 	cursor = None
 	conn_info = None
-
 	resp_cont_capture_tick = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = id_server)
 
 	all_districts = ewcfg.capturable_districts
@@ -474,7 +472,6 @@ async def capture_tick(id_server):
 			controlling_faction = dist.controlling_faction
 
 			gangsters_in_district = dist.get_players_in_district(min_slimes = ewcfg.min_slime_to_cap, life_states = [ewcfg.life_state_enlisted])
-					
 
 			slimeoids = ewutils.get_slimeoids_in_poi(poi = district_name, id_server = id_server, sltype = ewcfg.sltype_nega)
 			
@@ -501,7 +498,7 @@ async def capture_tick(id_server):
 				mutations = user_data.get_mutations()
 
 				try:
-					player_online = server.get_member(player_id).status != discord.Status.offline
+					player_online = server.get_member(int(player_id)).status != discord.Status.offline
 				except:
 					player_online = False
 
@@ -524,7 +521,6 @@ async def capture_tick(id_server):
 
 						capture_speed += player_capture_speed
 						dc_stat_increase_list.append(player_id)
-
 
 			if faction_capture not in ['both', None]:  # if only members of one faction is present
 				if district_name in ewcfg.capturable_districts:
