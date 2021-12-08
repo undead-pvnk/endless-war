@@ -605,7 +605,9 @@ async def debugHandling(message, cmd, cmd_obj):
     elif cmd == ewcfg.cmd_prefix + 'decaytick':
         #await loop_utils.decaySlimes(id_server=cmd_obj.guild.id)
         #await loop_utils.release_timed_prisoners_and_blockparties(id_server=cmd_obj.guild.id,day = market.day)
-        await move_utils.kick(id_server=cmd_obj.guild.id)
+        #await move_utils.kick(id_server=cmd_obj.guild.id)
+        #itm_utils.cull_slime_sea(id_server=message.guild.id)
+        await itm_utils.move_relics(id_server=cmd_obj.guild.id)
 
         # Gives the user some slime
     elif cmd == (ewcfg.cmd_prefix + 'getslime'):

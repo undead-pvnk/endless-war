@@ -124,7 +124,7 @@ def spawn_enemy(
             # If the enemy is a raid boss, re-roll it once to make things fair
             if enemytype in ewcfg.raid_bosses:
                 enemytype = random.choice(ewcfg.pre_historic_enemies)
-        elif potential_chosen_poi in [ewcfg.poi_id_maimridge_street_a, ewcfg.poi_id_maimridge_street_b, ewcfg.poi_id_maimridge_street_c]:
+        elif potential_chosen_poi in [ewcfg.poi_id_thesummit, ewcfg.poi_id_colloidsprings, ewcfg.poi_id_skilodges]:
             enemytype = random.choice(ewcfg.arctic_enemies)
             arctic = 1
             if enemytype in ewcfg.raid_bosses:

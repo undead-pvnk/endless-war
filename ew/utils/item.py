@@ -748,14 +748,15 @@ def cull_slime_sea(
             id_server=id_server
         )
         sea_size = len(seainv)
-        seainv = random.shuffle(seainv)
-        print(seainv)
+        random.shuffle(seainv)
+        #print(seainv)
         to_delete = []
 
         if sea_size <= 500:
             return
         else:
             for seaitem in seainv:
+                print(sea_size)
                 if sea_size <= 450:
                     break
                 elif seaitem.get('soulbound'):
@@ -766,7 +767,7 @@ def cull_slime_sea(
                     to_delete.append(seaitem.get('id_item'))
                 elif seaitem.get('item_type') == ewcfg.it_item:
                     item_obj = EwItem(seaitem.get('id_item'))
-                    if item_obj.item_props.get('context') in ['prankitem', ewcfg.context_seedpacket, ewcfg.context_tombstone, ewcfg.context_wrappingpaper, 'batterypack', 'player_bone', 'prankcapsule', 'dye'] or item_obj.item_props.get('id_item') in ewcfg.slimesea_disposables:
+                    if item_obj.item_props.get('context') in ['prankitem', ewcfg.context_seedpacket, ewcfg.context_tombstone, ewcfg.context_wrappingpaper, 'batterypack', 'player_bone', 'prankcapsule', 'dye', 'poudrin'] or item_obj.item_props.get('id_item') in ewcfg.slimesea_disposables:
                         to_delete.append(seaitem.get('id_item'))
                     else:
                         sea_size += 1
@@ -785,14 +786,16 @@ def cull_slime_sea(
                     sea_size += 1
                 sea_size -= 1
 
-            delete_string = [str(element) for element in to_delete]
-            bknd_core.execute_sql_query("DELETE FROM items WHERE {id_item} IN (%s)".format(id_item=ewcfg.col_id_item), (delete_string))
+            #delete_string = [str(element) for element in to_delete]
+            drop_list = ','.join(map(str, to_delete))
+            bknd_core.execute_sql_query("DELETE FROM items WHERE {id_item} IN ({drop_list})".format(id_item=ewcfg.col_id_item, drop_list=drop_list), ())
 
             item_cache = bknd_core.get_cache(obj_type="EwItem")
             num = len(to_delete)
             if item_cache:
                 for itemid in to_delete:
-                    item_cache.entries.pop(itemid)
+                    bknd_core.remove_entry(obj_type="EwItem", id_entry=int(itemid))
+                    #item_cache.entries.pop(itemid)
             return num
 
 def get_root_owner(id_item):
@@ -836,7 +839,7 @@ async def move_relics(id_server):
     if owner_list.count(mean_relics) > min(totals * 0.5, 20):
         iterator = int(owner_list.count(mean_relics) * .4)
         for relic in relic_stash:
-            relic_item = EwItem(id_item=relic.get('id_user'))
+            relic_item = EwItem(id_item=relic.get('id_item'))
             if relic_item.id_owner == mean_relics:
                 relic_item.id_owner = random.choice(static_poi.capturable_districts)
                 relic_item.persist()
