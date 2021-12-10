@@ -259,7 +259,7 @@ async def signlease(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	try:
-		message = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author, check=check)
+		message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == cmd.message.author and message.content.lower() in [ewcfg.cmd_sign, ewcfg.cmd_rip])
 
 		if message != None:
 			if message.content.lower() == ewcfg.cmd_sign:
@@ -714,7 +714,7 @@ async def upgrade(cmd):
 		accepted = False
 
 		try:
-			message = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author, check=ewutils.check_accept_or_refuse)
+			message = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 			if message != None:
 				if message.content.lower() == ewcfg.cmd_prefix + "accept":
@@ -946,7 +946,8 @@ async def knock(cmd = None):
 					user_data = EwUser(member=cmd.message.author)
 					user_data.rr_challenger = target_data.apt_zone
 					user_data.persist()
-					message = await cmd.client.wait_for_message(timeout=20, author=target, check=ewutils.check_accept_or_refuse)
+					#message = await cmd.client.wait_for_message(timeout=20, author=target, check=ewutils.check_accept_or_refuse)
+					message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == cmd.message.author and message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 					if message != None:
 						if message.content.lower() == ewcfg.cmd_accept:
@@ -999,7 +1000,7 @@ async def cancel(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		try:
 			accepted = False
-			message = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author, check=ewutils.check_accept_or_refuse)
+			message = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 			if message != None:
 				if message.content.lower() == ewcfg.cmd_prefix + "accept":

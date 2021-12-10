@@ -916,16 +916,17 @@ async def barter(cmd):
 				# Wait for an answer
 				accepted = False
 
-				try:
-					message = await cmd.client.wait_for_message(timeout = 20, author = cmd.message.author, check = ewutils.check_accept_or_refuse)
+				#try:
+				message = await cmd.client.wait_for('message', timeout = 20, check = lambda message: message.author == cmd.message.author and message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
-					if message != None:
-						if message.content.lower() == "!accept":
-							accepted = True
-						if message.content.lower() == "!refuse":
-							accepted = False
-				except:
-					accepted = False
+				if message != None:
+					if message.content.lower() == "!accept":
+						print("eh!")
+						accepted = True
+					if message.content.lower() == "!refuse":
+						accepted = False
+				#except:
+					#accepted = False
 
 				offer = EwOffer(
 					id_server = cmd.message.guild.id,
@@ -937,17 +938,20 @@ async def barter(cmd):
 				fish = EwItem(id_item = id_fish)
 
 				# cancel deal if fish is no longer in user's inventory
-				if fish.id_owner != user_data.id_user:
+				if int(fish.id_owner) != int(user_data.id_user):
 					accepted = False
-
+					print('one!')
 				# cancel deal if the user has left the speakeasy
 				if user_data.poi != ewcfg.poi_id_speakeasy:
 					accepted = False
+					print('two!')
 
 				# cancel deal if the offer has been deleted
 				if offer.time_sinceoffer == 0:
 					accepted = False
+					print('three!')
 
+				print("{}-{}-{}".format(user_data.poi, fish.id_owner, offer.time_sinceoffer))
 
 				if accepted == True:
 					offer_receive = str(offer.offer_receive)

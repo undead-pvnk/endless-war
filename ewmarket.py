@@ -1065,7 +1065,7 @@ async def trade(cmd):
 
 		try:
 			member = cmd.mentions[0]
-			msg = await cmd.client.wait_for_message(timeout = 30, author = member, check = ewutils.check_accept_or_refuse)
+			msg = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 			if msg != None and msg.content.lower() == ewcfg.cmd_accept:
 				accepted = True
