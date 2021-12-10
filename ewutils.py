@@ -26,6 +26,7 @@ from ewmarket import EwMarket
 from ewstatuseffects import EwStatusEffect
 
 TERMINATE = False
+DEBUG = False
 
 db_pool = {}
 db_pool_id = 0

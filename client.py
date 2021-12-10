@@ -502,6 +502,7 @@ debug = False
 while sys.argv:
 	if sys.argv[0].lower() == '--debug':
 		debug = True
+		ewutils.DEBUG = True
 
 	sys.argv = sys.argv[1:]
 
