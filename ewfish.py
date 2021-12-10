@@ -432,8 +432,10 @@ async def cast(cmd):
 					fun = 1
 				else:
 					damp = random.randrange(fun)
-					
-				await asyncio.sleep(60)
+				if ewutils.DEBUG == True:
+					await asyncio.sleep(1)
+				else:
+					await asyncio.sleep(60)
 				user_data = EwUser(member = cmd.message.author)
 
 				if user_data.poi != fisher.pier:
@@ -504,7 +506,7 @@ async def reel(cmd):
 			fisher.current_size = ""
 			fisher.fishing = False
 			fisher.pier = ""
-			fisher.persist()
+			#fisher.persist()
 			response = "You reeled in too early! Nothing was caught."
 
 		# On successful reel.
@@ -671,7 +673,7 @@ async def reel(cmd):
 				fisher.current_fish = ""
 				fisher.current_size = ""
 				fisher.pier = ""
-				fisher.persist()
+				#fisher.persist()
 				user_data.persist()
 				
 	else:
