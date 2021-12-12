@@ -251,9 +251,9 @@ def getRoleMap(roles):
 """ turn a list of Roles into a map of id = >Role """
 def getRoleIdMap(roles):
 	roles_map = {}
-	print(roles)
+
 	for role in roles:
-		print(role)
+
 		roles_map[role.id] = role
 
 	return roles_map

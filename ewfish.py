@@ -921,7 +921,6 @@ async def barter(cmd):
 
 				if message != None:
 					if message.content.lower() == "!accept":
-						print("eh!")
 						accepted = True
 					if message.content.lower() == "!refuse":
 						accepted = False
@@ -940,18 +939,13 @@ async def barter(cmd):
 				# cancel deal if fish is no longer in user's inventory
 				if int(fish.id_owner) != int(user_data.id_user):
 					accepted = False
-					print('one!')
 				# cancel deal if the user has left the speakeasy
 				if user_data.poi != ewcfg.poi_id_speakeasy:
 					accepted = False
-					print('two!')
 
 				# cancel deal if the offer has been deleted
 				if offer.time_sinceoffer == 0:
 					accepted = False
-					print('three!')
-
-				print("{}-{}-{}".format(user_data.poi, fish.id_owner, offer.time_sinceoffer))
 
 				if accepted == True:
 					offer_receive = str(offer.offer_receive)

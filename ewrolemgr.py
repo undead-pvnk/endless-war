@@ -120,14 +120,14 @@ async def restoreRoleNames(cmd):
         try:
             #print(poi.role)
             role_data = EwRole(id_server = server.id, name = poi.role)
-            print(role_data.id_role)
+            #print(role_data.id_role)
             #print(server.roles)
             for role in server.roles:
                 #print("{}, {}".format(role.id, role_data.id_role))
                 if int(role.id) == int(role_data.id_role):
-                    print("{}, {}".format(role.id, role_data.id_role))
+                    #print("{}, {}".format(role.id, role_data.id_role))
                     await role.edit(name = role_data.name)
-                    print(role_data.name)
+                    #print(role_data.name)
         except:
             ewutils.logMsg('Failed to restore role name for {}'.format(poi.role))
 
@@ -274,9 +274,9 @@ async def updateRoles(
     replacement_roles = []
     #roles_map = ewutils.getRoleMap(member.guild.roles)
 
-    print(role_ids)
+    #print(role_ids)
     for role in member.guild.roles:
-        print(role.id)
+        #print(role.id)
         if int(role.id) in role_ids:
             #ewutils.logMsg('found role {} with id {}'.format(role.name, role.id))
             replacement_roles.append(role)
@@ -312,11 +312,11 @@ async def recreateRoles(cmd):
 
     # print(server_role_names)
     roles_created = 0
-    print(server_role_names.keys())
+    #print(server_role_names.keys())
     for poi in ewcfg.poi_list:
 
          if poi.role != None:
-            print(poi.role)
+            #print(poi.role)
             if poi.role not in list(server_role_names.keys()):
                 newrole = await server.create_role(name=poi.role)
 
