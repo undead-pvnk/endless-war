@@ -317,6 +317,8 @@ def item_create(
         return
 
 
+
+
     if item_type == ewcfg.it_item:
         if "id_name" in item_props.keys():
             template_id = item_props.get("id_name", "bad general item id")
@@ -333,8 +335,6 @@ def item_create(
     elif item_type == ewcfg.it_furniture:
         template_id = item_props.get("id_furniture", "bad furniture id")
     elif item_type == ewcfg.it_relic:
-        if ewrelicutils.canCreateRelic(item_props.get('id_relic'), id_server, 1) != 1:
-            badRelic = 1
         template_id = item_props.get("id_relic", "bad relic id")
     elif item_type == ewcfg.it_book:
         template_id = "player book"
@@ -345,6 +345,9 @@ def item_create(
         template_id = "QUEST ITEM????"
     else:
         template_id = "-1"
+
+    if (item_type == ewcfg.it_relic or item_props.get('acquisition') == 'relic') and ewrelicutils.canCreateRelic(template_id, id_server, 1) != 1:
+        badRelic = 1
 
     if badRelic == 0:
         try:
@@ -649,6 +652,7 @@ def inventory(
         id_server = None,
         item_type_filter = None,
         item_sorting_method = None,
+        item_prop_method = None,
 ):
     items = []
 
@@ -660,6 +664,7 @@ def inventory(
         if id_user is not None: criteria.update({"id_owner": id_user})
         if id_server is not None: criteria.update({"id_server": id_server})
         if item_type_filter is not None: criteria.update({"item_type": item_type_filter})
+        if item_prop_method is not None: criteria.update({"item_props": item_prop_method})
 
         found_items = item_cache.find_entries(criteria=criteria)
 

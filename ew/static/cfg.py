@@ -2341,6 +2341,7 @@ stat_lifetime_slimecoin = 'lifetime_slime_coins'
 stat_bounty_collected = 'bounty_collected'
 stat_max_bounty = 'max_bounty'
 
+
 stat_lifetime_poudrins = 'lifetime_poudrins'
 stat_lifetime_damagedealt = 'lifetime_damage_dealt'
 

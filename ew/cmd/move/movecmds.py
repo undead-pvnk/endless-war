@@ -21,6 +21,7 @@ from ew.utils import frontend as fe_utils
 from ew.utils import move as move_utils
 from ew.utils import prank as prank_utils
 from ew.utils import rolemgr as ewrolemgr
+from ew.utils import stats as ewstats
 from ew.utils.ads import format_ad_response
 from ew.utils.combat import EwEnemy
 from ew.utils.combat import EwUser
@@ -358,7 +359,18 @@ async def move(cmd = None, isApt = False, isSplit = 0):
                             val += ewcfg.territory_time_gain
 
                 val = int(val / user_data.move_speed)
-                await asyncio.sleep(val)
+                if val > 1000:
+                    distance_log = ewstats.get_stat(id_server=player_data.id_server, id_user=player_data.id_user, metric='distance_walked')
+                    val -= distance_log * 400
+                    while val > 0:
+                        await asyncio.sleep(400)
+                        val -= 400
+                        ewstats.increment_stat(id_server=player_data.id_server, id_user=player_data.id_user, metric='distance_walked')
+                    if val == 0:
+                        ewstats.set_stat(id_server=player_data.id_server, id_user=player_data.id_user, metric='distance_walked', value=0)
+                else:
+                    ewstats.set_stat(id_server=player_data.id_server, id_user=player_data.id_user, metric='distance_walked', value=0)
+                    await asyncio.sleep(val)
 
                 # Check to see if we have been interrupted and need to not move any farther.
                 if ewutils.moves_active[cmd.message.author.id] != move_current:

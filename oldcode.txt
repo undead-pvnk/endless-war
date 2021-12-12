@@ -24622,3 +24622,16 @@ if response != "":
 
 
 
+def get_fingernail_item(cmd):
+    item = static_weapons.weapon_map.get(ewcfg.weapon_id_fingernails)
+    item_props = gen_item_props(item)
+    id_item = bknd_item.item_create(
+        item_type=ewcfg.it_weapon,
+        id_user=cmd.message.author.id,
+        id_server=cmd.guild.id,
+        stack_max=-1,
+        stack_size=0,
+        item_props=item_props
+    )
+
+    return id_item

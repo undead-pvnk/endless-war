@@ -386,7 +386,7 @@ async def museum_donate(cmd):
 
     if item_sought:
         item_obj = EwItem(id_item=item_sought.get("id_item"))
-        if item_obj.item_type == ewcfg.it_relic or item_obj.item_props.get('relic') is not None:
+        if item_obj.item_type == ewcfg.it_relic or item_obj.item_props.get('acquisition') == 'relic':
             response = await relic_donate(item_obj.id_item, cmd)
         elif item_obj.item_props.get('acquisition') == ewcfg.acquisition_fishing:
             response = await fish_donate(item_obj.id_item, cmd)
@@ -473,6 +473,8 @@ async def relic_donate(id_item, cmd):
         relic_count.value = str(count)
         relic_count.persist()
 
+        if item_obj.item_type != 'relic':
+            item_obj.item_props['id_relic'] = "{}{}".format('map', item_obj.template)
         relic_obj = relic_static.relic_map.get(item_obj.item_props.get('id_relic'))
         payout = relic_obj.amount_yield
         player = EwPlayer(id_user=item_obj.id_owner, id_server=cmd.guild.id)

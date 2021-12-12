@@ -92,7 +92,6 @@ def die_dropall( #drops all items unless they have been rigor mortissed
     end_list = []
     if item_type != '':
         type_filter = 'and item_type = \'{}\''.format(item_type)
-        print(type_filter)
     else:
         type_filter = ''
 
@@ -120,19 +119,6 @@ def die_dropall( #drops all items unless they have been rigor mortissed
         ewutils.logMsg('Failed to drop items for user with id {}'.format(user_data.id_user))
     return end_list
 
-def get_fingernail_item(cmd):
-    item = static_weapons.weapon_map.get(ewcfg.weapon_id_fingernails)
-    item_props = gen_item_props(item)
-    id_item = bknd_item.item_create(
-        item_type=ewcfg.it_weapon,
-        id_user=cmd.message.author.id,
-        id_server=cmd.guild.id,
-        stack_max=-1,
-        stack_size=0,
-        item_props=item_props
-    )
-
-    return id_item
 
 
 def get_cosmetic_abilities(id_user, id_server):
@@ -388,6 +374,7 @@ def gen_item_props(item):
             'furniture_look_desc': item.furniture_look_desc,
             'acquisition': item.acquisition
         }
+
 
     return item_props
 
@@ -813,9 +800,11 @@ def get_root_owner(id_item):
 
 async def move_relics(id_server):
     relic_stash = bknd_item.inventory(
-            id_server=id_server,
-            item_type_filter=ewcfg.it_relic
+        id_server=id_server,
+        item_prop_method={"acquisition": "relic"}
         )
+
+
     #this code sucks but it only runs once a day so fuck it
     owner_list = []
 

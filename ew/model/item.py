@@ -421,7 +421,7 @@ class EwRelic:
             rarity = "",
             price = 0,
             vendors = [],
-            acquisition = "",
+            acquisition = "relic",
             str_museum = "",
             str_use = "",
             amount_yield = 0,

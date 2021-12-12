@@ -1157,7 +1157,7 @@ async def on_message(message):
         cmd_fn = cmd_map.get(cmd)
 
         if usermodel.poi in ewdebug.act_pois.keys():
-            if content_tolower in ewdebug.act_pois.get(usermodel.poi).keys():
+            if ewutils.flattenTokenListToString(content_tolower) in ewdebug.act_pois.get(usermodel.poi).keys():
                 function = ewdebug.act_pois.get(usermodel.poi).get(content_tolower)
                 return await function(cmd=cmd_obj)
 
