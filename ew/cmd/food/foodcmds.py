@@ -108,6 +108,8 @@ async def menu(cmd):
 
                 if food_item:
                     value = food_item.price
+                    if ewcfg.slimernalia_active:
+                        value = 0
 
                 if cosmetic_item:
                     value = cosmetic_item.price
@@ -299,6 +301,8 @@ async def order(cmd):
                 response = ""
 
                 value = item.price
+                if item.item_type == ewcfg.it_food and ewcfg.slimernalia_active:
+                    value = 0
 
                 premium_purchase = True if item_id in ewcfg.premium_items else False
                 if premium_purchase:

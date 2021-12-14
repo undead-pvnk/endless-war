@@ -917,9 +917,9 @@ async def give(cmd):
 
     if item_sought:  # if an item was found
 
-        """
+
         # Slimernalia gifting
-        if item_sought.get('item_type') == ewcfg.it_item:
+        if item_sought.get('item_type') == ewcfg.it_item and ewcfg.slimernalia_active:
             item_data = EwItem(id_item = item_sought.get('id_item'))
 
             if item_data.item_props.get('id_item') == 'gift' and item_data.item_props.get("gifted") == "false":
@@ -927,7 +927,7 @@ async def give(cmd):
                 item_data.persist()
                 user_data.festivity += ewcfg.festivity_on_gift_giving
                 user_data.persist()
-        """
+
         # don't let people give others food when they shouldn't be able to carry more food items
         if item_sought.get('item_type') == ewcfg.it_food:
             food_items = bknd_item.inventory(

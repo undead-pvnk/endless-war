@@ -2082,7 +2082,6 @@ async def wrap(cmd):
 
     item_search = ewutils.flattenTokenListToString(cmd.tokens[3:])
     item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id)
-
     if item_sought:
         item = EwItem(id_item=item_sought.get('id_item'))
         if item.item_type == ewcfg.it_item:
@@ -2091,7 +2090,7 @@ async def wrap(cmd):
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         if item.soulbound:
             response = "It's a nice gesture, but trying to gift someone a Soulbound item is going a bit too far, don't you think?"
-        elif bknd_item.check_inv_capacity(user_data=user_data, item_type=ewcfg.it_item):
+        elif not bknd_item.check_inv_capacity(user_data=user_data, item_type=ewcfg.it_item):
             response = ewcfg.str_generic_inv_limit.format(ewcfg.it_item)
         else:
             gift_name = "Gift"

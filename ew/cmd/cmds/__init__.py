@@ -156,11 +156,11 @@ cmd_map = {
 
     # Slimernalia -- Moved unwrap to item cmds. Please move wrap upon reimplementation
     # Check your current festivity
-    # ewcfg.cmd_festivity: cmds.festivity,
+    ewcfg.cmd_festivity: cmdcmds.festivity,
     # Wrap a gift -- ewitem maybe?
-    # ewcfg.cmd_wrap: cmds.wrap,
+    ewcfg.cmd_wrap: cmdcmds.wrap,
     # Yo, Slimernalia
-    # ewcfg.cmd_yoslimernalia: cmds.yoslimernalia,
+    ewcfg.cmd_yoslimernalia: cmdcmds.yoslimernalia,
 
     # Swilldermuk -- Please make swilldermuk specific cmd/util files on reimplementation
     # ewcfg.cmd_gambit: cmds.gambit,
