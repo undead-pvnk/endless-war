@@ -449,7 +449,7 @@ def make_slimernalia_board(server, title):
     item_cache = bknd_core.get_cache(obj_type = "EwItem")
     if item_cache is not False:
         # get a list of [id, name, lifestate, faction, basefestivitysum] for all users in server
-        dat = bknd_core.execute_sql_query("SELECT  {id_user}, {display_name}, {state}, {faction}, FLOOR({festivity}) + FLOOR({festivity_from_slimecoin}) FROM users WHERE {id_server} = %s".format(
+        data = bknd_core.execute_sql_query("SELECT  users.{id_user}, {display_name}, {state}, {faction}, FLOOR({festivity}) + FLOOR({festivity_from_slimecoin}) FROM users, players WHERE users.{id_server} = %s and users.{id_user} = players.{id_user} ".format(
                 id_user=ewcfg.col_id_user,
                 id_server=ewcfg.col_id_server,
                 display_name=ewcfg.col_display_name,
@@ -459,11 +459,14 @@ def make_slimernalia_board(server, title):
                 festivity=ewcfg.col_festivity,
                 festivity_from_slimecoin=ewcfg.col_festivity_from_slimecoin,
             ), (
-                server
+                server,
             ))
-
+        dat = list(data)
+        f_data = []
         # iterate through all users, add sigillaria festivity to the base
+        #print(dat)
         for row in dat:
+            row = list(row)
             # Get all user sigs
             sigs = item_cache.find_entries(
                 criteria={
@@ -479,13 +482,14 @@ def make_slimernalia_board(server, title):
 
             # remove id to match return format
             row.pop(0)
-
+            f_data.append(row)
         # Sort the rows by the 4th value in the list (which is the festivity, after removing the id), highest first
-        dat.sort(key=lambda row: row[3], reverse=True)
+        f_data.sort(key=lambda row: row[3], reverse=True)
 
         # add the top 5 to be returned
         for i in range(5):
-            entries.append(dat[i])
+            print(f_data[i])
+            entries.append(f_data[i])
 
     else:
         data = bknd_core.execute_sql_query(
@@ -505,11 +509,12 @@ def make_slimernalia_board(server, title):
             ), (
                 "id_furniture",
                 ewcfg.item_id_sigillaria,
-                server
+                server,
             )
         )
 
         for row in data:
+            print(row)
             entries.append(row)
 
     return format_board(entries=entries, title=title)
@@ -655,7 +660,7 @@ def board_entry(entry, entry_type, divide_by):
     if entry_type == ewcfg.entry_type_player:
         faction = ewutils.get_faction(life_state=entry[1], faction=entry[2])
         faction_symbol = ewutils.get_faction_symbol(faction, entry[2])
-
+        print("{}--{}".format(entry[3], divide_by))
         number = int(entry[3] / divide_by)
 
         if number > 999999999:

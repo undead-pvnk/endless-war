@@ -718,18 +718,20 @@ def get_most_festive(server):
     item_cache = bknd_core.get_cache(obj_type = "EwItem")
     if item_cache is not False:
         # get a list of [id, festivitysum] for all users in server
-        dat = bknd_core.execute_sql_query("SELECT {id_user}, FLOOR({festivity}) + FLOOR({festivity_from_slimecoin}) FROM users WHERE {id_server} = %s".format(
+        data = bknd_core.execute_sql_query("SELECT {id_user}, FLOOR({festivity}) + FLOOR({festivity_from_slimecoin}) FROM users WHERE {id_server} = %s".format(
             id_user = ewcfg.col_id_user,
             id_server = ewcfg.col_id_server,
 
             festivity = ewcfg.col_festivity,
             festivity_from_slimecoin = ewcfg.col_festivity_from_slimecoin,
         ), (
-            server.id
+            server.id,
         ))
-
+        dat = list(data)
+        f_data = []
         # iterate through all users in the server
         for row in dat:
+            row = list(row)
             # Get all user furniture id'd as a sigil
             sigils = item_cache.find_entries(criteria={
                 "id_owner": row[0],
@@ -740,11 +742,11 @@ def get_most_festive(server):
 
             # add 1000 festivity to the user's sum per sigil
             row[1] += (len(sigils) * 1000)
-
+            f_data.append(row)
         # Sort the rows by the second index in each row, highest first
-        dat.sort(key=lambda row: row[1], reverse=True)
+        f_data.sort(key=lambda row: row[1], reverse=True)
 
-        return dat[0][0]
+        return f_data[0][0]
 
 
     data = bknd_core.execute_sql_query(

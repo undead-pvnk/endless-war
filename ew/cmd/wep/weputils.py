@@ -429,15 +429,6 @@ def canAttack(cmd):
             code_count += 1
 
     channel_poi = poi_static.chname_to_poi.get(cmd.message.channel.name)
-    """
-    if user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_corpse:
-        if user_data.life_state == ewcfg.life_state_enlisted:
-            response = "Not so fast, you scrooge! Only Juveniles can attack during Slimernalia."
-        else:
-            response = "You lack the moral fiber necessary for violence."
-    elif user_data.slimelevel <= ewcfg.max_safe_level:
-        response = "You are still too cowardly to hurt another being."
-    """
 
     if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
         response = "You can't commit violence from here."
@@ -446,6 +437,11 @@ def canAttack(cmd):
     elif channel_poi.id_poi != user_data.poi and user_data.poi not in channel_poi.mother_districts:
         # Only way to do this right now is by using the gellphone
         response = "Alas, you still can't shoot people through your phone."
+    elif user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_corpse and ewcfg.slimernalia_active:
+        if user_data.life_state == ewcfg.life_state_enlisted:
+            response = "Not so fast, you scrooge! Only Juveniles can attack during Slimernalia."
+        else:
+            response = "You lack the moral fiber necessary for violence."
     elif cmd.mentions_count > 1:
         response = "One shot at a time!"
     elif user_data.hunger >= user_data.get_hunger_max():
@@ -500,7 +496,7 @@ def canAttack(cmd):
             # disallow kill if the player has killed recently
             response = "Take a moment to appreciate your last slaughter."
 
-        elif user_iskillers == False and user_isrowdys == False and user_isexecutive == False and user_isshambler == False and user_isslimecorp == False:
+        elif user_iskillers == False and user_isrowdys == False and user_isexecutive == False and user_isshambler == False and user_isslimecorp == False and ewcfg.slimernalia_active == False:
             # Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
             if user_data.life_state == ewcfg.life_state_juvenile:
                 response = "Juveniles lack the moral fiber necessary for violence."
@@ -548,7 +544,7 @@ def canAttack(cmd):
         # elif shootee_data.life_state == ewcfg.life_state_shambler and (user_iskillers == True or user_isrowdys == True or user_isexecutive == True or user_isslimecorp == True) and len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_shambler])) > 0:
         # 	response = "You can't attack them, they're protected by a horde of enemy Shamblers!"
 
-        elif user_iskillers == False and user_isrowdys == False and user_isexecutive == False and user_isshambler == False and user_isslimecorp == False:
+        elif user_iskillers == False and user_isrowdys == False and user_isexecutive == False and user_isshambler == False and user_isslimecorp == False and ewcfg.slimernalia_active == False:
             # Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
             if user_data.life_state == ewcfg.life_state_juvenile:
                 response = "Juveniles lack the moral fiber necessary for violence."

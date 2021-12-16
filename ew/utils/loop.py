@@ -1378,7 +1378,10 @@ async def clock_tick_loop(id_server = None, force_active = False):
                         ewutils.logMsg("...finished bazaar refresh.")
                         
                         await leaderboard_utils.post_leaderboards(client=client, server=server)
-                        
+
+                        if ewcfg.slimernalia_active:
+                            await fe_utils.update_slimernalia_kingpin(client, server)
+
                         if market_data.clock % 8 == 0 or force_active:
                             ewutils.logMsg("Started rent calc...")
                             await apt_utils.rent_time(id_server)

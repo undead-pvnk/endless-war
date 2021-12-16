@@ -846,6 +846,9 @@ async def on_message(message):
             user_data.persist()
             await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
 
+        elif debug == True and cmd == (ewcfg.cmd_prefix + 'slkingpin'):
+            await fe_utils.update_slimernalia_kingpin(client, server=message.guild)
+
         elif debug == True and cmd == (ewcfg.cmd_prefix + 'createapple'):
             item_id = bknd_item.item_create(
                 id_user=message.author.id,
