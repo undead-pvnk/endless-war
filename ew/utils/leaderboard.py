@@ -450,7 +450,7 @@ def make_slimernalia_board(server, title):
 
 
         data = bknd_core.execute_sql_query("select u.id_user, p.display_name, u.life_state, u.faction, ifnull(st1.stat_value, 0) + ifnull(st2.stat_value, 0) as total from stats st1 left join stats st2 on st1.id_user = st2.id_user inner join users u on st1.id_user = u.id_user inner join players p on u.id_user = p.id_user where st1.stat_metric = 'festivity' and st2.stat_metric = 'festivity_from_slimecoin' and u.id_server = u.id_server union select u.id_user, p.display_name, u.life_state, u.faction, ifnull(st1.stat_value, 0) + ifnull(st2.stat_value, 0) as total from stats st1 right join stats st2 on st1.id_user = st2.id_user inner join users u on st2.id_user = u.id_user inner join players p on u.id_user = p.id_user where st1.stat_metric = 'festivity' and st2.stat_metric = 'festivity_from_slimecoin' and u.id_server = %s",
-    (server))
+    (server,))
         dat = list(data)
         f_data = []
         # iterate through all users, add sigillaria festivity to the base
@@ -470,13 +470,14 @@ def make_slimernalia_board(server, title):
 
             # remove id to match return format
             row.pop(0)
+            f_data.append(row)
 
         # Sort the rows by the 4th value in the list (which is the festivity, after removing the id), highest first
-        dat.sort(key=lambda row: row[3], reverse=True)
+        f_data.sort(key=lambda row: row[3], reverse=True)
 
         # add the top 5 to be returned
         for i in range(5):
-            entries.append(dat[i])
+            entries.append(f_data[i])
 
     else:
         return "" #whose idea was it to separate festivity into 3 different stats? idk, but fuck it, we're not running slimernalia without the cache.
