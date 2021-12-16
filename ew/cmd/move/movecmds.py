@@ -16,6 +16,10 @@ from ew.backend.worldevent import get_void_connection_pois
 from ew.cmd import apt as ewapt
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
+try:
+    from ew.cmd.debug import zone_bonus_flavor
+except:
+    from ew.cmd.debug_dummy import zone_bonus_flavor
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import move as move_utils
@@ -207,6 +211,10 @@ async def move(cmd = None, isApt = False, isSplit = 0):
     # Hard lock path costs to not be lower than 5 seconds.
     path.cost = max(path.cost, 5)
 
+    if path.cost > 1000:
+        distance_log = ewstats.get_stat(id_server=player_data.id_server, id_user=player_data.id_user, metric='distance_walked')
+        path.cost -= distance_log * 400
+
     minutes = int(path.cost / 60)
     seconds = path.cost % 60
 
@@ -366,7 +374,7 @@ async def move(cmd = None, isApt = False, isSplit = 0):
                         await asyncio.sleep(400)
                         val -= 400
                         ewstats.increment_stat(id_server=player_data.id_server, id_user=player_data.id_user, metric='distance_walked')
-                    if val == 0:
+                    if val <= 0:
                         ewstats.set_stat(id_server=player_data.id_server, id_user=player_data.id_user, metric='distance_walked', value=0)
                 else:
                     ewstats.set_stat(id_server=player_data.id_server, id_user=player_data.id_user, metric='distance_walked', value=0)
@@ -531,22 +539,29 @@ async def look(cmd):
     market_data = EwMarket(id_server=user_data.id_server)
     degrade_resp = ""
     if district_data.degradation >= poi.max_degradation:
-        degrade_resp = ewcfg.str_zone_degraded.format(poi=poi.str_name) + "\n\n"
+        degrade_resp = "\n\n" + ewcfg.str_zone_degraded.format(poi=poi.str_name) + "\n\n"
     void_resp = get_void_connections_resp(poi.id_poi, user_data.id_server)
 
     if poi.is_apartment:
         return await ewapt.aptcmds.apt_look(cmd)
 
+    bonus_flavor_list = zone_bonus_flavor.get(poi.id_poi)
+    if bonus_flavor_list is not None:
+        str_desc = poi.str_desc.format(bonusflavor = random.choice(bonus_flavor_list))
+    else:
+        str_desc = poi.str_desc
+
     if poi.is_subzone or poi.id_poi == ewcfg.poi_id_thevoid:  # Triggers if you input the command in the void or a sub-zone.
-        wikichar = '<{}>'.format(poi.wikipage) if poi.wikipage != '' else ''
+        wikichar = '\n\n<{}>'.format(poi.wikipage) if poi.wikipage != '' else ''
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author,
-                                                                                                   "You stand {} {}.\n\n{}\n\n{}\n{}\n\n{}".format(
+                                                                                                   "You stand {} {}.\n\n{}{}{}{}".format(
                                                                                                        poi.str_in,
                                                                                                        poi.str_name,
-                                                                                                       poi.str_desc,
+                                                                                                       str_desc,
                                                                                                        wikichar,
                                                                                                        void_resp,
                                                                                                        degrade_resp,
+
                                                                                                    )
                                                                                                    ))
 
@@ -596,13 +611,13 @@ async def look(cmd):
 
     # post result to channel
     if poi != None:
-        wikichar = '<{}>'.format(poi.wikipage) if poi.wikipage != '' else ''
+        wikichar = '\n\n<{}>'.format(poi.wikipage) if poi.wikipage != '' else ''
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(
             cmd.message.author,
-            "You stand {} {}.\n\n{}\n\n{}\n{}\n\n{}...".format(
+            "You stand {} {}.\n\n{}{}{}{}...".format(
                 poi.str_in,
                 poi.str_name,
-                poi.str_desc,
+                str_desc,
                 wikichar,
                 void_resp,
                 degrade_resp,

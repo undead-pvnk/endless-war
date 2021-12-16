@@ -26,6 +26,7 @@ forbiddenstuffedcrust_desc = "this sure looks like a pizza."
 
 act_pois = {}
 
+zone_bonus_flavor = {}
 
 def initialize_gamestate(id_server):
     return
