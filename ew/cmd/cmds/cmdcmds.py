@@ -7,13 +7,17 @@ from ew.backend import hunting as bknd_hunt
 from ew.backend import item as bknd_item
 from ew.backend import worldevent as bknd_worldevent
 from ew.backend.hunting import EwOperationData
+
 from ew.backend.apt import EwApartment
+
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.status import EwEnemyStatusEffect
 from ew.backend.status import EwStatusEffect
 from ew.backend.worldevent import EwWorldEvent
+
 from ew.utils.transport import EwTransport
+
 from ew.static import cfg as ewcfg
 from ew.static import hue as hue_static
 from ew.static import items as static_items
@@ -21,7 +25,9 @@ from ew.static import mutations as static_mutations
 from ew.static import poi as poi_static
 from ew.static import status as se_static
 from ew.static import vendors
+
 from ew.backend.player import EwPlayer
+
 from ew.static import weapons as static_weapons
 from ew.utils import cmd as cmd_utils
 from ew.utils import combat as cmbt_utils
@@ -46,7 +52,9 @@ from .cmdsutils import item_off
 from .cmdsutils import location_commands
 from .cmdsutils import mutation_commands
 
+
 from .cmdsutils import get_crime_level
+
 from .cmdsutils import holiday_commands
 from .. import item as ewitem
 from ..apt import aptcmds as apt_cmds
@@ -206,7 +214,9 @@ async def data(cmd):
             response += "You are a {}level {} {}shambler.".format(race_prefix, user_data.slimelevel, race_suffix)
         else:
             response += "You are a {}level {} {}slime{}.".format(race_prefix, user_data.slimelevel, race_suffix, user_data.gender)
+
             """if user_data.degradation < 20:
+
                 pass
             elif user_data.degradation < 40:
                 response += " Your bodily integrity is starting to slip."
@@ -218,6 +228,7 @@ async def data(cmd):
                 response += " Your limbs keep falling off. It's really annoying."
             else:
                 response += " You almost look like a shambler already."""
+
 
         if user_data.has_soul == 0:
             response += " You have no soul."
@@ -257,6 +268,7 @@ async def data(cmd):
 
         response_block += "{}{}".format(get_crime_level(num=user_data.crime, forYou=1), ' ')
 
+
         if user_kills > 0 and enemy_kills > 0:
             response_block += "You have {:,} confirmed kills, and {:,} confirmed hunts. ".format(user_kills,
                                                                                                  enemy_kills)
@@ -281,6 +293,7 @@ async def data(cmd):
             response_block += "You are {}% hungry. ".format(
                 round(user_data.hunger * 100.0 / user_data.get_hunger_max(), 1)
             )
+
 
         statuses = user_data.getStatusEffects()
 
@@ -689,6 +702,7 @@ async def toss_off_cliff(cmd):
                     response = "You throw a brick through {}'s window. Oh shit! Quick, scatter before they see you!".format(cmd.mentions[0].display_name)
                     user_data.change_crime(n=1)
                     user_data.persist()
+
                     if poi_static.id_to_poi.get(target.poi).is_apartment and target.visiting == ewcfg.location_id_empty:
                         try:
                             await fe_utils.send_message(cmd.client, cmd.mentions[0], fe_utils.formatMessage(cmd.mentions[0], "SMAAASH! A brick flies through your window!"))
@@ -711,8 +725,10 @@ async def toss_off_cliff(cmd):
                         response = ":bricks::boom: BONK! The brick slams against {}'s head!".format(cmd.mentions[0].display_name)
                         item.id_owner = target.poi
                         item.persist()
+
                         user_data.change_crime(n=1)
                         user_data.persist()
+
                         try:
                             await fe_utils.send_message(cmd.client, cmd.mentions[0], fe_utils.formatMessage(cmd.mentions[0], random.choice(["!!!!!!", "BRICK!", "FUCK", "SHIT", "?!?!?!?!?", "BONK!", "F'TAAAAANG!", "SPLAT!", "SPLAPP!", "WHACK"])))
                         except:
@@ -746,6 +762,7 @@ async def toss_off_cliff(cmd):
             response = item_off(item_sought.get('id_item'), user_data.id_server, item_sought.get('name'))
             user_data.change_crime(n=ewcfg.cr_littering_points)
             user_data.persist()
+
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     else:
@@ -756,6 +773,7 @@ async def toss_off_cliff(cmd):
 async def jump(cmd):
     user_data = EwUser(member=cmd.message.author)
     poi = poi_static.id_to_poi.get(user_data.poi)
+
 
     if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
         response = "You bonk your head on the shaft's ceiling."
@@ -780,6 +798,7 @@ async def jump(cmd):
                     wafflehouse_poi = poi_static.id_to_poi.get(ewcfg.poi_id_thevoid)
                     response = "You do a backflip on the way down, bounce on the trampoline a few times to reduce your momentum, and climb down a ladder from the roof, down to the ground. You find yourself standing next to {}, in {}.".format(wafflehouse_poi.str_name, void_poi.str_name)
                     await fe_utils.send_message(cmd.client, fe_utils.get_channel(cmd.guild, void_poi.channel), fe_utils.formatMessage(cmd.message.author, response), 20)
+
                     return
 
     elif user_data.life_state == ewcfg.life_state_corpse:
@@ -810,6 +829,7 @@ async def jump(cmd):
         resp_cont.add_channel_response(channel=poi_dest.channel, response=response_dest)
         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
         return await resp_cont.post()
+
 
 
     elif cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
@@ -1038,8 +1058,6 @@ async def crime(cmd):
         response = "You have commited {} crime. {}".format(user_data.crime, crimestring)
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-
 
 
 async def remove_item(cmd):
@@ -1350,12 +1368,14 @@ async def recycle(cmd):
                 user_data.sidearm = -1
                 user_data.persist()
 
+
             #elif item.item_type == ewcfg.it_relic: i need to learn to let things go and adapt.
             #    relic_mapped = rstatic.relic_map.get(item.item_props.get('id_relic'))
             #    if relic_mapped.has_effect or item.item_props.get('donated') is None or item.item_props.get('donated') == 0:
             #        response = "You reach into your pocket to dispose of this sacrosanct piece of history, but you can't find it! Damn, you've been pickpocketed!"
             #        bknd_item.give_item(id_server=cmd.guild.id, id_user='slimesea', id_item=item.id_item)
             #        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
             bknd_item.item_delete(id_item=item.id_item)
 
             pay = int(random.random() * 10 ** random.randrange(2, 6))
@@ -1544,6 +1564,7 @@ async def help(cmd):
             # stock exchange help
             response = ewcfg.help_responses['stocks']
         elif cmd.message.channel.name in [ewcfg.channel_casino, ewcfg.channel_casino_p]:
+
             # casino help
             response = ewcfg.help_responses['casino']
         elif cmd.message.channel.name in ewcfg.channel_sewers:
@@ -1819,9 +1840,6 @@ async def lol(cmd):
 
 
 
-
-
-
 async def pray(cmd):
     user_data = EwUser(member=cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
@@ -2028,7 +2046,6 @@ async def check_mastery(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-
 """
     SLIMERNALIA COMMANDS
 """
@@ -2126,6 +2143,7 @@ async def wrap(cmd):
 
             ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity, n=ewcfg.festivity_on_gift_wrapping)
 
+
     else:
         if item_search == "" or item_search == None:
             response = "Specify the item you want to wrap."
@@ -2146,6 +2164,7 @@ async def slimecoin(cmd):
         user_data = EwUser(member=cmd.message.author)
         coins = user_data.slimecoin
         response = "You have {:,} SlimeCoin.".format(coins)
+
 
 
     else:
@@ -2288,7 +2307,6 @@ async def prank(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
 
 
-
 async def almanac(cmd):
     if not cmd.tokens_count > 1:
         enemy_counter = 0
@@ -2319,7 +2337,6 @@ async def almanac(cmd):
             response = 'ENDLESS WAR questions your belief in the existence of such a shambler or gaiaslimeoid. Try referring to the ones in the list again by using just !almanac.'
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
 
 
 """ 
@@ -2521,6 +2538,7 @@ async def arrest(cmd):
 
         user_data = EwUser(member=member)
         user_data.arrested = market.day + (length * 4)
+
         user_data.poi = ewcfg.poi_id_thesphere
         user_data.change_slimes(n=- user_data.slimes)
         user_data.persist()
@@ -2532,12 +2550,14 @@ async def arrest(cmd):
         await fe_utils.send_message(cmd.client, leak_channel, "{} ({}): Arrested {}{}.".format(cmd.message.author.display_name, cmd.message.author.id, member.display_name, time_done))
 
 
+
 """
 	Allow a player to participate in the game again
 """
 
 
 async def release(cmd):
+
     if not 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
         return await cmd_utils.fake_failed_command(cmd)
 
@@ -2545,6 +2565,7 @@ async def release(cmd):
         member = cmd.mentions[0]
         user_data = EwUser(member=member)
         user_data.arrested = 0
+
         user_data.poi = ewcfg.poi_id_juviesrow
         user_data.persist()
 
@@ -2553,6 +2574,7 @@ async def release(cmd):
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         leak_channel = fe_utils.get_channel(server=cmd.guild, channel_name='squickyleaks')
         await fe_utils.send_message(cmd.client, leak_channel, "{} ({}): Released {}.".format(cmd.message.author.display_name, cmd.message.author.id, member.display_name))
+
 
 
 async def dual_key_ban(cmd):
@@ -2858,6 +2880,7 @@ async def cockdraw(cmd):
     if cmd.tokens[0] in ['!cockdraw', '!measurecock']:
         user_data.change_crime(n=1)
         user_data.persist()
+
         object = 'dick'
         action = 'whip out your'
         if protected:
@@ -2890,6 +2913,6 @@ async def cockdraw(cmd):
         await asyncio.sleep(1)
 
     response = "You {} {}! It's {} inches long!".format(action, object, size)
-    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 

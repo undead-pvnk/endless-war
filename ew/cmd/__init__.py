@@ -30,11 +30,13 @@ from . import spooky
 from . import sports
 from . import transport
 from . import wep
+
 from . import prank
 try:
     from . import debugr
 except:
     from . import debugr_dummy as debugr
+
 import ew.utils.frontend as fe_utils
 import ew.utils.poi as poi_utils
 import ew.utils.rolemgr as ewrolemgr
@@ -74,6 +76,7 @@ cmd_modules = [
     sports,
     debugr,
     prank
+
 ]
 
 cmd_map = {

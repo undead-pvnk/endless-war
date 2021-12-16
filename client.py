@@ -1168,7 +1168,6 @@ async def on_message(message):
             # Execute found command
             return await cmd_fn(cmd_obj)
 
-
         # AWOOOOO
         elif re_awoo.match(cmd):
             return await ewcmd.cmdcmds.cmd_howl(cmd_obj)

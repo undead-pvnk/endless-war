@@ -78,7 +78,9 @@ cmd_map = {
 
     # !bootall
     ewcfg.cmd_bootall: aptcmds.bootall,
+
     ewcfg.cmd_titleframe: aptcmds.frame_title,
+
 
 }
 

@@ -513,12 +513,15 @@ async def kick(id_server):
                 if not inaccessible(user_data=user_data, poi=poi_static.id_to_poi.get(mother_district_chosen)):
 
                     if user_data.poi != party_poi and user_data.life_state not in [ewcfg.life_state_kingpin, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
+
                         server = ewcfg.server_list[id_server]
                         member_object = server.get_member(id_user)
 
                         user_data.poi = mother_district_chosen
                         user_data.time_lastenter = int(time.time())
+
                         user_data.change_crime(n=50) # loitering:punishable by death
+
                         user_data.persist()
                         await ewrolemgr.updateRoles(client=client, member=member_object)
                         await user_data.move_inhabitants(id_poi=mother_district_chosen)
@@ -535,7 +538,9 @@ async def send_gangbase_messages(server_id, clock):
     casino_response = "**Lucky Lucy has arrived!** Now's the time to make your fortune!"
     casino_end = "Aww, Lucy left."
 
+
     highnoon = 0
+
 
     response = ""
     #if clock == 3:
@@ -545,16 +550,19 @@ async def send_gangbase_messages(server_id, clock):
     if random.randint(1, 50) == 2:
         lucky_lucy = 1
 
+
     if clock == 11:
         highnoon = 1
     if clock == 12:
         highnoon = 2
+
 
     client = ewutils.get_client()
     server = client.get_guild(server_id)
     channels = ewcfg.hideout_channels
     casino_channel = fe_utils.get_channel(server=server, channel_name=ewcfg.channel_casino)
     dueling_channel = fe_utils.get_channel(server=server, channel_name='hang-em-square')
+
 
 
     if response != "":
@@ -565,6 +573,7 @@ async def send_gangbase_messages(server_id, clock):
         await fe_utils.send_message(client, casino_channel, casino_response)
         await asyncio.sleep(300)
         await fe_utils.send_message(client, casino_channel, casino_end)
+
 
     if highnoon != 0:
         district = EwDistrict(district='hangemsquare', id_server=server_id)
