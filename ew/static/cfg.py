@@ -30,7 +30,7 @@ dh_active = False
 dh_stage = 1
 
 #Slimernalia Features
-slimernalia_active = False
+slimernalia_active = True
 
 #Swilldermuk Features
 swilldermuk_active = False

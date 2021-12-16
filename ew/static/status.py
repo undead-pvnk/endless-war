@@ -52,6 +52,11 @@ status_effect_list = [
         str_describe_self='The coleslaw in your stomach allows you to bust ghosts.'
     ),
     EwStatusEffectDef(
+        id_status=ewcfg.status_busted_id,
+        time_expire=86400,
+        str_describe_self='You are busted and therefore cannot leave the sewers until your next !haunt.'
+    ),
+    EwStatusEffectDef(
         id_status=ewcfg.status_strangled_id,
         time_expire=5,
         str_describe='They are being strangled.'

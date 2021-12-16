@@ -500,7 +500,7 @@ def canAttack(cmd):
             # disallow kill if the player has killed recently
             response = "Take a moment to appreciate your last slaughter."
 
-        elif user_iskillers == False and user_isrowdys == False and user_isexecutive == False and user_isshambler == False and user_isslimecorp == False:
+        elif user_iskillers == False and user_isrowdys == False and user_isexecutive == False and user_isshambler == False and user_isslimecorp == False and not ewcfg.slimernalia_active:
             # Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
             if user_data.life_state == ewcfg.life_state_juvenile:
                 response = "Juveniles lack the moral fiber necessary for violence."
@@ -548,7 +548,7 @@ def canAttack(cmd):
         # elif shootee_data.life_state == ewcfg.life_state_shambler and (user_iskillers == True or user_isrowdys == True or user_isexecutive == True or user_isslimecorp == True) and len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_shambler])) > 0:
         # 	response = "You can't attack them, they're protected by a horde of enemy Shamblers!"
 
-        elif user_iskillers == False and user_isrowdys == False and user_isexecutive == False and user_isshambler == False and user_isslimecorp == False:
+        elif user_iskillers == False and user_isrowdys == False and user_isexecutive == False and user_isshambler == False and user_isslimecorp == False and not ewcfg.slimernalia_active:
             # Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
             if user_data.life_state == ewcfg.life_state_juvenile:
                 response = "Juveniles lack the moral fiber necessary for violence."
@@ -559,7 +559,7 @@ def canAttack(cmd):
             # User is currently invulnerable.
             response = "{} has died too recently and is immune.".format(member.display_name)
 
-        elif shootee_data.life_state == ewcfg.life_state_corpse and ewcfg.status_busted_id not in shootee_data.getStatusEffects():
+        elif shootee_data.life_state == ewcfg.life_state_corpse and ewcfg.status_busted_id in shootee_data.getStatusEffects():
             # Target is already dead and not a ghost.
             response = "{} is already dead.".format(member.display_name)
 

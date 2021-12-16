@@ -1162,7 +1162,7 @@ def equip(user_data, weapon_item = None):
 
     if user_data.life_state == ewcfg.life_state_corpse:
         response = "Ghosts can't equip weapons."
-    elif user_data.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in weapon.classes:
+    elif user_data.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in weapon.classes and not ewcfg.slimernalia_active:
         response = "Juvies can't equip weapons."
     elif user_data.life_state == ewcfg.life_state_shambler:
         response = "Shamblers can't equip weapons."
@@ -1202,7 +1202,7 @@ def equip_sidearm(user_data, sidearm_item = None):
 
     if user_data.life_state == ewcfg.life_state_corpse:
         response = "Ghosts can't equip weapons."
-    elif user_data.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in sidearm.classes:
+    elif user_data.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in sidearm.classes and not ewcfg.slimernalia_active:
         response = "Juvies can't equip weapons."
     elif user_data.weaponmarried == True and int(sidearm_item.item_props.get("married")) == user_data.id_user:
         current_weapon = EwItem(id_item=user_data.weapon)

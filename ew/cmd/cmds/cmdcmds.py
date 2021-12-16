@@ -284,9 +284,6 @@ async def data(cmd):
 
         statuses = user_data.getStatusEffects()
 
-        if ewcfg.status_busted_id in statuses and user_data.life_state == ewcfg.life_state_corpse:
-            response_block += "You are busted and therefore cannot leave the sewers until your next !haunt. "
-
         for status in statuses:
             status_effect = EwStatusEffect(id_status=status, user_data=user_data)
             if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
@@ -2099,7 +2096,7 @@ async def wrap(cmd):
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         if item.soulbound:
             response = "It's a nice gesture, but trying to gift someone a Soulbound item is going a bit too far, don't you think?"
-        elif bknd_item.check_inv_capacity(user_data=user_data, item_type=ewcfg.it_item):
+        elif not bknd_item.check_inv_capacity(user_data=user_data, item_type=ewcfg.it_item):
             response = ewcfg.str_generic_inv_limit.format(ewcfg.it_item)
         else:
             gift_name = "Gift"
