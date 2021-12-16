@@ -477,7 +477,8 @@ def make_slimernalia_board(server, title):
 
         # add the top 5 to be returned
         for i in range(5):
-            entries.append(f_data[i])
+            if len(f_data) < i:
+                entries.append(f_data[i])
 
     else:
         return "" #whose idea was it to separate festivity into 3 different stats? idk, but fuck it, we're not running slimernalia without the cache.
