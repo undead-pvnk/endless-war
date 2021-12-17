@@ -2160,7 +2160,8 @@ trade_state_complete = 2
 
 # SLIMERNALIA
 festivity_on_gift_wrapping = 100
-festivity_on_gift_giving = 10000
+festivity_on_gift_giving = 1000
+phoebus_bet_floor = 1000000
 
 # Common strings.
 str_casino_closed = "The Casino only operates at night."
