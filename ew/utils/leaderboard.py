@@ -449,12 +449,13 @@ def make_slimernalia_board(server, title):
         # get a list of [id, name, lifestate, faction, basefestivitysum] for all users in server
 
 
-        data = bknd_core.execute_sql_query("select u.id_user, p.display_name, u.life_state, u.faction, ifnull(st1.stat_value, 0) + ifnull(st2.stat_value, 0) as total from stats st1 left join stats st2 on st1.id_user = st2.id_user inner join users u on st1.id_user = u.id_user inner join players p on u.id_user = p.id_user where st1.stat_metric = 'festivity' and st2.stat_metric = 'festivity_from_slimecoin' and u.id_server = u.id_server union select u.id_user, p.display_name, u.life_state, u.faction, ifnull(st1.stat_value, 0) + ifnull(st2.stat_value, 0) as total from stats st1 right join stats st2 on st1.id_user = st2.id_user inner join users u on st2.id_user = u.id_user inner join players p on u.id_user = p.id_user where st1.stat_metric = 'festivity' and st2.stat_metric = 'festivity_from_slimecoin' and u.id_server = %s",
+        data = bknd_core.execute_sql_query("select u.id_user, p.display_name, u.life_state, u.faction, ifnull(st1.stat_value, 0) + ifnull(st2.stat_value, 0) as total from stats st1 left join stats st2 on st1.id_user = st2.id_user inner join users u on st1.id_user = u.id_user and u.id_server = st1.id_server inner join players p on u.id_user = p.id_user where st1.stat_metric = 'festivity' and st2.stat_metric = 'festivity_from_slimecoin' and u.id_server = u.id_server union select u.id_user, p.display_name, u.life_state, u.faction, ifnull(st1.stat_value, 0) + ifnull(st2.stat_value, 0) as total from stats st1 right join stats st2 on st1.id_user = st2.id_user inner join users u on st2.id_user = u.id_user and u.id_server = st1.id_server inner join players p on u.id_user = p.id_user where st1.stat_metric = 'festivity' and st2.stat_metric = 'festivity_from_slimecoin' and u.id_server = %s",
     (server,))
         dat = list(data)
         f_data = []
         # iterate through all users, add sigillaria festivity to the base
         for row in dat:
+            row = list(row)
             # Get all user sigs
             sigs = item_cache.find_entries(
                 criteria={
@@ -477,7 +478,7 @@ def make_slimernalia_board(server, title):
 
         # add the top 5 to be returned
         for i in range(5):
-            if len(f_data) < i:
+            if len(f_data) > i:
                 entries.append(f_data[i])
 
     else:
