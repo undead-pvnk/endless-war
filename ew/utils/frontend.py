@@ -500,6 +500,7 @@ async def update_slimernalia_kingpin(client, server):
     try:
         new_kingpin_member = server.get_member(new_kingpin.id_user)
         await ewrolemgr.updateRoles(client=client, member=new_kingpin_member)
+        print("New kingpin is {}".format(new_kingpin_member))
     except:
         ewutils.logMsg("Error adding kingpin of slimernalia role to user {} in server {}.".format(new_kingpin.id_user, server.id))
 
