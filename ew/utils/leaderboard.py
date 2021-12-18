@@ -443,6 +443,7 @@ def make_district_control_board(id_server, title):
 
 
 # SLIMERNALIA
+
 def make_slimernalia_board(server, title):
     entries = []
     # Use the cache if it is enabled

@@ -3057,7 +3057,7 @@ poi_list = [
         minor_role = "nullminorrole",
         permissions = {'west-outskirts': ['read', 'send', 'connect']},
         is_outskirts = True,
-        neighbors = {'southwestoutskirts': 60, 'westoutskirtsdepths': 60, 'westoutskirtsedge': 60, 'northwestoutskirts': 60, 'ufoufo':60},
+        neighbors = {'southwestoutskirts': 60, 'westoutskirtsdepths': 60, 'westoutskirtsedge': 60, 'northwestoutskirts': 60},
         wikipage = "https://rfck.miraheze.org/wiki/Outskirts",
     ),
     EwPoi(
