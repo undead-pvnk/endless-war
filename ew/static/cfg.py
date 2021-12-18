@@ -3,7 +3,8 @@
 
 
 
-version = "v4.012 doubledoublehalloween"
+version = "v4.013 Slimernalia🎄🎁"
+#413 holy shit like the homestuck 😱
 
 dir_msgqueue = 'msgqueue'
 
