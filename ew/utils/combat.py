@@ -2451,7 +2451,7 @@ class EwUser(EwUserBase):
                     cosmetic_fraction = 4
 
                     # Remove them from Garden Ops where applicable
-                    bknd_core.execute_sql_query("DELETE FROM gvs_ops_choices WHERE id_user = {}".format(self.id_user))
+                    #bknd_core.execute_sql_query("DELETE FROM gvs_ops_choices WHERE id_user = {}".format(self.id_user))
 
                 else:  # If you were a Gangster.
                     item_fraction = 2

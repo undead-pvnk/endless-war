@@ -20,7 +20,6 @@ CREATE TABLE users (
 	faction varchar(32) NOT NULL default '',
 	poi varchar(64) NOT NULL default 'classroom',
 	life_state int NOT NULL DEFAULT '1',
-	busted int NOT NULL DEFAULT '0',
 	time_last_action bigint NOT NULL DEFAULT '0',
 	weaponmarried int NOT NULL DEFAULT '0',
 	time_lastscavenge int NOT NULL DEFAULT '0',
@@ -29,36 +28,20 @@ CREATE TABLE users (
 	time_lastoffline int NOT NULL DEFAULT '0',
 	time_joined int NOT NULL DEFAULT '0',
 	poi_death varchar(64) NOT NULL default '',
-	donated_slimes bigint NOT NULL DEFAULT '0',
-	donated_poudrins bigint NOT NULL DEFAULT '0',
 	arrested int NOT NULL DEFAULT '0',
-	apt_zone varchar(64) NOT NULL default 'empty',
 	visiting varchar(64) NOT NULL default 'empty',
-	splattered_slimes bigint NOT NULL DEFAULT '0',
 	time_expirpvp int NOT NULL DEFAULT '0',
 	time_lastenlist int NOT NULL DEFAULT '0',
 	active_slimeoid int NOT NULL DEFAULT '-1',
 	has_soul int NOT NULL DEFAULT '1',
-	sap int NOT NULL DEFAULT '0',
-	hardened_sap int NOT NULL DEFAULT '0',	
-	festivity int NOT NULL DEFAULT '0',	
-	festivity_from_slimecoin int NOT NULL DEFAULT '0',
-	slimernalia_kingpin boolean NOT NULL DEFAULT false,
 	manuscript int NOT NULL DEFAULT '-1',
-	salary_credits bigint NOT NULL DEFAULT '0',
-	degradation bigint NOT NULL DEFAULT '0',
 	time_lastdeath int NOT NULL DEFAULT '0',
 	sidearm int NOT NULL DEFAULT '-1',
-	gambit int NOT NULL DEFAULT '0',
-	credence int NOT NULL DEFAULT '0',
-	credence_used int NOT NULL DEFAULT '0',
 	id_inhabit_target bigint NOT NULL DEFAULT -1,
 	race varchar(32) NOT NULL DEFAULT '',
 	time_racialability int NOT NULL DEFAULT '0',
 	time_lastpremiumpurchase int NOT NULL DEFAULT '0',
 	spray varchar(400) NOT NULL DEFAULT 'https://img.booru.org/rfck//images/3/a69d72cf29cb750882de93b4640a175a88cdfd70.png',
-	juviemode int NOT NULL DEFAULT '0',
-	gvs_time_lastshambaquarium int NOT NULL DEFAULT '0',
 	time_lasthit int NOT NULL DEFAULT '0',
 	rand_seed bigint NOT NULL DEFAULT '0',
 	verified boolean NOT NULL DEFAULT '0',	
@@ -507,24 +490,6 @@ CREATE TABLE hues (
 	PRIMARY KEY(id_hue)
 );
 
-CREATE TABLE gvs_grid_conditions (
-    district varchar(64) NOT NULL,
-    coord varchar(32) NOT NULL,
-    grid_condition varchar(32) NOT NULL,
-    
-    PRIMARY KEY (district, coord, grid_condition)
-);
-
-CREATE TABLE gvs_ops_choices (
-    id_user bigint NOT NULL,
-    district varchar(64) NOT NULL,
-    enemytype varchar(32) NOT NULL,
-    faction varchar(16) NOT NULL,
-    id_item int NOT NULL DEFAULT '-1',
-    shambler_stock int NOT NULL DEFAULT '-1',
-    
-    PRIMARY KEY (id_user, enemytype, district)
-);
 
 CREATE TABLE gamestates (
     id_server bigint NOT NULL,
