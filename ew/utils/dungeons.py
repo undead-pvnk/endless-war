@@ -4,10 +4,7 @@ from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
-
-# maps users to where they are in the tutorial
-user_to_tutorial_state = {}
-
+from ew.cmd.dungeons import dungeonutils
 
 def format_tutorial_response(scene):
     response = scene.text
@@ -24,7 +21,7 @@ def format_tutorial_response(scene):
 
 async def begin_tutorial(member):
     user_data = EwUser(member=member)
-    user_to_tutorial_state[user_data.id_user] = 0
+    dungeonutils.user_to_tutorial_state[user_data.id_user] = 0
 
     scene = poi_static.dungeon_tutorial[0]
 
