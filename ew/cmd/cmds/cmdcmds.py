@@ -2130,7 +2130,7 @@ async def wrap(cmd):
                 gift_expiry = float(item.item_props.get("time_expir"))
 
                 if gift_expiry <= time.time():
-                    bonus = ewcfg.festivity_expired_penalty
+                    bonus -= ewcfg.festivity_expired_penalty
 
                 bonus += (gift_hunger / 10) * ewcfg.festivity_gift_food
             # Furniture-specific bonuses
@@ -2147,6 +2147,10 @@ async def wrap(cmd):
                     bonus += ewcfg.festivity_patr_bonus
                 else:
                     bonus += ewcfg.festivity_othr_bonus
+            # Phoebus isn't so sure about anything else
+            else:
+                festivity_value -= ewcfg.festivity_generic_penality
+        
             # Generic bonus
             if item.item_props.get("item_message"):
                 bonus += ewcfg.festivity_scrawl_bonus

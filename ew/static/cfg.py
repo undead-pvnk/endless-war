@@ -2177,7 +2177,8 @@ festivity_sigil_bonus = 1000 # The amount of festivity you gain per sigillaria
 
 festivity_kill_bonus = 500 # The  amount of festivity you gain upon killing someone
 
-festivity_expired_penalty = -2500 # Penalty if the food item you are giving has already expired
+festivity_expired_penalty = 2500 # Penalty if the food item you are giving has already expired
+festivity_generic_penality = 500 # Penality if the item is something generic
 
 phoebus_bet_floor = 1000000 # How high a slime bet needs to be to get the Phoebus' Blessing bonus
 

@@ -15,7 +15,13 @@ def payout(winnings, bet, user_data, currency_used):
         
         # SLIMERNALIA
         if ewcfg.slimernalia_active:
-            user_data.festivity += calc_payout_festivity(winnings)
+            lifestate_mod = 0.5
+            
+            # Gangsters and ghosts are bad at slimernalia gambling
+            if user_data.life_state == ewcfg.life_state_juvenile:
+                lifestate_mod = 1
+            
+            user_data.festivity += (calc_payout_festivity(winnings) * lifestate_mod)
 
     user_data.persist()
     # print("Paid out a value of {} to {}.".format(winnings, user_data.id_user))
