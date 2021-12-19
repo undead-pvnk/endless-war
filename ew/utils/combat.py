@@ -2651,6 +2651,12 @@ class EwUser(EwUserBase):
             self.inebriation += int(item_props['inebriation'])
             if self.inebriation > 20:
                 self.inebriation = 20
+            
+            if ewcfg.slimernalia_active:
+                food_type = static_food.food_map.get(item_props.get("id_food"))
+                if food_type and food_type.acquisition == ewcfg.acquisition_smelting:
+                    print("added bonus festivity")
+                    self.festivity += 100
 
             try:
                 if item_props['id_food'] in ["coleslaw", "bloodcabbagecoleslaw"]:
