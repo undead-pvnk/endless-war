@@ -925,7 +925,7 @@ async def give(cmd):
             if item_data.item_props.get('id_item') == 'gift' and item_data.item_props.get("gifted") == "false":
                 item_data.item_props['gifted'] = "true"
                 item_data.persist()
-                user_data.festivity += ewcfg.festivity_on_gift_giving
+                user_data.festivity += int(item_data.item_props.get("gift_value"))
                 user_data.persist()
 
         # don't let people give others food when they shouldn't be able to carry more food items
@@ -1515,12 +1515,19 @@ async def unwrap(cmd):
                         gift_name_type = 'title'
 
                     gifted_item_name = gifted_item.item_props.get('{}'.format(gift_name_type))
+                    
+                    # Specifically for weapons, if the weapon doesn't have a name, then use it's type
+                    if (not gifted_item_name) and gifted_item.item_type == ewcfg.it_weapon:
+                        weapon_type = gifted_item.item_props.get("weapon_type")
+                        weapon_data = static_weapons.weapon_map.get(weapon_type)
+                        gifted_item_name = weapon_data.str_name
+                    
                     gifted_item_message = item.item_props.get('context')
 
                     if ewcfg.slimernalia_active:
-                        user_data = EwUser(member=cmd.message.author)
-                        user_data.festivity += ewcfg.festivity_on_gift_wrapping
-                        user_data.persist()
+                        giftee_data = EwUser(member=cmd.message.author)
+                        giftee_data.festivity += ewcfg.festivity_gift_wrap
+                        giftee_data.persist()
 
                     response = "You shred through the packaging formalities to reveal a {}!\nThere is a note attached: '{}'.".format(gifted_item_name, gifted_item_message)
                     bknd_item.item_delete(id_item=item_sought.get('id_item'))

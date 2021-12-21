@@ -2627,7 +2627,7 @@ class EwUser(EwUserBase):
         user_has_spoiled_appetite = ewcfg.mutation_id_spoiledappetite in mutations
         item_has_expired = float(getattr(food_item, "time_expir", 0)) < time.time()
         if item_has_expired and not (user_has_spoiled_appetite or item_is_non_perishable):
-            response = "You realize that the food you were trying to eat is already spoiled. Ugh, not eating that."
+            response = "You realize that the {} you were trying to eat is already spoiled. Ugh, not eating that.".format(food_item.name)
         # ewitem.item_drop(food_item.id_item)
         else:
             hunger_restored = int(item_props['recover_hunger'])
@@ -2651,6 +2651,12 @@ class EwUser(EwUserBase):
             self.inebriation += int(item_props['inebriation'])
             if self.inebriation > 20:
                 self.inebriation = 20
+            
+            if ewcfg.slimernalia_active:
+                food_type = static_food.food_map.get(item_props.get("id_food"))
+                if food_type and food_type.acquisition == ewcfg.acquisition_smelting:
+                    print("added bonus festivity")
+                    self.festivity += 100
 
             try:
                 if item_props['id_food'] in ["coleslaw", "bloodcabbagecoleslaw"]:

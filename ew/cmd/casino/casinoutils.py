@@ -2,6 +2,69 @@ import math
 import shlex
 
 from ew.static import cfg as ewcfg
+from ew.utils import frontend as fe_utils
+
+def payout(winnings, bet, user_data, currency_used):
+    response = ""
+    if currency_used == ewcfg.currency_slimecoin:
+        user_data.change_slimecoin(n=winnings, coinsource=ewcfg.coinsource_casino)
+    elif currency_used == ewcfg.currency_slime:
+        levelup_response = user_data.change_slimes(n=winnings, source=ewcfg.source_casino)
+        if levelup_response != "":
+            response = "\n\n" + levelup_response
+        
+        # SLIMERNALIA
+        if ewcfg.slimernalia_active:
+            lifestate_mod = 0.5
+            
+            # Gangsters and ghosts are bad at slimernalia gambling
+            if user_data.life_state == ewcfg.life_state_juvenile:
+                lifestate_mod = 1
+            
+            user_data.festivity += (calc_payout_festivity(winnings) * lifestate_mod)
+
+    user_data.persist()
+    # print("Paid out a value of {} to {}.".format(winnings, user_data.id_user))
+    return response
+
+def calc_payout_festivity(value):
+    if value >= 1000:
+        return value / 1000
+    else:
+        return 1
+
+async def collect_bet(cmd, resp, value, user_data, currency_used):
+    response = ""
+    if currency_used == ewcfg.currency_slimecoin:
+        if value == -1:
+            value = user_data.slimecoin
+
+        if value > user_data.slimecoin:
+            response = "You don't have enough SlimeCoin for that bet."
+            return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
+
+        # subtract costs
+        user_data.change_slimecoin(n=-value, coinsource=ewcfg.coinsource_casino)
+    
+    elif currency_used == ewcfg.currency_slime:
+        if user_data.life_state == ewcfg.life_state_corpse:
+            return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
+
+        if value == -1:
+            value = user_data.slimes
+
+        if value > user_data.slimes:
+            response = "You don't have enough slime for that bet."
+            return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
+
+        # Phoebus likes big bets and he cannot lie
+        if ewcfg.slimernalia_active and (value > ewcfg.phoebus_bet_floor):
+            user_data.festivity += value / 10000
+        
+        # subtract costs
+        user_data.change_slimes(n=-value, source=ewcfg.source_casino)
+    # print("Collected bet of {} from {}.".format(value, user_data.id_user))
+    return response
 
 
 def printcard(card):
@@ -292,13 +355,3 @@ def determine_trick_taker(trick, gametype, trump):
         else:
             ranks.append(100)
     return ranks.index(min(ranks))
-
-
-# Unused
-def slimecoin_to_festivity(value, festivity_old):
-    try:
-        old_value = 1.00044 ** festivity_old
-        festivity_new = math.log(old_value + value) / math.log(1.00044)
-    except:
-        festivity_new = math.log(9223372036854775807) / math.log(1.00044)
-    return festivity_new
