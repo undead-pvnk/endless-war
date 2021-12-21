@@ -479,6 +479,9 @@ async def on_member_join(member):
     )
     user_data = EwUser(member=member)
 
+    # attempt to force discord.py to cache the user
+    await member.guild.query_members(user_ids=[member.id], presences=True)
+
     if user_data.poi in poi_static.tutorial_pois:
         await dungeon_utils.begin_tutorial(member)
 
