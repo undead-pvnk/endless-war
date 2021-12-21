@@ -12,7 +12,6 @@ from ew.static import weather as weather_static
 from ew.utils import item as itm_utils
 from ew.utils import poi as poi_utils
 from ew.utils.combat import EwUser
-from ew.utils.frontend import get_member
 
 
 class EwFisher:
@@ -316,10 +315,10 @@ async def award_fish(fisher, cmd, user_data):
 
         if fisher.inhabitant_id:
             server = cmd.guild
-            inhabitant_member = get_member(server, fisher.inhabitant_id)
+            inhabitant_member = server.get_member(fisher.inhabitant_id)
             inhabitant_name = inhabitant_member.display_name
             inhabitant_data = EwUser(id_user=fisher.inhabitant_id, id_server=user_data.id_server)
-            inhabitee_name = get_member(server, actual_fisherman).display_name
+            inhabitee_name = server.get_member(actual_fisherman).display_name
 
             slime_gain = int(0.25 * slime_gain)
 

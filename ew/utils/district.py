@@ -104,7 +104,7 @@ class EwDistrict(EwDistrictBase):
             faction = player[3]
             life_state = player[4]
 
-            member = fe_utils.get_member(server, id_user)
+            member = server.get_member(id_user)
 
             if member != None:
                 if max_level >= slimelevel >= min_level \

@@ -312,7 +312,7 @@ async def rejuvenate(cmd):
 
         client = ewutils.get_client()
         server = client.get_guild(user_data.id_server)
-        member = fe_utils.get_member(server, user_data.id_user)
+        member = server.get_member(user_data.id_user)
 
         base_poi_channel = fe_utils.get_channel(cmd.message.guild, ewcfg.channel_og_farms)
 
@@ -373,7 +373,7 @@ async def ufo_observe(cmd):
                 players_in_district = district_data.get_players_in_district(min_slimes=0, life_states=[ewcfg.life_state_enlisted, ewcfg.life_state_corpse, ewcfg.life_state_juvenile, ewcfg.life_state_shambler], ignore_offline=True)
                 server = ewcfg.server_list[cmd.guild.id]
                 for playerid in players_in_district:
-                    member_object = fe_utils.get_member(server, playerid)
+                    member_object = server.get_member(playerid)
                     await ewrolemgr.updateRoles(client=cmd.client, member=member_object)
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 

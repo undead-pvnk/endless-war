@@ -393,7 +393,7 @@ def create_death_report(cause = None, user_data = None):
     server = client.get_guild(user_data.id_server)
 
     # User display name is used repeatedly later, grab now
-    user_member = get_member(server, user_data.id_user)
+    user_member = server.get_member(user_data.id_user)
     user_player = EwPlayer(id_user=user_data.id_user)
     user_nick = user_player.display_name
 
@@ -488,7 +488,7 @@ async def update_slimernalia_kingpin(client, server):
         old_kingpin.slimernalia_kingpin = False
         old_kingpin.persist()
         try:
-            old_kingpin_member = get_member(server, old_kingpin.id_user)
+            old_kingpin_member = server.get_member(old_kingpin.id_user)
             await ewrolemgr.updateRoles(client=client, member=old_kingpin_member)
         except:
             ewutils.logMsg("Error removing kingpin of slimernalia role from {} in server {}.".format(old_kingpin.id_user, server.id))
@@ -498,7 +498,7 @@ async def update_slimernalia_kingpin(client, server):
     new_kingpin.slimernalia_kingpin = True
     new_kingpin.persist()
     try:
-        new_kingpin_member = get_member(server, new_kingpin.id_user)
+        new_kingpin_member = server.get_member(new_kingpin.id_user)
         await ewrolemgr.updateRoles(client=client, member=new_kingpin_member)
     except:
         ewutils.logMsg("Error adding kingpin of slimernalia role to user {} in server {}.".format(new_kingpin.id_user, server.id))

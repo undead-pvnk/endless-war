@@ -686,7 +686,7 @@ async def on_message(message):
             usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
             poi = poi_static.id_to_poi.get(usermodel.poi)
             cmd_obj.guild = ewcfg.server_list[playermodel.id_server]
-            cmd_obj.message.author = fe_utils.get_member(cmd_obj.guild, playermodel.id_user)
+            cmd_obj.message.author = cmd_obj.guild.get_member(playermodel.id_user)
 
             # Handle DM compatible commands
             if cmd in dm_cmd_map:

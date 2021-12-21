@@ -311,7 +311,7 @@ async def data(cmd):
         if user_data.life_state == ewcfg.life_state_corpse:
             inhabitee_id = user_data.get_inhabitee()
             if inhabitee_id:
-                inhabitee_name = fe_utils.get_member(server, inhabitee_id).display_name
+                inhabitee_name = server.get_member(inhabitee_id).display_name
                 possession = user_data.get_possession()
                 if possession:
                     if possession[3] == 'weapon':
@@ -325,7 +325,7 @@ async def data(cmd):
             if inhabitant_ids:
                 inhabitant_names = []
                 for inhabitant_id in inhabitant_ids:
-                    inhabitant_names.append(fe_utils.get_member(server, inhabitant_id).display_name)
+                    inhabitant_names.append(server.get_member(inhabitant_id).display_name)
 
                 possession = user_data.get_possession()
                 if possession is not None:
@@ -341,7 +341,7 @@ async def data(cmd):
                         inhabitant_names[-1]
                     )
                     if possession:
-                        response_block += "{} is also possessing your {}. ".format(fe_utils.get_member(server, ghost_in_weapon).display_name, possession_type)
+                        response_block += "{} is also possessing your {}. ".format(server.get_member(ghost_in_weapon).display_name, possession_type)
 
         # if user_data.swear_jar >= 500:
         # 	response_block += "You're going to The Underworld for the things you've said."

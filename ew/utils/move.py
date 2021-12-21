@@ -508,7 +508,7 @@ async def kick(id_server):
 
                     if user_data.life_state not in [ewcfg.life_state_kingpin, ewcfg.life_state_lucky, ewcfg.life_state_executive] and user_data.id_user != 799933061080416266:
                         server = ewcfg.server_list[id_server]
-                        member_object = fe_utils.get_member(server, id_user)
+                        member_object = server.get_member(id_user)
 
                         user_data.poi = mother_district_chosen
                         user_data.time_lastenter = int(time.time())
