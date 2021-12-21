@@ -280,7 +280,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 
                     resp_cont.add_channel_response(channel, response)
 
-                    resp_cont.add_member_to_update(server.get_member(target_data.id_user))
+                    resp_cont.add_member_to_update(fe_utils.get_member(server, target_data.id_user))
                 # Survived the explosion
                 else:
                     # sap_response = ""
@@ -403,7 +403,7 @@ def fulfill_ghost_weapon_contract(possession_data, market_data, user_data, user_
     user_data.cancel_possession()
 
     server = ewutils.get_client().get_guild(user_data.id_server)
-    ghost_name = server.get_member(ghost_id).display_name
+    ghost_name = fe_utils.get_member(server, ghost_id).display_name
     return "\n\n {} winces in pain as their slime is corrupted into negaslime. {}'s contract has been fulfilled.".format(user_name, ghost_name)
 
 
