@@ -3883,6 +3883,44 @@ async def verify_cache(cmd):
 
     return
 
+
+"""
+    Admin only command to force the bot to double check for a member
+"""
+async def user_search(cmd):
+    # Only allow admins to use this
+    if not cmd.message.author.guild_permissions.administrator:
+        return await cmd_utils.fake_failed_command(cmd)
+
+    # Set response for incorrect usage
+    response = fe_utils.formatMessage(cmd.message.author, "Incorrect Usage. Please try `{cm} <user snowflake>` or `{cm} <user mention>`.".format(cm=cmd.tokens[0]))
+
+    # Ensure correct terms are sent
+    if len(cmd.mentions) != 1 and len(cmd.tokens) != 2:
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+    # Parse search terms
+    if len(cmd.mentions) == 1:
+        target_id = cmd.mentions[0].id
+    else:
+        # Convert id without mention to integer, tell correct usage if incorrect
+        try:
+            target_id = int(cmd.tokens[1])
+        except ValueError:
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+    # Actually commit the search
+    found = await fe_utils.get_member(cmd.guild, target_id)
+
+    # Create and send response based on what was returned
+    if found is None:
+        response = "Failed to find user with id **{}**.".format(target_id)
+    else:
+        response = "Found user **{}** from id **{}**.".format(found.display_name, target_id)
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
 async def cockdraw(cmd):
     user_data = EwUser(member=cmd.message.author)
     command_used = str(cmd.tokens[0])

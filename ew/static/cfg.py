@@ -1527,14 +1527,21 @@ cmd_tweet = cmd_prefix + 'tweet'
 cmd_verification = cmd_prefix + 'requestverification'
 cmd_verification_alt = cmd_prefix + '#verify'
 
+# gamestate admin cmds
 cmd_changegamestate = cmd_prefix + 'changegamestate'
 cmd_display_states = cmd_prefix + 'displaystates'
+
+# elevator cmds
 cmd_press_button = cmd_prefix + 'press'
 cmd_call_elevator = cmd_prefix + 'callelevator'
+
+# admin checking cmds
 cmd_addstatuseffect = cmd_prefix + 'addstatuseffect'
 cmd_log_caches = cmd_prefix + 'cache'
 cmd_toggle_caches = cmd_prefix + 'togglecache'
 cmd_verify_cache = cmd_prefix + 'verifycache'
+cmd_user_search = cmd_prefix + 'searchfor'
+
 # SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
