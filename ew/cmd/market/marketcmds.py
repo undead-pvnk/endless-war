@@ -383,10 +383,9 @@ async def donate(cmd):
 async def museum_donate(cmd):
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
     item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id)
-
     if item_sought:
         item_obj = EwItem(id_item=item_sought.get("id_item"))
-        if item_obj.item_type == ewcfg.it_relic or item_obj.item_props.get('acquisition') == 'relic':
+        if item_obj.item_type == ewcfg.it_relic or item_obj.template in relic_static.alt_relics:
             response = await relic_donate(item_obj.id_item, cmd)
         elif item_obj.item_props.get('acquisition') == ewcfg.acquisition_fishing:
             response = await fish_donate(item_obj.id_item, cmd)
@@ -474,7 +473,7 @@ async def relic_donate(id_item, cmd):
         relic_count.persist()
 
         if item_obj.item_type != 'relic':
-            item_obj.item_props['id_relic'] = "{}{}".format('map', item_obj.template)
+            item_obj.item_props['id_relic'] = "{}{}".format('_', item_obj.template)
         relic_obj = relic_static.relic_map.get(item_obj.item_props.get('id_relic'))
         payout = relic_obj.amount_yield
         player = EwPlayer(id_user=item_obj.id_owner, id_server=cmd.guild.id)
@@ -490,7 +489,7 @@ async def relic_donate(id_item, cmd):
 
         relic_channel = fe_utils.get_channel(server=cmd.guild, channel_name='relic-exhibits')
         sent_message = await fe_utils.send_message(cmd.client, relic_channel, museum_text)
-
+        print(item_obj.item_props.get('id_relic'))
         new_record = EwRecord(id_server=cmd.guild.id, record_type=item_obj.item_props.get('id_relic'))
         new_record.id_user = cmd.message.author.id
         new_record.id_post = str(sent_message.id)
@@ -574,13 +573,16 @@ async def populate_image(cmd):
                 response = "Invalid command. Try !addart <relic/art> <title> <link>"
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+            if item in relic_static.alt_relics:
+                item = "_" + item
+
             record = EwRecord(id_server=cmd.guild.id, record_type=item)
 
             record.id_image = link
             record.persist()
 
             message = await channel.fetch_message(int(record.id_post))
-            await message.edit(content = message.content.replace('-...-', link))
+            await message.edit(content = message.content.replace("-...-", link))
             response = "Added an image to the message."
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     else:

@@ -413,14 +413,18 @@ re_flattener = re.compile("[ '\"!@#$%^&*().,/?{}\[\];:]")
     Turn an array of tokens into a single word (no spaces or punctuation) with all lowercase letters.
 """
 
-def flattenTokenListToString(tokens):
+def flattenTokenListToString(tokens, keepPunctuation = 0):
     global re_flattener
     target_name = ""
 
     if type(tokens) == list:
         for token in tokens:
-            if token.startswith('<@') == False:
+            if keepPunctuation == 1 and token.startswith('<@') == False:
+                target_name += token.lower().replace(" ", "")
+            elif token.startswith('<@') == False:
                 target_name += re_flattener.sub("", token.lower())
+    elif keepPunctuation == 1 and tokens.startswith('<@') == False:
+        target_name = tokens.lower().replace(" ", "")
     elif tokens.startswith('<@') == False:
         target_name = re_flattener.sub("", tokens.lower())
 

@@ -346,7 +346,7 @@ def item_create(
     else:
         template_id = "-1"
 
-    if (item_type == ewcfg.it_relic or item_props.get('acquisition') == 'relic') and ewrelicutils.canCreateRelic(template_id, id_server, 1) != 1:
+    if (item_type == ewcfg.it_relic or item_props.get('acquisition') == 'relic') and ewrelicutils.canCreateRelic(template_id, id_server, 0 if ewutils.DEBUG else 1) != 1:
         badRelic = 1
 
     if badRelic == 0:
