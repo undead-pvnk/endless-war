@@ -1,6 +1,7 @@
 from ew.backend.quadrants import EwQuadrant
 from ew.static import cfg as ewcfg
 from ew.static import quadrants as quad_static
+from ew.utils import frontend as fe_utils
 
 
 def get_quadrant(cmd, id_quadrant):
@@ -8,9 +9,9 @@ def get_quadrant(cmd, id_quadrant):
     quadrant = quad_static.quadrants_map[id_quadrant]
     if cmd.mentions_count == 0:
         quadrant_data = EwQuadrant(id_server=author.guild.id, id_user=author.id, quadrant=quadrant.id_quadrant)
-        if author.guild.get_member(quadrant_data.id_target) is None:
+        if fe_utils.get_member(author.guild, quadrant_data.id_target) is None:
             quadrant_data.id_target = -1
-        if author.guild.get_member(quadrant_data.id_target2) is None:
+        if fe_utils.get_member(author.guild, quadrant_data.id_target2) is None:
             quadrant_data.id_target2 = -1
 
         quadrant_data.persist()
@@ -21,9 +22,9 @@ def get_quadrant(cmd, id_quadrant):
             onesided = quadrant_data.check_if_onesided()
 
             if quadrant.id_quadrant == ewcfg.quadrant_policitous and quadrant_data.id_target2 != -1:
-                target_name = "{} and {}".format(author.guild.get_member(quadrant_data.id_target).display_name, author.guild.get_member(quadrant_data.id_target2).display_name)
+                target_name = "{} and {}".format(fe_utils.get_member(author.guild, quadrant_data.id_target).display_name, fe_utils.get_member(author.guild, quadrant_data.id_target2).display_name)
             else:
-                target_name = author.guild.get_member(quadrant_data.id_target).display_name
+                target_name = fe_utils.get_member(author.guild, quadrant_data.id_target).display_name
 
             if not onesided:
                 response = quadrant.resp_view_relationship_self.format(target_name)
@@ -34,9 +35,9 @@ def get_quadrant(cmd, id_quadrant):
         member = cmd.mentions[0]
         quadrant_data = EwQuadrant(id_server=member.guild.id, id_user=member.id, quadrant=quadrant.id_quadrant)
 
-        if author.guild.get_member(quadrant_data.id_target) is None:
+        if fe_utils.get_member(author.guild, quadrant_data.id_target) is None:
             quadrant_data.id_target = -1
-        if author.guild.get_member(quadrant_data.id_target2) is None:
+        if fe_utils.get_member(author.guild, quadrant_data.id_target2) is None:
             quadrant_data.id_target2 = -1
 
         quadrant_data.persist()
@@ -48,9 +49,9 @@ def get_quadrant(cmd, id_quadrant):
             onesided = quadrant_data.check_if_onesided()
 
             if quadrant.id_quadrant == ewcfg.quadrant_policitous and quadrant_data.id_target2 != -1:
-                target_name = "{} and {}".format(author.guild.get_member(quadrant_data.id_target).display_name, author.guild.get_member(quadrant_data.id_target2).display_name)
+                target_name = "{} and {}".format(fe_utils.get_member(author.guild, quadrant_data.id_target).display_name, fe_utils.get_member(author.guild, quadrant_data.id_target2).display_name)
             else:
-                target_name = author.guild.get_member(quadrant_data.id_target).display_name
+                target_name = fe_utils.get_member(author.guild, quadrant_data.id_target).display_name
 
             if not onesided:
                 response = quadrant.resp_view_relationship.format(member.display_name, target_name)

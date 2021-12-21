@@ -73,7 +73,7 @@ async def writhe(cmd):
                 # convert pulled IDs into member objects
                 target_ids = cursor.fetchall()
                 for target_id in target_ids:
-                    target = cmd.guild.get_member(target_id[0])
+                    target = fe_utils.get_member(cmd.guild, target_id[0])
                     targets.append(target)
 
                 conn.commit()

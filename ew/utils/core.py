@@ -848,7 +848,7 @@ def is_player_inventory(id_inventory, id_server):
 
     # Grab the Discord Client
     client = get_client()
-    discord_result = client.get_guild(id_server).get_member(id_inventory)
+    discord_result = client.get_guild(id_server).get_member(id_inventory) # TODO: refactor this util to be asynchronous so it can also query discord if user is not in cache
 
     # Access DB
     conn_info = bknd_core.databaseConnect()

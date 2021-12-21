@@ -114,7 +114,7 @@ async def event_tick(id_server):
                         # in shambaquarium the event happens in the user's DMs
                         if event_data.event_type == ewcfg.event_type_shambaquarium:
                             client = ewutils.get_client()
-                            channel = client.get_guild(id_server).get_member(int(channel))
+                            channel = fe_utils.get_member(client.get_guild(id_server), int(channel))
 
                         resp_cont.add_channel_response(channel, response)
                     elif poi != None:
@@ -233,7 +233,7 @@ def kill_quitters(id_server = None):
             users = cursor.fetchall()
 
             for user in users:
-                member = server.get_member(user[0])
+                member = fe_utils.get_member(server, user[0])
 
                 # Make sure to kill players who may have left while the bot was offline.
                 if member is None:
@@ -281,7 +281,7 @@ async def flag_outskirts(id_server = None):
                 enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
                 user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
                 user_data.persist()
-                await ewrolemgr.updateRoles(client=client, member=server.get_member(user_data.id_user))
+                await ewrolemgr.updateRoles(client=client, member=fe_utils.get_member(server, user_data.id_user))
 
             conn.commit()
         finally:
@@ -315,7 +315,7 @@ async def flag_vulnerable_districts(id_server = None):
 
             for user in users:
                 user_data = EwUser(id_user=user[0], id_server=id_server)
-                member = server.get_member(user_data.id_user)
+                member = fe_utils.get_member(server, user_data.id_user)
 
                 # Flag the user for PvP
                 enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
@@ -373,7 +373,7 @@ async def bleedSlimes(id_server = None):
                 user_data = EwUser(id_user=user[0], id_server=id_server)
 
                 mutations = user_data.get_mutations()
-                member = server.get_member(user_data.id_user)
+                member = fe_utils.get_member(server, user_data.id_user)
                 if ewcfg.mutation_id_bleedingheart not in mutations or user_data.time_lasthit < int(time.time()) - ewcfg.time_bhbleed:
                     slimes_to_bleed = user_data.bleed_storage * (
                             1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
@@ -563,7 +563,7 @@ async def burnSlimes(id_server = None):
         resp_cont = EwResponseContainer(id_server=id_server)
         for result in data:
             user_data = EwUser(id_user=result[0], id_server=id_server)
-            member = server.get_member(user_data.id_user)
+            member = fe_utils.get_member(server, user_data.id_user)
 
             slimes_dropped = user_data.totaldamage + user_data.slimes
             used_status_id = result[3]
@@ -1163,7 +1163,7 @@ async def capture_tick(id_server):
 
                 # dont count offline players
                 try:
-                    player_online = server.get_member(player_id).status != discord.Status.offline
+                    player_online = fe_utils.get_member(server, player_id).status != discord.Status.offline
                 except:
                     player_online = False
 

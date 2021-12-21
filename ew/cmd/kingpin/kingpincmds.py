@@ -406,7 +406,7 @@ async def clowncar(cmd):#shoves everyone not there into JR or the sewers
         phone_data.persist()
         if phone_data.id_owner.isnumeric() and int(phone_data.id_owner)>0:
             print(phone_data.id_owner)
-            member_object = server.get_member(int(phone_data.id_owner))
+            member_object = fe_utils.get_member(server, int(phone_data.id_owner))
             if member_object is None:
                 continue
             user_data = EwUser(member=member_object)
@@ -440,7 +440,7 @@ async def clowncar(cmd):#shoves everyone not there into JR or the sewers
                 iterator += 1
                 if iterator % 20 == 0:
                     await asyncio.sleep(5)
-                member_object = server.get_member(member[0])
+                member_object = fe_utils.get_member(server, member[0])
                 await ewrolemgr.updateRoles(client = cmd.client, member=member_object )
 
 

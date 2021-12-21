@@ -305,7 +305,7 @@ async def attack(cmd):
                 bounty_resp = "\n\n SlimeCorp transfers {:,} SlimeCoin to {}\'s account.".format(bounty, attacker_member.display_name)
 
             if possession:
-                ghost_name = cmd.guild.get_member(possession[0]).display_name
+                ghost_name = fe_utils.get_member(cmd.guild, possession[0]).display_name
                 contract_resp = "\n\n {} winces in pain as their slime is corrupted into negaslime. {}'s contract has been fulfilled.".format(attacker_member.display_name, ghost_name)
 
             if ctn.vax and target.life_state == ewcfg.life_state_shambler:

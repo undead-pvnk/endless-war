@@ -531,7 +531,7 @@ class EwEnemy(EwEnemyBase):
 
                 # Assign the corpse role to the newly dead player.
                 if was_killed:
-                    member = server.get_member(target_data.id_user)
+                    member = fe_utils.get_member(server, target_data.id_user)
                     await ewrolemgr.updateRoles(client=client, member=member)
         # announce death in kill feed channel
         # killfeed_channel = ewutils.get_channel(enemy_data.id_server, ewcfg.channel_killfeed)
@@ -1333,7 +1333,7 @@ def explode(damage = 0, district_data = None, market_data = None):
                 player_data.display_name)
             resp_cont.add_channel_response(channel, response)
 
-            resp_cont.add_member_to_update(server.get_member(user_data.id_user))
+            resp_cont.add_member_to_update(fe_utils.get_member(server, user_data.id_user))
         else:
             # survive
             slime_splatter = 0.5 * slimes_damage
@@ -2527,7 +2527,7 @@ class EwUser(EwUserBase):
 
         if cause not in explosion_block_list:  # Run explosion after location/stat reset, to prevent looping onto self
             if user_hasCombustion:
-                explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!\n".format(server.get_member(self.id_user).display_name)
+                explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!\n".format(fe_utils.get_member(server, self.id_user).display_name)
                 ewutils.logMsg("")
                 resp_cont.add_channel_response(explode_poi_channel, explode_resp)
 
@@ -3009,7 +3009,7 @@ class EwUser(EwUserBase):
                 ghost_data.time_lastenter = int(time.time())
                 ghost_data.persist()
 
-                ghost_member = server.get_member(ghost)
+                ghost_member = fe_utils.get_member(server, ghost)
                 await ewrolemgr.updateRoles(client=client, member=ghost_member)
 
     def remove_inhabitation(self):
