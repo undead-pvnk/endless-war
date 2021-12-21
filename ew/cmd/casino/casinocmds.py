@@ -559,9 +559,7 @@ async def roulette(cmd):
 
         if cmd.tokens_count > 1:
             value = ewutils.getIntToken(tokens=cmd.tokens[:2], allow_all=True)
-            print(value)
             bet = ewutils.flattenTokenListToString(tokens=cmd.tokens[2:3])
-            print(bet)
 
         if ewcfg.currency_soul in cmd.tokens[1:]:
             value = ewcfg.soulprice
