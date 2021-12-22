@@ -913,6 +913,11 @@ async def give(cmd):
         response = "You must be in the same location as the person you want to gift your item to, bitch."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+    # Check if the player is giving an item to themselves
+    if user_data.id_user == recipient_data.id_user:
+        response = "You can't give yourself something you already have, headass. You literally **already have it.**"
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
     item_sought = bknd_item.find_item(item_search=item_search, id_user=author.id, id_server=server.id)
 
     if item_sought:  # if an item was found
@@ -1526,7 +1531,9 @@ async def unwrap(cmd):
 
                     if ewcfg.slimernalia_active:
                         giftee_data = EwUser(member=cmd.message.author)
-                        giftee_data.festivity += ewcfg.festivity_gift_wrap
+                        # Make sure the player is not opening their own gift before applying festivity
+                        if giftee_data.id_user != item.item_props.get("gifter_id"):
+                            giftee_data.festivity += ewcfg.festivity_gift_wrap
                         giftee_data.persist()
 
                     response = "You shred through the packaging formalities to reveal a {}!\nThere is a note attached: '{}'.".format(gifted_item_name, gifted_item_message)

@@ -2062,7 +2062,7 @@ async def wrap(cmd):
 
     member = cmd.message.author
     user_data = EwUser(member=cmd.message.author)
-
+    
     if recipient_data.id_user == user_data.id_user:
         response = "C'mon man, you got friends, don't you? Try and give a gift to someone other than yourself."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -2090,6 +2090,10 @@ async def wrap(cmd):
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         if item.soulbound:
             response = "It's a nice gesture, but trying to gift someone a Soulbound item is going a bit too far, don't you think?"
+        # Check if the item has been gifted before
+        elif item.item_props.get('gifted') == "true":
+            print("I am going to kill myself")
+            response = "Alas, regifting is considered a grave sin from Phoebus themselves. Enjoy your gift, or else. {}".format(ewcfg.emote_slimeheart)
         elif not bknd_item.check_inv_capacity(user_data=user_data, item_type=ewcfg.it_item):
             response = ewcfg.str_generic_inv_limit.format(ewcfg.it_item)
         else:
@@ -2100,6 +2104,10 @@ async def wrap(cmd):
             gift_desc = "A gift wrapped in {}. Wonder what's inside?\nThe front of the tag reads '{}'\nOn the back of the tag, an ID number reads **({})**.".format(paper_name, gift_address, item.id_item)
 
             response = "You shroud your {} in {} and slap on a premade bow. Onto it, you attach a note containing the following text: '{}'.\nThis small act of kindness manages to endow you with Slimernalia spirit, if only a little.".format(item_sought.get('name'), paper_name, gift_address)
+
+            # Make the gifted item marked as gifted so that it can't be regifted once it's gifted
+            item.item_props['gifted'] = "true"
+            item.persist()
 
             festivity_value = ewcfg.festivity_gift_base
             bonus = 0

@@ -525,6 +525,7 @@ async def on_message(message):
 
     re_awoo = re.compile('.*![a]+[w]+o[o]+.*')
     re_moan = re.compile('.*![b]+[r]+[a]+[i]+[n]+[z]+.*')
+    re_yoslimernalia = re.compile('.*![y]+[o]+[s]+[l]+[i]+[m]+[e]+[r]+[n]+[a]+[l]+[i]+[a]+.*')
     re_measure = re.compile('!measure.*')
     
     # update the player's time_last_action which is used for kicking AFK players out of subzones
@@ -1050,6 +1051,8 @@ async def on_message(message):
             return await ewcmd.cmdcmds.cmd_howl(cmd_obj)
         elif re_moan.match(cmd):
             return await ewcmd.cmdcmds.cmd_moan(cmd_obj)
+        elif re_yoslimernalia.match(cmd) and ewcfg.slimernalia_active:
+            return await ewcmd.cmdcmds.yoslimernalia(cmd_obj)
         elif re_measure.match(cmd):
             return await ewcmd.cmdcmds.cockdraw(cmd_obj)
 
@@ -1059,7 +1062,7 @@ async def on_message(message):
             response = ""
 
             if mentions_count == 0:
-                response = 'Set who\'s role?'
+                response = 'Set whose role?'
             else:
                 roles_map = ewutils.getRoleMap(message.guild.roles)
                 role_target = tokens[1]
@@ -1208,6 +1211,15 @@ async def on_message(message):
             client=client,
             guild=message.guild
         ))
+    elif content_tolower.find(ewcfg.cmd_yoslimernalia) >= 0 or re_yoslimernalia.match(content_tolower):
+        if ewcfg.slimernalia_active:
+            return await ewcmd.cmdcmds.yoslimernalia(cmd_utils.EwCmd(
+                message=message,
+                client=client,
+                guild=message.guild
+            ))
+        else:
+            return
 
 
 @client.event
