@@ -316,30 +316,45 @@ async def attack(cmd):
 
             # Lets throw a little scalp creation in here
             if target.life_state != ewcfg.life_state_shambler:
-                bknd_item.item_create(
-                    item_type=ewcfg.it_cosmetic,
-                    id_user=attacker_member.id,
-                    id_server=cmd.guild.id,
-                    item_props={
-                        'id_cosmetic': 'scalp',
-                        'cosmetic_name': "{}'s scalp".format(target_member.display_name),
-                        'cosmetic_desc': "A scalp.{}".format(attacker_weapon.str_scalp),
-                        'str_onadorn': ewcfg.str_generic_onadorn,
-                        'str_unadorn': ewcfg.str_generic_unadorn,
-                        'str_onbreak': ewcfg.str_generic_onbreak,
-                        'rarity': ewcfg.rarity_patrician,
-                        'attack': 1,
-                        'defense': 0,
-                        'speed': 0,
-                        'ability': None,
-                        'durability': int(ewutils.slime_bylevel(target.slimelevel) / 4),
-                        'original_durability': int(ewutils.slime_bylevel(target.slimelevel) / 4),
-                        'size': 1,
-                        'fashion_style': ewcfg.style_cool,
-                        'freshness': 10,
-                        'adorned': 'false'
-                    }
-                )
+                if ewcfg.slimernalia_active:
+                    bknd_item.item_create(
+                        item_type=ewcfg.it_furniture,
+                        id_user=attacker_member.id,
+                        id_server=cmd.guild.id,
+                        item_props={
+                            'id_furniture': ewcfg.item_id_sigillaria,
+                            'furniture_name': "{}'s sigillaria".format(target_member.display_name),
+                            'furniture_desc': "A sigillaria of {}.".format(target_member.display_name),
+                            'rarity': ewcfg.rarity_patrician,
+                            'furniture_place_desc': "You place the figurine, filling your apartment with Slimernalia cheer.",
+                            'furniture_look_desc': "There's a sigillaria of {}.".format(target_member.display_name),
+                        }
+                    )
+                else:
+                    bknd_item.item_create(
+                        item_type=ewcfg.it_cosmetic,
+                        id_user=attacker_member.id,
+                        id_server=cmd.guild.id,
+                        item_props={
+                            'id_cosmetic': 'scalp',
+                            'cosmetic_name': "{}'s scalp".format(target_member.display_name),
+                            'cosmetic_desc': "A scalp.{}".format(attacker_weapon.str_scalp),
+                            'str_onadorn': ewcfg.str_generic_onadorn,
+                            'str_unadorn': ewcfg.str_generic_unadorn,
+                            'str_onbreak': ewcfg.str_generic_onbreak,
+                            'rarity': ewcfg.rarity_patrician,
+                            'attack': 1,
+                            'defense': 0,
+                            'speed': 0,
+                            'ability': None,
+                            'durability': int(ewutils.slime_bylevel(target.slimelevel) / 4),
+                            'original_durability': int(ewutils.slime_bylevel(target.slimelevel) / 4),
+                            'size': 1,
+                            'fashion_style': ewcfg.style_cool,
+                            'freshness': 10,
+                            'adorned': 'false'
+                        }
+                    )
 
         elif not ctn.miss:
             # Flavor for non fatal blows only
