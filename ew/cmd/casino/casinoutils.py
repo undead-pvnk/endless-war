@@ -64,7 +64,7 @@ async def collect_bet(cmd, resp, value, user_data, currency_used):
         # subtract costs
         user_data.change_slimes(n=-value, source=ewcfg.source_casino)
     # print("Collected bet of {} from {}.".format(value, user_data.id_user))
-    return response
+    return value
 
 
 def printcard(card):

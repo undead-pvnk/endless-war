@@ -183,7 +183,11 @@ async def pachinko(cmd):
         elif currency_used == ewcfg.currency_slime:
             value = ewcfg.slimes_perpachinko * ewcfg.slimecoin_exchangerate
         
-        await collect_bet(cmd, resp, value, user_data, currency_used)
+        # Handle all "regular bets", including slime / slimecoin
+        value = await collect_bet(cmd, resp, value, user_data, currency_used)
+
+        if not value:
+            return
 
         user_data.persist()
 
@@ -281,7 +285,11 @@ async def craps(cmd):
         if value != None:
             user_data = EwUser(member=cmd.message.author)
             
-            await collect_bet(cmd, resp, value, user_data, currency_used)
+            # Handle all "regular bets", including slime / slimecoin
+            value = await collect_bet(cmd, resp, value, user_data, currency_used)
+
+            if not value:
+                return
 
             if currency_used == ewcfg.currency_soul:
                 if cmd.mentions_count > 0:
@@ -391,7 +399,11 @@ async def slots(cmd):
         elif currency_used == ewcfg.currency_slime:
             value = ewcfg.slimes_perslot * ewcfg.slimecoin_exchangerate
         
-        await collect_bet(cmd, resp, value, user_data, currency_used)
+        # Handle all "regular bets", including slime / slimecoin
+        value = await collect_bet(cmd, resp, value, user_data, currency_used)
+
+        if not value:
+            return
 
         user_data.persist()
 
@@ -564,8 +576,11 @@ async def roulette(cmd):
                 response = "The dealer didn't understand your wager. Options are: {}\n{}board.png".format(ewutils.formatNiceList(names=all_bets), img_base)
             else:
                 # Handle all "regular bets", including slime / slimecoin
-                await collect_bet(cmd, resp, value, user_data, currency_used)
+                value = await collect_bet(cmd, resp, value, user_data, currency_used)
 
+                if not value:
+                    return
+                
                 if currency_used == ewcfg.currency_soul:
                     if cmd.mentions_count > 0:
                         correct_soul = 0
@@ -745,7 +760,10 @@ async def baccarat(cmd):
                 await asyncio.sleep(1)
 
             else:
-                await collect_bet(cmd, resp, value, user_data, currency_used)
+                value = await collect_bet(cmd, resp, value, user_data, currency_used)
+
+                if not value:
+                    return
                 
                 if currency_used == ewcfg.currency_soul:
                     if cmd.mentions_count > 0:
