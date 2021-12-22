@@ -248,6 +248,9 @@ async def on_ready():
     channels_stockmarket = {}
 
     for server in client.guilds:
+        # Force discord to send all users, even offline ones
+        await server.chunk()
+
         # Update server data in the database
         bknd_server.server_update(server=server)
 
@@ -475,6 +478,9 @@ async def on_member_join(member):
         server=member.guild
     )
     user_data = EwUser(member=member)
+
+    # attempt to force discord.py to cache the user
+    await member.guild.query_members(user_ids=[member.id], presences=True)
 
     if user_data.poi in poi_static.tutorial_pois:
         await dungeon_utils.begin_tutorial(member)

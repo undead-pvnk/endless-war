@@ -220,6 +220,11 @@ cmd_map = {
 
     # Verify that the cache is functional
     ewcfg.cmd_verify_cache: cmdcmds.verify_cache,
+
+    # Testing command for retrieving members
+    ewcfg.cmd_user_search: cmdcmds.user_search,
+
+    # *sigh*
     ewcfg.cmd_cockdraw: cmdcmds.cockdraw,
     ewcfg.cmd_measurecock: cmdcmds.cockdraw
 }
