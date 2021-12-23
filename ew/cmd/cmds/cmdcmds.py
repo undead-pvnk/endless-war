@@ -3616,6 +3616,36 @@ async def set_slime(cmd):
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+# Debug - this is also a shameless copy of setslime, maybe look for a way to centralise these commands?
+async def set_festivity(cmd):
+    if not cmd.message.author.guild_permissions.administrator:
+        return
+
+    response = ""
+    target = None
+
+    if cmd.mentions_count != 1:
+        response = "Invalid use of command. Example: !setfestivity @player 100"
+    else:
+        target = cmd.mentions[0]
+        target_user_data = EwUser(id_user=target.id, id_server=cmd.guild.id)
+
+    if len(cmd.tokens) > 2 and not response:
+        new_festivity = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
+        if new_festivity == None or new_festivity < 0:
+            response = "Invalid number entered."
+        print(new_festivity)
+        
+        target_user_data.festivity = new_festivity
+        target_user_data.persist()
+        
+        print(target_user_data.festivity)
+
+        response = "Set {}'s festivity to {}.".format(target.display_name, target_user_data.festivity)
+    else:
+        response = "Invalid use of command. Example: !setfestivity @player 100"
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 # Debug
 async def check_stats(cmd):
