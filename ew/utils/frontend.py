@@ -496,6 +496,9 @@ async def update_slimernalia_kingpin(client, server):
     # Update the new kingpin of slimernalia
     new_kingpin = EwUser(id_user=ewutils.get_most_festive(server), id_server=server.id)
     new_kingpin.slimernalia_kingpin = True
+    
+    # Reset the new kingpin's festivity upon getting the award
+    new_kingpin.festivity = 0
     new_kingpin.persist()
     try:
         new_kingpin_member = server.get_member(new_kingpin.id_user)
