@@ -2165,7 +2165,9 @@ async def wrap(cmd):
 
             festivity_value += bonus
 
-            if festivity_value < 0: festivity_value = 1
+            # Gifts cannot be negative festivity, and gifts cannot go above a max
+            festivity_value = max(festivity_value, 1)
+            festivity_value = min(festivity_value, ewcfg.festivity_gift_max)
 
             bknd_item.item_create(
                 id_user=cmd.message.author.id,

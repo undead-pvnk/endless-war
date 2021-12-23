@@ -2172,6 +2172,7 @@ festivity_gift_base = 1000 # How much festivity a basic gift is worth
 festivity_gift_food = 1 # How much festivity is given per ten points of hunger restored by the food
 festivity_gift_weapon = 100 # How much festivity is given per kill on a weapon
 festivity_gift_cosmetic = 10 # How much festivity is given per freshness on a cosmetic
+festivity_gift_max = 10000 # How much festivity you can gain in a single gift or feasting
 festivity_dye_bonus = 500 # Bonus for dyeing a gifted cosmetic
 festivity_scrawl_bonus = 100 # Bonus for scrawling on a gift
 festivity_name_bonus = 100 # Bonus for naming a weapon gift
