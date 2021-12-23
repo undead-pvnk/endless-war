@@ -3634,12 +3634,9 @@ async def set_festivity(cmd):
         new_festivity = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
         if new_festivity == None or new_festivity < 0:
             response = "Invalid number entered."
-        print(new_festivity)
         
         target_user_data.festivity = new_festivity
         target_user_data.persist()
-        
-        print(target_user_data.festivity)
 
         response = "Set {}'s festivity to {}.".format(target.display_name, target_user_data.festivity)
     else:
