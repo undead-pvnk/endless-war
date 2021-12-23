@@ -685,6 +685,10 @@ async def scout(cmd):
         min_level = math.ceil((1 / 10) ** 0.25 * user_data.slimelevel)
 
         life_states = [ewcfg.life_state_enlisted]
+
+        if ewcfg.slimernalia_active:
+            life_states.append(ewcfg.life_state_juvenile)
+        
         # get information about players in the district
         players_in_district = district_data.get_players_in_district(min_level=min_level, life_states=life_states)
         if user_data.id_user in players_in_district:
