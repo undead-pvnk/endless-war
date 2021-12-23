@@ -927,11 +927,14 @@ async def give(cmd):
         if item_sought.get('item_type') == ewcfg.it_item and ewcfg.slimernalia_active:
             item_data = EwItem(id_item = item_sought.get('id_item'))
 
-            if item_data.item_props.get('id_item') == 'gift' and item_data.item_props.get("gifted") == "false":
-                item_data.item_props['gifted'] = "true"
-                item_data.persist()
-                user_data.festivity += int(item_data.item_props.get("gift_value"))
-                user_data.persist()
+            # Fuck everything, TRIPLE nested if statement
+            if item_data.item_props.get('id_item') == 'gift':
+                if item_data.item_props.get('giftee_id') == recipient_data.id_user and item_data.item_props.get("gifter_id") == user_data.id_user:
+                    if item_data.item_props.get("gifted") == "false":
+                        item_data.item_props['gifted'] = "true"
+                        item_data.persist()
+                        user_data.festivity += int(item_data.item_props.get("gift_value"))
+                        user_data.persist()
 
         # don't let people give others food when they shouldn't be able to carry more food items
         if item_sought.get('item_type') == ewcfg.it_food:
