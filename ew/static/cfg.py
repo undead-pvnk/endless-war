@@ -2191,7 +2191,7 @@ festivity_generic_penality = 500 # Penality if the item is something generic
 
 phoebus_bet_floor = 1000000 # How high a slime bet needs to be to get the Phoebus' Blessing bonus
 
-slimernalia_kingpin_announcement = "HARK! I, Phoebus do thus crown **{player}** as today's Kingpin of Slimernalia! They gained a total of **{festivity}** festivity!"
+slimernalia_kingpin_announcement = "**HARK!** I, Phoebus do hereby crown <{player}> as today's Kingpin of Slimernalia! <{player}> gained a total of **{festivity}** festivity!"
 
 # Common strings.
 str_casino_closed = "The Casino only operates at night."

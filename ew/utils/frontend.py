@@ -509,7 +509,7 @@ async def update_slimernalia_kingpin(client, server):
 
     if new_kingpin_member:
         # Format and release a message from Phoebus about how who just won and how much slime they got
-        announce_content = ewcfg.slimernalia_kingpin_announcement.format(player=new_kingpin_member.display_name, festivity=old_festivity) 
+        announce_content = ewcfg.slimernalia_kingpin_announcement.format(player=("@" + str(new_kingpin_member.id)), festivity=old_festivity) 
 
         announce = discord.Embed()
         announce.set_thumbnail(url="https://i.imgur.com/aVfaB9I.png")
