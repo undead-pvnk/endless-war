@@ -729,19 +729,24 @@ def get_most_festive(server):
         ))
         dat = list(data)
         f_data = []
+
+        all_sigils = item_cache.find_entries(criteria={
+            "id_server": server.id,
+            "template": ewcfg.item_id_sigillaria
+        })
+
         # iterate through all users in the server
         for row in dat:
             row = list(row)
-            # Get all user furniture id'd as a sigil
-            sigils = item_cache.find_entries(criteria={
-                "id_owner": row[0],
-                "item_type": ewcfg.it_furniture,
-                "id_server": server.id,
-                "item_props": {"id_furniture": ewcfg.item_id_sigillaria},
-            })
+
+            # get all sigils belonging to the user
+            user_sigils = []
+            for sigil_data in all_sigils:
+                if sigil_data.get("id_owner") == row[0]:
+                    user_sigils.append(sigil_data)
 
             # add festivity to the user's sum per sigil
-            row[1] += (len(sigils) * ewcfg.festivity_sigil_bonus)
+            row[1] += (len(user_sigils) * ewcfg.festivity_sigil_bonus)
             f_data.append(row)
         # Sort the rows by the second index in each row, highest first
         f_data.sort(key=lambda row: row[1], reverse=True)
