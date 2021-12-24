@@ -41,6 +41,7 @@ dh_stage = -1
 #sure, but is slimernalia active?
 slimernalia_active = True
 
+forbidden_channels = ["suggestion-box", "splatify"]
 
 # The max amount of degradation a district can have before it is shambled completely
 district_max_degradation = 10000
