@@ -311,6 +311,9 @@ async def attack(cmd):
                 slimeoid_kill=slimeoid_kill
             ))
 
+            if ewcfg.slimernalia_active and attacker.life_state == ewcfg.life_state_juvenile:
+                attacker.festivity += ewcfg.festivity_kill_bonus
+            
             if attacker_slimeoid.life_state == ewcfg.slimeoid_state_active:
                 slimeoid_resp += "\n\n" + sl_static.brain_map.get(attacker_slimeoid.ai).str_kill.format(slimeoid_name=attacker_slimeoid.name)
 
@@ -328,13 +331,30 @@ async def attack(cmd):
             if ctn.vax and target.life_state == ewcfg.life_state_shambler:
                 shambler_resp = "\nYour purified slime seeps into and emulsifies in their mangled corpse, healing their degraded body. When they revive, they’ll be a normal slimeboi like the rest of us. A pure, homogenous race of ENDLESS WAR fearing juveniles. It brings a tear to your eye."
 
+
             if random.randint(0, 99) == 0 and target.gender != 'gorl':
                 foreskin = True
             else:
                 foreskin = False
 
             # Lets throw a little scalp and/or foreskin creation in here
-            if foreskin and target.life_state != ewcfg.life_state_shambler:
+            # Lets throw a little scalp creation in here
+            if target.life_state != ewcfg.life_state_shambler:
+                if ewcfg.slimernalia_active:
+                    bknd_item.item_create(
+                        item_type=ewcfg.it_furniture,
+                        id_user=attacker_member.id,
+                        id_server=cmd.guild.id,
+                        item_props={
+                            'id_furniture': ewcfg.item_id_sigillaria,
+                            'furniture_name': "{}'s sigillaria".format(target_member.display_name),
+                            'furniture_desc': "A sigillaria of {}.".format(target_member.display_name),
+                            'rarity': ewcfg.rarity_patrician,
+                            'furniture_place_desc': "You place the figurine, filling your apartment with Slimernalia cheer.",
+                            'furniture_look_desc': "There's a sigillaria of {}.".format(target_member.display_name),
+                        }
+                    )
+            elif foreskin and target.life_state != ewcfg.life_state_shambler:
                 bknd_item.item_create(
                     item_type=ewcfg.it_cosmetic,
                     id_user=attacker_member.id,
@@ -384,6 +404,7 @@ async def attack(cmd):
                         'adorned': 'false'
                     }
                 )
+
 
         elif not ctn.miss:
             # Flavor for non fatal blows only

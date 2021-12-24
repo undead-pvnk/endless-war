@@ -684,7 +684,7 @@ async def devour(cmd):
                 item_has_expired = float(getattr(item_obj, "time_expir", 0)) < time.time()
 
                 if item_has_expired and not (user_has_spoiled_appetite or item_is_non_perishable):
-                    response = "You realize that the food you were trying to eat is already spoiled. Ugh, not eating that."
+                    response = "You realize that the {} you were trying to eat is already spoiled. Ugh, not eating that.".format(item_sought.get('name'))
                     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                 # ewitem.item_drop(food_item.id_item)
 

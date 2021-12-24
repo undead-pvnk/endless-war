@@ -501,6 +501,7 @@ async def update_slimernalia_kingpin(client, server):
     try:
         new_kingpin_member = server.get_member(new_kingpin_id)
         await ewrolemgr.updateRoles(client=client, member=new_kingpin_member)
+        print("New kingpin is {}".format(new_kingpin_member))
     except:
         ewutils.logMsg("Error adding kingpin of slimernalia role to user {} in server {}.".format(new_kingpin_id, server.id))
 
@@ -599,3 +600,23 @@ async def sync_topics(cmd):
             ewutils.logMsg('Failed to set channel topic for {} to {}'.format(channel, debug_info))
 
     ewutils.logMsg('Finished syncing topics.')
+
+
+"""
+    A get_member replacement for discord.py's implementation, how it should have been done anyway
+    Takes a guild and user id, returns a Discord Member if found, otherwise None
+    Checks discord.py user cache for the member, and then queries discord if not found
+"""
+async def get_member(guild, member_id):
+    # Check for member in discord.py cache
+    member = guild.get_member(member_id)
+
+    # Sometimes discord.py fails cache members for no apparent reason, lets fix that
+    if member is None:
+        # query that insists on returning a list cause rapptz is lazy and so am I
+        mem_list = await guild.query_members(user_ids=[member_id], presences=True)
+
+        # retrieve the member from the list if it's there
+        member = mem_list[0] if len(mem_list) == 1 else None
+
+    return member

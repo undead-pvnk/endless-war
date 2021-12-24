@@ -2,7 +2,9 @@
 
 
 
+
 version = "v4.100 Season 4 Act 1"
+
 
 dir_msgqueue = 'msgqueue'
 
@@ -1250,14 +1252,21 @@ cmd_tweet = cmd_prefix + 'tweet'
 cmd_verification = cmd_prefix + 'requestverification'
 cmd_verification_alt = cmd_prefix + '#verify'
 
+# gamestate admin cmds
 cmd_changegamestate = cmd_prefix + 'changegamestate'
 cmd_display_states = cmd_prefix + 'displaystates'
+
+# elevator cmds
 cmd_press_button = cmd_prefix + 'press'
 cmd_call_elevator = cmd_prefix + 'callelevator'
+
+# admin checking cmds
 cmd_addstatuseffect = cmd_prefix + 'addstatuseffect'
 cmd_log_caches = cmd_prefix + 'cache'
 cmd_toggle_caches = cmd_prefix + 'togglecache'
 cmd_verify_cache = cmd_prefix + 'verifycache'
+cmd_user_search = cmd_prefix + 'searchfor'
+
 # SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
@@ -1875,8 +1884,27 @@ trade_state_ongoing = 1
 trade_state_complete = 2
 
 # SLIMERNALIA
-festivity_on_gift_wrapping = 100
-festivity_on_gift_giving = 10000
+festivity_gift_wrap = 100 # How much festivity is rewarded for wrapping / unwrapping a present
+festivity_gift_base = 1000 # How much festivity a basic gift is worth
+festivity_gift_food = 1 # How much festivity is given per ten points of hunger restored by the food
+festivity_gift_weapon = 100 # How much festivity is given per kill on a weapon
+festivity_gift_cosmetic = 10 # How much festivity is given per freshness on a cosmetic
+festivity_dye_bonus = 500 # Bonus for dyeing a gifted cosmetic
+festivity_scrawl_bonus = 100 # Bonus for scrawling on a gift
+festivity_name_bonus = 100 # Bonus for naming a weapon gift
+festivity_smelt_bonus = 500 # Bonus for gifting something handmade
+festivity_pleb_bonus = 10 # Bonus for plebian tier gifts
+festivity_patr_bonus = 100 # Bonus for patrician tier gifts
+festivity_othr_bonus = 300 # Bonus for any other tier gifts
+
+festivity_sigil_bonus = 1000 # The amount of festivity you gain per sigillaria
+
+festivity_kill_bonus = 500 # The  amount of festivity you gain upon killing someone
+
+festivity_expired_penalty = 2500 # Penalty if the food item you are giving has already expired
+festivity_generic_penality = 500 # Penality if the item is something generic
+
+phoebus_bet_floor = 1000000 # How high a slime bet needs to be to get the Phoebus' Blessing bonus
 
 # Common strings.
 str_casino_closed = "The Casino only operates at night."

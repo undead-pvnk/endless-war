@@ -441,6 +441,7 @@ def make_relics_found_board(id_server, title):
 
 
 # SLIMERNALIA
+
 def make_slimernalia_board(server, title):
     entries = []
     # Use the cache if it is enabled
@@ -453,21 +454,28 @@ def make_slimernalia_board(server, title):
     (server,))
         dat = list(data)
         f_data = []
+
+        # Retrieve all sigillarias
+        all_sigs = item_cache.find_entries(
+            criteria={
+                "item_type": ewcfg.it_furniture,
+                "id_server": server,
+                "item_props": {"id_furniture": ewcfg.item_id_sigillaria}
+            }
+        )
+
         # iterate through all users, add sigillaria festivity to the base
         for row in dat:
             row = list(row)
+
             # Get all user sigs
-            sigs = item_cache.find_entries(
-                criteria={
-                    "id_owner": row[0],
-                    "item_type": ewcfg.it_furniture,
-                    "id_server": server,
-                    "item_props": {"id_furniture": ewcfg.item_id_sigillaria}
-                }
-            )
+            user_sigs = []
+            for sig in all_sigs:
+                if sig.get("id_owner") == row[0]:
+                    user_sigs.append(sig)
 
             # Add 1000 to total festivity per sig
-            row[4] += len(sigs) * 1000
+            row[4] += len(user_sigs) * 1000
 
             # remove id to match return format
             row.pop(0)

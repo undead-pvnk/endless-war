@@ -152,7 +152,7 @@ ewcfg.cmd_debug9 = ewcfg.cmd_prefix + ewdebug.cmd_debug9
 re_awoo_g = re.compile('.*![a]+[w]+o[o]+.*') #taking these out of on_message so they only need to be compiled once
 re_moan_g = re.compile('.*![b]+[r]+[a]+[i]+[n]+[z]+.*')
 re_measure_g = re.compile('!measure.*')
-
+re_yoslimernalia_g = re.compile('.*![y]+[o]+[s]+[l]+[i]+[m]+[e]+[r]+[n]+[a]+[l]+[i]+[a]+.*')
 
 @client.event
 async def on_member_remove(member):
@@ -266,6 +266,9 @@ async def on_ready():
     channels_stockmarket = {}
 
     for server in client.guilds:
+        # Force discord to send all users, even offline ones
+        await server.chunk()
+
         # Update server data in the database
         bknd_server.server_update(server=server)
 
@@ -504,6 +507,9 @@ async def on_member_join(member):
         server=member.guild
     )
     user_data = EwUser(member=member)
+
+    # attempt to force discord.py to cache the user
+    await member.guild.query_members(user_ids=[member.id], presences=True)
 
     if user_data.poi in poi_static.tutorial_pois:
         await dungeon_utils.begin_tutorial(member)
@@ -982,9 +988,11 @@ async def on_message(message):
     content_tolower = message.content.lower()
     content_tolower_list = content_tolower.split(" ")
 
+
     re_awoo = re_awoo_g
     re_moan = re_moan_g
     re_measure = re_measure_g
+    re_yoslimernalia = re_yoslimernalia_g
 
     # update the player's time_last_action which is used for kicking AFK players out of subzones
     if message.guild != None:
@@ -1174,11 +1182,13 @@ async def on_message(message):
             return await ewcmd.cmdcmds.cmd_howl(cmd_obj)
         elif re_moan.match(cmd):
             return await ewcmd.cmdcmds.cmd_moan(cmd_obj)
+        elif re_yoslimernalia.match(cmd) and ewcfg.slimernalia_active:
+            return await ewcmd.cmdcmds.yoslimernalia(cmd_obj)
         elif re_measure.match(cmd):
             return await ewcmd.cmdcmds.cockdraw(cmd_obj)
-
         elif debug == True and cmd in ewcfg.client_debug_commands:
             return await debugHandling(message=message, cmd=cmd, cmd_obj=cmd_obj)
+
 
 
 
@@ -1214,6 +1224,15 @@ async def on_message(message):
             client=client,
             guild=message.guild
         ))
+    elif content_tolower.find(ewcfg.cmd_yoslimernalia) >= 0 or re_yoslimernalia.match(content_tolower):
+        if ewcfg.slimernalia_active:
+            return await ewcmd.cmdcmds.yoslimernalia(cmd_utils.EwCmd(
+                message=message,
+                client=client,
+                guild=message.guild
+            ))
+        else:
+            return
 
 
 

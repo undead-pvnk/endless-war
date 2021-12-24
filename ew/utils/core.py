@@ -716,7 +716,7 @@ def get_most_festive(server):
     item_cache = bknd_core.get_cache(obj_type = "EwItem")
     if item_cache is not False:
         # get a list of [id, festivitysum] for all users in server
-        data = bknd_core.execute_sql_query("SELECT {id_user}, FLOOR({festivity}) + FLOOR({festivity_from_slimecoin}) FROM users WHERE {id_server} = %s".format(
+        data = bknd_core.execute_sql_query("SELECT {id_user}, FLOOR({festivity}) + FLOOR({festivity_from_slimecoin}) FROM users WHERE {id_server} = %s AND (FLOOR({festivity}) + FLOOR({festivity_from_slimecoin})) >= 1".format(
             id_user = ewcfg.col_id_user,
             id_server = ewcfg.col_id_server,
 
@@ -727,24 +727,33 @@ def get_most_festive(server):
         ))
         dat = list(data)
         f_data = []
+
+        all_sigils = item_cache.find_entries(criteria={
+            "id_server": server.id,
+            "template": ewcfg.item_id_sigillaria
+        })
+
         # iterate through all users in the server
         for row in dat:
             row = list(row)
-            # Get all user furniture id'd as a sigil
-            sigils = item_cache.find_entries(criteria={
-                "id_owner": row[0],
-                "item_type": ewcfg.it_furniture,
-                "id_server": server.id,
-                "item_props": {"id_furniture": ewcfg.item_id_sigillaria},
-            })
 
-            # add 1000 festivity to the user's sum per sigil
-            row[1] += (len(sigils) * 1000)
+            # get all sigils belonging to the user
+            user_sigils = []
+            for sigil_data in all_sigils:
+                if sigil_data.get("id_owner") == row[0]:
+                    user_sigils.append(sigil_data)
+
+            # add festivity to the user's sum per sigil
+            row[1] += (len(user_sigils) * ewcfg.festivity_sigil_bonus)
             f_data.append(row)
         # Sort the rows by the second index in each row, highest first
         f_data.sort(key=lambda row: row[1], reverse=True)
+        if f_data:
+            return f_data[0][0]
+        else:
+            return 1
 
-        return f_data[0][0]
+        #return f_data[0][0]
 
 
     data = bknd_core.execute_sql_query(

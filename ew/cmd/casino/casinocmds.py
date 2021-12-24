@@ -24,7 +24,8 @@ from .casinoutils import get_skat_play
 from .casinoutils import printcard
 from .casinoutils import printhand
 from .casinoutils import skat_putback
-from .casinoutils import slimecoin_to_festivity
+from .casinoutils import payout
+from .casinoutils import collect_bet
 
 # Map containing user IDs and the last time in UTC seconds since the pachinko
 # machine was used.
@@ -177,37 +178,20 @@ async def pachinko(cmd):
             response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+        value = 1
         if currency_used == ewcfg.currency_slimecoin:
             value = ewcfg.slimes_perpachinko
 
-            if value > user_data.slimecoin:
-                response = "You don't have enough SlimeCoin to play. You need {} but only have {}.".format(value, user_data.slimecoin)
-                return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
+        elif currency_used == ewcfg.currency_slime:
 
-            # subtract costs
-            user_data.change_slimecoin(n=-value, coinsource=ewcfg.coinsource_casino)
-        # SLIMERNALIA
-            if ewcfg.slimernalia_active:
-                old_festivity = ewstats.get_stat(id_server=user_data.id_server, id_user=user_data.id_user, metric=ewcfg.stat_festivity_from_slimecoin)
-                ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric = ewcfg.stat_festivity_from_slimecoin, n=slimecoin_to_festivity(value, old_festivity))
-
-        else:
             value = ewcfg.slimes_perpachinko * ewcfg.slimecoin_exchangerate
+        
+        # Handle all "regular bets", including slime / slimecoin
+        value = await collect_bet(cmd, resp, value, user_data, currency_used)
 
-            if user_data.life_state == ewcfg.life_state_corpse:
-                return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_machine))
-            elif user_data.poi != ewcfg.poi_id_thecasino:
-                return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, "You try to shove the slime through your phone into the casino, but it just bounces off the screen. Better use a digital currency. Or your soul."))
+        if not value:
+            return
 
-            if value > user_data.slimes:
-                response = "You don't have enough slime to play. You need {} but only have {}.".format(value, user_data.slimes)
-                return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
-
-            # subtract costs
-            user_data.change_slimes(n=-value, source=ewcfg.source_casino)
-        # SLIMERNALIA
-            if ewcfg.slimernalia_active:
-                ewstats.change_stat(id_server=cmd.guild.id, id_user=cmd.message.author.id, metric = ewcfg.stat_festivity, n=value)
 
         user_data.persist()
 
@@ -249,17 +233,8 @@ async def pachinko(cmd):
             response += "\n\n**You won {:,} {currency}!**".format(winnings, currency=currency_used)
         else:
             response += "\n\nYou lost your {}.".format(currency_used)
-
-        # add winnings
-        if currency_used == ewcfg.currency_slimecoin:
-            user_data.change_slimecoin(n=winnings, coinsource=ewcfg.coinsource_casino)
-        elif currency_used == ewcfg.currency_slime:
-            levelup_response = user_data.change_slimes(n=winnings, source=ewcfg.source_casino)
-
-            if levelup_response != "":
-                response += "\n\n" + levelup_response
-
-        user_data.persist()
+        
+        response += payout(winnings, value, user_data, currency_used)
 
         # Allow the player to pachinko again now that we're done.
         last_pachinkoed_times[cmd.message.author.id] = 0
@@ -273,6 +248,7 @@ async def pachinko(cmd):
 
 async def craps(cmd):
     time_now = int(time.time())
+    resp = await cmd_utils.start(cmd=cmd)
 
     user_data = EwUser(member=cmd.message.author)
 
@@ -300,7 +276,7 @@ async def craps(cmd):
 
         if district_data.is_degraded():
             response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
         last_crapsed_times[cmd.message.author.id] = time_now
         value = None
         winnings = 0
@@ -312,19 +288,14 @@ async def craps(cmd):
 
         if value != None:
             user_data = EwUser(member=cmd.message.author)
-            if user_data.life_state == ewcfg.life_state_shambler:
-                response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            
+            # Handle all "regular bets", including slime / slimecoin
+            value = await collect_bet(cmd, resp, value, user_data, currency_used)
 
-            if currency_used == ewcfg.currency_slimecoin:
-                if value == -1:
-                    value = user_data.slimecoin
+            if not value:
+                return
 
-                elif value > user_data.slimecoin:
-                    response = "You don't have that much SlimeCoin to bet with."
-                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-            elif currency_used == ewcfg.currency_soul:
+            if currency_used == ewcfg.currency_soul:
                 if cmd.mentions_count > 0:
                     correct_soul = 0
                     user_inv = bknd_item.inventory(id_server=user_data.id_server, id_user=user_data.id_user)
@@ -335,30 +306,18 @@ async def craps(cmd):
                                 correct_soul = item.id_item
                     if correct_soul == 0:
                         response = "You don't have that soul."
-                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                        return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
                     else:
                         bknd_item.give_item(id_item=correct_soul, id_user="casinosouls_wait", id_server=user_data.id_server)
                         soul_id = correct_soul
                 elif user_data.has_soul == 0:
                     response = "You don't have a soul to bet."
-                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
                 else:
                     soul_id = item_utils.surrendersoul(receiver=user_data.id_user, giver=user_data.id_user, id_server=user_data.id_server)
                     bknd_item.give_item(id_item=soul_id, id_user="casinosouls_wait", id_server=user_data.id_server)
                     user_data = EwUser(member=cmd.message.author)
 
-            else:
-                if user_data.life_state == ewcfg.life_state_corpse:
-                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
-                elif user_data.poi != ewcfg.poi_id_thecasino:
-                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You try to shove the slime through your phone into the casino, but it just bounces off the screen. Better use a digital currency. Or your soul."))
-
-                if value == -1:
-                    value = user_data.slimes
-
-                elif value > user_data.slimes:
-                    response = "You don't have that much slime to bet with."
-                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
             roll1 = random.randint(1, 6)
             roll2 = random.randint(1, 6)
@@ -388,30 +347,15 @@ async def craps(cmd):
                 if currency_used == ewcfg.currency_soul:
                     bknd_item.give_item(id_item=soul_id, id_user="casinosouls", id_server=cmd.guild.id)
 
-            # add winnings/subtract losses
-            if currency_used == ewcfg.currency_slimecoin:
-                user_data.change_slimecoin(n=winnings - value, coinsource=ewcfg.coinsource_casino)
-            # SLIMERNALIA
-                if ewcfg.slimernalia_active:
-                    old_festivity = ewstats.get_stat(id_server=user_data.id_server, id_user=user_data.id_user,metric=ewcfg.stat_festivity_from_slimecoin)
-                    ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity_from_slimecoin, n=slimecoin_to_festivity(value, old_festivity))
+            response += payout(winnings, value, user_data, currency_used)
 
-            elif currency_used == ewcfg.currency_slime:
-                levelup_response = user_data.change_slimes(n=winnings - value, source=ewcfg.source_casino)
-
-                if levelup_response != "":
-                    response += "\n\n" + levelup_response
-
-            # SLIMERNALIA
-                if ewcfg.slimernalia_active:
-                    ewstats.change_stat(id_server=cmd.guild.id, id_user=cmd.message.author.id, metric = ewcfg.stat_festivity, n=value)
 
             user_data.persist()
         else:
             response = "Specify how much {} you will wager.".format(currency_used)
 
     # Send the response to the player.
-    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
     # gangsters don't need their roles updated
     if user_data.life_state == ewcfg.life_state_juvenile:
         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
@@ -455,40 +399,21 @@ async def slots(cmd):
             response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+        value = 1
         if currency_used == ewcfg.currency_slimecoin:
             value = ewcfg.slimes_perslot
 
-            if value > user_data.slimecoin:
-                response = "You don't have enough SlimeCoin. You need {} but only have {}.".format(value, user_data.slimecoin)
-                return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
+        elif currency_used == ewcfg.currency_slime:
 
-            # subtract costs
-            user_data.change_slimecoin(n=-value, coinsource=ewcfg.coinsource_casino)
-
-        # SLIMERNALIA
-            if ewcfg.slimernalia_active:
-                old_festivity = ewstats.get_stat(id_server=user_data.id_server, id_user=user_data.id_user, metric=ewcfg.stat_festivity_from_slimecoin)
-                ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity_from_slimecoin, n=slimecoin_to_festivity(value, old_festivity))
-
-
-        else:
             value = ewcfg.slimes_perslot * ewcfg.slimecoin_exchangerate
+        
+        # Handle all "regular bets", including slime / slimecoin
+        value = await collect_bet(cmd, resp, value, user_data, currency_used)
 
-            if user_data.life_state == ewcfg.life_state_corpse:
-                return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_machine))
-            elif user_data.poi != ewcfg.poi_id_thecasino:
-                return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, "You try to shove the slime through your phone into the casino, but it just bounces off the screen. Better use a digital currency. Or your soul."))
 
-            if value > user_data.slimes:
-                response = "You don't have enough slime. You need {} but only have {}.".format(value, user_data.slimes)
-                return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
+        if not value:
+            return
 
-            # subtract costs
-            user_data.change_slimes(n=-value, source=ewcfg.source_casino)
-
-        # SLIMERNALIA
-            if ewcfg.slimernalia_active:
-                ewstats.change_stat(id_server=cmd.guild.id, id_user=cmd.message.author.id, metric = ewcfg.stat_festivity, n=value)
 
         user_data.persist()
 
@@ -655,48 +580,18 @@ async def roulette(cmd):
                 response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-            if currency_used == ewcfg.currency_slimecoin:
-                if value == -1:
-                    value = user_data.slimecoin
-
-                if value > user_data.slimecoin:
-                    response = "You don't have enough SlimeCoin."
-                    return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
-
-                # subtract costs
-                user_data.change_slimecoin(n=-value, coinsource=ewcfg.coinsource_casino)
-            # SLIMERNALIA
-                if ewcfg.slimernalia_active:
-                    old_festivity = ewstats.get_stat(id_server=user_data.id_server, id_user=user_data.id_user, metric=ewcfg.stat_festivity_from_slimecoin)
-                    ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity_from_slimecoin, n=slimecoin_to_festivity(value, old_festivity))
-
-
-            elif currency_used == ewcfg.currency_soul:
-                pass
-            else:
-                if user_data.life_state == ewcfg.life_state_corpse:
-                    return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
-                elif user_data.poi != ewcfg.poi_id_thecasino:
-                    return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, "You try to shove the slime through your phone into the casino, but it just bounces off the screen. Better use a digital currency. Or your soul."))
-
-                if value == -1:
-                    value = user_data.slimes
-
-                if value > user_data.slimes:
-                    response = "You don't have enough slime."
-                    return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
-
-                # subtract costs
-                user_data.change_slimes(n=-value, source=ewcfg.source_casino)
-            # SLIMERNALIA
-                if ewcfg.slimernalia_active:
-                    ewstats.change_stat(id_server=cmd.guild.id, id_user=cmd.message.author.id, metric = ewcfg.stat_festivity, n=value)
 
             if len(bet) == 0:
                 response = "You need to say what you're betting on. Options are: {}\n{}board.png".format(ewutils.formatNiceList(names=all_bets), img_base)
             elif bet not in all_bets:
                 response = "The dealer didn't understand your wager. Options are: {}\n{}board.png".format(ewutils.formatNiceList(names=all_bets), img_base)
             else:
+                # Handle all "regular bets", including slime / slimecoin
+                value = await collect_bet(cmd, resp, value, user_data, currency_used)
+
+                if not value:
+                    return
+                
                 if currency_used == ewcfg.currency_soul:
                     if cmd.mentions_count > 0:
                         correct_soul = 0
@@ -799,16 +694,7 @@ async def roulette(cmd):
 
                 # add winnings
                 user_data = EwUser(member=cmd.message.author)
-
-                if currency_used == ewcfg.currency_slimecoin:
-                    user_data.change_slimecoin(n=winnings, coinsource=ewcfg.coinsource_casino)
-                elif currency_used == ewcfg.currency_slime:
-                    levelup_response = user_data.change_slimes(n=winnings, source=ewcfg.source_casino)
-
-                    if levelup_response != "":
-                        response += "\n\n" + levelup_response
-
-                user_data.persist()
+                response += payout(winnings, value, user_data, currency_used)
         else:
             response = "Specify how much {} you will wager.".format(currency_used)
 
@@ -874,42 +760,6 @@ async def baccarat(cmd):
                 response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-            if currency_used == ewcfg.currency_slimecoin:
-                if value == -1:
-                    value = user_data.slimecoin
-
-                if value > user_data.slimecoin:
-                    response = "You don't have enough SlimeCoin."
-                    return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
-
-                # subtract costs
-                user_data.change_slimecoin(n=-value, coinsource=ewcfg.coinsource_casino)
-            # SLIMERNALIA
-                if ewcfg.slimernalia_active:
-                    old_festivity = ewstats.get_stat(id_server=user_data.id_server, id_user=user_data.id_user, metric=ewcfg.stat_festivity_from_slimecoin)
-                    ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity_from_slimecoin, n=slimecoin_to_festivity(value, old_festivity))
-
-
-            elif currency_used == ewcfg.currency_soul:
-                pass
-            else:
-                if user_data.life_state == ewcfg.life_state_corpse:
-                    return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
-                elif user_data.poi != ewcfg.poi_id_thecasino:
-                    return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, "You try to shove the slime through your phone into the casino, but it just bounces off the screen. Better use a digital currency. Or your soul."))
-                if value == -1:
-                    value = user_data.slimes
-
-                if value > user_data.slimes:
-                    response = "You don't have enough slime."
-                    return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
-
-                # subtract costs
-                user_data.change_slimes(n=-value, source=ewcfg.source_casino)
-
-            # SLIMERNALIA
-            if ewcfg.slimernalia_active:
-                ewstats.change_stat(id_server=cmd.guild.id, id_user=cmd.message.author.id, metric = ewcfg.stat_festivity, n=value)
 
             if len(bet) == 0:
                 response = "You must specify what hand you are betting on. Options are {}.".format(ewutils.formatNiceList(names=all_bets), img_base)
@@ -922,6 +772,11 @@ async def baccarat(cmd):
                 await asyncio.sleep(1)
 
             else:
+                value = await collect_bet(cmd, resp, value, user_data, currency_used)
+
+                if not value:
+                    return
+                
                 if currency_used == ewcfg.currency_soul:
                     if cmd.mentions_count > 0:
                         correct_soul = 0
@@ -1462,13 +1317,7 @@ async def baccarat(cmd):
 
                 # add winnings
                 user_data = EwUser(member=cmd.message.author)
-                if currency_used == ewcfg.currency_slimecoin:
-                    user_data.change_slimecoin(n=winnings, coinsource=ewcfg.coinsource_casino)
-                elif currency_used == ewcfg.currency_slime:
-                    levelup_response = user_data.change_slimes(n=winnings, source=ewcfg.source_casino)
-
-                    if levelup_response != "":
-                        response += "\n\n" + levelup_response
+                response += payout(winnings, value, user_data, currency_used)
 
                 user_data.persist()
                 await fe_utils.edit_message(cmd.client, resp_f, fe_utils.formatMessage(cmd.message.author, response))
@@ -2207,11 +2056,9 @@ async def russian_roulette(cmd):
             challenger = EwUser(member = author)
             challengee = EwUser(member = member)
 
-            ewstats.change_stat(id_server=cmd.guild.id, id_user=challengee.id_user, metric=ewcfg.stat_festivity, n=challengee.slimes)
-            ewstats.change_stat(id_server=cmd.guild.id, id_user=challenger.id_user, metric=ewcfg.stat_festivity, n=challenger.slimes)
 
-            challenger.persist()
-            challengee.persist()
+            ewstats.change_stat(id_server=cmd.guild.id, id_user=challengee.id_user, metric=ewcfg.stat_festivity, n=round((challenger.slimes / 100000) + 50))
+            ewstats.change_stat(id_server=cmd.guild.id, id_user=challenger.id_user, metric=ewcfg.stat_festivity, n=round((challengee.slimes / 100000) + 50))
 
 
         wait_time = 1

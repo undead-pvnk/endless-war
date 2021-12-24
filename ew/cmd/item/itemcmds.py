@@ -957,6 +957,11 @@ async def give(cmd):
         response = "You must be in the same location as the person you want to gift your item to, bitch."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+    # Check if the player is giving an item to themselves
+    if user_data.id_user == recipient_data.id_user:
+        response = "You can't give yourself something you already have, headass. You literally **already have it.**"
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
     item_sought = bknd_item.find_item(item_search=item_search, id_user=author.id, id_server=server.id)
 
     if item_sought:  # if an item was found
@@ -970,7 +975,9 @@ async def give(cmd):
             if item_data.item_props.get('id_item') == 'gift' and item_data.item_props.get("gifted") == "false":
                 item_data.item_props['gifted'] = "true"
                 item_data.persist()
-                ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity, n=ewcfg.festivity_on_gift_giving)
+
+                ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity, n=int(item_data.item_props.get("gift_value")))
+
 
         # don't let people give others food when they shouldn't be able to carry more food items
         if item_sought.get('item_type') == ewcfg.it_food:
@@ -1559,10 +1566,21 @@ async def unwrap(cmd):
                         gift_name_type = 'title'
 
                     gifted_item_name = gifted_item.item_props.get('{}'.format(gift_name_type))
+                    
+                    # Specifically for weapons, if the weapon doesn't have a name, then use it's type
+                    if (not gifted_item_name) and gifted_item.item_type == ewcfg.it_weapon:
+                        weapon_type = gifted_item.item_props.get("weapon_type")
+                        weapon_data = static_weapons.weapon_map.get(weapon_type)
+                        gifted_item_name = weapon_data.str_name
+                    
                     gifted_item_message = item.item_props.get('context')
 
-                    ewstats.change_stat(id_server=cmd.guild.id, id_user=cmd.message.author.id, metric=ewcfg.stat_festivity, n=ewcfg.festivity_on_gift_wrapping)
 
+                    if ewcfg.slimernalia_active:
+                        giftee_data = EwUser(member=cmd.message.author)
+                        # Make sure the player is not opening their own gift before applying festivity
+                        if giftee_data.id_user != item.item_props.get("gifter_id"):
+                            ewstats.change_stat(id_server=cmd.guild.id, id_user=cmd.message.author.id, metric=ewcfg.stat_festivity, n=ewcfg.festivity_gift_wrap)
 
                     response = "You shred through the packaging formalities to reveal a {}!\nThere is a note attached: '{}'.".format(gifted_item_name, gifted_item_message)
                     bknd_item.item_delete(id_item=item_sought.get('id_item'))

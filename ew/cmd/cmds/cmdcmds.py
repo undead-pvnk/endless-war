@@ -2084,7 +2084,7 @@ async def wrap(cmd):
 
     member = cmd.message.author
     user_data = EwUser(member=cmd.message.author)
-
+    
     if recipient_data.id_user == user_data.id_user:
         response = "C'mon man, you got friends, don't you? Try and give a gift to someone other than yourself."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -2113,6 +2113,10 @@ async def wrap(cmd):
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         if item.soulbound:
             response = "It's a nice gesture, but trying to gift someone a Soulbound item is going a bit too far, don't you think?"
+        # Check if the item has been gifted before
+        elif item.item_props.get('gifted') == "true":
+            print("I am going to kill myself")
+            response = "Alas, regifting is considered a grave sin from Phoebus themselves. Enjoy your gift, or else. {}".format(ewcfg.emote_slimeheart)
         elif not bknd_item.check_inv_capacity(user_data=user_data, item_type=ewcfg.it_item):
             response = ewcfg.str_generic_inv_limit.format(ewcfg.it_item)
         else:
@@ -2123,6 +2127,68 @@ async def wrap(cmd):
             gift_desc = "A gift wrapped in {}. Wonder what's inside?\nThe front of the tag reads '{}'\nOn the back of the tag, an ID number reads **({})**.".format(paper_name, gift_address, item.id_item)
 
             response = "You shroud your {} in {} and slap on a premade bow. Onto it, you attach a note containing the following text: '{}'.\nThis small act of kindness manages to endow you with Slimernalia spirit, if only a little.".format(item_sought.get('name'), paper_name, gift_address)
+
+            # Make the gifted item marked as gifted so that it can't be regifted once it's gifted
+            item.item_props['gifted'] = "true"
+            item.persist()
+
+            festivity_value = ewcfg.festivity_gift_base
+            bonus = 0
+            # Calculate the festivity value of the gift - this changes depending on the type of item wrapped
+            # Cosmetic-specific bonuses
+            if item.item_type == ewcfg.it_cosmetic:
+                gift_freshness = int(item.item_props.get("freshness"))
+
+                bonus += gift_freshness * ewcfg.festivity_gift_cosmetic                
+                if item.item_props.get("hue"):
+                    bonus += ewcfg.festivity_dye_bonus
+            # Weapon-specific bonuses
+            elif item.item_type == ewcfg.it_weapon:
+                gift_kills = int(item.item_props.get("totalkills"))
+                gift_type = item.item_props.get("weapon_type")
+                gift_wtype = static_weapons.weapon_map.get(gift_type)
+
+                if gift_wtype.acquisition == ewcfg.acquisition_smelting:
+                    bonus += ewcfg.festivity_smelt_bonus
+
+                bonus = gift_kills * ewcfg.festivity_gift_weapon
+                
+                if item.item_props.get("weapon_name"):
+                    bonus += ewcfg.festivity_name_bonus
+            # Food-specific bonuses
+            elif item.item_type == ewcfg.it_food:
+                gift_hunger = int(item.item_props.get("recover_hunger"))
+                gift_expiry = float(item.item_props.get("time_expir"))
+
+                if gift_expiry <= time.time():
+                    bonus -= ewcfg.festivity_expired_penalty
+
+                bonus += (gift_hunger / 10) * ewcfg.festivity_gift_food
+            # Furniture-specific bonuses
+            elif item.item_type == ewcfg.it_furniture:
+                gift_rarity = item.item_props.get("rarity")
+                gift_acquisition = item.item_props.get('acquisition')
+
+                if gift_acquisition == ewcfg.acquisition_smelting:
+                    bonus += ewcfg.festivity_smelt_bonus
+
+                if gift_rarity == ewcfg.rarity_plebeian:
+                    bonus += ewcfg.festivity_pleb_bonus
+                elif gift_rarity == ewcfg.rarity_patrician:
+                    bonus += ewcfg.festivity_patr_bonus
+                else:
+                    bonus += ewcfg.festivity_othr_bonus
+            # Phoebus isn't so sure about anything else
+            else:
+                festivity_value -= ewcfg.festivity_generic_penality
+        
+            # Generic bonus
+            if item.item_props.get("item_message"):
+                bonus += ewcfg.festivity_scrawl_bonus
+
+            festivity_value += bonus
+
+            if festivity_value < 0: festivity_value = 1
 
             bknd_item.item_create(
                 id_user=cmd.message.author.id,
@@ -2135,13 +2201,18 @@ async def wrap(cmd):
                     'context': gift_address,
                     'acquisition': "{}".format(item_sought.get('id_item')),
                     # flag indicating if the gift has already been given once so as to not have people farming festivity through !giving
-                    'gifted': "false"
+                    'gifted': "false",
+                    'gift_value': festivity_value,
+                    'gifter_id': user_data.id_user,
+                    'gifter_server': user_data.id_server
                 }
             )
+
             bknd_item.give_item(id_item=item_sought.get('id_item'), id_user=str(cmd.message.author.id) + "gift", id_server=cmd.guild.id)
             bknd_item.item_delete(id_item=paper_item.id_item)
 
-            ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity, n=ewcfg.festivity_on_gift_wrapping)
+
+            ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity, n=ewcfg.festivity_gift_wrap)
 
 
     else:
@@ -2855,6 +2926,44 @@ async def verify_cache(cmd):
             ewutils.logMsg("Item {}'s name failed flattening. Data: \n{}".format(item_data.get("id_item"), item_data))
 
     return
+
+
+"""
+    Admin only command to force the bot to double check for a member
+"""
+async def user_search(cmd):
+    # Only allow admins to use this
+    if not cmd.message.author.guild_permissions.administrator:
+        return await cmd_utils.fake_failed_command(cmd)
+
+    # Set response for incorrect usage
+    response = fe_utils.formatMessage(cmd.message.author, "Incorrect Usage. Please try `{cm} <user snowflake>` or `{cm} <user mention>`.".format(cm=cmd.tokens[0]))
+
+    # Ensure correct terms are sent
+    if len(cmd.mentions) != 1 and len(cmd.tokens) != 2:
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+    # Parse search terms
+    if len(cmd.mentions) == 1:
+        target_id = cmd.mentions[0].id
+    else:
+        # Convert id without mention to integer, tell correct usage if incorrect
+        try:
+            target_id = int(cmd.tokens[1])
+        except ValueError:
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+    # Actually commit the search
+    found = await fe_utils.get_member(cmd.guild, target_id)
+
+    # Create and send response based on what was returned
+    if found is None:
+        response = "Failed to find user with id **{}**.".format(target_id)
+    else:
+        response = "Found user **{}** from id **{}**.".format(found.display_name, target_id)
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def cockdraw(cmd):
     user_data = EwUser(member=cmd.message.author)
