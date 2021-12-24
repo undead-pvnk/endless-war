@@ -2092,7 +2092,6 @@ async def wrap(cmd):
             response = "It's a nice gesture, but trying to gift someone a Soulbound item is going a bit too far, don't you think?"
         # Check if the item has been gifted before
         elif item.item_props.get('gifted') == "true":
-            # print("I am going to kill myself")
             response = "Alas, regifting is considered a grave sin from Phoebus themselves. Enjoy your gift, or else. {}".format(ewcfg.emote_slimeheart)
         elif not bknd_item.check_inv_capacity(user_data=user_data, item_type=ewcfg.it_item):
             response = ewcfg.str_generic_inv_limit.format(ewcfg.it_item)
