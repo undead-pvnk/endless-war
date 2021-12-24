@@ -3,6 +3,7 @@ import shlex
 
 from ew.static import cfg as ewcfg
 from ew.utils import frontend as fe_utils
+from ew.utils import stats as ewstats
 
 def payout(winnings, bet, user_data, currency_used):
     response = ""
@@ -20,8 +21,9 @@ def payout(winnings, bet, user_data, currency_used):
             # Gangsters and ghosts are bad at slimernalia gambling
             if user_data.life_state == ewcfg.life_state_juvenile:
                 lifestate_mod = 1
-            
-            user_data.festivity += (calc_payout_festivity(winnings) * lifestate_mod)
+
+            ewstats.change_stat(id_server=user_data.id_server, id_user=user_data.id_user, metric=ewcfg.stat_festivity, n=(calc_payout_festivity(winnings) * lifestate_mod))
+
 
     user_data.persist()
     # print("Paid out a value of {} to {}.".format(winnings, user_data.id_user))
@@ -50,6 +52,10 @@ async def collect_bet(cmd, resp, value, user_data, currency_used):
         if user_data.life_state == ewcfg.life_state_corpse:
             return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
 
+        if user_data.poi != ewcfg.poi_id_thecasino:
+            response = "You try to shove the slime through your phone into the casino, but it just bounces off the screen. Better use a digital currency. Or your soul."
+            return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
+
         if value == -1:
             value = user_data.slimes
 
@@ -59,8 +65,8 @@ async def collect_bet(cmd, resp, value, user_data, currency_used):
 
         # Phoebus likes big bets and he cannot lie
         if ewcfg.slimernalia_active and (value > ewcfg.phoebus_bet_floor):
-            user_data.festivity += value / 10000
-        
+            ewstats.change_stat(id_server=user_data.id_server, id_user=user_data.id_user, metric=ewcfg.stat_festivity, n=value / 10000)
+
         # subtract costs
         user_data.change_slimes(n=-value, source=ewcfg.source_casino)
     # print("Collected bet of {} from {}.".format(value, user_data.id_user))

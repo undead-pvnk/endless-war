@@ -199,7 +199,7 @@ if ewcfg.slimernalia_active:
     # Slimernalia -- Moved unwrap to item cmds. Please move wrap upon reimplementation
     cmd_map[ewcfg.cmd_festivity]= cmdcmds.festivity
     cmd_map[ewcfg.cmd_wrap] = cmdcmds.wrap
-    cmd_map[ewcfg.cmd_yoslimernalia]= cmdcmds.yoslimernalia
+    #cmd_map[ewcfg.cmd_yoslimernalia]= cmdcmds.yoslimernalia
 
 
 dm_cmd_map = {

@@ -2662,7 +2662,7 @@ class EwUser(EwUserBase):
                 food_type = static_food.food_map.get(item_props.get("id_food"))
                 if food_type and food_type.acquisition == ewcfg.acquisition_smelting:
                     print("added bonus festivity")
-                    self.festivity += 100
+                    ewstats.change_stat(id_server=self.id_server, id_user=self.id_user, metric=ewcfg.stat_festivity, n=100)
 
             if int(item_props['inebriation']) > 0:
                 self.change_crime(n=ewcfg.cr_underage_drinking_points)
