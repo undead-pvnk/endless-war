@@ -496,7 +496,7 @@ def make_slimernalia_board(server, title):
 
         # add the top 5 to be returned
         for i in range(5):
-            print(f_data[i])
+            # print(f_data[i])
             entries.append(f_data[i])
 
     else:
@@ -522,7 +522,7 @@ def make_slimernalia_board(server, title):
         )
 
         for row in data:
-            print(row)
+            # print(row)
             entries.append(row)
 
     return format_board(entries=entries, title=title)
@@ -668,7 +668,7 @@ def board_entry(entry, entry_type, divide_by):
     if entry_type == ewcfg.entry_type_player:
         faction = ewutils.get_faction(life_state=entry[1], faction=entry[2])
         faction_symbol = ewutils.get_faction_symbol(faction, entry[2])
-        print("{}--{}".format(entry[3], divide_by))
+        # print("{}--{}".format(entry[3], divide_by))
         number = int(entry[3] / divide_by)
 
         if number > 999999999:

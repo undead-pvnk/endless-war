@@ -93,6 +93,7 @@ cmd_map = {
 
     # Admin/debug commands
     ewcfg.cmd_setslime: cmdcmds.set_slime,
+    ewcfg.cmd_setfestivity: cmdcmds.set_festivity,
     ewcfg.cmd_checkstats: cmdcmds.check_stats,
     ewcfg.cmd_makebp: cmdcmds.make_bp,
     ewcfg.cmd_ping_me: cmdcmds.ping_me,

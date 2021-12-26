@@ -2092,7 +2092,6 @@ async def wrap(cmd):
             response = "It's a nice gesture, but trying to gift someone a Soulbound item is going a bit too far, don't you think?"
         # Check if the item has been gifted before
         elif item.item_props.get('gifted') == "true":
-            print("I am going to kill myself")
             response = "Alas, regifting is considered a grave sin from Phoebus themselves. Enjoy your gift, or else. {}".format(ewcfg.emote_slimeheart)
         elif not bknd_item.check_inv_capacity(user_data=user_data, item_type=ewcfg.it_item):
             response = ewcfg.str_generic_inv_limit.format(ewcfg.it_item)
@@ -2165,7 +2164,9 @@ async def wrap(cmd):
 
             festivity_value += bonus
 
-            if festivity_value < 0: festivity_value = 1
+            # Gifts cannot be negative festivity, and gifts cannot go above a max
+            festivity_value = max(festivity_value, 1)
+            festivity_value = min(festivity_value, ewcfg.festivity_gift_max)
 
             bknd_item.item_create(
                 id_user=cmd.message.author.id,
@@ -2180,6 +2181,7 @@ async def wrap(cmd):
                     # flag indicating if the gift has already been given once so as to not have people farming festivity through !giving
                     'gifted': "false",
                     'gift_value': festivity_value,
+                    'giftee_id': recipient_data.id_user,
                     'gifter_id': user_data.id_user,
                     'gifter_server': user_data.id_server
                 }
@@ -3614,6 +3616,33 @@ async def set_slime(cmd):
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+# Debug - this is also a shameless copy of setslime, maybe look for a way to centralise these commands?
+async def set_festivity(cmd):
+    if not cmd.message.author.guild_permissions.administrator:
+        return
+
+    response = ""
+    target = None
+
+    if cmd.mentions_count != 1:
+        response = "Invalid use of command. Example: !setfestivity @player 100"
+    else:
+        target = cmd.mentions[0]
+        target_user_data = EwUser(id_user=target.id, id_server=cmd.guild.id)
+
+    if len(cmd.tokens) > 2 and not response:
+        new_festivity = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
+        if new_festivity == None or new_festivity < 0:
+            response = "Invalid number entered."
+        
+        target_user_data.festivity = new_festivity
+        target_user_data.persist()
+
+        response = "Set {}'s festivity to {}.".format(target.display_name, target_user_data.festivity)
+    else:
+        response = "Invalid use of command. Example: !setfestivity @player 100"
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 # Debug
 async def check_stats(cmd):
