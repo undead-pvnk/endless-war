@@ -498,7 +498,7 @@ async def relic_donate(id_item, cmd):
         user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
         user_data.change_slimes(n=payout)
         user_data.persist()
-        response = "The curator takes the {} and excitedly jaunts into his backroom, casually tossing {:,} slime your way. You wait for him to carefully examine it, write up a plaque, and get all the fanboying out of his system, before he comes back to set up the museum display. He also hands you a meticulously constructed replica for your trouble.\n\n While he isn't looking, you swap the copied relic with the original. This guy's such a goddamn idiot.\"".format(relic_obj.str_name, payout)
+        response = "The curator takes the {} and excitedly jaunts into his backroom, casually tossing {:,} slime your way. You wait for him to carefully examine it, write up a plaque, and get all the fanboying out of his system, before he comes back to set up the museum display. He also hands you a meticulously constructed replica for your trouble.\n\n While he isn't looking, you swap the copied relic with the original. This guy's such a goddamn idiot.".format(relic_obj.str_name, payout)
 
     return response
 

@@ -440,7 +440,7 @@ def canAttack(cmd):
         # Only way to do this right now is by using the gellphone
         response = "Alas, you still can't shoot people through your phone."
 
-    elif user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_corpse and ewcfg.slimernalia_active:
+    elif (user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_corpse) and ewcfg.slimernalia_active:
         if user_data.life_state == ewcfg.life_state_enlisted:
             response = "Not so fast, you scrooge! Only Juveniles can attack during Slimernalia."
         else:

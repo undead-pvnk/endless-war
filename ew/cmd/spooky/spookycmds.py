@@ -22,7 +22,7 @@ from ew.utils.item import EwItem
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
-
+from ew.cmd.debugr import debug13
 
 async def negapool(cmd):
     # Add persisted negative slime.
@@ -605,6 +605,8 @@ async def sacrifice(cmd):
 
 async def favor(cmd):
     user_data = EwUser(member=cmd.message.author)
-    favor = ewstats.get_stat(user=user_data, metric='sacrificerate')
-    response = "You have {} favor with the ancient eldritch gods.".format(favor)
-    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    await debug13(cmd, user_data)
+    if ewcfg.dh_active and ewcfg.dh_stage >= 2:
+        favor = ewstats.get_stat(user=user_data, metric='sacrificerate')
+        response = "You have {} favor with the ancient eldritch gods.".format(favor)
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

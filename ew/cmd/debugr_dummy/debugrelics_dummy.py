@@ -1,15 +1,15 @@
 
-cmd_debug12 = ''
+cmd_debug15 = ''
 
 
 async def debug11(cmd):
     pass
 
 
-async def debug12(cmd):
+async def debug15(cmd):
     pass
 
 
 relic_functions = {
-    "gucci":debug12
+    "gucci":debug15
 }

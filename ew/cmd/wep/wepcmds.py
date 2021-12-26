@@ -19,6 +19,12 @@ from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils import stats as ewstats
+try:
+    from ew.utils.rutils import debug16
+    from ew.utils.rutils import debug17
+except:
+    from ew.utils.rutils_dummy import debug16
+    from ew.utils.rutils import debug17
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
@@ -259,6 +265,7 @@ async def attack(cmd):
 
                 # Stat Updates
                 start = time.perf_counter()
+                debug16(attacker_weapon_item, attacker, target)
                 ewstats.increment_stat(user=attacker, metric=ewcfg.stat_kills)
                 ewstats.track_maximum(user=attacker, metric=ewcfg.stat_biggest_kill, value=target.totaldamage + target.slimes)
                 ewstats.increment_stat(user=attacker, metric=attacker_weapon.stat)
@@ -268,6 +275,7 @@ async def attack(cmd):
                     ewstats.increment_stat(user=attacker, metric=ewcfg.stat_lifetime_takedowns)
                 if target.life_state == ewcfg.life_state_shambler:
                     ewstats.increment_stat(user=attacker, metric=ewcfg.stat_shamblers_killed)
+
                 end = time.perf_counter()
                 print("{} seconds to run attack ln 252 stat updates".format(end-start))
             else:
@@ -285,7 +293,7 @@ async def attack(cmd):
         if attacker_weapon.id_weapon == ewcfg.weapon_id_slimeoidwhistle:
             if attacker_slimeoid.life_state == ewcfg.slimeoid_state_none:
                 slimeoid_name = cmd.message.author.display_name
-                slimeoid_kill = 'goes full child gorilla and tears their victim to hideous chunks, before wailing a ferocious battle cry.'
+                slimeoid_kill = 'goes full child gorilla and tears their victim to hideous chunks, before wailing a ferocious battle cry!'
                 slimeoid_crit = 'a full speed donkey kick'
                 slimeoid_dmg = 'knocked upside the head'
             else:
@@ -301,6 +309,9 @@ async def attack(cmd):
         if ewcfg.weapon_class_captcha in attacker_weapon.classes:
             new_cap += "\nNew security code: **{}**".format(ewutils.text_to_regional_indicator(attacker_weapon_item.item_props.get("captcha")))
 
+        bonus1 = ""
+        bonus1 = debug17(attacker_weapon_item)
+
         if target_killed:
             # Flavortext for fatal blows only
             hit_msg = "\n\n{}".format(attacker_weapon.str_kill.format(
@@ -308,7 +319,8 @@ async def attack(cmd):
                 name_target=target_member.display_name,
                 emote_skull=ewcfg.emote_slimeskull,
                 slimeoid_name=slimeoid_name,
-                slimeoid_kill=slimeoid_kill
+                slimeoid_kill=slimeoid_kill,
+                bonus1 = bonus1
             ))
 
             if ewcfg.slimernalia_active and attacker.life_state == ewcfg.life_state_juvenile:
@@ -336,6 +348,8 @@ async def attack(cmd):
                 foreskin = True
             else:
                 foreskin = False
+
+
 
             # Lets throw a little scalp and/or foreskin creation in here
             # Lets throw a little scalp creation in here
@@ -413,7 +427,8 @@ async def attack(cmd):
                 name_target=target_member.display_name,
                 hitzone=randombodypart,
                 slimeoid_name=slimeoid_name,
-                slimeoid_dmg=slimeoid_dmg
+                slimeoid_dmg=slimeoid_dmg,
+                bonus1 = bonus1
             )
 
             if ctn.crit:
@@ -422,7 +437,8 @@ async def attack(cmd):
                     name_target=target_member.display_name,
                     hitzone=randombodypart,
                     slimeoid_name=slimeoid_name,
-                    slimeoid_crit=slimeoid_crit
+                    slimeoid_crit=slimeoid_crit,
+                    bonus1 = bonus1
                 )
 
             hit_msg += " {target_name} loses {damage:,} slime!".format(target_name=target_member.display_name, damage=ctn.slimes_damage)
@@ -432,7 +448,8 @@ async def attack(cmd):
             hit_msg = attacker_weapon.str_miss.format(
                 name_player=attacker_member.display_name,
                 name_target=target_member.display_name,
-                slimeoid_name=slimeoid_name
+                slimeoid_name=slimeoid_name,
+                bonus1 = bonus1
             )
 
         """ Final Operations """
