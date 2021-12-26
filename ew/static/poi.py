@@ -3829,45 +3829,6 @@ transport_lines = [
         }
 
     ),
-    # EwTransportLine( # white subway line from downtown to juvies row
-    #     id_line = ewcfg.transport_line_subway_white_eastbound,
-    #     alias = [
-    #         "whiteeastline",
-    #         "whiteeast",
-    #         "eastwhite",
-    #         "whitetojuviesrow",
-    #         "whitetojuvies",
-    #         "whitetojr"
-    #     ],
-    #     first_stop = ewcfg.poi_id_underworld_subway_station,
-    #     last_stop = ewcfg.poi_id_jr_subway_station,
-    #     next_line = ewcfg.transport_line_subway_white_westbound,
-    #     str_name = "The white subway line towards Juvie's Row",
-    #     schedule ={
-    #         ewcfg.poi_id_underworld_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_dt_subway_station],
-    #         ewcfg.poi_id_dt_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_rr_subway_station],
-    #         ewcfg.poi_id_rr_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_jr_subway_station]
-    #     }
-    # ),
-    # EwTransportLine( # white subway line from juvies row to downtown
-    #     id_line = ewcfg.transport_line_subway_white_westbound,
-    #     alias = [
-    #         "whitewestline",
-    #         "whitewest",
-    #         "westwhite",
-    #         "whitetounderworld",
-    #         "whitetouw"
-    #     ],
-    #     first_stop = ewcfg.poi_id_jr_subway_station,
-    #     last_stop = ewcfg.poi_id_underworld_subway_station,
-    #     next_line = ewcfg.transport_line_subway_white_eastbound,
-    #     str_name = "The white subway line towards The Underworld",
-    #     schedule ={
-    #         ewcfg.poi_id_jr_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_rr_subway_station],
-    #         ewcfg.poi_id_rr_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_dt_subway_station],
-    #         ewcfg.poi_id_dt_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_underworld_subway_station],
-    #     }
-    # ),
     EwTransportLine(  # blimp line from dreadford to assault flats beach
         id_line=ewcfg.transport_line_blimp_df_to_afb,
         alias=[
@@ -3921,6 +3882,48 @@ transport_lines = [
 
     ),
 ]
+
+if ewcfg.dh_active:
+    transport_lines.append(EwTransportLine( # white subway line from downtown to juvies row
+             id_line = ewcfg.transport_line_subway_white_eastbound,
+             alias = [
+                 "whiteeastline",
+                 "whiteeast",
+                 "eastwhite",
+                 "whitetojuviesrow",
+                 "whitetojuvies",
+                 "whitetojr"
+             ],
+             first_stop = ewcfg.poi_id_underworld_subway_station,
+             last_stop = ewcfg.poi_id_jr_subway_station,
+             next_line = ewcfg.transport_line_subway_white_westbound,
+             str_name = "The white subway line towards Juvie's Row",
+             schedule ={
+                 ewcfg.poi_id_underworld_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_dt_subway_station],
+                 ewcfg.poi_id_dt_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_rr_subway_station],
+                 ewcfg.poi_id_rr_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_jr_subway_station]
+             }
+         ))
+    transport_lines.append(EwTransportLine( # white subway line from juvies row to downtown
+         id_line = ewcfg.transport_line_subway_white_westbound,
+         alias = [
+             "whitewestline",
+             "whitewest",
+             "westwhite",
+             "whitetounderworld",
+             "whitetouw"
+         ],
+         first_stop = ewcfg.poi_id_jr_subway_station,
+         last_stop = ewcfg.poi_id_underworld_subway_station,
+         next_line = ewcfg.transport_line_subway_white_eastbound,
+         str_name = "The white subway line towards The Underworld",
+         schedule ={
+             ewcfg.poi_id_jr_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_rr_subway_station],
+             ewcfg.poi_id_rr_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_dt_subway_station],
+             ewcfg.poi_id_dt_subway_station : [ewcfg.time_movesubway, ewcfg.poi_id_underworld_subway_station],
+         }
+     ))
+
 
 id_to_transport_line = {}
 

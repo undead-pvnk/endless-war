@@ -5,6 +5,6 @@ cmd_debug11 = 'fellate' #replaced from the real command, lol
 cmd_map = {
 
 cmd_debug11:debug11,
-cmd_debug15 : debug15
+#cmd_debug15 : debug15
 
 }

@@ -716,15 +716,17 @@ def get_most_festive(server):
     item_cache = bknd_core.get_cache(obj_type = "EwItem")
     if item_cache is not False:
         # get a list of [id, festivitysum] for all users in server
-        data = bknd_core.execute_sql_query("SELECT {id_user}, FLOOR({festivity}) + FLOOR({festivity_from_slimecoin}) FROM users WHERE {id_server} = %s AND (FLOOR({festivity}) + FLOOR({festivity_from_slimecoin})) >= 1".format(
+        data = bknd_core.execute_sql_query("SELECT {id_user}, FLOOR({value}) FROM stats WHERE {id_server} = %s AND FLOOR({value}) >= 1 AND {metric} = %s".format(
             id_user = ewcfg.col_id_user,
+            value = ewcfg.col_value,
             id_server = ewcfg.col_id_server,
-
-            festivity = ewcfg.col_festivity,
             festivity_from_slimecoin = ewcfg.col_festivity_from_slimecoin,
+            metric = ewcfg.col_stat_metric
         ), (
-            server.id,
+        server.id,
+        'festivity'
         ))
+
         dat = list(data)
         f_data = []
 
@@ -757,9 +759,9 @@ def get_most_festive(server):
 
 
     data = bknd_core.execute_sql_query(
-    "SELECT users.{id_user}, FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) as total_festivity FROM users "\
-    "LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} "\
-    "WHERE users.{id_server} = %s ORDER BY total_festivity DESC LIMIT 1".format(
+    "SELECT users.{id_user}, FLOOR({value}) as total_festivity FROM stats "\
+    "LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on stats.{id_user} = f.{id_user} AND stats.{id_server} = f.{id_server} "\
+    "WHERE users.{id_server} = %s AND {metric} = %s ORDER BY total_festivity DESC LIMIT 1".format(
         id_user = ewcfg.col_id_user,
         id_server = ewcfg.col_id_server,
         festivity = ewcfg.col_festivity,
@@ -767,6 +769,7 @@ def get_most_festive(server):
         name = ewcfg.col_name,
         value = ewcfg.col_value,
         id_item = ewcfg.col_id_item,
+        metric = ewcfg.col_stat_metric
     ),(
         "id_furniture",
         ewcfg.item_id_sigillaria,

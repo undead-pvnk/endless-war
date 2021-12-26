@@ -491,31 +491,31 @@ def make_slimernalia_board(server, title):
 
     else:
         return "" #whose idea was it to separate festivity into 3 different stats? idk, but fuck it, we're not running slimernalia without the cache.
-        data = bknd_core.execute_sql_query(
-            "SELECT {display_name}, {state}, {faction}, FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) as total_festivity FROM users " \
-            "LEFT JOIN (SELECT id_user, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}) f on users.{id_user} = f.{id_user}, players " \
-            "WHERE users.{id_server} = %s AND users.{id_user} = players.{id_user} ORDER BY total_festivity DESC LIMIT 5".format(
-                id_user=ewcfg.col_id_user,
-                id_server=ewcfg.col_id_server,
-                id_item=ewcfg.col_id_item,
-                festivity=ewcfg.col_festivity,
-                festivity_from_slimecoin=ewcfg.col_festivity_from_slimecoin,
-                name=ewcfg.col_name,
-                display_name=ewcfg.col_display_name,
-                value=ewcfg.col_value,
-                state=ewcfg.col_life_state,
-                faction=ewcfg.col_faction
-            ), (
-                "id_furniture",
-                ewcfg.item_id_sigillaria,
-                server
-            )
-        )
+        #data = bknd_core.execute_sql_query(
+        #    "SELECT {display_name}, {state}, {faction}, FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) as total_festivity FROM users " \
+        #    "LEFT JOIN (SELECT id_user, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}) f on users.{id_user} = f.{id_user}, players " \
+        #    "WHERE users.{id_server} = %s AND users.{id_user} = players.{id_user} ORDER BY total_festivity DESC LIMIT 5".format(
+        #        id_user=ewcfg.col_id_user,
+        #        id_server=ewcfg.col_id_server,
+        #        id_item=ewcfg.col_id_item,
+        #        festivity=ewcfg.col_festivity,
+        #        festivity_from_slimecoin=ewcfg.col_festivity_from_slimecoin,
+        #        name=ewcfg.col_name,
+        #        display_name=ewcfg.col_display_name,
+        #        value=ewcfg.col_value,
+        #        state=ewcfg.col_life_state,
+        #        faction=ewcfg.col_faction
+        #    ), (
+        #        "id_furniture",
+        #        ewcfg.item_id_sigillaria,
+        #        server
+        #    )
+        #)
 
-        for row in data:
-            entries.append(row)
+        #for row in data:
+        #    entries.append(row)
 
-    return format_board(entries=entries, title=title)
+    #return format_board(entries=entries, title=title)
 
 
 # SWILLDERMUK

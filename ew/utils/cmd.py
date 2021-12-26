@@ -14,7 +14,6 @@ from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import stats as ewstats
 from ew.utils.combat import EwUser
-from ew.cmd.cmds.cmdsutils import get_crime_level
 from ew.utils.slimeoid import EwSlimeoid
 
 """ wrapper for discord members """  # Doesn't really sound like a cmd related class
@@ -292,3 +291,20 @@ async def fake_failed_command(cmd):
         pass
     except:
         pass
+
+
+def get_crime_level(num, forYou = 1):
+    if forYou == 0:
+        pronounThey = 'they'
+        pronounThem = 'them'
+        pronounTheir = 'their'
+    else:
+        pronounThey = 'you'
+        pronounThem = 'you'
+        pronounTheir = 'your'
+
+    for level in ewcfg.crime_status.keys():
+        if num <= level:
+            response = ewcfg.crime_status.get(level).format(they=pronounThey, them=pronounThem, their=pronounTheir)
+            return response.capitalize()
+    return ewcfg.crime_status.get(1000000)

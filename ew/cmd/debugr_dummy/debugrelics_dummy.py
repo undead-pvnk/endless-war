@@ -11,5 +11,5 @@ async def debug15(cmd):
 
 
 relic_functions = {
-    "gucci":debug15
+    #"gucci":debug15
 }
