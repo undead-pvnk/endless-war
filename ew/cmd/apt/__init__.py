@@ -21,6 +21,7 @@ cmd_map = {
 
     # !apartment
     ewcfg.cmd_apartment: aptcmds.apartment,
+    ewcfg.cmd_apartment_alt: aptcmds.apartment,
 
     # !udgrade
     ewcfg.cmd_upgrade: aptcmds.upgrade,
@@ -141,6 +142,7 @@ apt_dm_cmd_map = {
 
     # !apartment
     ewcfg.cmd_apartment: aptcmds.apartment,
+    ewcfg.cmd_apartment_alt: aptcmds.apartment,
 
     # !setalarm
     ewcfg.cmd_setalarm: aptcmds.set_alarm,

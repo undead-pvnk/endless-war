@@ -1316,6 +1316,7 @@ cmd_undecorate = cmd_prefix + 'undecorate'
 cmd_freeze = cmd_prefix + 'freeze'
 cmd_unfreeze = cmd_prefix + 'unfreeze'
 cmd_apartment = cmd_prefix + 'apartment'
+cmd_apartment_alt = cmd_prefix + 'apt'
 cmd_aptname = cmd_prefix + 'aptname'
 cmd_aptdesc = cmd_prefix + 'aptdesc'
 cmd_upgrade = cmd_prefix + 'aptupgrade'  # do we need the apt at the beginning?
