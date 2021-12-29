@@ -131,64 +131,27 @@ async def depart(cmd = None, isGoto = False, movecurrent = None):
 
 async def consult(cmd):
     target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
-    # to check the descriptions, look for consult_responses in ewcfg
 
-    if target_name == None or len(target_name) == 0:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "What region would you like to look at?"))
-
-    user_data = EwUser(member=cmd.message.author)
     response = ""
 
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    print(cmd.message.channel.name)
+    print(ewcfg.poi_id_realestate)
 
-    if user_data.poi != ewcfg.poi_id_realestate:
+    if cmd.message.channel.name != ewcfg.channel_realestateagency:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You have to !consult at the Real Estate Agency in Old New Yonkers."))
 
-    poi = poi_static.id_to_poi.get(user_data.poi)
-    district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-    if district_data.is_degraded():
-        response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    if not target_name:
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "What region would you like to look at?"))
 
     poi = poi_static.id_to_poi.get(target_name)
 
-    if poi == None:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "That place doesn't exist. The stupidity of the question drives the realtor to down another bottle."))
-
-    elif poi.id_poi in poi_static.transports:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "As much as the realtor would like to charge you for being homeless, you can't pay rent for sleeping on public transport."))
-
-    elif poi.id_poi == ewcfg.poi_id_rowdyroughhouse or poi.id_poi == ewcfg.poi_id_copkilltown or poi.id_poi == ewcfg.poi_id_juviesrow:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "\"We don't have apartments in such...urban places,\" your consultant mutters under his breath."))
-
-
-    elif poi.is_subzone:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You don't find it on the list of properties. Try something that isn't a subzone."))
-
-    elif poi.id_poi == ewcfg.poi_id_assaultflatsbeach or poi.id_poi == ewcfg.poi_id_dreadford:  # check for DT and other S districts separately, otherwise rank by class
-        multiplier = ewcfg.apartment_s_multiplier
-
-    elif poi.id_poi == ewcfg.poi_id_downtown:
-        multiplier = ewcfg.apartment_dt_multiplier
-
-    elif poi.property_class == ewcfg.property_class_c:
-        multiplier = 1
-
-    elif poi.property_class == ewcfg.property_class_b:
-        multiplier = ewcfg.apartment_b_multiplier
-
-    elif poi.property_class == ewcfg.property_class_a:
-        multiplier = ewcfg.apartment_a_multiplier
-
-    else:
-        response = "Not for sale."
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    if ewcfg.consult_responses[poi.id_poi]:
+    if poi and ewcfg.consult_responses.get(poi.id_poi):
+        multiplier = ewcfg.apartment_value_map.get(poi.property_class)
         response = "You ask the realtor what he thinks of {}.\n\n\"".format(poi.str_name) + ewcfg.consult_responses[poi.id_poi] + "\"\n\n"
         response += "The cost per month is {:,} SC. \n\n The down payment is four times that, {:,} SC.".format(multiplier * getPriceBase(cmd=cmd), multiplier * 4 * getPriceBase(cmd=cmd))
+    else:
+        response = "\"We don't have apartments in such... urban places,\" your consultant mutters under his breath."
+
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 

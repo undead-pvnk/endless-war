@@ -1409,6 +1409,13 @@ apartment_a_multiplier = 2000000
 apartment_dt_multiplier = 3000000000
 apartment_s_multiplier = 6000000000
 
+apartment_value_map = {
+    "c": 1,
+    "b": 1500,
+    "a": 2000000,
+    "s": 6000000000
+}
+
 soulprice = 500000000
 
 tv_set_slime = 5000000
