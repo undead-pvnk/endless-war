@@ -134,9 +134,6 @@ async def consult(cmd):
 
     response = ""
 
-    print(cmd.message.channel.name)
-    print(ewcfg.poi_id_realestate)
-
     if cmd.message.channel.name != ewcfg.channel_realestateagency:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You have to !consult at the Real Estate Agency in Old New Yonkers."))
 
