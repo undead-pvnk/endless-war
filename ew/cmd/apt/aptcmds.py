@@ -298,9 +298,8 @@ async def apartment(cmd):
 
 
 async def upgrade(cmd):
-    playermodel = EwPlayer(id_user=cmd.message.author.id)
-    usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
-    apt_model = EwApartment(id_server=playermodel.id_server, id_user=cmd.message.author.id)
+    usermodel = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
+    apt_model = EwApartment(id_server=cmd.guild.id, id_user=cmd.message.author.id)
 
     if usermodel.life_state == ewcfg.life_state_shambler:
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
@@ -323,20 +322,13 @@ async def upgrade(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     else:
-        poi = poi_static.id_to_poi.get(usermodel.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=usermodel.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         response = "Are you sure? The upgrade cost is {:,} SC, and rent goes up to {:,} SC per month. To you !accept the deal, or do you !refuse it?".format(apt_model.rent * 8, apt_model.rent * 2)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         accepted = False
 
         try:
-            message = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and
-                                                                                             message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
+            message = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
             if message != None:
                 if message.content.lower() == ewcfg.cmd_accept:
@@ -351,8 +343,8 @@ async def upgrade(cmd):
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         else:
-            usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
-            apt_model = EwApartment(id_server=playermodel.id_server, id_user=cmd.message.author.id)
+            usermodel = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
+            apt_model = EwApartment(id_server=cmd.guild.id, id_user=cmd.message.author.id)
 
             usermodel.change_slimecoin(n=apt_model.rent * -8, coinsource=ewcfg.coinsource_spending)
 
