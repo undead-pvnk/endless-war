@@ -63,83 +63,83 @@ async def event_tick_loop(id_server):
 async def event_tick(id_server):
     time_now = int(time.time())
     resp_cont = EwResponseContainer(id_server=id_server)
-    # try:
-    data = bknd_core.execute_sql_query(
-        "SELECT {id_event} FROM world_events WHERE {time_expir} <= %s AND {time_expir} > 0 AND id_server = %s".format(
-            id_event=ewcfg.col_id_event,
-            time_expir=ewcfg.col_time_expir,
-        ), (
-            time_now,
-            id_server,
-        ))
+    try:
+        data = bknd_core.execute_sql_query(
+            "SELECT {id_event} FROM world_events WHERE {time_expir} <= %s AND {time_expir} > 0 AND id_server = %s".format(
+                id_event=ewcfg.col_id_event,
+                time_expir=ewcfg.col_time_expir,
+            ), (
+                time_now,
+                id_server,
+            ))
 
-    for row in data:
-            # try:
-                event_data = EwWorldEvent(id_event=row[0])
-                event_def = poi_static.event_type_to_def.get(event_data.event_type)
+        for row in data:
+                try:
+                    event_data = EwWorldEvent(id_event=row[0])
+                    event_def = poi_static.event_type_to_def.get(event_data.event_type)
 
-                response = event_def.str_event_end if event_def else ""
-                if event_data.event_type == ewcfg.event_type_minecollapse:
-                    user_data = EwUser(id_user=event_data.event_props.get('id_user'), id_server=id_server)
-                    mutations = user_data.get_mutations()
-                    if user_data.poi == event_data.event_props.get('poi'):
+                    response = event_def.str_event_end if event_def else ""
+                    if event_data.event_type == ewcfg.event_type_minecollapse:
+                        user_data = EwUser(id_user=event_data.event_props.get('id_user'), id_server=id_server)
+                        mutations = user_data.get_mutations()
+                        if user_data.poi == event_data.event_props.get('poi'):
 
-                        player_data = EwPlayer(id_user=user_data.id_user)
-                        response = "*{}*: You have lost an arm and a leg in a mining accident. Tis but a scratch.".format(
-                            player_data.display_name)
-
-                        if random.randrange(4) == 0:
-                            response = "*{}*: Big John arrives just in time to save you from your mining accident!\nhttps://cdn.discordapp.com/attachments/431275470902788107/743629505876197416/mine2.jpg".format(
+                            player_data = EwPlayer(id_user=user_data.id_user)
+                            response = "*{}*: You have lost an arm and a leg in a mining accident. Tis but a scratch.".format(
                                 player_data.display_name)
-                        else:
 
-                            if ewcfg.mutation_id_lightminer in mutations:
-                                response = "*{}*: You instinctively jump out of the way of the collapsing shaft, not a scratch on you. Whew, really gets your blood pumping.".format(
+                            if random.randrange(4) == 0:
+                                response = "*{}*: Big John arrives just in time to save you from your mining accident!\nhttps://cdn.discordapp.com/attachments/431275470902788107/743629505876197416/mine2.jpg".format(
                                     player_data.display_name)
                             else:
-                                user_data.change_slimes(n=-(user_data.slimes * 0.5))
-                                user_data.persist()
 
-                elif event_data.event_type == ewcfg.event_type_alarmclock:
-                    clock_item = EwItem(event_data.event_props.get("clock_id"))
-                    print(clock_item.item_props)
-                    clock_item.item_props["furniture_look_desc"] = "There's an alarm clock that's stopped working."
-                    clock_item.item_props["furniture_desc"] = "The annoying sound this thing makes perfectly explains why the bazaar sells so many broken clocks. Or at least that's what it used to do before the shitty little batteries gave out. Could try setting it again?"
-                    clock_item.persist()
-                # check if any void connections have expired, if so pop it and create a new one
-                elif event_data.event_type == ewcfg.event_type_voidconnection:
-                    void_poi = poi_static.id_to_poi.get(ewcfg.poi_id_thevoid)
-                    void_poi.neighbors.pop(event_data.event_props.get('poi'), "")
-                    bknd_event.create_void_connection(id_server)
+                                if ewcfg.mutation_id_lightminer in mutations:
+                                    response = "*{}*: You instinctively jump out of the way of the collapsing shaft, not a scratch on you. Whew, really gets your blood pumping.".format(
+                                        player_data.display_name)
+                                else:
+                                    user_data.change_slimes(n=-(user_data.slimes * 0.5))
+                                    user_data.persist()
 
-                if len(response) > 0:
-                    poi = event_data.event_props.get('poi')
-                    channel = event_data.event_props.get('channel')
-                    if channel != None:
+                    elif event_data.event_type == ewcfg.event_type_alarmclock:
+                        clock_item = EwItem(event_data.event_props.get("clock_id"))
+                        print(clock_item.item_props)
+                        clock_item.item_props["furniture_look_desc"] = "There's an alarm clock that's stopped working."
+                        clock_item.item_props["furniture_desc"] = "The annoying sound this thing makes perfectly explains why the bazaar sells so many broken clocks. Or at least that's what it used to do before the shitty little batteries gave out. Could try setting it again?"
+                        clock_item.persist()
+                    # check if any void connections have expired, if so pop it and create a new one
+                    elif event_data.event_type == ewcfg.event_type_voidconnection:
+                        void_poi = poi_static.id_to_poi.get(ewcfg.poi_id_thevoid)
+                        void_poi.neighbors.pop(event_data.event_props.get('poi'), "")
+                        bknd_event.create_void_connection(id_server)
 
-                        # in shambaquarium the event happens in the user's DMs
-                        if event_data.event_type == ewcfg.event_type_shambaquarium:
-                            client = ewutils.get_client()
-                            channel = client.get_guild(id_server).get_member(int(channel))
+                    if len(response) > 0:
+                        poi = event_data.event_props.get('poi')
+                        channel = event_data.event_props.get('channel')
+                        if channel != None:
 
-                        resp_cont.add_channel_response(channel, response)
-                    elif poi != None:
-                        poi_def = poi_static.id_to_poi.get(poi)
-                        if poi_def != None:
-                            resp_cont.add_channel_response(poi_def.channel, response)
+                            # in shambaquarium the event happens in the user's DMs
+                            if event_data.event_type == ewcfg.event_type_shambaquarium:
+                                client = ewutils.get_client()
+                                channel = client.get_guild(id_server).get_member(int(channel))
 
-                    else:
-                        for ch in ewcfg.hideout_channels:
-                            resp_cont.add_channel_response(ch, response)
+                            resp_cont.add_channel_response(channel, response)
+                        elif poi != None:
+                            poi_def = poi_static.id_to_poi.get(poi)
+                            if poi_def != None:
+                                resp_cont.add_channel_response(poi_def.channel, response)
 
-                bknd_event.delete_world_event(event_data.id_event)
-            # except:
-            #     ewutils.logMsg("Error in event tick for server {}".format(id_server))
+                        else:
+                            for ch in ewcfg.hideout_channels:
+                                resp_cont.add_channel_response(ch, response)
 
-    await resp_cont.post()
+                    bknd_event.delete_world_event(event_data.id_event)
+                except:
+                    ewutils.logMsg("Error in event tick for server {}".format(id_server))
 
-    # except:
-    #     ewutils.logMsg("Error in event tick for server {}".format(id_server))
+        await resp_cont.post()
+
+    except:
+        ewutils.logMsg("Error in event tick for server {}".format(id_server))
 
 
 """ Decay slime totals for all users, with the exception of Kingpins"""
