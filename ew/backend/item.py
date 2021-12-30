@@ -1,6 +1,7 @@
 import time
 
 from . import core as bknd_core
+from . import worldevent as bknd_event
 from ..static import cfg as ewcfg
 from ..static import cosmetics
 from ..static import hue as hue_static

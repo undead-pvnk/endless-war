@@ -3,10 +3,12 @@ import random
 import time
 
 from ew.backend import item as bknd_item
+from ew.backend import worldevent as bknd_event
 from ew.backend.apt import EwApartment
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.player import EwPlayer
+from ew.backend.worldevent import EwWorldEvent
 from ew.static import cfg as ewcfg
 from ew.static import cosmetics
 from ew.static import food as static_food
@@ -955,15 +957,35 @@ async def set_alarm(cmd):
     time_set = ewutils.flattenTokenListToString(cmd.tokens[1:2])
 
     if ((not time_set[:-2].isnumeric()) or not (time_set[-2:] == "am" or time_set[-2:] == "pm")) and time_set != "off":
-        response = "You're setting it wrong, dumbass. See, I knew you were bad at this."
+        response = "You're setting it wrong, dumbass. See, I knew you were bad at this. Try ``!setalarm <time> <item>``"
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     item_sought = bknd_item.find_item(item_search=item_search, id_user=user_data.id_user, id_server=player_data.id_server)
     if item_sought:
         item = EwItem(id_item=item_sought.get('id_item'))
         if "alarmclock" == item.item_props.get('id_furniture'):
-            item.item_props['furniture_name'] = "alarm clock set to {}".format(time_set)
+            response = ""
+            # Check if this alarm clock already has an event attached, and delete it
+            events = bknd_event.get_world_events(cmd.guild.id, True)
+            for we_id, we_type in events.items():
+                if we_type == ewcfg.event_type_alarmclock:
+                    we = EwWorldEvent(we_id)
+                    if str(we.event_props.get("clock_id")) == str(item.id_item):
+                        bknd_event.delete_world_event(we_id)
+            props = {
+                "time": time_set,
+                "clock_id": item.id_item
+            }
+            expiry = (7 * 24 * 60 * 60)
+            clock_def = static_items.furniture_map.get("alarmclock")
+            # Setting an alarm clock lasts for an IRL week, then the batteries give out
+            bknd_event.create_world_event(cmd.guild.id, ewcfg.event_type_alarmclock, time.time(), time.time() + expiry, props)
+            item.item_props["furniture_desc"] = clock_def.str_desc + " It's set to {}.".format(time_set)
+            if item.item_props["furniture_look_desc"] != clock_def.furniture_look_desc:
+                response = "You notice that this alarm clock isn't working. You take out the two shitty batteries and shake them a bit before putting them back in. Good as new!\n\n"
+                item.item_props["furniture_look_desc"] = clock_def.furniture_look_desc
             item.persist()
-            response = "You set the clock to {}.".format(time_set)
+            
+            response += "You set the clock to {}.".format(time_set)
         else:
             response = "That's not an alarm clock. Be less delusional next time."
     else:

@@ -3222,7 +3222,7 @@ furniture_list = [
     ),
     EwFurniture(
         id_furniture = "alarmclock",
-        str_name = "alarm clock set to OFF",
+        str_name = "alarm clock",
         str_desc = "The annoying sound this thing makes perfectly explains why the bazaar sells so many broken clocks.",
         rarity = "Plebeian",
         acquisition = "bartering",

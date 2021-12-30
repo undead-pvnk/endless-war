@@ -34,6 +34,7 @@ from ..backend.dungeons import EwGamestate
 from ..backend.status import EwEnemyStatusEffect
 from ..backend.status import EwStatusEffect
 from ..backend.worldevent import EwWorldEvent
+from ..backend.item import EwItem
 from ..static import cfg as ewcfg
 from ..static import items as static_items
 from ..static import poi as poi_static
@@ -62,18 +63,18 @@ async def event_tick_loop(id_server):
 async def event_tick(id_server):
     time_now = int(time.time())
     resp_cont = EwResponseContainer(id_server=id_server)
-    try:
-        data = bknd_core.execute_sql_query(
-            "SELECT {id_event} FROM world_events WHERE {time_expir} <= %s AND {time_expir} > 0 AND id_server = %s".format(
-                id_event=ewcfg.col_id_event,
-                time_expir=ewcfg.col_time_expir,
-            ), (
-                time_now,
-                id_server,
-            ))
+    # try:
+    data = bknd_core.execute_sql_query(
+        "SELECT {id_event} FROM world_events WHERE {time_expir} <= %s AND {time_expir} > 0 AND id_server = %s".format(
+            id_event=ewcfg.col_id_event,
+            time_expir=ewcfg.col_time_expir,
+        ), (
+            time_now,
+            id_server,
+        ))
 
-        for row in data:
-            try:
+    for row in data:
+            # try:
                 event_data = EwWorldEvent(id_event=row[0])
                 event_def = poi_static.event_type_to_def.get(event_data.event_type)
 
@@ -99,7 +100,12 @@ async def event_tick(id_server):
                                 user_data.change_slimes(n=-(user_data.slimes * 0.5))
                                 user_data.persist()
 
-
+                elif event_data.event_type == ewcfg.event_type_alarmclock:
+                    clock_item = EwItem(event_data.event_props.get("clock_id"))
+                    print(clock_item.item_props)
+                    clock_item.item_props["furniture_look_desc"] = "There's an alarm clock that's stopped working."
+                    clock_item.item_props["furniture_desc"] = "The annoying sound this thing makes perfectly explains why the bazaar sells so many broken clocks. Or at least that's what it used to do before the shitty little batteries gave out. Could try setting it again?"
+                    clock_item.persist()
                 # check if any void connections have expired, if so pop it and create a new one
                 elif event_data.event_type == ewcfg.event_type_voidconnection:
                     void_poi = poi_static.id_to_poi.get(ewcfg.poi_id_thevoid)
@@ -127,13 +133,13 @@ async def event_tick(id_server):
                             resp_cont.add_channel_response(ch, response)
 
                 bknd_event.delete_world_event(event_data.id_event)
-            except:
-                ewutils.logMsg("Error in event tick for server {}".format(id_server))
+            # except:
+            #     ewutils.logMsg("Error in event tick for server {}".format(id_server))
 
-        await resp_cont.post()
+    await resp_cont.post()
 
-    except:
-        ewutils.logMsg("Error in event tick for server {}".format(id_server))
+    # except:
+    #     ewutils.logMsg("Error in event tick for server {}".format(id_server))
 
 
 """ Decay slime totals for all users, with the exception of Kingpins"""
@@ -1338,7 +1344,8 @@ async def clock_tick_loop(id_server = None, force_active = False):
                     if not ewutils.check_fursuit_active(market_data) and not ewcfg.dh_active: # I don't see why costumes should be dedorned automatically so, like, just removing this. It's dumb.
                          await cosmetic_utils.dedorn_all_costumes()
 
-                    await apt_utils.setOffAlarms(id_server)
+                    ewutils.logMsg('Setting off alarms...')
+                    await apt_utils.handle_hourly_events(id_server)
 
                     # Decay slime totals
                     ewutils.logMsg("Decaying slimes...")
@@ -1361,8 +1368,10 @@ async def clock_tick_loop(id_server = None, force_active = False):
 
                     ewutils.logMsg("Handling capture points...")
                     await give_kingpins_slime_and_decay_capture_points(id_server)
+                    
                     ewutils.logMsg("Sending gangbase messages...")
                     await move_utils.send_gangbase_messages(id_server, market_data.clock)
+                    
                     ewutils.logMsg("Kicking AFK players...")
                     await move_utils.kick(id_server)
 
@@ -1372,8 +1381,10 @@ async def clock_tick_loop(id_server = None, force_active = False):
 
                     if market_data.clock == 6 or force_active:
                         response = ' The SlimeCorp Stock Exchange is now open for business.'
+                        
                         await fe_utils.send_message(client, sex_channel, response)
                         ewutils.logMsg("Started bazaar refresh...")
+                        
                         await market_utils.refresh_bazaar(id_server)
                         ewutils.logMsg("...finished bazaar refresh.")
                         

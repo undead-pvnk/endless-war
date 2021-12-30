@@ -5486,6 +5486,13 @@ event_type_voidconnection = "voidconnection"
 event_type_shambaquarium = "shambaquarium"
 event_type_marriageceremony = "marriageceremony"
 
+event_type_brickshit = "brickshit"
+event_type_alarmclock = "alarmclock"
+
+# Events that need to be checked up on every time the market updates
+# All hourly_events MUST include a "time" event_prop!
+hourly_events = [event_type_brickshit, event_type_alarmclock]
+
 halloween_tricks_tricker = [
     "You open the door and give {} a hearty '!SPOOK'. They lose {} slime!",
     "You slam open the door and give {} a knuckle sandwich. They lose {} slime!",
