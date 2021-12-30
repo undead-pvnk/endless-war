@@ -3,7 +3,7 @@
 
 
 
-version = "v4.013c Slimernalia🎄🎁"
+version = "v4.013d Slimernalia Housing Crisis🎄🎁"
 #413 holy shit like the homestuck 😱
 
 dir_msgqueue = 'msgqueue'
