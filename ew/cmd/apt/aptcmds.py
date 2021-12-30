@@ -147,7 +147,7 @@ async def consult(cmd):
     if poi and ewcfg.consult_responses.get(poi.id_poi):
         multiplier = ewcfg.apartment_class_map.get(poi.property_class)
         response = "You ask the realtor what he thinks of {}.\n\n\"".format(poi.str_name) + ewcfg.consult_responses[poi.id_poi] + "\"\n\n"
-        response += "The cost per month is {:,} Slimecoin. \n\n The down payment is four times that, {:,} Slimecoin.".format(multiplier * getPriceBase(cmd=cmd), multiplier * 4 * getPriceBase(cmd=cmd))
+        response += "The cost per week is {:,} Slimecoin. \n\n The down payment is four times that, {:,} Slimecoin.".format(multiplier * getPriceBase(cmd=cmd), multiplier * 4 * getPriceBase(cmd=cmd))
     else:
         response = "\"We don't have apartments in such... urban places,\" your consultant mutters under his breath."
 
@@ -179,7 +179,7 @@ async def signlease(cmd):
         response = "\n\"Fuck off, deadbeat. Come back when you've got some real dough. You can't even afford the down payment of {:,} Slimecoin! Can't believe some real smartass cocksucker would walk into **MY REAL ESTATE AGENCY** with only {:,} Slimecoin and expect a place in {}! Un-fucking-believable!\"".format(base_cost * 4, user_data.slimecoin, target_name)
         return await fe_utils.send_response(response, cmd)
 
-    response = "The receptionist slides you a contract. It reads:\n\n THE TENANT, {},  WILL HERETO SUBMIT {:,} SLIMECOIN EACH MONTH UNTIL THEY INEVITABLY HIT ROCK BOTTOM. THEY MUST ALSO PROVIDE A DOWN PAYMENT OF {:,} TO INSURE THE PROPERTY FROM THEIR GREASY JUVENILE HANDS. LANDLORD(S) ARE NOT RESPONSIBLE FOR ANY INJURY OR PROPERTY DAMAGE THAT MAY OCCUR ON THE PREMISES. THEY'RE ALSO NOT RESPONSIBLE IN GENERAL. YOU ARE. BITCH. \n\nDo you !sign the document, or do you !rip it into a million pieces?".format(
+    response = "The receptionist slides you a contract. It reads:\n\n THE TENANT, {},  WILL HERETO SUBMIT {:,} SLIMECOIN EACH WEEK UNTIL THEY INEVITABLY HIT ROCK BOTTOM. THEY MUST ALSO PROVIDE A DOWN PAYMENT OF {:,} TO INSURE THE PROPERTY FROM THEIR GREASY JUVENILE HANDS. LANDLORD(S) ARE NOT RESPONSIBLE FOR ANY INJURY OR PROPERTY DAMAGE THAT MAY OCCUR ON THE PREMISES. THEY'RE ALSO NOT RESPONSIBLE IN GENERAL. YOU ARE. BITCH. \n\nDo you !sign the document, or do you !rip it into a million pieces?".format(
         cmd.message.author.display_name, base_cost, base_cost * 4)
     
     await fe_utils.send_response(response, cmd)
@@ -233,7 +233,7 @@ async def signlease(cmd):
         user_apt.rent = base_cost
         user_apt.persist()
 
-        response = "You signed the lease for an apartment in {} for {:,} SlimeCoin a month.".format(lease_poi.str_name, base_cost)
+        response = "You signed the lease for an apartment in {} for {:,} SlimeCoin a week.".format(lease_poi.str_name, base_cost)
 
         if had_old_place:
             response += " The receptionist calls up a moving crew, who quickly move your stuff to your new place. "
@@ -264,7 +264,7 @@ async def apartment(cmd):
 
     else:
         poi = poi_static.id_to_poi.get(usermodel.apt_zone)
-        response = "Your apartment is in {}. This {} rank apartment costs {:,} SlimeCoin a month.".format(poi.str_name, apartmentmodel.apt_class.upper(), apartmentmodel.rent)
+        response = "Your apartment is in {}. This {} rank apartment costs {:,} SlimeCoin a week.".format(poi.str_name, apartmentmodel.apt_class.upper(), apartmentmodel.rent)
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
@@ -295,7 +295,7 @@ async def upgrade(cmd):
 
     else:
 
-        response = "Are you sure? The upgrade cost is {:,} SC, and rent goes up to {:,} SC per month. To you !accept the deal, or do you !refuse it?".format(apt_model.rent * 8, apt_model.rent * 2)
+        response = "Are you sure? The upgrade cost is {:,} SC, and rent goes up to {:,} SC per week. To you !accept the deal, or do you !refuse it?".format(apt_model.rent * 8, apt_model.rent * 2)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         accepted = False
 
@@ -836,7 +836,7 @@ async def add_key(cmd):
             response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-        response = "Adding a key will change your rent to {:,} SlimeCoin. It will cost {:,}, as a down payment. Do you !accept or !refuse?".format(int(apartment_data.rent * 1.5), apartment_data.rent)
+        response = "Adding a key will change your rent to {:,} SlimeCoin. It will cost {:,} Slimcoin, as a down payment. Do you !accept or !refuse?".format(int(apartment_data.rent * 1.5), apartment_data.rent)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         try:
             accepted = False
@@ -912,7 +912,7 @@ async def manual_changelocks(cmd):
             response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-        response = "Changing the locks will revert your rent back to before you added keys. It will cost {:,}, though. Do you !accept or !refuse?".format(apartment_data.rent / 2)
+        response = "Changing the locks will revert your rent back to before you added keys. It will cost {:,} Slimecoin, though. Do you !accept or !refuse?".format(apartment_data.rent / 2)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         try:
             accepted = False

@@ -1373,9 +1373,7 @@ async def clock_tick_loop(id_server = None, force_active = False):
                     await move_utils.send_gangbase_messages(id_server, market_data.clock)
                     
                     ewutils.logMsg("Kicking AFK players...")
-                    await move_utils.kick(id_server)
-
-                    ewutils.logMsg("Finished clock tick.")  
+                    await move_utils.kick(id_server)  
 
                     sex_channel = fe_utils.get_channel(server=server, channel_name=ewcfg.channel_stockexchange)
 
@@ -1392,17 +1390,19 @@ async def clock_tick_loop(id_server = None, force_active = False):
 
                         if ewcfg.slimernalia_active:
                             await fe_utils.update_slimernalia_kingpin(client, server)
+                    
+                    # Rent is paid every week
+                    if market_data.day % 7 == 0 or force_active:
+                        ewutils.logMsg("Started rent calc...")
+                        await pay_salary(id_server) # Did I rearrange these just so I wouldn't get kicked out of my apt? Don't be silly...
+                        await apt_utils.rent_time(id_server)
+                        ewutils.logMsg("...finished rent calc.")
 
-                        if market_data.clock % 8 == 0 or force_active:
-                            ewutils.logMsg("Started rent calc...")
-                            await apt_utils.rent_time(id_server)
-                            await pay_salary(id_server)
-                            ewutils.logMsg("...finished rent calc.")
-
-                    elif market_data.clock == 20:
+                    if market_data.clock == 20:
                         response = ' The SlimeCorp Stock Exchange has closed for the night.'
                         await fe_utils.send_message(client, sex_channel, response)
                   
+                ewutils.logMsg("Finished clock tick.")
                 await asyncio.sleep(60)
     except:
         ewutils.logMsg('An error occurred in the scheduled slime market update task. Fix that.')
