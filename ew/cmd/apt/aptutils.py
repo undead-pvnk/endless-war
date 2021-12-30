@@ -13,10 +13,6 @@ from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 
 
-# This is quite literally not used anywhere
-def check(str):
-    if str.content == ewcfg.cmd_sign or str.content == ewcfg.cmd_rip:
-        return True
 
 async def usekey(cmd, owner_user):
     user_data = EwUser(member=cmd.message.author)
@@ -78,15 +74,6 @@ def getPriceBase(cmd):
         return hut.market_rate * 201
 
 
-def letter_up(letter = None):
-    if letter == ewcfg.property_class_a:
-        return ewcfg.property_class_s
-    elif letter == ewcfg.property_class_b:
-        return ewcfg.property_class_a
-    elif letter == ewcfg.property_class_c:
-        return ewcfg.property_class_b
-
-
 """
 	Apartments were originally intended to be read-only channels
 	with all interaction being in the dms only. Someone apparently
@@ -95,5 +82,5 @@ def letter_up(letter = None):
 	with the same update that releases this package so this is 
 	entirely nonsensical to keep around.
 
-	--Crank Note: I removed it. Just imagine the biggest if else chain you've ever seen, and double it.
+	--Crank Note: I removed it. Just imagine the biggest if else chain you've ever seen, then double it.
 """

@@ -26,7 +26,7 @@ from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid, get_slimeoid_look_string
-from .aptutils import getPriceBase, letter_up, usekey
+from .aptutils import getPriceBase, usekey
 
 
 async def nothing(cmd):  # for an accept, refuse, sign or rip
@@ -143,9 +143,9 @@ async def consult(cmd):
     poi = poi_static.id_to_poi.get(target_name)
 
     if poi and ewcfg.consult_responses.get(poi.id_poi):
-        multiplier = ewcfg.apartment_value_map.get(poi.property_class)
+        multiplier = ewcfg.apartment_class_map.get(poi.property_class)
         response = "You ask the realtor what he thinks of {}.\n\n\"".format(poi.str_name) + ewcfg.consult_responses[poi.id_poi] + "\"\n\n"
-        response += "The cost per month is {:,} SC. \n\n The down payment is four times that, {:,} SC.".format(multiplier * getPriceBase(cmd=cmd), multiplier * 4 * getPriceBase(cmd=cmd))
+        response += "The cost per month is {:,} Slimecoin. \n\n The down payment is four times that, {:,} Slimecoin.".format(multiplier * getPriceBase(cmd=cmd), multiplier * 4 * getPriceBase(cmd=cmd))
     else:
         response = "\"We don't have apartments in such... urban places,\" your consultant mutters under his breath."
 
@@ -154,63 +154,33 @@ async def consult(cmd):
 
 async def signlease(cmd):
     target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
-    if target_name == None or len(target_name) == 0:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "What region would you like to rent?"))
-
     user_data = EwUser(member=cmd.message.author)
 
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    if not target_name:
+        response = "What region would you like to rent?"
+        return await fe_utils.send_response(response, cmd)
 
     if user_data.poi != ewcfg.poi_id_realestate:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You have to !signlease at the Real Estate Agency in Old New Yonkers."))
+        response = "You have to !signlease at the Real Estate Agency in Old New Yonkers."
+        return await fe_utils.send_response(response, cmd)
 
-    poi = poi_static.id_to_poi.get(user_data.poi)
-    district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
+    lease_poi = poi_static.id_to_poi.get(target_name)
 
-    if district_data.is_degraded():
-        response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-    poi = poi_static.id_to_poi.get(target_name)
-
-    if poi == None:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "That place doesn't exist. The consultant behind the counter is aroused by your stupidity."))
-
-    elif poi == ewcfg.poi_id_rowdyroughhouse or poi == ewcfg.poi_id_copkilltown or poi == ewcfg.poi_id_juviesrow:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "\"We don't have apartments in such...urban places,\" your consultant mutters under his breath."))
-
-    elif poi.id_poi in poi_static.transports:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "As much as the realtor would like to charge you for being homeless, you can't pay rent for sleeping on public transport."))
-
-    elif poi.is_subzone:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You don't find it on the list of properties. Try something that isn't a subzone."))
     # these prices are based on prices in the design doc.
-    elif poi.id_poi == ewcfg.poi_id_assaultflatsbeach or poi.id_poi == ewcfg.poi_id_dreadford:
-        base_cost = ewcfg.apartment_s_multiplier * getPriceBase(cmd=cmd)
-
-    elif poi.id_poi == ewcfg.poi_id_downtown:
-        base_cost = ewcfg.apartment_dt_multiplier * getPriceBase(cmd=cmd)
-
-    elif poi.property_class == ewcfg.property_class_c:
-        base_cost = getPriceBase(cmd=cmd)
-
-    elif poi.property_class == ewcfg.property_class_b:
-        base_cost = ewcfg.apartment_b_multiplier * getPriceBase(cmd=cmd)
-
-    elif poi.property_class == ewcfg.property_class_a:
-        base_cost = ewcfg.apartment_a_multiplier * getPriceBase(cmd=cmd)
-
+    if lease_poi and ewcfg.consult_responses.get(lease_poi.id_poi):
+        base_cost = ewcfg.apartment_class_map.get(lease_poi.property_class) * getPriceBase(cmd)
     else:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "Not for sale."))
-
+        response = "\"We don't have apartments in such... urban places,\" your consultant mutters under his breath."
+        return await fe_utils.send_response(response, cmd)
+    
     if (user_data.slimecoin < base_cost * 4):
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You can't afford it."))
+        response = "\n\"Fuck off, deadbeat. Come back when you've got some real dough. You can't even afford the down payment of {:,} Slimecoin! Can't believe some real smartass cocksucker would walk into **MY REAL ESTATE AGENCY** with only {:,} Slimecoin and expect a place in {}! Un-fucking-believable!\"".format(base_cost * 4, user_data.slimecoin, target_name)
+        return await fe_utils.send_response(response, cmd)
 
     response = "The receptionist slides you a contract. It reads:\n\n THE TENANT, {},  WILL HERETO SUBMIT {:,} SLIMECOIN EACH MONTH UNTIL THEY INEVITABLY HIT ROCK BOTTOM. THEY MUST ALSO PROVIDE A DOWN PAYMENT OF {:,} TO INSURE THE PROPERTY FROM THEIR GREASY JUVENILE HANDS. LANDLORD(S) ARE NOT RESPONSIBLE FOR ANY INJURY OR PROPERTY DAMAGE THAT MAY OCCUR ON THE PREMISES. THEY'RE ALSO NOT RESPONSIBLE IN GENERAL. YOU ARE. BITCH. \n\nDo you !sign the document, or do you !rip it into a million pieces?".format(
         cmd.message.author.display_name, base_cost, base_cost * 4)
-    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    
+    await fe_utils.send_response(response, cmd)
 
     try:
         message = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and
@@ -241,7 +211,7 @@ async def signlease(cmd):
             had_old_place = False
 
         user_data.change_slimecoin(n=-base_cost * 4, coinsource=ewcfg.coinsource_spending)
-        user_data.apt_zone = poi.id_poi
+        user_data.apt_zone = lease_poi.id_poi
         user_data.persist()
 
         # if user_apt.key_1 != 0:
@@ -255,13 +225,13 @@ async def signlease(cmd):
         user_apt.num_keys = 0
 
         user_apt.name = "{}'s Apartment".format(cmd.message.author.display_name)
-        user_apt.apt_class = poi.property_class
+        user_apt.apt_class = lease_poi.property_class
         user_apt.description = "This new flat is fucking cash, bro.".format(cmd.message.author.display_name)
-        user_apt.poi = poi.id_poi
+        user_apt.poi = lease_poi.id_poi
         user_apt.rent = base_cost
         user_apt.persist()
 
-        response = "You signed the lease for an apartment in {} for {:,} SlimeCoin a month.".format(poi.str_name, base_cost)
+        response = "You signed the lease for an apartment in {} for {:,} SlimeCoin a month.".format(lease_poi.str_name, base_cost)
 
         if had_old_place:
             response += " The receptionist calls up a moving crew, who quickly move your stuff to your new place. "
@@ -349,7 +319,10 @@ async def upgrade(cmd):
             usermodel.change_slimecoin(n=apt_model.rent * -8, coinsource=ewcfg.coinsource_spending)
 
             apt_model.rent *= 2
-            apt_model.apt_class = letter_up(letter=apt_model.apt_class)
+
+            if apt_model.apt_class in ewcfg.apartment_classes:
+                current_index = ewcfg.apartment_classes.index(apt_model.apt_class)
+                apt_model.apt_class = ewcfg.apartment_classes[current_index + 1]
 
             usermodel.persist()
             apt_model.persist()

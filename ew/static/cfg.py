@@ -1410,12 +1410,14 @@ apartment_a_multiplier = 2000000
 apartment_dt_multiplier = 3000000000
 apartment_s_multiplier = 6000000000
 
-apartment_value_map = {
+apartment_class_map = {
     "c": 1,
     "b": 1500,
     "a": 2000000,
     "s": 6000000000
 }
+
+apartment_classes = [*apartment_class_map.keys()]
 
 soulprice = 500000000
 
