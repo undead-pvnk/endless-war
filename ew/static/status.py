@@ -339,7 +339,7 @@ trauma_list = [
     ),
     EwTrauma(
         id_trauma=ewcfg.trauma_id_environment,
-        str_trauma_self="Your death could have resulted any number of situations, mostly related to your own idiocy.",
+        str_trauma_self="Your death could have resulted from any number of situations, mostly related to your own idiocy.",
         str_trauma="Their death could have come from any number of situations, mostly related to their own idiocy.",
         trauma_class=ewcfg.trauma_class_slimegain,
     ),

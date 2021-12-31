@@ -34,6 +34,7 @@ from ..backend.dungeons import EwGamestate
 from ..backend.status import EwEnemyStatusEffect
 from ..backend.status import EwStatusEffect
 from ..backend.worldevent import EwWorldEvent
+from ..backend.item import EwItem
 from ..static import cfg as ewcfg
 from ..static import items as static_items
 from ..static import poi as poi_static
@@ -73,62 +74,67 @@ async def event_tick(id_server):
             ))
 
         for row in data:
-            try:
-                event_data = EwWorldEvent(id_event=row[0])
-                event_def = poi_static.event_type_to_def.get(event_data.event_type)
+                try:
+                    event_data = EwWorldEvent(id_event=row[0])
+                    event_def = poi_static.event_type_to_def.get(event_data.event_type)
 
-                response = event_def.str_event_end if event_def else ""
-                if event_data.event_type == ewcfg.event_type_minecollapse:
-                    user_data = EwUser(id_user=event_data.event_props.get('id_user'), id_server=id_server)
-                    mutations = user_data.get_mutations()
-                    if user_data.poi == event_data.event_props.get('poi'):
+                    response = event_def.str_event_end if event_def else ""
+                    if event_data.event_type == ewcfg.event_type_minecollapse:
+                        user_data = EwUser(id_user=event_data.event_props.get('id_user'), id_server=id_server)
+                        mutations = user_data.get_mutations()
+                        if user_data.poi == event_data.event_props.get('poi'):
 
-                        player_data = EwPlayer(id_user=user_data.id_user)
-                        response = "*{}*: You have lost an arm and a leg in a mining accident. Tis but a scratch.".format(
-                            player_data.display_name)
-
-                        if random.randrange(4) == 0:
-                            response = "*{}*: Big John arrives just in time to save you from your mining accident!\nhttps://cdn.discordapp.com/attachments/431275470902788107/743629505876197416/mine2.jpg".format(
+                            player_data = EwPlayer(id_user=user_data.id_user)
+                            response = "*{}*: You have lost an arm and a leg in a mining accident. Tis but a scratch.".format(
                                 player_data.display_name)
-                        else:
 
-                            if ewcfg.mutation_id_lightminer in mutations:
-                                response = "*{}*: You instinctively jump out of the way of the collapsing shaft, not a scratch on you. Whew, really gets your blood pumping.".format(
+                            if random.randrange(4) == 0:
+                                response = "*{}*: Big John arrives just in time to save you from your mining accident!\nhttps://cdn.discordapp.com/attachments/431275470902788107/743629505876197416/mine2.jpg".format(
                                     player_data.display_name)
                             else:
-                                user_data.change_slimes(n=-(user_data.slimes * 0.5))
-                                user_data.persist()
 
+                                if ewcfg.mutation_id_lightminer in mutations:
+                                    response = "*{}*: You instinctively jump out of the way of the collapsing shaft, not a scratch on you. Whew, really gets your blood pumping.".format(
+                                        player_data.display_name)
+                                else:
+                                    user_data.change_slimes(n=-(user_data.slimes * 0.5))
+                                    user_data.persist()
 
-                # check if any void connections have expired, if so pop it and create a new one
-                elif event_data.event_type == ewcfg.event_type_voidconnection:
-                    void_poi = poi_static.id_to_poi.get(ewcfg.poi_id_thevoid)
-                    void_poi.neighbors.pop(event_data.event_props.get('poi'), "")
-                    bknd_event.create_void_connection(id_server)
+                    elif event_data.event_type == ewcfg.event_type_alarmclock:
+                        clock_item = EwItem(event_data.event_props.get("clock_id"))
+                        print(clock_item.item_props)
+                        clock_item.item_props["furniture_look_desc"] = "There's an alarm clock that's stopped working."
+                        clock_item.item_props["furniture_desc"] = "The annoying sound this thing makes perfectly explains why the bazaar sells so many broken clocks. Or at least that's what it used to do before the shitty little batteries gave out. Could try setting it again?"
+                        clock_item.persist()
+                    # check if any void connections have expired, if so pop it and create a new one
+                    elif event_data.event_type == ewcfg.event_type_voidconnection:
+                        void_poi = poi_static.id_to_poi.get(ewcfg.poi_id_thevoid)
+                        void_poi.neighbors.pop(event_data.event_props.get('poi'), "")
+                        bknd_event.create_void_connection(id_server)
 
-                if len(response) > 0:
-                    poi = event_data.event_props.get('poi')
-                    channel = event_data.event_props.get('channel')
-                    if channel != None:
+                    if len(response) > 0:
+                        poi = event_data.event_props.get('poi')
+                        channel = event_data.event_props.get('channel')
+                        if channel != None:
 
-                        # in shambaquarium the event happens in the user's DMs
-                        if event_data.event_type == ewcfg.event_type_shambaquarium:
-                            client = ewutils.get_client()
-                            channel = client.get_guild(id_server).get_member(int(channel))
+                            # in shambaquarium the event happens in the user's DMs
+                            if event_data.event_type == ewcfg.event_type_shambaquarium:
+                                client = ewutils.get_client()
+                                channel = client.get_guild(id_server).get_member(int(channel))
 
-                        resp_cont.add_channel_response(channel, response)
-                    elif poi != None:
-                        poi_def = poi_static.id_to_poi.get(poi)
-                        if poi_def != None:
-                            resp_cont.add_channel_response(poi_def.channel, response)
+                            resp_cont.add_channel_response(channel, response)
+                        elif poi != None:
+                            poi_def = poi_static.id_to_poi.get(poi)
+                            if poi_def != None:
+                                resp_cont.add_channel_response(poi_def.channel, response)
 
-                    else:
-                        for ch in ewcfg.hideout_channels:
-                            resp_cont.add_channel_response(ch, response)
+                        else:
+                            for ch in ewcfg.hideout_channels:
+                                resp_cont.add_channel_response(ch, response)
 
-                bknd_event.delete_world_event(event_data.id_event)
-            except:
-                ewutils.logMsg("Error in event tick for server {}".format(id_server))
+                    bknd_event.delete_world_event(event_data.id_event)
+                except:
+                    ewutils.logMsg("Error in event tick for server {}".format(id_server))
 
         await resp_cont.post()
 
@@ -1338,7 +1344,8 @@ async def clock_tick_loop(id_server = None, force_active = False):
                     if not ewutils.check_fursuit_active(market_data) and not ewcfg.dh_active: # I don't see why costumes should be dedorned automatically so, like, just removing this. It's dumb.
                          await cosmetic_utils.dedorn_all_costumes()
 
-                    await apt_utils.setOffAlarms(id_server)
+                    ewutils.logMsg('Setting off alarms...')
+                    await apt_utils.handle_hourly_events(id_server)
 
                     # Decay slime totals
                     ewutils.logMsg("Decaying slimes...")
@@ -1361,19 +1368,21 @@ async def clock_tick_loop(id_server = None, force_active = False):
 
                     ewutils.logMsg("Handling capture points...")
                     await give_kingpins_slime_and_decay_capture_points(id_server)
+                    
                     ewutils.logMsg("Sending gangbase messages...")
                     await move_utils.send_gangbase_messages(id_server, market_data.clock)
+                    
                     ewutils.logMsg("Kicking AFK players...")
-                    await move_utils.kick(id_server)
-
-                    ewutils.logMsg("Finished clock tick.")  
+                    await move_utils.kick(id_server)  
 
                     sex_channel = fe_utils.get_channel(server=server, channel_name=ewcfg.channel_stockexchange)
 
                     if market_data.clock == 6 or force_active:
                         response = ' The SlimeCorp Stock Exchange is now open for business.'
+                        
                         await fe_utils.send_message(client, sex_channel, response)
                         ewutils.logMsg("Started bazaar refresh...")
+                        
                         await market_utils.refresh_bazaar(id_server)
                         ewutils.logMsg("...finished bazaar refresh.")
                         
@@ -1381,17 +1390,19 @@ async def clock_tick_loop(id_server = None, force_active = False):
 
                         if ewcfg.slimernalia_active:
                             await fe_utils.update_slimernalia_kingpin(client, server)
+                    
+                    # Rent is paid every week
+                    if market_data.day % 7 == 0 or force_active:
+                        ewutils.logMsg("Started rent calc...")
+                        await pay_salary(id_server) # Did I rearrange these just so I wouldn't get kicked out of my apt? Don't be silly...
+                        await apt_utils.rent_time(id_server)
+                        ewutils.logMsg("...finished rent calc.")
 
-                        if market_data.clock % 8 == 0 or force_active:
-                            ewutils.logMsg("Started rent calc...")
-                            await apt_utils.rent_time(id_server)
-                            await pay_salary(id_server)
-                            ewutils.logMsg("...finished rent calc.")
-
-                    elif market_data.clock == 20:
+                    if market_data.clock == 20:
                         response = ' The SlimeCorp Stock Exchange has closed for the night.'
                         await fe_utils.send_message(client, sex_channel, response)
                   
+                ewutils.logMsg("Finished clock tick.")
                 await asyncio.sleep(60)
     except:
         ewutils.logMsg('An error occurred in the scheduled slime market update task. Fix that.')

@@ -2,10 +2,12 @@ import time
 
 from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
+from ew.backend import worldevent as bknd_event
 from ew.backend.apt import EwApartment
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.player import EwPlayer
+from ew.backend.worldevent import EwWorldEvent
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
 from ew.utils import core as ewutils
@@ -77,65 +79,52 @@ async def rent_time(id_server = None):
         bknd_core.databaseClose(conn_info)
 
 
-async def setOffAlarms(id_server = None):
-    ewutils.logMsg('Setting off alarms...')
-
+async def handle_hourly_events(id_server = None):
     if id_server != None:
         client = ewutils.get_client()
         server = client.get_guild(id_server)
         time_current = EwMarket(id_server=id_server).clock
-        if time_current <= 12:
-            displaytime = str(time_current)
-            ampm = 'am'
-        if time_current > 12:
-            displaytime = str(time_current - 12)
-            ampm = 'pm'
 
-        if time_current == 24:
-            ampm = "am"
-        elif time_current == 12:
-            ampm = "pm"
-
-        item_search = "alarm clock set to {}{}".format(displaytime, ampm)
-        item_search_brick = "brick{:02d}".format(time_current)
-        clockinv = item_utils.find_item_all(item_search="alarmclock", id_server=id_server, item_type_filter=ewcfg.it_furniture)
-        brickinv = item_utils.find_item_all(item_search=item_search_brick, id_server=id_server, item_type_filter=ewcfg.it_furniture, search_names=True)
-
-        for clock in clockinv:
-            isFurnished = False
-            clock_obj = EwItem(id_item=clock.get('id_item'))
-
-            if clock_obj.item_props.get('furniture_name') == item_search:
-                if "decorate" in clock_obj.id_owner:
-                    isFurnished = True
-                clock_user = clock_obj.id_owner.replace("decorate", "")
-                clock_member = server.get_member(user_id=clock_user)
-                if clock_member != None:
-                    clock_player = EwUser(member=clock_member)
-                    if (isFurnished == False or ("apt" in clock_player.poi and clock_player.visiting == "empty")) and clock_member:
-                        try:
-                            await fe_utils.send_message(client, clock_member, fe_utils.formatMessage(clock_member, "BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP"))
-                        except:
-                            ewutils.logMsg("failed to send alarm to user {}".format(clock_member.id))
-
-        for brick in brickinv:
-            brick_obj = EwItem(id_item=brick.get('id_item'))
-            id_user = brick_obj.id_owner.replace("brickshit", "")
-            brick_user = EwUser(id_server=id_server, id_user=id_user)
-            brick_member = server.get_member(user_id=int(id_user))
-            poi = poi_static.id_to_poi.get(brick_user.poi)
-            channel_brick = fe_utils.get_channel(server, poi.channel)
-            if brick_member != None:
-                if brick_member:
-                    try:
-                        await fe_utils.send_message(client, channel_brick, fe_utils.formatMessage(brick_member, "UUUUUUUUUUGGGGGGGGGGGGHHHHHHHHHHH... OOOOOOOOOOOOOOOOOAAAAAAAAAAAAAAAHHHHH th-tunk. You just shit a brick. Congratulations?"))
-                        brick_obj.id_owner = poi.id_poi
-                        brick_obj.item_props['furniture_name'] = 'brick'
-                        brick_obj.persist()
-                    except:
-                        ewutils.logMsg("failed to shit brick on user {}".format(brick_member.id))
-
-
+        events = bknd_event.get_world_events(id_server, True)
+        for we_id, we_type  in events.items():
+            if we_type in ewcfg.hourly_events:
+                we = EwWorldEvent(id_event=we_id)
+                if we.event_props.get("time") == str(time_current):
+                    # Handle brickshitting code
+                    if we_type == ewcfg.event_type_brickshit:
+                        print("brick")
+                        brick_obj = EwItem(id_item=we.event_props.get("brick_id"))
+                        id_user = brick_obj.id_owner.replace("stomach", "")
+                        brick_user = EwUser(id_server=id_server, id_user=id_user)
+                        brick_member = server.get_member(user_id=int(id_user))
+                        poi = poi_static.id_to_poi.get(brick_user.poi)
+                        channel_brick = fe_utils.get_channel(server, poi.channel)
+                        if brick_member:
+                            try:
+                                await fe_utils.send_message(client, channel_brick, fe_utils.formatMessage(brick_member, "UUUUUUUUUUGGGGGGGGGGGGHHHHHHHHHHH... OOOOOOOOOOOOOOOOOAAAAAAAAAAAAAAAHHHHH th-tunk. You just shit a brick. Congratulations?"))
+                                brick_obj.id_owner = poi.id_poi
+                                brick_obj.item_props['furniture_name'] = 'brick'
+                                brick_obj.persist()
+                            except:
+                                ewutils.logMsg("failed to shit brick on user {}".format(brick_member.id))
+                            else:
+                                bknd_event.delete_world_event(we_id)
+                    
+                    # Handle alarm clock code
+                    elif we_type == ewcfg.event_type_alarmclock:
+                        clock_obj = EwItem(id_item=we.event_props.get("clock_id"))
+                        if "decorate" in clock_obj.id_owner:
+                            isFurnished = True
+                        clock_user = clock_obj.id_owner.replace("decorate", "")
+                        clock_member = server.get_member(user_id=clock_user)
+                        if clock_member != None:
+                            clock_player = EwUser(member=clock_member)
+                            if (isFurnished == False or ("apt" in clock_player.poi and clock_player.visiting == "empty")) and clock_member:
+                                try:
+                                    await fe_utils.send_message(client, clock_member, fe_utils.formatMessage(clock_member, "BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP"))
+                                except:
+                                    ewutils.logMsg("failed to send alarm to user {}".format(clock_member.id))
+                        
 def toss_items(id_user = None, id_server = None, poi = None):
     if id_user != None and id_server != None and poi != None:
         inv_toss = bknd_item.inventory(id_user=id_user, id_server=id_server)

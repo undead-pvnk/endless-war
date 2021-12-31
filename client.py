@@ -507,7 +507,7 @@ async def on_message(message):
         return
 
     # Ignore messages in certain channels
-    if message.channel.name in ewcfg.forbidden_channels:
+    if message.channel.type ==  0 and message.channel.name in ewcfg.forbidden_channels:
         return
 
     if message.guild != None:
@@ -883,8 +883,7 @@ async def on_message(message):
             await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, "Apple created."))
 
         elif debug == True and cmd == (ewcfg.cmd_prefix + 'weathertick'):
-
-            await apt_utils.setOffAlarms(id_server=message.guild.id)
+            pass
 
         elif debug == True and cmd == (ewcfg.cmd_prefix + 'createhat'):
             patrician_rarity = 20
