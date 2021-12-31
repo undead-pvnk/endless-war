@@ -1588,7 +1588,12 @@ async def remove_item(cmd):
             item = EwItem(id_item=item_sought.get('id_item'))
             item_search = ewutils.flattenTokenListToString(item_sought.get('name'))
 
+
             if items_snagged == 0: #handle item limits only on the first pass
+                inv_response = bknd_item.check_inv_capacity(user_data=usermodel, item_type=item_sought.get('item_type'), return_strings=True, pronoun="You")
+                if inv_response != "":
+                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, inv_response))
+
                 if destination == "closet" and item_sought.get('item_type') == ewcfg.it_cosmetic:
                     hatrack_obj = bknd_item.find_item(id_server=playermodel.id_server, id_user=str(playermodel.id_user) + "decorate", item_search="hatstand")
                     map_obj = cosmetics.cosmetic_map.get(item.item_props.get('id_cosmetic'))
@@ -1602,11 +1607,7 @@ async def remove_item(cmd):
                         id_server=playermodel.id_server,
                         item_type_filter=ewcfg.it_food
                     )
-                    if len(food_items) >= usermodel.get_food_capacity():
-                        del food_items
-                        response = "You can't carry any more food."
-                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-                    elif usermodel.get_food_capacity() - len(food_items) < multisnag:
+                    if usermodel.get_food_capacity() - len(food_items) < multisnag:
                         multisnag = usermodel.get_food_capacity() - len(food_items)
                         del food_items
                 elif item_sought.get('item_type') == ewcfg.it_weapon:
@@ -1615,11 +1616,7 @@ async def remove_item(cmd):
                         id_server=playermodel.id_server,
                         item_type_filter=ewcfg.it_weapon
                     )
-                    if len(wep_items) >= usermodel.get_weapon_capacity():
-                        del wep_items
-                        response = "You can't carry any more weapons."
-                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-                    elif usermodel.get_weapon_capacity() - len(wep_items) < multisnag:
+                    if usermodel.get_weapon_capacity() - len(wep_items) < multisnag:
                         multisnag = usermodel.get_weapon_capacity() - len(wep_items)
                         del wep_items
 
@@ -1629,11 +1626,7 @@ async def remove_item(cmd):
                         id_server=playermodel.id_server,
                         item_type_filter=item_sought.get('item_type')
                     )
-                    if len(other_items) >= ewcfg.generic_inv_limit:
-                        del other_items
-                        response = ewcfg.str_generic_inv_limit.format(item_sought.get('item_type'))
-                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-                    elif ewcfg.generic_inv_limit - len(other_items) < multisnag:
+                    if ewcfg.generic_inv_limit - len(other_items) < multisnag:
                         multisnag = ewcfg.generic_inv_limit - len(other_items)
                         del other_items
 

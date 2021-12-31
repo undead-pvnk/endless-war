@@ -427,6 +427,7 @@ async def inventory_print(cmd):
                 else:
                     stacked_item_map[item.get("name")] = item
 
+
             if not stacking and len(response) + len(response_part) > 1492:
                 # Format the response if necessary and add to the container
                 response = fe_utils.formatMessage(cmd.message.author, response) if not targeting_dms else response
@@ -452,10 +453,11 @@ async def inventory_print(cmd):
                 item = stacked_item_map.get(item_name)
 
                 # Generate the stack's line in the response
-                response_part = "\n{soulbound_style}{name}{soulbound_style}{quantity}".format(
+                response_part = "\n{id_item}: {soulbound_style}{name}{soulbound_style}{quantity}".format(
                     name=item.get('name'),
                     soulbound_style=("**" if item.get('soulbound') else ""),
-                    quantity=(" **x{:,}**".format(item.get("quantity")) if (item.get("quantity") > 0) else "")
+                    quantity=(" **x{:,}**".format(item.get("quantity")) if (item.get("quantity") > 0) else ""),
+                    id_item=item.get('id_item')
                 )
 
                 # Print item type labels if sorting by type and showing a different type of items
@@ -978,45 +980,19 @@ async def give(cmd):
 
                 ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity, n=int(item_data.item_props.get("gift_value")))
 
+        inv_response = bknd_item.check_inv_capacity(user_data=recipient_data, item_type=item_sought.get('item_type'), return_strings=True, pronoun="They")
+        #don't let people give others food when they shouldn't be able to carry more food items
+        if inv_response != "":
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, inv_response))
 
-        # don't let people give others food when they shouldn't be able to carry more food items
-        if item_sought.get('item_type') == ewcfg.it_food:
-            food_items = bknd_item.inventory(
-                id_user=recipient.id,
-                id_server=server.id,
-                item_type_filter=ewcfg.it_food
-            )
 
-            if len(food_items) >= recipient_data.get_food_capacity():
-                response = "They can't carry any more food items."
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-        elif item_sought.get('item_type') == ewcfg.it_weapon:
-            weapons_held = bknd_item.inventory(
-                id_user=recipient.id,
-                id_server=server.id,
-                item_type_filter=ewcfg.it_weapon
-            )
+        if item_sought.get('item_type') == ewcfg.it_weapon:
 
             if user_data.weaponmarried and user_data.weapon == item_sought.get('id_item'):
                 response = "Your cuckoldry is appreciated, but your {} will always remain faithful to you.".format(item_sought.get('name'))
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
             elif recipient_data.life_state == ewcfg.life_state_corpse:
                 response = "Ghosts can't hold weapons."
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-            elif len(weapons_held) >= recipient_data.get_weapon_capacity():
-                response = "They can't carry any more weapons."
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        else:
-            # inventory limits for items that aren't food or weapons
-            other_items = bknd_item.inventory(
-                id_user=recipient.id,
-                id_server=server.id,
-                item_type_filter=item_sought.get('item_type')
-            )
-
-            if len(other_items) >= ewcfg.generic_inv_limit:
-                response = "They can't carry any more of those."
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         if item_sought.get('item_type') == ewcfg.it_cosmetic:

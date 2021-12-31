@@ -122,6 +122,8 @@ while sys.argv:
         debug = True
         for option in ewutils.DEBUG_OPTIONS:
             ewutils.DEBUG_OPTIONS[option] = True
+    elif arg_lower == '--initiate':
+        makebp = True
     elif arg_lower.startswith(db_prefix):
         ewcfg.database = arg_lower[len(db_prefix):]
 

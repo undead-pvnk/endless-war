@@ -314,9 +314,6 @@ async def order(cmd):
                     else:
                         current_vendor = None
 
-            if current_vendor == ewcfg.vendor_downpourlaboratory:
-                currency_used = 'brainz'
-                current_currency_amount = user_data.gvs_currency
 
             if current_vendor is None or len(current_vendor) < 1:
                 response = "Check the {} for a list of items you can {}.".format(ewcfg.cmd_menu, ewcfg.cmd_order)
@@ -388,14 +385,13 @@ async def order(cmd):
                     if random.randrange(5) == 0 and ewcfg.mutation_id_stickyfingers in mutations:
                         value = 0
                         user_data.change_crime(n=ewcfg.cr_larceny_points)
+
+                    inv_response = bknd_item.check_inv_capacity(user_data=user_data, item_type=item_type, return_strings=True, pronoun="You")
+                    if inv_response != "" and (item_type != ewcfg.it_food or togo):
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, inv_response))
+
                     if item_type == ewcfg.it_food:
                         food_ordered = True
-
-                        food_items = bknd_item.inventory(
-                            id_user=cmd.message.author.id,
-                            id_server=cmd.guild.id,
-                            item_type_filter=ewcfg.it_food
-                        )
 
                         target = None
                         target_data = None
@@ -414,36 +410,10 @@ async def order(cmd):
                                 response = "You can't order anything for them because they aren't here!"
                                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-                        if len(food_items) >= user_data.get_food_capacity() and target_data == None and togo:
-                            # user_data never got persisted so the player won't lose money unnecessarily
-                            response = "You can't carry any more food than that."
-                            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
                     elif item_type == ewcfg.it_weapon:
-                        weapons_held = bknd_item.inventory(
-                            id_user=user_data.id_user,
-                            id_server=cmd.guild.id,
-                            item_type_filter=ewcfg.it_weapon
-                        )
 
-                        if len(weapons_held) >= user_data.get_weapon_capacity():
-                            response = "You can't carry any more weapons."
-                            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-
-                        elif user_data.life_state == ewcfg.life_state_corpse:
+                        if user_data.life_state == ewcfg.life_state_corpse:
                             response = "Ghosts can't hold weapons."
-                            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-                    else:
-                        other_items_held = bknd_item.inventory(
-                            id_user=user_data.id_user,
-                            id_server=cmd.guild.id,
-                            item_type_filter=item_type
-                        )
-
-                        if len(other_items_held) >= ewcfg.generic_inv_limit:
-                            response = ewcfg.str_generic_inv_limit.format(item_type)
                             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
                     item_props = itm_utils.gen_item_props(item)
@@ -454,8 +424,6 @@ async def order(cmd):
 
                     if currency_used == 'slime':
                         user_data.change_slimes(n=-value, source=ewcfg.source_spending)
-                    elif currency_used == 'brainz':
-                        user_data.gvs_currency -= value
 
                     if company_data is not None:
                         company_data.recent_profits += value

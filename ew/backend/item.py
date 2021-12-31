@@ -1061,49 +1061,83 @@ def give_item(
     return True
 
 
+
+
 """
     Return false if a player's inventory is at or over capacity for a specific item type
+    >return_strings will return a response instead of a yes/no. good for quick general inventory checks
+    >items_added is for when more than one item will be added to the inventory. they would all need to be the same item type for this check to work
+    >pronoun: you or they. what's it gonna be
 """
 
 
-def check_inv_capacity(user_data = None, item_type = None):
+def check_inv_capacity(user_data = None, item_type = None, return_strings = False, pronoun = 'You', items_added = 1):
+    true_bool = True
+    false_bool = False
+
+    if return_strings:
+        true_bool = ""
+        false_bool = "You can't carry any more items."
+
+    if items_added <= 0: #if items are being removed or the count remains the same
+        return true_bool
+
     if user_data is not None and item_type is not None:
         if item_type == ewcfg.it_food:
+            if return_strings:
+                false_bool = "{} can't carry any more food.".format(pronoun)
             food_items = inventory(
                 id_user=user_data.id_user,
                 id_server=user_data.id_server,
                 item_type_filter=ewcfg.it_food
             )
-
-            if len(food_items) >= user_data.get_food_capacity():
-                return False
+            if len(food_items) + (items_added - 1) >= user_data.get_food_capacity():
+                return false_bool
             else:
-                return True
+                return true_bool
         elif item_type == ewcfg.it_weapon:
+            if return_strings:
+                false_bool = "{} can't carry any more weapons.".format(pronoun)
             weapons_held = inventory(
                 id_user=user_data.id_user,
                 id_server=user_data.id_server,
                 item_type_filter=ewcfg.it_weapon
             )
 
-            if len(weapons_held) >= user_data.get_weapon_capacity():
-                return False
+            if len(weapons_held) + (items_added - 1) >= user_data.get_weapon_capacity():
+                return false_bool
             else:
-                return True
+                return true_bool
+        elif item_type == ewcfg.it_relic:
+            if return_strings:
+                false_bool = "{} can't carry any more relics.".format(pronoun)
+            relics_held = inventory(
+                id_user=user_data.id_user,
+                id_server=user_data.id_server,
+                item_type_filter=ewcfg.it_relic
+            )
+
+            if len(relics_held) + (items_added - 1) >= ewcfg.relic_item_limit:
+                return false_bool
+            else:
+                return true_bool
+
         else:
+            if return_strings:
+                false_bool = "{} can't carry any more items.".format(pronoun)
             other_items = inventory(
                 id_user=user_data.id_user,
                 id_server=user_data.id_server,
                 item_type_filter=item_type
             )
 
-            if len(other_items) >= ewcfg.generic_inv_limit:
-                return False
+            if len(other_items) + (items_added - 1) >= ewcfg.generic_inv_limit:
+                return false_bool
             else:
-                return True
+                return true_bool
 
     else:
-        return False
+        return false_bool
 
 
 """

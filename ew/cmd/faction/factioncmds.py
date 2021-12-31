@@ -172,6 +172,19 @@ async def take(cmd):
         loop_sought = item_sought.copy()
         while multisnag > 0 and loop_sought is not None:
             if items_snagged == 0:
+                inv_response = bknd_item.check_inv_capacity(user_data=user_data, item_type=loop_sought.get('item_type'), return_strings=True, pronoun="You")
+
+                if inv_response != "":
+                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, inv_response))
+
+                list_items = bknd_item.inventory(
+                        id_user=cmd.message.author.id,
+                        id_server=cmd.guild.id,
+                        item_type_filter=loop_sought.get('item_type')
+                    )
+
+
+
                 if loop_sought.get('item_type') == ewcfg.it_food:
                     food_items = bknd_item.inventory(
                         id_user=cmd.message.author.id,
@@ -179,11 +192,7 @@ async def take(cmd):
                         item_type_filter=ewcfg.it_food
                     )
 
-                    if len(food_items) >= user_data.get_food_capacity():
-                        del food_items
-                        response = "You can't carry any more food items."
-                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-                    elif user_data.get_food_capacity() - len(food_items) < multisnag:
+                    if user_data.get_food_capacity() - len(food_items) < multisnag:
                         multisnag = user_data.get_food_capacity() - len(food_items)
                         del food_items
                 elif loop_sought.get('item_type') == ewcfg.it_weapon:
@@ -201,22 +210,13 @@ async def take(cmd):
                         multisnag = user_data.get_weapon_capacity() - len(weapons_held)
                         del weapons_held
 
-                    elif len(weapons_held) >= user_data.get_weapon_capacity():
-                        del weapons_held
-                        response = "You can't carry any more weapons."
-                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
                 else:
                     other_items = bknd_item.inventory(
                         id_user=cmd.message.author.id,
                         id_server=user_data.id_server,
                         item_type_filter=loop_sought.get('item_type')
                     )
-                    if len(other_items) >= ewcfg.generic_inv_limit:
-                        del other_items
-                        response = ewcfg.str_generic_inv_limit.format(loop_sought.get('item_type'))
-                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-                    elif ewcfg.generic_inv_limit - len(other_items) < multisnag:
+                    if ewcfg.generic_inv_limit - len(other_items) < multisnag:
                         multisnag = ewcfg.generic_inv_limit - len(other_items)
                         del other_items
 

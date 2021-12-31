@@ -1399,46 +1399,21 @@ async def complete_trade(cmd):
 
             # check items currently held + items being given to the player - items the player is giving
             # check other user's inventory capacity
+            trader_data = EwUser(id_user=trader_id, id_server=cmd.guild.id)
             for item_type in items_offered:
-                it_held = bknd_item.inventory(
-                    id_user = trade_partner.id_user,
-                    id_server = trade_partner.id_server,
-                    item_type_filter = item_type
-                )
 
-                if item_type == ewcfg.it_food:
-                    if (len(it_held) + items_offered[ewcfg.it_food] - trader_items_offered.get(ewcfg.it_food, 0)) > trade_partner.get_food_capacity():
-                        response = "They can't carry any more food items."
-                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-                elif item_type == ewcfg.it_weapon:
-                    if (len(it_held) + items_offered[ewcfg.it_weapon] - trader_items_offered.get(ewcfg.it_weapon, 0)) > trade_partner.get_weapon_capacity():
-                        response = "They can't carry any more weapon items."
-                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-                else:
-                    if (len(it_held) + items_offered[item_type] - trader_items_offered.get(item_type, 0)) > ewcfg.generic_inv_limit:
-                        response = "They can't carry any more {}s.".format(item_type)
-                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                inv_response = bknd_item.check_inv_capacity(user_data=trader_data, item_type=item_type, return_strings=True, pronoun='They', items_added=(items_offered[item_type] - trader_items_offered.get(item_type, 0)))
+                if inv_response != "":
+                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, inv_response))
 
             # check own user's inventory capacity
             for item_type in trader_items_offered:
-                it_held = bknd_item.inventory(
-                    id_user = user_data.id_user,
-                    id_server = user_data.id_server,
-                    item_type_filter = item_type
-                )
+                inv_response = bknd_item.check_inv_capacity(user_data=user_data, item_type=item_type, return_strings=True, pronoun='You', items_added=(trader_items_offered.get(item_type) - items_offered.get(item_type, 0)))
+                if inv_response != "":
+                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, inv_response))
 
-                if item_type == ewcfg.it_food:
-                    if (len(it_held) + trader_items_offered[ewcfg.it_food] - items_offered.get(ewcfg.it_food, 0)) > user_data.get_food_capacity():
-                        response = "You can't carry any more food items."
-                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-                elif item_type == ewcfg.it_weapon:
-                    if (len(it_held) + trader_items_offered[ewcfg.it_weapon] - items_offered.get(ewcfg.it_weapon, 0)) > user_data.get_weapon_capacity():
-                        response = "You can't carry any more weapon items."
-                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-                else:
-                    if (len(it_held) + trader_items_offered.get(item_type) - items_offered.get(item_type, 0)) > ewcfg.generic_inv_limit:
-                        response = "You can't carry any more {}s.".format(item_type)
-                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
 
             for item in list(ewutils.trading_offers.get(user_data.id_user)):
                 if item.get("id_item") == user_data.weapon:

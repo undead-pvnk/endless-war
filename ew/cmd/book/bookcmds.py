@@ -847,13 +847,16 @@ async def order_zine(cmd):
 
                     user_data = EwUser(member=cmd.message.author)
 
-                    if book.genre != 10:
-                        price = ewcfg.zine_cost
-                    else:
-                        price = ewcfg.zine_cost / 4
+                    #if book.genre != 10:
+                    #    price = ewcfg.zine_cost
+                    #else:
+                    #    price = ewcfg.zine_cost / 4
 
-                    if user_data.slimes < price:
-                        response = "YOU CAN'T AFFORD IT. ({:,}/{:,})".format(user_data.slimes, price)
+                    #if user_data.slimes < price:
+                    poudrins = bknd_item.find_item(item_search="slimepoudrin", id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter=ewcfg.it_item)
+
+                    if poudrins == None:
+                        response = "YOU CAN'T AFFORD IT. YOU NEED A POUDRIN."
 
                     else:
                         bknd_item.item_create(
@@ -876,7 +879,8 @@ async def order_zine(cmd):
                                 book_sale.persist()
                                 book.persist()
 
-                        user_data.change_slimes(n=-(price), source=ewcfg.source_spending)
+                        bknd_item.item_delete(id_item=poudrins.get('id_item'))
+                        #user_data.change_slimes(n=-(price), source=ewcfg.source_spending)
 
                         user_data.persist()
 

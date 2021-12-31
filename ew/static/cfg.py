@@ -65,6 +65,8 @@ max_iw_swing = 30
 # An inventory limit for every item type that's not food or weapons
 generic_inv_limit = 1000
 
+relic_item_limit = 3
+
 # combatant ids to differentiate players and NPCs in combat
 combatant_type_player = "player"
 combatant_type_enemy = "enemy"

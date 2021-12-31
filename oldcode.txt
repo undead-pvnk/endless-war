@@ -24654,3 +24654,37 @@ CREATE TABLE gvs_grid_conditions (
 
     PRIMARY KEY (district, coord, grid_condition)
 );
+
+
+                #if item_type == ewcfg.it_food:
+                #    if (len(it_held) + items_offered[ewcfg.it_food] - trader_items_offered.get(ewcfg.it_food, 0)) > trade_partner.get_food_capacity():
+                #        response = "They can't carry any more food items."
+                #        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                #elif item_type == ewcfg.it_weapon:
+                #    if (len(it_held) + items_offered[ewcfg.it_weapon] - trader_items_offered.get(ewcfg.it_weapon, 0)) > trade_partner.get_weapon_capacity():
+                #        response = "They can't carry any more weapon items."
+                #        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                #else:
+                #    if (len(it_held) + items_offered[item_type] - trader_items_offered.get(item_type, 0)) > ewcfg.generic_inv_limit:
+                #        response = "They can't carry any more {}s.".format(item_type)
+                #        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+                #it_held = bknd_item.inventory(
+                #    id_user = user_data.id_user,
+                #    id_server = user_data.id_server,
+                #    item_type_filter = item_type
+                #)
+        #if item_type == ewcfg.it_food:
+                #    if (len(it_held) + trader_items_offered[ewcfg.it_food] - items_offered.get(ewcfg.it_food, 0)) > user_data.get_food_capacity():
+                #        response = "You can't carry any more food items."
+                #        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                #elif item_type == ewcfg.it_weapon:
+                #    if (len(it_held) + trader_items_offered[ewcfg.it_weapon] - items_offered.get(ewcfg.it_weapon, 0)) > user_data.get_weapon_capacity():
+                #        response = "You can't carry any more weapon items."
+                #        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                #else:
+                #    if (len(it_held) + trader_items_offered.get(item_type) - items_offered.get(item_type, 0)) > ewcfg.generic_inv_limit:
+                #        response = "You can't carry any more {}s.".format(item_type)
+                #        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
