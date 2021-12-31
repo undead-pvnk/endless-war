@@ -974,11 +974,17 @@ async def give(cmd):
         if item_sought.get('item_type') == ewcfg.it_item and ewcfg.slimernalia_active:
             item_data = EwItem(id_item = item_sought.get('id_item'))
 
-            if item_data.item_props.get('id_item') == 'gift' and item_data.item_props.get("gifted") == "false":
-                item_data.item_props['gifted'] = "true"
-                item_data.persist()
 
-                ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity, n=int(item_data.item_props.get("gift_value")))
+            # Fuck everything, TRIPLE nested if statement
+            if item_data.item_props.get('id_item') == 'gift':
+                if item_data.item_props.get('giftee_id') == recipient_data.id_user and item_data.item_props.get("gifter_id") == user_data.id_user:
+                    if item_data.item_props.get("gifted") == "false":
+                        item_data.item_props['gifted'] = "true"
+                        item_data.persist()
+                        ewstats.change_stat(id_server=cmd.guild.id, id_user=user_data.id_user, metric=ewcfg.stat_festivity, n=int(item_data.item_props.get("gift_value")))
+                        user_data.persist()
+
+
 
         inv_response = bknd_item.check_inv_capacity(user_data=recipient_data, item_type=item_sought.get('item_type'), return_strings=True, pronoun="They")
         #don't let people give others food when they shouldn't be able to carry more food items

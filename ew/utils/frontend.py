@@ -16,7 +16,7 @@ from ..static import hunting as hunt_static
 from ..static import poi as poi_static
 from ..static import weapons as static_weapons
 from ew.backend.dungeons import EwGamestate
-
+from ew.utils import stats as ewstats
 
 class Message:
     # Send the message to this exact channel by name.
@@ -495,16 +495,38 @@ async def update_slimernalia_kingpin(client, server):
             ewutils.logMsg("Error removing kingpin of slimernalia role from {} in server {}.".format(old_kingpin_id, server.id))
 
     # Update the new kingpin of slimernalia
+
     new_kingpin_id = ewutils.get_most_festive(server)
     kingpin_state.value = str(new_kingpin_id)
+
+
+
+    # Reset the new kingpin's festivity upon getting the award
+    old_festivity = ewstats.get_stat(id_server=server.id, id_user=new_kingpin_id, metric=ewcfg.stat_festivity)
+    ewstats.set_stat(id_server=server.id, id_user=new_kingpin_id, metric=ewcfg.stat_festivity, value=0)
+    #new_kingpin.festivity = 0
+    #new_kingpin.persist()
 
     try:
         new_kingpin_member = server.get_member(new_kingpin_id)
         await ewrolemgr.updateRoles(client=client, member=new_kingpin_member)
-        print("New kingpin is {}".format(new_kingpin_member))
     except:
         ewutils.logMsg("Error adding kingpin of slimernalia role to user {} in server {}.".format(new_kingpin_id, server.id))
 
+    if new_kingpin_member:
+        # Format and release a message from Phoebus about how who just won and how much slime they got
+        announce_content = ewcfg.slimernalia_kingpin_announcement.format(player=("@" + str(new_kingpin_member.id)), festivity=old_festivity) 
+
+        announce = discord.Embed()
+        announce.set_thumbnail(url="https://i.imgur.com/aVfaB9I.png")
+        announce.description = "**Phoebus**{}".format(ewcfg.emote_verified)
+        announce.color = discord.Color.green()
+        announce.add_field(name='\u200b', value=announce_content)
+
+        channel = get_channel(server=server, channel_name="auditorium")
+
+        await send_message(client, channel, embed=announce)
+    
 
 def check_user_has_role(server, member, checked_role_name):
     checked_role = discord.utils.get(server.roles, name=checked_role_name)

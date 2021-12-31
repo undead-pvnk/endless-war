@@ -678,7 +678,6 @@ def board_entry(entry, entry_type, divide_by):
     if entry_type == ewcfg.entry_type_player:
         faction = ewutils.get_faction(life_state=entry[1], faction=entry[2])
         faction_symbol = ewutils.get_faction_symbol(faction, entry[2])
-
         number = int(entry[3] / divide_by)
 
         if number > 999999999:

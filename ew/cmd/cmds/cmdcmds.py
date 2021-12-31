@@ -2112,7 +2112,6 @@ async def wrap(cmd):
             response = "It's a nice gesture, but trying to gift someone a Soulbound item is going a bit too far, don't you think?"
         # Check if the item has been gifted before
         elif item.item_props.get('gifted') == "true":
-            print("I am going to kill myself")
             response = "Alas, regifting is considered a grave sin from Phoebus themselves. Enjoy your gift, or else. {}".format(ewcfg.emote_slimeheart)
         elif not bknd_item.check_inv_capacity(user_data=user_data, item_type=ewcfg.it_item):
             response = ewcfg.str_generic_inv_limit.format(ewcfg.it_item)
@@ -2185,7 +2184,9 @@ async def wrap(cmd):
 
             festivity_value += bonus
 
-            if festivity_value < 0: festivity_value = 1
+            # Gifts cannot be negative festivity, and gifts cannot go above a max
+            festivity_value = max(festivity_value, 1)
+            festivity_value = min(festivity_value, ewcfg.festivity_gift_max)
 
             bknd_item.item_create(
                 id_user=cmd.message.author.id,
@@ -2200,6 +2201,7 @@ async def wrap(cmd):
                     # flag indicating if the gift has already been given once so as to not have people farming festivity through !giving
                     'gifted': "false",
                     'gift_value': festivity_value,
+                    'giftee_id': recipient_data.id_user,
                     'gifter_id': user_data.id_user,
                     'gifter_server': user_data.id_server
                 }
@@ -2568,7 +2570,6 @@ async def set_debug_option(cmd):
 async def check_bot(cmd):
     if not cmd.message.author.guild_permissions.administrator:
         return
-
     ewutils.logMsg('TERMINATE is currently: {}'.format(ewutils.TERMINATE))
 
     return

@@ -55,6 +55,7 @@ public_gamestates = {
 
 
 
+forbidden_channels = ["suggestion-box"]
 
 # The max amount of degradation a district can have before it is shambled completely
 district_max_degradation = 10000
@@ -909,6 +910,7 @@ cmd_createall = cmd_prefix + 'createall'
 cmd_manualsoulbind = cmd_prefix + 'soulbind'
 cmd_editprops = cmd_prefix + 'editprops'
 cmd_setslime = cmd_prefix + 'setslime'
+cmd_setfestivity = cmd_prefix + 'setfestivity'
 cmd_checkstats = cmd_prefix + 'checkstats'
 cmd_makebp = cmd_prefix + 'makebp'
 cmd_exalt = cmd_prefix + 'exalt'
@@ -1891,6 +1893,7 @@ festivity_gift_base = 1000 # How much festivity a basic gift is worth
 festivity_gift_food = 1 # How much festivity is given per ten points of hunger restored by the food
 festivity_gift_weapon = 100 # How much festivity is given per kill on a weapon
 festivity_gift_cosmetic = 10 # How much festivity is given per freshness on a cosmetic
+festivity_gift_max = 10000 # How much festivity you can gain in a single gift or feasting
 festivity_dye_bonus = 500 # Bonus for dyeing a gifted cosmetic
 festivity_scrawl_bonus = 100 # Bonus for scrawling on a gift
 festivity_name_bonus = 100 # Bonus for naming a weapon gift
@@ -1907,6 +1910,8 @@ festivity_expired_penalty = 2500 # Penalty if the food item you are giving has a
 festivity_generic_penality = 500 # Penality if the item is something generic
 
 phoebus_bet_floor = 1000000 # How high a slime bet needs to be to get the Phoebus' Blessing bonus
+
+slimernalia_kingpin_announcement = "**HARK!** I, Phoebus do hereby crown <{player}> as today's Kingpin of Slimernalia! <{player}> gained a total of **{festivity}** festivity!"
 
 # Common strings.
 str_casino_closed = "The Casino only operates at night."

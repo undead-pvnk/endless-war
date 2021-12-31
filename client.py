@@ -973,6 +973,10 @@ async def on_message(message):
     if message.author.id == client.user.id or message.author.bot == True:
         return
 
+    # Ignore messages in certain channels
+    if message.channel.name in ewcfg.forbidden_channels:
+        return
+
     if message.guild != None:
         # Note that the user posted a message.
         active_map = active_users_map.get(message.guild.id)
