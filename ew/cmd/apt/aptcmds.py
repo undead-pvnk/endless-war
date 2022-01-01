@@ -4,10 +4,12 @@ import time
 from copy import deepcopy
 
 from ew.backend import item as bknd_item
+from ew.backend import worldevent as bknd_event
 from ew.backend.apt import EwApartment
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.player import EwPlayer
+from ew.backend.worldevent import EwWorldEvent
 from ew.static import cfg as ewcfg
 from ew.static import cosmetics
 from ew.static import food as static_food
@@ -27,7 +29,7 @@ from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid, get_slimeoid_look_string
-from .aptutils import getPriceBase, letter_up, usekey
+from .aptutils import getPriceBase, usekey
 
 
 async def nothing(cmd):  # for an accept, refuse, sign or rip
@@ -137,64 +139,24 @@ async def depart(cmd = None, isGoto = False, movecurrent = None):
 
 async def consult(cmd):
     target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
-    # to check the descriptions, look for consult_responses in ewcfg
 
-    if target_name == None or len(target_name) == 0:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "What region would you like to look at?"))
-
-    user_data = EwUser(member=cmd.message.author)
     response = ""
 
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-    if user_data.poi != ewcfg.poi_id_realestate:
+    if cmd.message.channel.name != ewcfg.channel_realestateagency:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You have to !consult at the Real Estate Agency in Old New Yonkers."))
 
-    poi = poi_static.id_to_poi.get(user_data.poi)
-    district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-    if district_data.is_degraded():
-        response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    if not target_name:
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "What region would you like to look at?"))
 
     poi = poi_static.id_to_poi.get(target_name)
 
-    if poi == None:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "That place doesn't exist. The stupidity of the question drives the realtor to down another bottle."))
-
-    elif poi.id_poi in poi_static.transports:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "As much as the realtor would like to charge you for being homeless, you can't pay rent for sleeping on public transport."))
-
-    elif poi.id_poi == ewcfg.poi_id_rowdyroughhouse or poi.id_poi == ewcfg.poi_id_copkilltown or poi.id_poi == ewcfg.poi_id_juviesrow:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "\"We don't have apartments in such...urban places,\" your consultant mutters under his breath."))
-
-
-    elif poi.is_subzone:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You don't find it on the list of properties. Try something that isn't a subzone."))
-
-    elif poi.id_poi == ewcfg.poi_id_assaultflatsbeach or poi.id_poi == ewcfg.poi_id_dreadford:  # check for DT and other S districts separately, otherwise rank by class
-        multiplier = ewcfg.apartment_s_multiplier
-
-    elif poi.id_poi == ewcfg.poi_id_downtown:
-        multiplier = ewcfg.apartment_dt_multiplier
-
-    elif poi.property_class == ewcfg.property_class_c:
-        multiplier = 1
-
-    elif poi.property_class == ewcfg.property_class_b:
-        multiplier = ewcfg.apartment_b_multiplier
-
-    elif poi.property_class == ewcfg.property_class_a:
-        multiplier = ewcfg.apartment_a_multiplier
-
-    else:
-        response = "Not for sale."
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    if ewcfg.consult_responses[poi.id_poi]:
+    if poi and ewcfg.consult_responses.get(poi.id_poi):
+        multiplier = ewcfg.apartment_class_map.get(poi.property_class)
         response = "You ask the realtor what he thinks of {}.\n\n\"".format(poi.str_name) + ewcfg.consult_responses[poi.id_poi] + "\"\n\n"
-        response += "The cost per month is {:,} SC. \n\n The down payment is four times that, {:,} SC.".format(multiplier * getPriceBase(cmd=cmd), multiplier * 4 * getPriceBase(cmd=cmd))
+        response += "The cost per week is {:,} Slimecoin. \n\n The down payment is four times that, {:,} Slimecoin.".format(multiplier * getPriceBase(cmd=cmd), multiplier * 4 * getPriceBase(cmd=cmd))
+    else:
+        response = "\"We don't have apartments in such... urban places,\" your consultant mutters under his breath."
+
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
@@ -216,63 +178,33 @@ async def frame_title(cmd):
 
 async def signlease(cmd):
     target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
-    if target_name == None or len(target_name) == 0:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "What region would you like to rent?"))
-
     user_data = EwUser(member=cmd.message.author)
 
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    if not target_name:
+        response = "What region would you like to rent?"
+        return await fe_utils.send_response(response, cmd)
 
     if user_data.poi != ewcfg.poi_id_realestate:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You have to !signlease at the Real Estate Agency in Old New Yonkers."))
+        response = "You have to !signlease at the Real Estate Agency in Old New Yonkers."
+        return await fe_utils.send_response(response, cmd)
 
-    poi = poi_static.id_to_poi.get(user_data.poi)
-    district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
+    lease_poi = poi_static.id_to_poi.get(target_name)
 
-    if district_data.is_degraded():
-        response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-    poi = poi_static.id_to_poi.get(target_name)
-
-    if poi == None:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "That place doesn't exist. The consultant behind the counter is aroused by your stupidity."))
-
-    elif poi == ewcfg.poi_id_rowdyroughhouse or poi == ewcfg.poi_id_copkilltown or poi == ewcfg.poi_id_juviesrow:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "\"We don't have apartments in such...urban places,\" your consultant mutters under his breath."))
-
-    elif poi.id_poi in poi_static.transports:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "As much as the realtor would like to charge you for being homeless, you can't pay rent for sleeping on public transport."))
-
-    elif poi.is_subzone:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You don't find it on the list of properties. Try something that isn't a subzone."))
     # these prices are based on prices in the design doc.
-    elif poi.id_poi == ewcfg.poi_id_assaultflatsbeach or poi.id_poi == ewcfg.poi_id_dreadford:
-        base_cost = ewcfg.apartment_s_multiplier * getPriceBase(cmd=cmd)
-
-    elif poi.id_poi == ewcfg.poi_id_downtown:
-        base_cost = ewcfg.apartment_dt_multiplier * getPriceBase(cmd=cmd)
-
-    elif poi.property_class == ewcfg.property_class_c:
-        base_cost = getPriceBase(cmd=cmd)
-
-    elif poi.property_class == ewcfg.property_class_b:
-        base_cost = ewcfg.apartment_b_multiplier * getPriceBase(cmd=cmd)
-
-    elif poi.property_class == ewcfg.property_class_a:
-        base_cost = ewcfg.apartment_a_multiplier * getPriceBase(cmd=cmd)
-
+    if lease_poi and ewcfg.consult_responses.get(lease_poi.id_poi):
+        base_cost = ewcfg.apartment_class_map.get(lease_poi.property_class) * getPriceBase(cmd)
     else:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "Not for sale."))
-
+        response = "\"We don't have apartments in such... urban places,\" your consultant mutters under his breath."
+        return await fe_utils.send_response(response, cmd)
+    
     if (user_data.slimecoin < base_cost * 4):
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You can't afford it."))
+        response = "\n\"Fuck off, deadbeat. Come back when you've got some real dough. You can't even afford the down payment of {:,} Slimecoin! Can't believe some real smartass cocksucker would walk into **MY REAL ESTATE AGENCY** with only {:,} Slimecoin and expect a place in {}! Un-fucking-believable!\"".format(base_cost * 4, user_data.slimecoin, target_name)
+        return await fe_utils.send_response(response, cmd)
 
-    response = "The receptionist slides you a contract. It reads:\n\n THE TENANT, {},  WILL HERETO SUBMIT {:,} SLIMECOIN EACH MONTH UNTIL THEY INEVITABLY HIT ROCK BOTTOM. THEY MUST ALSO PROVIDE A DOWN PAYMENT OF {:,} TO INSURE THE PROPERTY FROM THEIR GREASY JUVENILE HANDS. LANDLORD(S) ARE NOT RESPONSIBLE FOR ANY INJURY OR PROPERTY DAMAGE THAT MAY OCCUR ON THE PREMISES. THEY'RE ALSO NOT RESPONSIBLE IN GENERAL. YOU ARE. BITCH. \n\nDo you !sign the document, or do you !rip it into a million pieces?".format(
+    response = "The receptionist slides you a contract. It reads:\n\n THE TENANT, {},  WILL HERETO SUBMIT {:,} SLIMECOIN EACH WEEK UNTIL THEY INEVITABLY HIT ROCK BOTTOM. THEY MUST ALSO PROVIDE A DOWN PAYMENT OF {:,} TO INSURE THE PROPERTY FROM THEIR GREASY JUVENILE HANDS. LANDLORD(S) ARE NOT RESPONSIBLE FOR ANY INJURY OR PROPERTY DAMAGE THAT MAY OCCUR ON THE PREMISES. THEY'RE ALSO NOT RESPONSIBLE IN GENERAL. YOU ARE. BITCH. \n\nDo you !sign the document, or do you !rip it into a million pieces?".format(
         cmd.message.author.display_name, base_cost, base_cost * 4)
-    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    
+    await fe_utils.send_response(response, cmd)
 
     try:
         message = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and
@@ -303,6 +235,9 @@ async def signlease(cmd):
             had_old_place = False
 
         user_data.change_slimecoin(n=-base_cost * 4, coinsource=ewcfg.coinsource_spending)
+
+        #user_data.apt_zone = lease_poi.id_poi
+
         user_data.persist()
 
         # if user_apt.key_1 != 0:
@@ -316,13 +251,13 @@ async def signlease(cmd):
         user_apt.num_keys = 0
 
         user_apt.name = "{}'s Apartment".format(cmd.message.author.display_name)
-        user_apt.apt_class = poi.property_class
+        user_apt.apt_class = lease_poi.property_class
         user_apt.description = "This new flat is fucking cash, bro.".format(cmd.message.author.display_name)
-        user_apt.poi = poi.id_poi
+        user_apt.poi = lease_poi.id_poi
         user_apt.rent = base_cost
         user_apt.persist()
 
-        response = "You signed the lease for an apartment in {} for {:,} SlimeCoin a month.".format(poi.str_name, base_cost)
+        response = "You signed the lease for an apartment in {} for {:,} SlimeCoin a week.".format(lease_poi.str_name, base_cost)
 
         if had_old_place:
             response += " The receptionist calls up a moving crew, who quickly move your stuff to your new place. "
@@ -353,15 +288,15 @@ async def apartment(cmd):
 
     else:
         poi = poi_static.id_to_poi.get(apartmentmodel.poi)
-        response = "Your apartment is in {}. This {} rank apartment costs {:,} SlimeCoin a month.".format(poi.str_name, apartmentmodel.apt_class.upper(), apartmentmodel.rent)
+        response = "Your apartment is in {}. This {} rank apartment costs {:,} SlimeCoin a week.".format(poi.str_name, apartmentmodel.apt_class.upper(), apartmentmodel.rent)
+
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def upgrade(cmd):
-    playermodel = EwPlayer(id_user=cmd.message.author.id)
-    usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
-    apt_model = EwApartment(id_server=playermodel.id_server, id_user=cmd.message.author.id)
+    usermodel = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
+    apt_model = EwApartment(id_server=cmd.guild.id, id_user=cmd.message.author.id)
 
     if usermodel.life_state == ewcfg.life_state_shambler:
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
@@ -384,20 +319,13 @@ async def upgrade(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     else:
-        poi = poi_static.id_to_poi.get(usermodel.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=usermodel.id_server)
 
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-        response = "Are you sure? The upgrade cost is {:,} SC, and rent goes up to {:,} SC per month. To you !accept the deal, or do you !refuse it?".format(apt_model.rent * 8, apt_model.rent * 2)
+        response = "Are you sure? The upgrade cost is {:,} SC, and rent goes up to {:,} SC per week. To you !accept the deal, or do you !refuse it?".format(apt_model.rent * 8, apt_model.rent * 2)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         accepted = False
 
         try:
-            message = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and
-                                                                                             message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
+            message = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
             if message != None:
                 if message.content.lower() == ewcfg.cmd_accept:
@@ -412,13 +340,16 @@ async def upgrade(cmd):
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         else:
-            usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
-            apt_model = EwApartment(id_server=playermodel.id_server, id_user=cmd.message.author.id)
+            usermodel = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
+            apt_model = EwApartment(id_server=cmd.guild.id, id_user=cmd.message.author.id)
 
             usermodel.change_slimecoin(n=apt_model.rent * -8, coinsource=ewcfg.coinsource_spending)
 
             apt_model.rent *= 2
-            apt_model.apt_class = letter_up(letter=apt_model.apt_class)
+
+            if apt_model.apt_class in ewcfg.apartment_classes:
+                current_index = ewcfg.apartment_classes.index(apt_model.apt_class)
+                apt_model.apt_class = ewcfg.apartment_classes[current_index + 1]
 
             usermodel.persist()
             apt_model.persist()
@@ -934,7 +865,7 @@ async def add_key(cmd):
             response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-        response = "Adding a key will change your rent to {:,} SlimeCoin. It will cost {:,}, as a down payment. Do you !accept or !refuse?".format(int(apartment_data.rent * 1.5), apartment_data.rent)
+        response = "Adding a key will change your rent to {:,} SlimeCoin. It will cost {:,} Slimcoin, as a down payment. Do you !accept or !refuse?".format(int(apartment_data.rent * 1.5), apartment_data.rent)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         try:
             accepted = False
@@ -1011,7 +942,7 @@ async def manual_changelocks(cmd):
             response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-        response = "Changing the locks will revert your rent back to before you added keys. It will cost {:,}, though. Do you !accept or !refuse?".format(apartment_data.rent / 2)
+        response = "Changing the locks will revert your rent back to before you added keys. It will cost {:,} Slimecoin, though. Do you !accept or !refuse?".format(apartment_data.rent / 2)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         try:
             accepted = False
@@ -1056,15 +987,35 @@ async def set_alarm(cmd):
     time_set = ewutils.flattenTokenListToString(cmd.tokens[1:2])
 
     if ((not time_set[:-2].isnumeric()) or not (time_set[-2:] == "am" or time_set[-2:] == "pm")) and time_set != "off":
-        response = "You're setting it wrong, dumbass. See, I knew you were bad at this."
+        response = "You're setting it wrong, dumbass. See, I knew you were bad at this. Try ``!setalarm <time> <item>``"
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     item_sought = bknd_item.find_item(item_search=item_search, id_user=user_data.id_user, id_server=player_data.id_server)
     if item_sought:
         item = EwItem(id_item=item_sought.get('id_item'))
         if "alarmclock" == item.item_props.get('id_furniture'):
-            item.item_props['furniture_name'] = "alarm clock set to {}".format(time_set)
+            response = ""
+            # Check if this alarm clock already has an event attached, and delete it
+            events = bknd_event.get_world_events(cmd.guild.id, True)
+            for we_id, we_type in events.items():
+                if we_type == ewcfg.event_type_alarmclock:
+                    we = EwWorldEvent(we_id)
+                    if str(we.event_props.get("clock_id")) == str(item.id_item):
+                        bknd_event.delete_world_event(we_id)
+            props = {
+                "time": time_set,
+                "clock_id": item.id_item
+            }
+            expiry = (7 * 24 * 60 * 60)
+            clock_def = static_items.furniture_map.get("alarmclock")
+            # Setting an alarm clock lasts for an IRL week, then the batteries give out
+            bknd_event.create_world_event(cmd.guild.id, ewcfg.event_type_alarmclock, time.time(), time.time() + expiry, props)
+            item.item_props["furniture_desc"] = clock_def.str_desc + " It's set to {}.".format(time_set)
+            if item.item_props["furniture_look_desc"] != clock_def.furniture_look_desc:
+                response = "You notice that this alarm clock isn't working. You take out the two shitty batteries and shake them a bit before putting them back in. Good as new!\n\n"
+                item.item_props["furniture_look_desc"] = clock_def.furniture_look_desc
             item.persist()
-            response = "You set the clock to {}.".format(time_set)
+            
+            response += "You set the clock to {}.".format(time_set)
         else:
             response = "That's not an alarm clock. Be less delusional next time."
     else:

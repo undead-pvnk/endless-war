@@ -974,7 +974,7 @@ async def on_message(message):
         return
 
     # Ignore messages in certain channels
-    if message.channel.name in ewcfg.forbidden_channels:
+    if message.channel.type ==  0 and message.channel.name in ewcfg.forbidden_channels:
         return
 
     if message.guild != None:
@@ -1184,7 +1184,6 @@ async def on_message(message):
         if cmd_fn != None:
             # Execute found command
             return await cmd_fn(cmd_obj)
-
         # AWOOOOO
         elif re_awoo.match(cmd):
             return await ewcmd.cmdcmds.cmd_howl(cmd_obj)

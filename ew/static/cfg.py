@@ -1032,6 +1032,7 @@ cmd_undecorate = cmd_prefix + 'undecorate'
 cmd_freeze = cmd_prefix + 'freeze'
 cmd_unfreeze = cmd_prefix + 'unfreeze'
 cmd_apartment = cmd_prefix + 'apartment'
+cmd_apartment_alt = cmd_prefix + 'apt'
 cmd_aptname = cmd_prefix + 'aptname'
 cmd_aptdesc = cmd_prefix + 'aptdesc'
 cmd_upgrade = cmd_prefix + 'aptupgrade'  # do we need the apt at the beginning?
@@ -1128,6 +1129,15 @@ apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
 apartment_dt_multiplier = 3000000000
 apartment_s_multiplier = 6000000000
+
+apartment_class_map = {
+    "c": 1,
+    "b": 1500,
+    "a": 2000000,
+    "s": 6000000000
+}
+
+apartment_classes = [*apartment_class_map.keys()]
 
 soulprice = 500000000
 
@@ -4558,6 +4568,13 @@ event_type_voidhole = "voidhole"
 event_type_voidconnection = "voidconnection"
 event_type_shambaquarium = "shambaquarium"
 event_type_marriageceremony = "marriageceremony"
+
+event_type_brickshit = "brickshit"
+event_type_alarmclock = "alarmclock"
+
+# Events that need to be checked up on every time the market updates
+# All hourly_events MUST include a "time" event_prop!
+hourly_events = [event_type_brickshit, event_type_alarmclock]
 
 halloween_tricks_tricker = [
     "You open the door and give {} a hearty '!SPOOK'. They lose {} slime!",

@@ -29,9 +29,12 @@ class EwTransport(EwTransportBase):
                 return
 
             # Grab EwTransportLine object for current line
-            transport_line = poi_static.id_to_transport_line[self.current_line]
+            transport_line = poi_static.id_to_transport_line.get(self.current_line)
             client = ewutils.get_client()
             resp_cont = EwResponseContainer(client=client, id_server=self.id_server)
+
+            if not transport_line:
+                return
 
             # If the train is at its last stop, switch to the opposite direction
             if self.current_stop == transport_line.last_stop:
