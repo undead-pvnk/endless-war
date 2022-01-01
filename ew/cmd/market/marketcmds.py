@@ -538,28 +538,17 @@ async def art_donate(id_item, cmd):
                 bknd_item.item_delete(id_item)
 
             else:
-                response = "\"GIVE ME A TITLE FOR THIS, LAD! MY EXHIBITS ARE MORE THAN A GLORIFIED KITCHEN FRIDGE!\" "
+                response = "\"GIVE ME A TITLE FOR THIS, YOU {}! MY EXHIBITS ARE MORE THAN A GLORIFIED KITCHEN FRIDGE!\" ".format(random.choice(ewcfg.curator_insults))
         else:
             response = '\"Sorry, we\'re not collecting donations from your kind at this time. Please refrain from stinking up the general vicinity.\"'
     return response
-
-
-def check_art_for_duplicates(link):
-    try:
-        result = bknd_core.execute_sql_query("SELECT {}, {} FROM world_events WHERE id_event = %s".format(
-            ewcfg.col_record_type,
-            ewcfg.col_id_image
-        ), (
-            link
-        ))
-    except:
-        ewutils.logMsg("Error while checking for duplicates.")
 
 
 async def populate_image(cmd):
     if 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
         if cmd.tokens_count != 4:
             response = "Invalid command. Try !addart <fish/relic> <title> <link>."
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         else:
             type = cmd.tokens[1]
             item = cmd.tokens[2]
