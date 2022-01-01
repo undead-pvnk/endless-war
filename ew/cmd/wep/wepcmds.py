@@ -324,7 +324,7 @@ async def attack(cmd):
             ))
 
             if ewcfg.slimernalia_active and attacker.life_state == ewcfg.life_state_juvenile:
-                attacker.festivity += ewcfg.festivity_kill_bonus
+                ewstats.change_stat(id_server=attacker.id_server, id_user=attacker.id_user, metric=ewcfg.stat_festivity, n=ewcfg.festivity_kill_bonus)
             
             if attacker_slimeoid.life_state == ewcfg.slimeoid_state_active:
                 slimeoid_resp += "\n\n" + sl_static.brain_map.get(attacker_slimeoid.ai).str_kill.format(slimeoid_name=attacker_slimeoid.name)
