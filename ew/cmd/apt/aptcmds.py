@@ -236,7 +236,6 @@ async def signlease(cmd):
 
         user_data.change_slimecoin(n=-base_cost * 4, coinsource=ewcfg.coinsource_spending)
 
-        #user_data.apt_zone = lease_poi.id_poi
 
         user_data.persist()
 
