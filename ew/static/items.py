@@ -2738,7 +2738,7 @@ furniture_list = [
         rarity = "Plebeian",
         acquisition = "bartering",
         price = 90000,
-        vendors = ['bazaar'],
+        vendors = ['bazaar', ewcfg.vendor_basedhardware],
         furniture_place_desc = "You place the picture on the wall. What did you put in there? Was it a picture of your family? I bet it was a picture of your family. Man, you suck.",
         furniture_look_desc = "A picture frame hangs on the wall.",
     ),
