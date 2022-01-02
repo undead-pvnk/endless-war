@@ -482,6 +482,7 @@ def create_death_report(cause = None, user_data = None):
 
 
 async def update_slimernalia_kingpin(client, server):
+    return
     # Depose current slimernalia kingpin
     kingpin_state = EwGamestate(id_server=server.id, id_state='slimernaliakingpin')
     old_kingpin_id = int(kingpin_state.value)
