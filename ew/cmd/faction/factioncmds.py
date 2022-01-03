@@ -1,4 +1,5 @@
 from ew.backend import item as bknd_item
+from ew.backend import core as bknd_core
 from ew.backend.item import EwItem
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
@@ -64,7 +65,7 @@ async def store(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     else:
         if len(poi.factions) > 0 and user_data.faction not in poi.factions:
-            response = "Get real, asshole. You haven't even enlisted into this gang yet, so it's not like they'd trust you with a key to their valubles."
+            response = "Get real, asshole. You haven't even enlisted into this gang yet, so it's not like they'd trust you with a key to their valuables."
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if cmd.tokens[1] == 'all':
@@ -72,6 +73,9 @@ async def store(cmd):
 
     multistow = 1
     startparse = 1
+
+    items = []
+
     if cmd.tokens[1].isnumeric() and cmd.tokens_count > 2:
         startparse = 2
         multistow = int(cmd.tokens[1])
@@ -85,6 +89,10 @@ async def store(cmd):
         if not item_sought.get('soulbound'):
             items_had = 0
             loop_sought = item_sought.copy()
+
+            item_cache = bknd_core.get_cache(obj_type="EwItem")
+
+
             while multistow > 0 and loop_sought is not None:
                 item = EwItem(id_item=loop_sought.get("id_item"))
                 item_search = ewutils.flattenTokenListToString(loop_sought.get('name'))
@@ -108,7 +116,13 @@ async def store(cmd):
                         item.item_props["slimeoid"] = "false"
 
                 item.persist()
-                bknd_item.give_item(id_item=loop_sought.get('id_item'), id_server=item.id_server, id_user=poi.community_chest)
+                #bknd_item.give_item(id_item=loop_sought.get('id_item'), id_server=item.id_server, id_user=poi.community_chest)
+                items.append(int(loop_sought.get('id_item')))
+
+                cache_item = item_cache.get_entry(unique_vals={"id_item": int(loop_sought.get('id_item'))})
+                cache_item.update({'id_owner': poi.community_chest})
+                item_cache.set_entry(data=cache_item)
+
                 loop_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
                 items_had += 1
                 multistow -= 1
@@ -118,7 +132,7 @@ async def store(cmd):
             else:
                 name_string = item_sought.get("name")
 
-
+            bknd_item.give_item_multi(id_list=items, destination=poi.community_chest)
             response = "You store your {} in the community chest.".format(name_string)
 
         else:
@@ -166,6 +180,8 @@ async def take(cmd):
     item_sought = bknd_item.find_item(item_search=item_search, id_user=poi.community_chest, id_server=cmd.guild.id if cmd.guild is not None else None, admin = admin)
 
     items_snagged = 0
+    item_list = []
+    item_cache = bknd_core.get_cache(obj_type="EwItem")
 
     if item_sought:
         item_search = ewutils.flattenTokenListToString(item_sought.get('name'))
@@ -222,8 +238,15 @@ async def take(cmd):
 
             items_snagged += 1
             multisnag -= 1
-            print(loop_sought.get('id_item'))
+
             bknd_item.give_item(id_item=loop_sought.get('id_item'), id_server=user_data.id_server, id_user=user_data.id_user)
+            item_list.append(loop_sought.get('id_item'))
+
+            cache_item = item_cache.get_entry(unique_vals={"id_item": loop_sought.get('id_item')})
+            cache_item.update({'id_owner': cmd.message.author.id})
+            item_cache.set_entry(data=cache_item)
+
+
             loop_sought = bknd_item.find_item(item_search=item_search, id_user=poi.community_chest, id_server=cmd.guild.id if cmd.guild is not None else None, admin=admin)
 
         if items_snagged > 1:

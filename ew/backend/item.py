@@ -1062,7 +1062,32 @@ def give_item(
     return True
 
 
+def give_item_multi(id_list = None, destination = None):
+    if id_list != None and destination != None:
+        for id_item in id_list:
+            remove_from_trades(id_item)
 
+        try:
+
+            drop_list = ','.join(map(str, id_list))
+
+            bknd_core.execute_sql_query(
+                "UPDATE items SET {id_user} = %s WHERE id_item IN({drop_list})".format(
+                    id_user=ewcfg.col_id_user,
+                    drop_list=drop_list
+                ),
+                (
+                    [destination]
+                ))
+
+        except:
+            ewutils.logMsg('Failed to mass move items.')
+
+        item_cache = bknd_core.get_cache(obj_type="EwItem")
+        for id in id_list:
+            cache_item = item_cache.get_entry(unique_vals={"id_item": id})
+            cache_item.update({'id_owner': destination})
+            item_cache.set_entry(data=cache_item)
 
 """
     Return false if a player's inventory is at or over capacity for a specific item type

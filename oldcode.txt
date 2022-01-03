@@ -24688,3 +24688,36 @@ CREATE TABLE gvs_grid_conditions (
                 #        response = "You can't carry any more {}s.".format(item_type)
                 #        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+async def temple_mine(cmd):
+    state = EwGamestate(id_server=cmd.guild.id, id_state='mineslab')
+    counter = int(state.value)
+
+    if counter < 0:
+        response = "There's nothing left to desecrate here, sadly."
+    elif counter >= 1:
+        response = "crack"
+        counter -= 1
+        state.value = str(counter)
+        state.persist()
+        return await ewfrontend.send_message(cmd.client, cmd.message.channel, response)
+    else:
+        response = "**CCCRACKSHhh.** Oh? Look at that, the last preserved piece of writing from this ancient temple just fell right outta the wall! This oughta make a good souvenir for the missus!\n\nYou got the Petrified Slab!"
+        counter -= 1
+        state.value = str(counter)
+        state.persist()
+        item_id = bknd_item.item_create(
+            id_user=cmd.message.author.id,
+            id_server=cmd.guild.id,
+            item_type=ewcfg.it_relic,
+            item_props={
+                'id_relic': "petrifiedslab",
+                'acquisition': '',
+                'relic_name': 'petrified slab',
+                'relic_desc': 'It\'s a big chunk taken out of a wall. The holy temple it came from must\'ve had great reverence for whatever gods they worshipped. And you broke a piece off as a souvenir. I\'m impressed, actually.'
+            }
+        )
+
+
+
+
+    return await ewfrontend.send_message(cmd.client, cmd.message.channel, ewfrontend.formatMessage(cmd.message.author, response))

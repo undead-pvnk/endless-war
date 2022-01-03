@@ -5,6 +5,7 @@ from copy import deepcopy
 
 from ew.backend import item as bknd_item
 from ew.backend import worldevent as bknd_event
+from ew.backend import core as bknd_core
 from ew.backend.apt import EwApartment
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
@@ -1398,6 +1399,9 @@ async def store_item(cmd):
 
         items_had = 0
         loop_sought = item_sought.copy()
+        item_list = []
+        item_cache = bknd_core.get_cache(obj_type="EwItem")
+
         while multistow > 0 and loop_sought is not None:
             item = EwItem(id_item=loop_sought.get('id_item'))
             if item.item_type == ewcfg.it_food and destination == ewcfg.compartment_id_fridge:
@@ -1422,13 +1426,22 @@ async def store_item(cmd):
 
             items_had += 1
             multistow -= 1
-            bknd_item.give_item(id_item=item.id_item, id_server=playermodel.id_server, id_user=recipient + destination)
+            item_list.append(item.id_item)
+
+            cache_item = item_cache.get_entry(unique_vals={"id_item": int(loop_sought.get('id_item'))})
+            cache_item.update({'id_owner': recipient + destination})
+            item_cache.set_entry(data=cache_item)
+
+            #bknd_item.give_item(id_item=item.id_item, id_server=playermodel.id_server, id_user=recipient + destination)
             loop_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
 
 
         if items_had > 1:
             name_string = "{}(x{})".format(name_string, items_had)
 
+        bknd_item.give_item_multi(id_list=item_list, destination=recipient + destination)
+        print(item_list)
         if (destination == ewcfg.compartment_id_decorate):
             response = item.item_props['furniture_place_desc']
             if items_had > 1:
@@ -1497,6 +1510,8 @@ async def remove_item(cmd):
 
     items_snagged = 0
     hatrack = False
+    item_list = []
+    item_cache = bknd_core.get_cache(obj_type="EwItem")
     while multisnag > 0:
         item_sought = None
         # if the command is "take", we need to determine where the item might be
@@ -1591,7 +1606,13 @@ async def remove_item(cmd):
                 item.persist()
             items_snagged += 1
             multisnag -= 1
-            bknd_item.give_item(id_item=item.id_item, id_server=playermodel.id_server, id_user=cmd.message.author.id)
+
+            #bknd_item.give_item(id_item=item.id_item, id_server=playermodel.id_server, id_user=cmd.message.author.id)
+            item_list.append(item.id_item)
+
+            cache_item = item_cache.get_entry(unique_vals={"id_item": item.id_item})
+            cache_item.update({'id_owner': cmd.message.author.id})
+            item_cache.set_entry(data=cache_item)
 
     if items_snagged > 1:
         name_string = "{}(x{})".format(name_string, items_snagged)
