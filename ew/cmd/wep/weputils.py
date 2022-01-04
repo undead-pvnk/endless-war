@@ -453,6 +453,8 @@ def canAttack(cmd):
         response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
     elif weapon.cooldown + (float(weapon_item.item_props.get("time_lastattack")) if weapon_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
         response = "Your {weapon_name} isn't ready for another attack yet!".format(weapon_name=weapon.id_weapon)
+    elif poi.id_poi == 'hangemsquare' and market.clock != 12:
+        response = "It's not noon yet. Everything in its own time."
     elif (ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower) or code_count > 1:
         if (ewcfg.weapon_class_burning in weapon.classes or ewcfg.weapon_class_exploding in weapon.classes):
             slime_backfired = int(user_data.slimes * (0.1 + random.random() / 20))
@@ -471,8 +473,6 @@ def canAttack(cmd):
                     "Why don't these explosives have proper training manuals? You'll never get to know, as you're splattered across the concrete."
                 ])
             response += "\nYou lose {:,} slime. Learn to type, you fucking idiot.".format(slime_backfired)
-        elif poi.id_poi == 'hangemsquare' and market.clock != 12:
-            response = "It's not noon yet. Everything in its own time."
         else:
             response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
 

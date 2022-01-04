@@ -591,7 +591,7 @@ poi_list = [
 		property_class = "s",
 		is_district = True,
 		is_capturable = True,
-		neighbors = {'jaywalkerplain': 60, 'crookline': 60, 'thecountryclub': 20, 'dreadfordblimptower': 20, 'southwestoutskirtsedge': 120},
+		neighbors = {'jaywalkerplain': 60, 'crookline': 60, 'thecountryclub': 20, 'dreadfordblimptower': 20, 'southwestoutskirtsedge': 120, 'hangemsaloon':20, 'hangemsquare':20},
 		topic = "Ford of Dread.",
 		wikipage = "https://rfck.miraheze.org/wiki/Dreadford",
 	),
@@ -3342,7 +3342,31 @@ EwPoi(
 		neighbors={"westoutskirts": 60} if ewcfg.dh_stage == 3 else {},
 		wikipage=""
 	),
-EwPoi(
+	EwPoi(
+		id_poi="saloon",
+		alias=['hangemsaloon', 'hes'],
+		str_name="Hang 'em Saloon",
+		str_desc="How is this saloon not collapsed by now? It was built by the gangs of the city out of bricks and slime, from a blueprint none of them should be able to read. Well, it's here now. And pretty soon you imagine the gangs will make it their own. And by that I mean raze it to the ground. Hey, at least you have a good view of the dueling grounds from here. This area leads to Hang-em Square and Dreadford.",
+		channel="saloon",
+		permissions={'saloon': ['read', 'send', 'connect'], 'hang-em-square': ['read']},
+		property_class="",
+		is_subzone=True,
+		pvp=False,
+		neighbors={"hangemsquare": 20,  "dreadford":20}
+	),
+	EwPoi(
+        id_poi="hangemsquare",
+        alias=['townsquare', 'hes', 'hangem', 'hang', 'duel', 'dueling'],
+        str_name="Hang 'em Square",
+        str_desc="This is the old town square of Dreadford, near abandoned after the new saloon opened up and drove everyone out. The old settlers that founded the district used the well-worn, well-loved guillotine in its center to decapitate each other for frivolous, basically nonexistent crimes. Today, you're much more likely to see them squaring off Big Iron style, as onlookers watch from indoors. How precious to see today's youth keeping up with suicidal tradition. This area leads to the Saloon and Dreadford.",
+        channel="hang-em-square",
+        permissions={'hang-em-square': ['read', 'send', 'connect']},
+        property_class="",
+        is_subzone=True,
+		pvp = True,
+        neighbors={"saloon":20, "dreadford":20}
+    ),
+	EwPoi(
 		id_poi="greenroom",
 		alias=[
 		],

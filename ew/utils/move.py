@@ -578,7 +578,7 @@ async def send_gangbase_messages(server_id, clock):
 
     if highnoon != 0:
         district = EwDistrict(district='hangemsquare', id_server=server_id)
-        if district.get_players_in_district(min_slimes=0, life_states=[ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_shambler, ewcfg.life_state_corpse], ignore_offline=True) > 0:
+        if len(district.get_players_in_district(min_slimes=0, life_states=[ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_shambler, ewcfg.life_state_corpse], ignore_offline=True)) > 0:
             if highnoon == 1:
                 response = "It's almost high noon..."
             else:
