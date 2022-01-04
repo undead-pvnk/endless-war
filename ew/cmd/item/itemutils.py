@@ -138,7 +138,7 @@ def get_weapon_collection(id_item, id_server):
 
     for wep in weapon_inv:
         weapon_item = EwItem(id_item=wep.get('id_item'))
-        kills = weapon_item.item_props.get('kills')
+        kills = weapon_item.item_props.get('totalkills')
         if kills is None:
             kills = 0
         name = weapon_item.item_props.get('weapon_name')

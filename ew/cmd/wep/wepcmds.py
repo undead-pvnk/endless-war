@@ -353,21 +353,20 @@ async def attack(cmd):
 
             # Lets throw a little scalp and/or foreskin creation in here
             # Lets throw a little scalp creation in here
-            if target.life_state != ewcfg.life_state_shambler:
-                if ewcfg.slimernalia_active:
-                    bknd_item.item_create(
-                        item_type=ewcfg.it_furniture,
-                        id_user=attacker_member.id,
-                        id_server=cmd.guild.id,
-                        item_props={
-                            'id_furniture': ewcfg.item_id_sigillaria,
-                            'furniture_name': "{}'s sigillaria".format(target_member.display_name),
-                            'furniture_desc': "A sigillaria of {}.".format(target_member.display_name),
-                            'rarity': ewcfg.rarity_patrician,
-                            'furniture_place_desc': "You place the figurine, filling your apartment with Slimernalia cheer.",
-                            'furniture_look_desc': "There's a sigillaria of {}.".format(target_member.display_name),
-                        }
-                    )
+            if ewcfg.slimernalia_active and target.life_state != ewcfg.life_state_shambler:
+                bknd_item.item_create(
+                    item_type=ewcfg.it_furniture,
+                    id_user=attacker_member.id,
+                    id_server=cmd.guild.id,
+                    item_props={
+                        'id_furniture': ewcfg.item_id_sigillaria,
+                        'furniture_name': "{}'s sigillaria".format(target_member.display_name),
+                        'furniture_desc': "A sigillaria of {}.".format(target_member.display_name),
+                        'rarity': ewcfg.rarity_patrician,
+                        'furniture_place_desc': "You place the figurine, filling your apartment with Slimernalia cheer.",
+                        'furniture_look_desc': "There's a sigillaria of {}.".format(target_member.display_name),
+                    }
+                )
             elif foreskin and target.life_state != ewcfg.life_state_shambler:
                 bknd_item.item_create(
                     item_type=ewcfg.it_cosmetic,

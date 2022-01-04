@@ -448,7 +448,7 @@ async def fish_donate(id_item, cmd):
             slimes_awarded *= 3
 
         user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
-        user_data.change_slimes(n=100000)
+        user_data.change_slimes(n=slimes_awarded)
         user_data.persist()
 
 
