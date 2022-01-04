@@ -47,7 +47,7 @@ from .moveutils import send_arrival_response
 """
 
 
-async def move(cmd = None, isApt = False, isSplit = 0):
+async def move(cmd = None, isApt = False, isSplit = 0, continuousMove = -1):
     player_data = EwPlayer(id_user=cmd.message.author.id)
     user_data = EwUser(id_user=cmd.message.author.id, id_server=player_data.id_server, data_level=1)
     poi_current = poi_static.id_to_poi.get(user_data.poi)
@@ -163,26 +163,26 @@ async def move(cmd = None, isApt = False, isSplit = 0):
         path = EwPath(cost=60)
     elif len(poi.neighbors.keys()) == 0 or poi_current == None or len(poi_current.neighbors.keys()) == 0:
         path = None
-    elif  poi_current.isSplit  != "" and poi.isSplit != "" and poi_current.isSplit != poi.isSplit and isSplit == False:
+    elif  poi_current.isSplit  != "" and poi.isSplit != "" and poi_current.isSplit != poi.isSplit and isSplit == False:#this code is probably my worst fucking code ever. we need to fix routing
         cmd_swap = cmd.tokens
         cmd.tokens = ['!goto', poi_current.isSplit]
         await move(cmd=cmd, isSplit=1)
         cmd.tokens = ['!goto', poi.isSplit]
-        await move(cmd=cmd, isSplit=2)
+        await move(cmd=cmd, isSplit=2, continuousMove=ewutils.moves_active.get(cmd.message.author.id))
         cmd.tokens = cmd_swap
-        return await move(cmd=cmd, isSplit=2)
-    elif poi.isSplit != "" and isSplit == False and poi_current.isSplit != poi.isSplit:
+        return await move(cmd=cmd, isSplit=2, continuousMove=ewutils.moves_active.get(cmd.message.author.id))
+    elif poi.isSplit != "" and isSplit == False and poi_current.isSplit != poi.isSplit and poi.id_poi != poi.isSplit:
         cmd_swap = cmd.tokens
         cmd.tokens = ['!goto', poi.isSplit]
         await move(cmd=cmd, isSplit=1)
         cmd.tokens = cmd_swap
-        return await move(cmd=cmd, isSplit=2)
-    elif poi_current.isSplit != "" and isSplit == False and poi_current.isSplit != poi.isSplit:
+        return await move(cmd=cmd, isSplit=2, continuousMove=ewutils.moves_active.get(cmd.message.author.id))
+    elif poi_current.isSplit != "" and isSplit == False and poi_current.isSplit != poi.isSplit and poi_current.id_poi != poi_current.isSplit:
         cmd_swap = cmd.tokens
         cmd.tokens = ['!goto', poi_current.isSplit]
         await move(cmd=cmd, isSplit=1)
         cmd.tokens = cmd_swap
-        return await move(cmd=cmd, isSplit=2)
+        return await move(cmd=cmd, isSplit=2, continuousMove=ewutils.moves_active.get(cmd.message.author.id))
     else:
         path = move_utils.path_to(
             poi_start=poi_current.id_poi,
@@ -193,7 +193,6 @@ async def move(cmd = None, isApt = False, isSplit = 0):
         if path != None:
             path.cost = int(path.cost / user_data.move_speed)
 
-    print(cmd.tokens)
     if path == None:
         return await fe_utils.send_message(cmd.client, cmd.message.channel,
                                            fe_utils.formatMessage(cmd.message.author, "You don't know how to get there."))
@@ -202,11 +201,14 @@ async def move(cmd = None, isApt = False, isSplit = 0):
     # global move_counter
 
     # Check if we're already moving. If so, cancel move and change course. If not, register this course.
-    move_current = ewutils.moves_active.get(cmd.message.author.id)
-    move_utils.move_counter += 1
-
+    if continuousMove == -1:
+        move_current = ewutils.moves_active.get(cmd.message.author.id)
+        move_utils.move_counter += 1
+        move_current = ewutils.moves_active[cmd.message.author.id] = move_utils.move_counter
+    else:
+        move_current = continuousMove
     # Take control of the move for this player.
-    move_current = ewutils.moves_active[cmd.message.author.id] = move_utils.move_counter
+
 
     # Hard lock path costs to not be lower than 5 seconds.
     path.cost = max(path.cost, 5)
@@ -281,7 +283,7 @@ async def move(cmd = None, isApt = False, isSplit = 0):
         if path.cost > 0:
             await asyncio.sleep(path.cost)
 
-        if ewutils.moves_active[cmd.message.author.id] != move_current:
+        if ewutils.moves_active[cmd.message.author.id] != move_current or ewutils.moves_active[cmd.message.author.id] == 0:
             return
 
         user_data = EwUser(id_user=cmd.message.author.id, id_server=player_data.id_server)
@@ -381,7 +383,7 @@ async def move(cmd = None, isApt = False, isSplit = 0):
                     await asyncio.sleep(val)
 
                 # Check to see if we have been interrupted and need to not move any farther.
-                if ewutils.moves_active[cmd.message.author.id] != move_current:
+                if ewutils.moves_active[cmd.message.author.id] != move_current or move_current == 0:
                     break
 
                 user_data = EwUser(id_user=cmd.message.author.id, id_server=player_data.id_server)
@@ -452,7 +454,7 @@ async def move(cmd = None, isApt = False, isSplit = 0):
                             await fe_utils.send_message(cmd.client, channel,
                                                         fe_utils.formatMessage(cmd.message.author, ad_response))
 
-        if intoApt and ewutils.moves_active[cmd.message.author.id] == move_current:
+        if intoApt and ewutils.moves_active[cmd.message.author.id] == move_current and move_current != 0:
             await ewapt.aptcmds.retire(cmd=cmd, isGoto=True, movecurrent=move_current)
         if isSplit == 0:
             await asyncio.sleep(30)

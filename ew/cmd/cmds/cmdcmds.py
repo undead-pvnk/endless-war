@@ -2713,7 +2713,6 @@ async def dual_key_release(cmd):
         return await cmd_utils.fake_failed_command(cmd)
     response = ""
     final_unban_text = ""
-    print(cmd.tokens)
     player = None
     if cmd.tokens_count == 2:
         if '<@!' in cmd.tokens[1]:
@@ -2727,10 +2726,8 @@ async def dual_key_release(cmd):
         bans = target_data.get_bans()
         key = 'dualkey{}'.format(cmd.message.author.id)
         response = "You never banned them to begin with. "
-        print("{} - Key".format(key))
 
         if key in bans:
-            print('taken')
             target_data.unban(faction=key)
             response = "You take your ban key out of the slot. "
             bans.remove(key)
@@ -2739,12 +2736,10 @@ async def dual_key_release(cmd):
         for ban in bans:
             if 'dualkey' in ban:
                 ban_count += 1
-        print('madestart{}'.format(target_data.id_user))
         if ban_count < 2:
 
             banned_users = await cmd.guild.bans()
             for ban in banned_users:
-                print(ban.user.id)
                 if ban.user.id == player.id_user:
                     await cmd.guild.unban(ban.user)
                     final_unban_text = "{} is unbanned!".format(player.display_name)

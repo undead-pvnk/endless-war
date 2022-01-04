@@ -46,5 +46,7 @@ def get_move_speed(user_data):
     move_speed = max(0.1, move_speed)
     if ewutils.DEBUG == True:
         move_speed *= 2
+        #move_speed = 12
+
 
     return move_speed

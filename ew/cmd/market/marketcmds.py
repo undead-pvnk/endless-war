@@ -489,7 +489,6 @@ async def relic_donate(id_item, cmd):
 
         relic_channel = fe_utils.get_channel(server=cmd.guild, channel_name='relic-exhibits')
         sent_message = await fe_utils.send_message(cmd.client, relic_channel, museum_text)
-        print(item_obj.item_props.get('id_relic'))
         new_record = EwRecord(id_server=cmd.guild.id, record_type=item_obj.item_props.get('id_relic'))
         new_record.id_user = cmd.message.author.id
         new_record.id_post = str(sent_message.id)

@@ -1417,10 +1417,10 @@ async def clock_tick_loop(id_server = None, force_active = False):
                         response = ' The SlimeCorp Stock Exchange has closed for the night.'
                         await fe_utils.send_message(client, sex_channel, response)
                   
-                ewutils.logMsg("Finished clock tick.")
+                    ewutils.logMsg("Finished clock tick.")
                 await asyncio.sleep(60)
-    except:
-        ewutils.logMsg('An error occurred in the scheduled slime market update task. Fix that.')
+    except Exception as e:
+        ewutils.logMsg('An error occurred in the scheduled slime market update task: {}. Fix that.'.format(e))
 
 
 

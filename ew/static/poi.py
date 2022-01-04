@@ -3207,7 +3207,7 @@ poi_list = [
 		is_subzone = True,
 		father_district = "downtown",
 		neighbors = {'limecorp2f': 20, 'downtown': 20},
-		isSplit= ''
+		isSplit= 'limecorp1f'
 	),
 	EwPoi(
 		id_poi = "thesummit",

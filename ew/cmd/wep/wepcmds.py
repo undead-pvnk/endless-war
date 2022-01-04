@@ -280,10 +280,10 @@ async def attack(cmd):
                 print("{} seconds to run attack ln 252 stat updates".format(end-start))
             else:
                 attacker.change_crime(n=ewcfg.cr_assault_points)
-                print('hulu {}'.format(to_kingpin))
+
                 if to_kingpin > 0:
                     ewstats.change_stat(user=attacker, metric=ewcfg.stat_lifetime_kingpin_slimes, n=to_kingpin)
-                    print("{} wee mama".format(to_kingpin))
+
 
         """ Flavortext Generation """
 

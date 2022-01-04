@@ -570,9 +570,10 @@ async def send_gangbase_messages(server_id, clock):
             post_channel = fe_utils.get_channel(server, channel)
             await fe_utils.send_message(client, post_channel, response)
     if lucky_lucy == 1:
-        await fe_utils.send_message(client, casino_channel, casino_response)
-        await asyncio.sleep(300)
-        await fe_utils.send_message(client, casino_channel, casino_end)
+        pass #taking this out until we have a better method
+        #await fe_utils.send_message(client, casino_channel, casino_response)
+        #await asyncio.sleep(300)
+        #await fe_utils.send_message(client, casino_channel, casino_end)
 
 
     if highnoon != 0:

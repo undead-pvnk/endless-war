@@ -588,9 +588,7 @@ async def sacrifice(cmd):
                 item_name = item.item_props.get(property_type)
                 if property_type == 'normal':
                     item_name = 'normal'
-                print(item_name)
                 arr_sac = ewcfg.sacrifice_rates.get(item_name)
-                print(arr_sac)
 
                 if arr_sac == None and item.item_type == ewcfg.it_food:
                     arr_sac = [3, "Tasty."]

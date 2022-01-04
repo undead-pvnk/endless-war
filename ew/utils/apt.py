@@ -92,7 +92,7 @@ async def handle_hourly_events(id_server = None):
                 if we.event_props.get("time") == str(time_current):
                     # Handle brickshitting code
                     if we_type == ewcfg.event_type_brickshit:
-                        print("brick")
+
                         brick_obj = EwItem(id_item=we.event_props.get("brick_id"))
                         id_user = brick_obj.id_owner.replace("stomach", "")
                         brick_user = EwUser(id_server=id_server, id_user=id_user)
