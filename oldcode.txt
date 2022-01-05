@@ -24721,3 +24721,62 @@ async def temple_mine(cmd):
 
 
     return await ewfrontend.send_message(cmd.client, cmd.message.channel, ewfrontend.formatMessage(cmd.message.author, response))
+
+
+async def searchpapers(cmd):
+    state = EwGamestate(id_state='siftpapers', id_server=cmd.guild.id)
+
+    usedwords = state.value
+
+    keyword = str(cmd.tokens[0])
+
+    keyword_dict = {
+        '!sift': "You sift through the papers, looking for anything of value. Huh, maybe sifting's no good.",
+        '!search': "You find a crossword puzzle Nina was doing back in some 2019 newspaper. Why did she file this?",
+        '!molest': "You gently stroke the fine print on these docs. What kind of sick, fucked up kid are you?",
+        '!organize': "You file the docs in triplicate, ordering by date of publication, department number, and dewey decimal value. Seeing that your shit filing system actually makes everything harder to find, you toss it mindlessly back on the floor.",
+        '!lookthrough': "You see if X-ray vision is in your mutations. It isn't. You can't see through them then.",
+        '!peruse': "Maybe looking through these with the pompousness of an explorer will give you something. You turn your nose at the documents. They ignore you. Typical.",
+        '!rummage': "You get on your hands and knees, ceaselessly struggling to find anything that justifies this endless search for \"search\" synonyms. Please, god, give me anything!",
+        '!examine': "You open up one particular document, just to make sure it isn't valuable. It's the firing paperwork for all the N's. Looks like N1 got all that ready ahead of time, eh?",
+        '!probe': "You, uh, \"probe\" the documents. Whatever that means. It seems to have given you some kind of breakthrough, god knows what you did.",
+        '!scrutinize': "The papers are blanketing the floor here, you can hardly see the carpet. They're just begging to be sifted.",
+        '!read': "You can't read. This realization actually helps you look for valuables in here, now that you know to check for illustrations instead.",
+        '!dissect': "You cut a document in half, carefully examining the millimeters of sheet on its interior. It's paper, numbnuts. There's obviously nothing inside it.",
+        '!scavenge': "You collect the papers into your inventory. They're all useless ones, and your inventory doesn't even dignify them with a slot.",
+        '!survey': "You pick up each paper one by one, checking for any surveys you can fill out. There's a few, but they're out of date.",
+        '!frisk': "You look intently through the papyrus, but sans a few paper cuts you don't uncover anything new.",
+        '!shift':"YOU SIFT THE PAPERS WHILE HOLDING DOWN THE SHIFT KEY. THIS MAKES THE PROCESS A LOT LOUDER.",
+        '!shuffle': "You give the papers two riffles, a cut, and then a casino wash. Casino protocol gets more thorough than that but this paper stack is about as tall as you, and you're not gonna bother.",
+        '!sort': " sort: You divide the papers into the \"boring\", \"really boring\", and \"hot goss\" categories. Not that you would bother reading anything to actually know this information.",
+        '!analyze': '"Papers" are an English colloquialism which comes from lengthening the root word \'Papes\'. For the most part, it is synonymous with writable surfaces of any kind.',
+        '!sniff': 'They smell like wet concrete. Huh.',
+        '!thinkabout': "You ponder papers for awhile. Because honestly, what are we but the reproductive organs for the continued existence of paper? While our quality of life and birth rate both decline, what happens to paper? It just keeps coming out of nowhere. Multiplying, reams after reams printing for the mere spread of overrated knowledge. Leading, of course, to the mess lying before you. \n Wait, what are you talking about?'",
+        '!scan': "BEGINNING SCAN...\n20 %\n...\n40 %\n...\n60 %\n...\n90 %\n...\n99 %\n...\n...\n...\nSCAN COMPLETE.IT'S PAPER."
+    }
+
+    if len(usedwords) >= 111 and state.bit == False:
+        response = "After eternities of scrambling through these endless stacks of goldenrod and cardstock, you finally found something under a weird tipi of index cards: a rolled up blueprint containing the schematics for an old bar in Dreadford! Thank god it was blue, you would never have found it otherwise."  #complete sift
+        item_id = bknd_item.item_create(
+            id_user=cmd.message.author.id,
+            id_server=cmd.guild.id,
+            item_type=ewcfg.it_relic,
+            item_props={
+                'id_relic': "oldblueprint",
+                'acquisition': '',
+                'relic_name': 'Old Blueprint',
+                'relic_desc': 'It\'s a floorplan for some two century old building. Looks like a saloon was meant to be constructed somewhere in the city. Probably got cancelled because inebriation still doesn\'t do anything. God DAMMIT devs.'
+            },
+        )
+        state.bit = True
+        state.persist()
+    else:
+        response = keyword_dict.get(keyword)
+        if keyword not in usedwords:
+            usedwords += keyword
+            state.value = usedwords
+            print(usedwords)
+            state.persist()
+        else:
+            response += "\n\nSomeone already tried that, though. Maybe something else?"
+    return await ewfrontend.send_message(cmd.client, cmd.message.channel, ewfrontend.formatMessage(cmd.message.author, response))

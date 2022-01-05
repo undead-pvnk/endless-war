@@ -14,6 +14,11 @@ from ew.backend.fish import EwRecord
 from ew.backend.dungeons import EwGamestate
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
+from ew.static.fish import fish_map
+try:
+    from ew.static.rstatic import relic_map
+except:
+    from ew.static.rstatic_dummy import relic_map
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import market as market_utils
@@ -568,10 +573,33 @@ async def populate_image(cmd):
 
             record.id_image = link
             record.persist()
-
             message = await channel.fetch_message(int(record.id_post))
-            await message.edit(content = message.content.replace("-...-", link))
+
             response = "Added an image to the message."
+
+            if '-...-' not in message.content:
+                donor = EwPlayer(id_server=cmd.guild.id, id_user=record.id_user)
+                if type == 'fish':
+                    fishmap = fish_map.get(record.record_type)
+                    if fishmap is not None:
+                        museum_text = "-------------------------------------------------\n{}\nDonated by {}\n{}\nLENGTH:{} INCHES\n{}".format(
+                            fishmap.str_name.upper(), donor.display_name, record.id_image,
+                            record.record_amount, fishmap.str_desc)
+                        await message.edit(content=museum_text)
+                    else:
+                        response = "Failed to add an image to the message."
+
+                elif type == 'relic':
+                    relicmap = relic_map.get(record.record_type)
+                    if relicmap is not None:
+                        museum_text = "-------------------------------------------------\n{}\nDiscovered by {}\n{}\n{}".format(relicmap.str_name, donor.display_name, record.id_image, relicmap.str_museum)
+                        await message.edit(content=museum_text)
+                    else:
+                        response = "Failed to add an image to the message."
+
+            else:
+                await message.edit(content = message.content.replace("-...-", link))
+
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     else:
         response = "The Curator doesn't trust you with his precious displays. Maybe you could get someone else to help you..."

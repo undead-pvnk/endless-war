@@ -1247,11 +1247,14 @@ async def on_message(message):
 
 @client.event
 async def on_raw_reaction_add(payload):
+    if ewutils.DEBUG:
+        emoji_req = 2
+    else:
+        emoji_req = 10
     # We only respond to reactions in the slime twitter channel
     if (payload.guild_id is not None  # not a dm
             and channels_slimetwitter[payload.guild_id] is not None  # server has a slime twitter channel
             and payload.channel_id == channels_slimetwitter[payload.guild_id].id):  # reaction was in that channel
-
         message = await channels_slimetwitter[payload.guild_id].fetch_message(payload.message_id)
 
         if len(message.embeds) > 0:
@@ -1264,14 +1267,14 @@ async def on_raw_reaction_add(payload):
                 if (str(payload.emoji) == ewcfg.emote_delete_tweet):
                     await message.delete()
     elif (payload.guild_id is not None # not a dm
-        and channels_deviantsplaart.get(payload.guild_id) is not None # server has a slime twitter channel
+        and channels_deviantsplaart.get(payload.guild_id) is not None
         and payload.channel_id == channels_deviantsplaart[payload.guild_id].id):
         message = await channels_deviantsplaart[payload.guild_id].fetch_message(payload.message_id)
         if str(payload.emoji) == ewcfg.emote_111 or str(payload.emoji) == ewcfg.emote_111_debug:
             for react in message.reactions:
-                if react.count >= 10 and react.emoji.id in [720412882143150241, 431547758181220377]:
+                if react.count >= emoji_req and react.emoji.id in [720412882143150241, 431547758181220377]:
                     msgtext = "--------------------------------------------------------------------------------------------------\n" + message.content
-                    title = msgtext.split('::', 1)
+                    title = message.content.split('::', 1)
                     current_record = EwRecord(id_server=payload.guild_id, record_type=title[0])
                     current_record.legality = 0
                     current_record.persist()
