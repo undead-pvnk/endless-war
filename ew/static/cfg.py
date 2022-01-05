@@ -1644,7 +1644,7 @@ time_kickout = 60 * 60  # 1 hour
 time_afk_swilldermuk = 60 * 60 * 2  # 1 hours
 
 # time after coming online before you can act
-time_offline = 10
+time_offline = 5
 
 # time for an enemy to despawn
 time_despawn = 60 * 60 * 12  # 12 hours

@@ -501,8 +501,8 @@ def canAttack(cmd):
             # disallow kill if the player has killed recently
             response = "Take a moment to appreciate your last slaughter."
 
-
-        elif user_iskillers == False and user_isrowdys == False and user_isexecutive == False and user_isshambler == False and user_isslimecorp == False and not ewcfg.slimernalia_active:
+        # what the fuck is this
+        elif user_data.life_state not in [ewcfg.life_state_enlisted, ewcfg.life_state_shambler, ewcfg.life_state_lucky, ewcfg.life_state_executive] and not ewcfg.slimernalia_active:
 
             # Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
             if user_data.life_state == ewcfg.life_state_juvenile:
@@ -539,8 +539,17 @@ def canAttack(cmd):
             # disallow kill if the player has killed recently
             response = "Take a moment to appreciate your last slaughter."
 
+        elif shootee_data.life_state == ewcfg.life_state_corpse and \
+        (ewcfg.status_busted_id in shootee_data.getStatusEffects()) or (time.time() - shootee_data.time_lastdeath < ewcfg.time_to_manifest):
+            # Target is already dead and not a ghost.
+            response = "{} is already dead.".format(member.display_name)
+
         elif shootee_data.poi != user_data.poi:
-            response = "You can't reach them from where you are."
+            response = "You can't reach them from where you are. Didn't stop you trying, though."
+            # Fuck buffering, hard penalty of 20%, no matter what
+            hunger_penalty = user_data.get_hunger_max() // 5
+            user_data.hunger += hunger_penalty
+            user_data.persist()
 
         elif move_utils.poi_is_pvp(shootee_data.poi) == False:
             response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
@@ -562,10 +571,6 @@ def canAttack(cmd):
         elif (time_now - shootee_data.time_lastrevive) < ewcfg.invuln_onrevive:
             # User is currently invulnerable.
             response = "{} has died too recently and is immune.".format(member.display_name)
-
-        elif shootee_data.life_state == ewcfg.life_state_corpse and ewcfg.status_busted_id in shootee_data.getStatusEffects():
-            # Target is already dead and not a ghost.
-            response = "{} is already dead.".format(member.display_name)
 
         elif shootee_data.life_state == ewcfg.life_state_corpse and ewcfg.status_ghostbust_id not in user_data.getStatusEffects() and ewcfg.mutation_id_coleblooded not in mutations:
             # Target is a ghost but user is not able to bust

@@ -34,7 +34,7 @@ async def usekey(cmd, owner_user):
     elif key == None:
         response = "You don't have a key for their apartment."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    elif owner_apartment.apt_class == ewcfg.property_class_c or (apartment.apt_class in [ewcfg.property_class_a, ewcfg.property_class_b] and key.id_item == apartment.key_2):
+    elif owner_apartment.apt_class == ewcfg.property_class_c or (owner_apartment.apt_class in [ewcfg.property_class_a, ewcfg.property_class_b] and key.id_item == owner_apartment.key_2):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "Your key's not working at this new flat. Your roomates must've forgotten to upgrade apartments. Congratulations on the homelessness by the way.".format(cmd.tokens[0])))
     elif owner_apartment.poi != poi.id_poi:
         response = "Your key doesn't match an apartment here."
