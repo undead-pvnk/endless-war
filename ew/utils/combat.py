@@ -2473,9 +2473,7 @@ class EwUser(EwUserBase):
                 ewutils.weaponskills_clear(id_server=self.id_server, id_user=self.id_user, weaponskill=ewcfg.weaponskill_max_onrevive)
 
                 try:
-
                     drop_list = ','.join(map(str, ids_to_drop))
-
                     bknd_core.execute_sql_query(
                         "UPDATE items SET {id_user} = %s WHERE id_item IN({drop_list})".format(
                             id_user=ewcfg.col_id_user,
@@ -2485,8 +2483,8 @@ class EwUser(EwUserBase):
                             [self.poi]
                         ))
 
-                except:
-                    ewutils.logMsg('Failed to drop items on death.')
+                except Exception as e:
+                    ewutils.logMsg('Failed to drop items on death, {}.'.format(e))
 
                 item_cache = bknd_core.get_cache(obj_type="EwItem")
                 for id in ids_to_drop:
@@ -2667,6 +2665,7 @@ class EwUser(EwUserBase):
             if int(item_props['inebriation']) > 0:
                 self.change_crime(n=ewcfg.cr_underage_drinking_points)
 
+            response = item_props['str_eat'] + ("\n\nYou're stuffed!" if self.hunger <= 0 else "")
             try:
                 if item_props['id_food'] in ["coleslaw", "bloodcabbagecoleslaw"]:
                     self.clear_status(id_status=ewcfg.status_ghostbust_id)
@@ -2677,12 +2676,15 @@ class EwUser(EwUserBase):
                 if item_props['id_food'] == ewcfg.item_id_seaweedjoint:
                     self.applyStatus(id_status=ewcfg.status_high_id)
                     self.change_crime(n=ewcfg.cr_posession_points)
+                if item_props.get('poisoned') == 'yes' and self.life_state != ewcfg.life_state_corpse:
+                    self.die(cause=ewcfg.cause_poison)
+                    response = "Oh, that food was poisoned. Nice one, idiot. Now you're dead."
 
             except:
                 # An exception will occur if there's no id_food prop in the database. We don't care.
                 pass
 
-            response = item_props['str_eat'] + ("\n\nYou're stuffed!" if self.hunger <= 0 else "")
+            #response = item_props['str_eat'] + ("\n\nYou're stuffed!" if self.hunger <= 0 else "")
 
             bknd_item.item_delete(food_item.id_item)
 

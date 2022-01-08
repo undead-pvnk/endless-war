@@ -21,8 +21,10 @@ from ..static import weapons as static_weapons
 from ..static import poi as static_poi
 try:
     from ..static.rstatic import relic_list
+    from ..static.rstatic import dontfilter_relics
 except:
     from ..static.rstatic_dummy import relic_list
+    from ..static.rstatic_dummy import dontfilter_relics
 
 """
     Drop some of a player's non-soulbound items into their district.
@@ -100,7 +102,6 @@ def die_dropall( #drops all items unless they have been rigor mortissed
             result = bknd_core.execute_sql_query(
                 "select id_item from items WHERE id_user = %s AND id_server = %s and soulbound = 0 {}".format(
                     type_filter), (
-                    user_data.id_killer,
                     user_data.id_user,
                     user_data.id_server
                 ))
@@ -812,7 +813,7 @@ async def move_relics(id_server):
 
     for relic in relic_stash:
         relic_item = EwItem(id_item=relic.get('id_user'))
-        if relic_item.id_owner == 'slimesea':
+        if relic_item.id_owner == 'slimesea' and relic_item.template not in dontfilter_relics:
             relic_item.id_owner = random.choice(static_poi.capturable_districts)
             relic_item.persist()
             continue

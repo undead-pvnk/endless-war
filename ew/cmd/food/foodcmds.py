@@ -198,6 +198,7 @@ async def menu(cmd):
 
 # Buy items.
 async def order(cmd):
+
     user_data = EwUser(member=cmd.message.author)
     mutations = user_data.get_mutations()
     if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_nuclear_beach_edge:
@@ -454,6 +455,7 @@ async def order(cmd):
                                 item_props['furniture_look_desc'] = item_props['furniture_look_desc'].format(custom=customname)
                                 item_props['furniture_place_desc'] = item_props['furniture_place_desc'].format(custom=customname)
 
+                    item_props = relic_utils.debug19(props = item_props, user_data = user_data)
                     id_item = bknd_item.item_create(
                         item_type=item_type,
                         id_user=cmd.message.author.id,

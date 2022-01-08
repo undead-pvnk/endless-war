@@ -25,13 +25,15 @@ debug11 = "!midlifecrisis"
 relic_map = {}
 relic_names = []
 alt_relics = []
-
+dontfilter_relics = []
 
 for relic in relic_list:
     relic_map[relic.id_relic] = relic
     relic_names.append(relic.id_relic)
     if relic.id_relic[0]=='_':
         alt_relics.append(relic.id_relic[1:])
+    if relic.str_use == 'dontfilter':
+        dontfilter_relics.append(relic.id_relic)
 
 
 

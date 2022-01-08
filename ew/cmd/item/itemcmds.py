@@ -572,6 +572,8 @@ async def item_look(cmd):
                     else:
                         response += "."
                     # itm_utils.item_drop(id_item)
+                if item.item_props.get('poisoned') == 'yes':
+                    response += " It...smells awful funny."
 
             if item.item_type == ewcfg.it_weapon:
                 response += "\n\n"
@@ -758,6 +760,10 @@ async def item_use(cmd):
         item = EwItem(id_item=item_sought.get('id_item'))
 
         response = "The item doesn't have !use functionality"  # if it's not overwritten
+
+        secret_use = await ewdebug.secret_context(user_data, item, cmd)
+        if secret_use is True:
+            return
 
         if item.item_type == ewcfg.it_food:
             response = user_data.eat(item)

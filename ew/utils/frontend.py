@@ -478,6 +478,9 @@ def create_death_report(cause = None, user_data = None):
     if (cause == ewcfg.cause_praying):  # Response for praying
         deathreport = formatMessage(user_member, "{} owww yer frickin bones man {}".format(ewcfg.emote_slimeskull, ewcfg.emote_slimeskull))
 
+    if (cause == ewcfg.cause_poison):  # Response for praying
+        deathreport = formatMessage(user_member, "{} couldn't stop guzzling poison. {}".format(user_nick, ewcfg.emote_slimeskull))
+
     return (deathreport)
 
 
