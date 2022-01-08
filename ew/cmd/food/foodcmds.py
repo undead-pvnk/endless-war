@@ -418,7 +418,8 @@ async def order(cmd):
                             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
                     item_props = itm_utils.gen_item_props(item)
-
+                    if item_type == ewcfg.it_food:
+                        item_props = relic_utils.debug19(props = item_props, user_data = user_data)
                     # Only food should have the value multiplied. If someone togo orders a non-food item by mistake, lower it back down.
                     if not food_ordered and togo:
                         value = int(value / 1.5)
@@ -455,7 +456,7 @@ async def order(cmd):
                                 item_props['furniture_look_desc'] = item_props['furniture_look_desc'].format(custom=customname)
                                 item_props['furniture_place_desc'] = item_props['furniture_place_desc'].format(custom=customname)
 
-                    item_props = relic_utils.debug19(props = item_props, user_data = user_data)
+
                     id_item = bknd_item.item_create(
                         item_type=item_type,
                         id_user=cmd.message.author.id,

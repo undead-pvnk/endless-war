@@ -3329,7 +3329,7 @@ EwPoi(
 	),
 	EwPoi(
 		id_poi="saloon",
-		alias=['hangemsaloon', 'hes'],
+		alias=['hangemsaloon'],
 		str_name="Hang 'em Saloon",
 		str_desc="How is this saloon not collapsed by now? It was built by the gangs of the city out of bricks and slime, from a blueprint none of them should be able to read. Well, it's here now. And pretty soon you imagine the gangs will make it their own. And by that I mean raze it to the ground. Hey, at least you have a good view of the dueling grounds from here. This area leads to Hang-em Square and Dreadford.",
 		channel="saloon",
