@@ -539,8 +539,7 @@ def canAttack(cmd):
             # disallow kill if the player has killed recently
             response = "Take a moment to appreciate your last slaughter."
 
-        elif shootee_data.life_state == ewcfg.life_state_corpse and \
-        (ewcfg.status_busted_id in shootee_data.getStatusEffects()) or (time.time() - shootee_data.time_lastdeath < ewcfg.time_to_manifest):
+        elif shootee_data.life_state == ewcfg.life_state_corpse and (ewcfg.status_busted_id in shootee_data.getStatusEffects() or (time.time() - shootee_data.time_lastdeath < ewcfg.time_to_manifest)):
             # Target is already dead and not a ghost.
             response = "{} is already dead.".format(member.display_name)
 
