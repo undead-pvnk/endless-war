@@ -564,6 +564,11 @@ async def item_look(cmd):
                         pass
 
             if item.item_type == ewcfg.it_food:
+                # Some rotten fish randomly have their item.id_owner turned into an integer, so it turns into a string here before the fridge check.
+                if type(item.id_owner) == int:
+                    item.id_owner = str(item.id_owner)
+
+                # Checks if food is expired and, if it's expired, whether or not item.id_owner has "fridge" at the end of it. Only changes flavor text.
                 if float(item.item_props.get('time_expir') if not None else 0) < time.time() and item.id_owner[
                                                                                                  -6:] != ewcfg.compartment_id_fridge:
                     response += " This food item is rotten"
