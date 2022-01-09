@@ -305,6 +305,7 @@ async def reel(cmd):
                 else:
                     if fisher.fleshling_reeled:
                         response = await award_fish(fisher, cmd, user_data)
+                        user_data = EwUser(member = cmd.message.author)
                     else:
                         fisher.ghost_reeled = True
                         response = "You reel in anticipation of your fleshy partner!"
