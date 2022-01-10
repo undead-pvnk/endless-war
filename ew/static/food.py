@@ -1989,6 +1989,18 @@ food_list = [
         acquisition = "smelting",
         perishable = False,
     ),
+    EwFood(
+        id_food = "windigowhiskey",
+        alias = ['corpsebourbon'],
+        recover_hunger = 20,
+        price = 400,
+        str_name = "shot of windigo whiskey",
+        vendors = ['saloon'],
+        str_eat = "You toss back another shot, and it hits you like a truck. You breathe out and taste a hint of iron on your breath.",
+        inebriation = 2,
+        str_desc = "Windigo Whiskey is a classic that was popularized shortly after the slime came. The old folks call it corpse bourbon. It has a unique aroma and goes down smooth due to it being filtered through a scalp.",
+        time_expir = 43200,
+    ),
 ]
 
 # A map of id_food to EwFood objects.

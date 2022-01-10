@@ -11,13 +11,24 @@ from ew.static import items as static_items
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils.combat import EwUser
-
+try:
+    from ew.static.rstatic import debugsmoke
+    from ew.cmd.debugr import debug22
+except:
+    from ew.static.rstatic_dummy import debugsmoke
 
 async def smoke(cmd):
     usermodel = EwUser(member=cmd.message.author)
     # item_sought = bknd_item.find_item(item_search="cigarette", id_user=cmd.message.author.id, id_server=usermodel.id_server)
     item_sought = None
     space_adorned = 0
+
+    item_seek = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    item = bknd_item.find_item(item_search=item_seek, id_user=cmd.message.author.id, id_server=cmd.guild.id)
+    if item:
+        if item.get('name') == debugsmoke:
+            return await debug22(cmd=cmd)
+
     item_stash = bknd_item.inventory(id_user=cmd.message.author.id, id_server=usermodel.id_server)
     for item_piece in item_stash:
         item = EwItem(id_item=item_piece.get('id_item'))

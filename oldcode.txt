@@ -24780,3 +24780,17 @@ async def searchpapers(cmd):
         else:
             response += "\n\nSomeone already tried that, though. Maybe something else?"
     return await ewfrontend.send_message(cmd.client, cmd.message.channel, ewfrontend.formatMessage(cmd.message.author, response))
+
+"""def calc_fish_length(distdata):
+    weight = random.randint(-100, 100)
+    median = distdata[0]
+    max_deviation = distdata[1]
+
+
+    if random.randint(1, 50) == 50:
+        pass
+    else:
+        max_deviation = 0.7 * median
+
+    length = round((median + max_deviation * (weight/100)), 2)
+    return length"""
