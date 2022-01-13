@@ -218,7 +218,7 @@ async def banish(cmd):
 async def create(cmd):
     # if not cmd.message.author.guild_permissions.administrator:
     #if EwUser(member=cmd.message.author).life_state != ewcfg.life_state_kingpin and not cmd.message.author.guild_permissions.administrator:
-    if (0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4) or EwUser(member=cmd.message.author).life_state != ewcfg.life_state_kingpin:
+    if not (0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4) or EwUser(member=cmd.message.author).life_state != ewcfg.life_state_kingpin:
         response = 'Lowly Non-Kingpins cannot hope to create items with their bare hands.'
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 

@@ -1175,10 +1175,11 @@ async def on_message(message):
         if usermodel.poi in ewdebug.act_pois.keys():
             keycontent = ewutils.flattenTokenListToString(content_tolower)
             if keycontent in ewdebug.act_pois.get(usermodel.poi).keys() or content_tolower in ewdebug.act_pois.get(usermodel.poi).keys():
-                function = ewdebug.act_pois.get(usermodel.poi).get(keycontent)
-                if function is None:
-                    function = ewdebug.act_pois.get(usermodel.poi).get(content_tolower)
-                return await function(cmd=cmd_obj)
+                return await ewdebug.act(cmd=cmd_obj, content_tolower=content_tolower)
+                #function = ewdebug.act_pois.get(usermodel.poi).get(keycontent)
+                #if function is None:
+                #    function = ewdebug.act_pois.get(usermodel.poi).get(content_tolower)
+                #return await function(cmd=cmd_obj)
 
         #if usermodel.poi in poi_static.tutorial_pois:
         #    return await ewdungeons.tutorial_cmd(cmd_obj)

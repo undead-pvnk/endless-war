@@ -20,7 +20,6 @@ relic_list = [
 
 debug1 = 'suckdick'
 debug2 = 'clownfart'
-debug11 = "!midlifecrisis"
 
 relic_map = {}
 relic_names = []

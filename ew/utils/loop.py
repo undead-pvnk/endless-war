@@ -176,7 +176,7 @@ async def decaySlimes(id_server = None):
                 block_poi = ewcfg.poi_id_711
             for user in users:
                 user_data = EwUser(id_user=user[0], id_server=id_server)
-                slimes_to_decay = user_data.slimes - (user_data.slimes * (.5 ** (ewcfg.update_market / relicutils.calc_half_life(id_server=id_server, slime=user_data.slimes))))
+                slimes_to_decay = user_data.slimes - (user_data.slimes * (.5 ** (ewcfg.update_market / ewutils.calc_half_life(user_data.slimes))))
 
                 # round up or down, randomly weighted
                 remainder = slimes_to_decay - int(slimes_to_decay)
@@ -1146,7 +1146,7 @@ async def capture_tick(id_server):
             if dist.time_unlock > 0:
                 continue
 
-            gangsters_in_district = dist.get_players_in_district(min_slimes=ewcfg.min_slime_to_cap, life_states=[ewcfg.life_state_enlisted], ignore_offline=True)
+            gangsters_in_district = dist.get_players_in_district(min_slimes=ewcfg.min_slime_to_cap, life_states=[ewcfg.life_state_enlisted], ignore_offline=False)
 
             slimeoids = ewutils.get_slimeoids_in_poi(poi=district_name, id_server=id_server, sltype=ewcfg.sltype_nega)
 

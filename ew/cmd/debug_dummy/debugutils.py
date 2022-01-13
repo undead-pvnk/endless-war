@@ -7,7 +7,6 @@ cmd_debug6 = "debug6"
 cmd_debug7 = "debug7"
 cmd_debug8 = "debug8"
 cmd_debug9 = "debug9"
-cmd_debug11 = "debug11"
 debug_state_1 = 'debugstate1'
 debugitem_set = []
 debugpois = []

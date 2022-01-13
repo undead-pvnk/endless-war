@@ -24794,3 +24794,42 @@ async def searchpapers(cmd):
 
     length = round((median + max_deviation * (weight/100)), 2)
     return length"""
+
+async def debug11(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    gamestate = EwGamestate(id_server=cmd.guild.id, id_state='dreadfordbuilding')
+
+    item_search = coreutils.flattenTokenListToString(cmd.tokens[1:])
+    author = cmd.message.author
+    server = cmd.guild
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=author.id, id_server=server.id)
+
+
+    if item_search == 'slimeoid':
+        response = "Christ. What's with all these degenerates wanting to fuck their slimeoids in public? I mean, props for wanting to add beastiality to your criminal record but do it where i'm not looking."
+    elif item_sought:
+        item_obj = bknd_item.EwItem(id_item=item_sought.get('id_item'))
+        if item_obj.item_props.get('id_furniture') == 'brick' and user_data.poi == 'dreadford' and user_data.slimes >= 1000:
+            total = int(gamestate.value)
+            if total >= 1500:
+                response = "The building's finished. Enough already."
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            total += 1
+            gamestate.value = str(total)
+            gamestate.persist()
+            response = "You empty some of your slime onto the wall and add your brick. {} bricks to go!".format(
+                1500 - total)
+            user_data.change_slimes(n=-1000)
+            user_data.persist()
+            bknd_item.item_delete(item_obj.id_item)
+
+        elif user_data.slimes < 1000:
+            response = "You don't have enough slime to mortar the brick into place. You'll need at least 1000."
+        elif item_obj.item_props.get('id_furniture') != 'brick':
+            response = "You attempt to lay the {}, using slime for mortar. Some bystander hurls a brick at your head, probably because you're so goddamn stupid. See the thing that just gave you a concussion? That's what you're supposed to use.".format(item_sought.get('name'))
+        else:
+            response = "You stick a brick onto the wall of an existing building. You've marked it as you territory. You own this now."
+    else:
+        response = "Are you sure you have that item?"
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

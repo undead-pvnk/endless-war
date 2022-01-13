@@ -26,9 +26,6 @@ def canCreateRelic(item, id_server, createstate = 0):
         return 1
 
 
-def calc_half_life(id_server=None, slime=None):
-    return 60 * 60 * 24 * 14 #standard slime half life
-
 
 def debug16(one, two, three):
     pass

@@ -670,6 +670,13 @@ def end_trade(id_user):
         trading_offers[id_user] = []
 
 
+def calc_half_life(slime=None):
+    relative_level = level_byslime(slime) - 54
+    if relative_level > 0:
+        return (60 * 60 * 24 * 14) / relative_level
+    else:
+        return 60 * 60 * 24 * 14  # standard slime half life
+
 
 def text_to_regional_indicator(text):
     #  note that inside the quotes below is a zero-width space,
