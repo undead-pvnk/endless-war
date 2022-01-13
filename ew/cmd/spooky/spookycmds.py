@@ -371,7 +371,7 @@ async def inhabit(cmd):
                     )
                 )
 
-                response = "{}\'s body is inhabitted by the ghost of {}!".format(member.display_name, cmd.message.author.display_name)
+                response = "{}\'s body is inhabited by the ghost of {}!".format(member.display_name, cmd.message.author.display_name)
         else:
             response = "Your spookiness is appreciated, but ENDLESS WAR didn\'t understand that name."
 

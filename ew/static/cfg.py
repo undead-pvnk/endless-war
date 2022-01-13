@@ -2354,6 +2354,9 @@ str_zone_degraded = "{poi} has been degraded too far to keep operating."
 weaponskill_max_onrevive = 6
 weaponskill_min_onrevive = 0
 
+# Needed for duels, apparently. 
+time_pvp_duel = 3 * 60
+
 # User statistics we track
 stat_max_slimes = 'max_slimes'
 stat_lifetime_slimes = 'lifetime_slimes'

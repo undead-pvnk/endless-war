@@ -1790,7 +1790,7 @@ async def duel(cmd):
         challengee_slimes = challengee.slimes
 
         while challenger_slimes > 0 and challengee_slimes > 0 and duel_timer > 0:
-            # count down from 2 minutes, the max possible time a duel should last
+            # count down from 3 minutes, the max possible time a duel should last
             duel_timer -= 1
             await asyncio.sleep(1)
 
