@@ -483,6 +483,9 @@ async def relic_donate(id_item, cmd):
         payout = relic_obj.amount_yield
         player = EwPlayer(id_user=item_obj.id_owner, id_server=cmd.guild.id)
 
+        if relic_obj.acquisition == 'zine':
+            bknd_core.execute_sql_query("UPDATE books SET {genre} = 1 WHERE {title} = %s and {genre} = 11".format(title=ewcfg.col_title, genre=ewcfg.col_genre), (relic_obj.str_use, ))
+
         if relic_obj.str_use == relic_static.debug1:
             artplayer_obj = EwGamestate(id_server=cmd.guild.id, id_state='artplayer')
             id_artplayer = int(artplayer_obj.value)

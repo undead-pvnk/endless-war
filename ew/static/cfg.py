@@ -4693,7 +4693,8 @@ book_genres = [
     "journal",  # 7
     "newspaper",  # 8
     "experimental",  # 9
-    "surgical"  # 10
+    "surgical",  # 10
+    "locked" #11
 ]
 
 # rating flavor text

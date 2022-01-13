@@ -156,8 +156,9 @@ async def set_genre(cmd):
 
         book = EwBook(member=cmd.message.author, book_state=0)
 
-        if id_genre == 10 and not cmd.message.author.guild_permissions.administrator:
+        if id_genre in [10, 11] and not cmd.message.author.guild_permissions.administrator:
             response = "You're not a doctor. The publishing company's gonna skin your ass, so you better not."
+
         else:
             book.genre = id_genre
             book.persist()
@@ -682,7 +683,7 @@ async def browse_zines(cmd):
                 cursor.execute((
                         "SELECT b.id_book, b.title, b.author{} ".format(more_selects) +
                         "FROM books AS b " +
-                        "WHERE b.id_server = %s AND b.book_state {} {}".format(quality, query_suffix) +
+                        "WHERE b.id_server = %s AND b.genre <> 11 AND b.book_state {} {}".format(quality, query_suffix) +
                         "ORDER BY b.{}".format(query_sort)
                 ), (
                     cmd.guild.id,
