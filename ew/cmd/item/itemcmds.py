@@ -2063,3 +2063,51 @@ async def remove_from_collection(cmd):
         response = "You somehow find a specialist in the smoky kiosks that can get your precious belongings out of the {} you forced them into. You hand over 100,000 slime, and he walks into the tent behind his stall. \n\nBefore you can figure you what it is he's doing, {}. Eventually, you find your way back to the stall. The specialist hands you the item and collection, fully separated. Maybe someday you'll figure out how to do it...".format(item_sought_col.get('name'), random.choice(ewcfg.bazaar_distractions))
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def bury(cmd):
+    user_data = EwUser(member = cmd.message.author)
+    if user_data.weapon >= 0:
+        weapon_item = EwItem(id_item=user_data.weapon)
+        if weapon_item.template != 'shovel':
+            response = "You'll need a shovel to bury shit."
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        elif cmd.tokens_count <= 2:
+            response = "That's not going to work. Try !bury <coordinates> <item>"
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        coords = cmd.tokens[1]
+        item_seek = ewutils.flattenTokenListToString(cmd.tokens[2:])
+        item_sought = bknd_item.find_item(item_search=item_seek, id_user=cmd.message.author.id, id_server=cmd.guild.id)
+        if item_sought:
+            if item_sought.get('soulbound'):
+                response = "You can't bury that. It's bound to your essence, stupid."
+
+            ground_recipient = "{}-{}-{}".format('bury', user_data.poi, coords.lower())
+
+            bknd_item.give_item(id_item=item_sought.get('id_item'), id_server=cmd.guild.id, id_user=ground_recipient)
+            response = "You bury the {} at coordinates {}.".format(item_sought.get('name'), coords.upper())
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response), delete_after=10)
+        else:
+            response = "You don't have that."
+    else:
+        response = "You're not even carrying a stick, let alone a shovel."
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+
+async def unearth(cmd):
+    user_data = EwUser(member = cmd.message.author)
+    coords = ewutils.flattenTokenListToString(cmd.tokens[1:]).lower()
+    lookup = 'bury-{}-{}'.format(user_data.poi, coords)
+    burial_finding = bknd_item.inventory(id_user=lookup, id_server=cmd.guild.id)
+    if len(burial_finding) == 0:
+        response = "There's nothing in there."
+    else:
+        item = burial_finding[0]
+        if not bknd_item.check_inv_capacity(user_data, item.get('item_type')):
+            response = "There's something down there, but you don't have room for it."
+        else:
+            response = "You unearthed a {}!".format(item.get('name'))
+            bknd_item.give_item(member=cmd.message.author, id_item=item.get('id_item'))
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
