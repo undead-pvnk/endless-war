@@ -739,40 +739,44 @@ def cull_slime_sea(
         random.shuffle(seainv)
         #print(seainv)
         to_delete = []
-
         if sea_size <= 500:
             return
         else:
             for seaitem in seainv:
-                print(sea_size)
-                if sea_size <= 450:
-                    break
-                elif seaitem.get('soulbound'):
-                    sea_size += 1
-                elif seaitem.get('item_type') in [ewcfg.it_book, ewcfg.it_food]:
-                    to_delete.append(seaitem.get('id_item'))
-                elif seaitem.get('name') in static_weapons.weapon_names and seaitem.get('item_type') == ewcfg.it_weapon: #delete non-named weapons
-                    to_delete.append(seaitem.get('id_item'))
-                elif seaitem.get('item_type') == ewcfg.it_item:
-                    item_obj = EwItem(seaitem.get('id_item'))
-                    if item_obj.item_props.get('context') in ['prankitem', ewcfg.context_seedpacket, ewcfg.context_tombstone, ewcfg.context_wrappingpaper, 'batterypack', 'player_bone', 'prankcapsule', 'dye', 'poudrin'] or item_obj.item_props.get('id_item') in ewcfg.slimesea_disposables:
+                try:
+                    if sea_size <= 450:
+                        break
+                    elif seaitem.get('soulbound'):
+                        sea_size += 1
+                    elif seaitem.get('item_type') in [ewcfg.it_book, ewcfg.it_food]:
                         to_delete.append(seaitem.get('id_item'))
+                    elif seaitem.get('name') in static_weapons.weapon_names and seaitem.get('item_type') == ewcfg.it_weapon: #delete non-named weapons
+                        to_delete.append(seaitem.get('id_item'))
+                    elif seaitem.get('item_type') == ewcfg.it_item:
+                        item_obj = EwItem(seaitem.get('id_item'))
+                        if item_obj.item_props.get('context') in ['prankitem', ewcfg.context_seedpacket, ewcfg.context_tombstone, ewcfg.context_wrappingpaper, 'batterypack', 'player_bone', 'prankcapsule', 'dye', 'poudrin'] or item_obj.item_props.get('id_item') in ewcfg.slimesea_disposables:
+                            to_delete.append(seaitem.get('id_item'))
+                        else:
+                            sea_size += 1
+                    elif seaitem.get('item_type') == ewcfg.it_furniture: #non-smelted furniture with a price below 1 mega gets culled
+                        item_obj = EwItem(id_item=seaitem.get('id_item'))
+                        mapped = static_items.furniture_map.get(item_obj.item_props.get('id_furniture'))
+                        if mapped is not None:
+                            if (mapped.price < 100000 and mapped.acquisition != ewcfg.acquisition_smelting) or mapped.id_furniture in ewcfg.slimesea_disposables:
+                                to_delete.append(seaitem.get('id_item'))
+                            else:
+                                sea_size += 1
+                        else:
+                            sea_size += 1
+                    elif seaitem.get('item_type') == ewcfg.it_cosmetic:
+                        item_obj = EwItem(seaitem.get('id_item'))
+                        if item_obj.item_props.get('id_cosmetic') in ewcfg.slimesea_disposables:
+                            to_delete.append(seaitem.get('id_item'))
                     else:
                         sea_size += 1
-                elif seaitem.get('item_type') == ewcfg.it_furniture: #non-smelted furniture with a price below 1 mega gets culled
-                    item_obj = EwItem(seaitem.get('id_item'))
-                    mapped = static_items.furniture_map.get(item_obj.item_props.get('id_furniture'))
-                    if (mapped != None and mapped.price < 100000 and mapped.acquisition != ewcfg.acquisition_smelting) or mapped.id_furniture in ewcfg.slimesea_disposables:
-                        to_delete.append(seaitem.get('id_item'))
-                    else:
-                        sea_size += 1
-                elif seaitem.get('item_type') == ewcfg.it_cosmetic:
-                    item_obj = EwItem(seaitem.get('id_item'))
-                    if item_obj.item_props.get('id_cosmetic') in ewcfg.slimesea_disposables:
-                        to_delete.append(seaitem.get('id_item'))
-                else:
-                    sea_size += 1
-                sea_size -= 1
+                    sea_size -= 1
+                except Exception as e:
+                    ewutils.logMsg("Error when trying to cull item {}: {}".format(seaitem.get('id_item'), e))
 
             #delete_string = [str(element) for element in to_delete]
             drop_list = ','.join(map(str, to_delete))
