@@ -1290,13 +1290,15 @@ async def store_item(cmd):
     usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
     if cmd.tokens[1] == 'all':
-        cmd.tokens[1] = '4000'
+        cmd.tokens[1] = '100'
 
     multistow = 1
     startparse = 1
     if cmd.tokens[1].isnumeric() and cmd.tokens_count > 2:
         startparse = 2
         multistow = int(cmd.tokens[1])
+        if multistow > 100:
+            multistow = 100
 
 
 
@@ -1492,11 +1494,13 @@ async def remove_item(cmd):
     multisnag = 1
     startparse = 1
     if cmd.tokens[1] == 'all':
-        cmd.tokens[1] = '4000'
+        cmd.tokens[1] = '100'
 
     if cmd.tokens[1].isnumeric():
         startparse = 2
         multisnag = int(cmd.tokens[1])
+        if multisnag > 100:
+            multisnag = 100
 
     item_search = ewutils.flattenTokenListToString(cmd.tokens[startparse:])
 

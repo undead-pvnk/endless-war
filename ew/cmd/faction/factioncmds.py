@@ -69,7 +69,7 @@ async def store(cmd):
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if cmd.tokens[1] == 'all':
-        cmd.tokens[1] = '4000'
+        cmd.tokens[1] = '100'
 
     multistow = 1
     startparse = 1
@@ -79,6 +79,8 @@ async def store(cmd):
     if cmd.tokens[1].isnumeric() and cmd.tokens_count > 2:
         startparse = 2
         multistow = int(cmd.tokens[1])
+        if multistow > 100:
+            multistow = 100
 
     item_search = ewutils.flattenTokenListToString(cmd.tokens[startparse:])
 
@@ -169,11 +171,13 @@ async def take(cmd):
     multisnag = 1
     startparse = 1
     if cmd.tokens[1] == 'all':
-        cmd.tokens[1] = '4000'
+        cmd.tokens[1] = '100'
 
     if cmd.tokens[1].isnumeric() and cmd.tokens_count > 2:
         startparse = 2
         multisnag = int(cmd.tokens[1])
+        if multisnag > 100:
+            multisnag = 100
 
     item_search = ewutils.flattenTokenListToString(cmd.tokens[startparse:])
 
