@@ -2,6 +2,7 @@ from . import core as ewutils
 from . import frontend as fe_utils
 from .combat import EwUser
 from ..backend import core as bknd_core
+from ..backend import item as bknd_item
 from ..backend.district import EwDistrictBase as EwDistrict
 from ..backend.market import EwMarket
 from ..backend.market import EwStock
@@ -140,6 +141,7 @@ def make_freshness_top_board(server = None):
                 return format_board(entries=entries, title=ewcfg.leaderboard_fashion)
 
             # since find_entries returns all data for an object no need to fetch new info
+            # Creates a list of lists formatted as [id_item, freshness]
             all_basefresh = list(map(lambda a: [
                     a.get("id_item"),
                     # In case someone has something adorned that has no freshness stat, default to zero
@@ -147,6 +149,7 @@ def make_freshness_top_board(server = None):
                 ], dat_adorned
             ))
 
+            # Creates a list of lists formatted as [id_item, id_owner]
             all_users = list(map(lambda a: [a.get("id_item"), a.get("id_owner")], dat_adorned))
         else:
             all_adorned = bknd_core.execute_sql_query("SELECT id_item FROM items WHERE id_server = %s " +
@@ -169,19 +172,31 @@ def make_freshness_top_board(server = None):
         fresh_map = {}
 
         user_fresh = {}
+
+        # iterate through all [id, freshness] elements in all_basefresh
         for row in all_basefresh:
+            # adds entry to fresh_map as {id_item: int(freshness)}
             basefresh = int(row[1])
             fresh_map[row[0]] = basefresh
 
+        # iterate through all [id_item, id_owner] lists in all_users
         for row in all_users:
+            # updates user_fresh with {id_owner: 0}
             user_fresh[row[1]] = 0
 
+        # iterate through all [id_item, id_owner] lists in all_users
         for row in all_users:
+            # gets the freshness associated with the id_item from fresh_map
             item_fresh = fresh_map.get(row[0])
+
+            # sets value to zero if not an int
             if type(item_fresh) != int:
                 item_fresh = 0
+
+            # updates user_fresh with {id_owner: current_value + freshness}
             user_fresh[row[1]] += item_fresh
 
+        # creates a sorted dictionary from user_fresh
         user_ids = sorted(user_fresh, key=lambda u: user_fresh[u], reverse=True)
 
         top_five = []
@@ -190,8 +205,19 @@ def make_freshness_top_board(server = None):
 
         max_fresh = lambda base: base * 50 + 100
 
+        # iterate through freshness sorted users until the freshest user left can't possibly be fresher than the top 5
         while len(user_ids) > 0 and (len(top_five) < 5 or top_five[-1].freshness < max_fresh(user_fresh.get(user_ids[0]))):
-            current_user = EwUser(id_user=user_ids.pop(0), id_server=server, data_level=2)
+            current_id = user_ids.pop(0)
+            current_user = EwUser(id_user=current_id, id_server=server, data_level=0)
+
+            # Build a list of all cosmetics adorned by the current user
+            user_adorned_ids = []
+            for row in all_users:
+                if row[1] == current_id:
+                    user_adorned_ids.append(row[0])
+
+            # get user freshness
+            current_user.freshness = bknd_item.get_freshness(current_user, adorned_id_list=user_adorned_ids)
 
             top_five.append(current_user)
 
