@@ -519,7 +519,7 @@ async def art_donate(id_item, cmd):
 
     else:
         #gamestate = EwGamestate(id_server=item_obj.id_server, id_state='artplayer')
-        if 1 is not None:
+        if 1 != None:
 
             if item_obj.item_props.get('title') is not None:
                 new_record = EwRecord(id_server=cmd.guild.id, record_type = item_obj.item_props.get('title'))
