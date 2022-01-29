@@ -9,6 +9,8 @@ from ..backend.player import EwPlayer
 from ..utils.frontend import EwResponseContainer
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
+import asyncio
+from functools import partial
 
 try:
     import ew.static.rstatic as static_relic
@@ -55,7 +57,7 @@ async def post_leaderboards(client = None, server = None):
 
     elif market.day % 3 == 1:
 
-        topfashion = make_freshness_top_board(server=server.id)
+        topfashion = await make_freshness_top_board(server=server.id)
         resp_cont.add_channel_response(leaderboard_channel, topfashion)
 
         topslimeoids = make_slimeoids_top_board(server=server.id)
@@ -126,7 +128,7 @@ def make_stocks_top_board(server = None):
     return format_board(entries=entries, title=ewcfg.leaderboard_slimecoin)
 
 
-def make_freshness_top_board(server = None):
+async def make_freshness_top_board(server = None):
     entries = []
     try:
         # if the cache exists use it
@@ -191,8 +193,10 @@ def make_freshness_top_board(server = None):
         max_fresh = lambda base: base * 50 + 100
 
         while len(user_ids) > 0 and (len(top_five) < 5 or top_five[-1].freshness < max_fresh(user_fresh.get(user_ids[0]))):
-            current_user = EwUser(id_user=user_ids.pop(0), id_server=server, data_level=2)
-
+            event_loop = asyncio.get_event_loop()
+            user_func = partial(EwUser, id_user = user_ids.pop(0), id_server = server, data_level = 2)
+            current_user = await event_loop.run_in_executor(None, user_func)
+            #current_user = EwUser(id_user=user_ids.pop(0), id_server=server, data_level=2)
             top_five.append(current_user)
 
             top_five.sort(key=lambda u: u.freshness, reverse=True)
