@@ -24,7 +24,7 @@ try:
     from ew.utils.rutils import debug17
 except:
     from ew.utils.rutils_dummy import debug16
-    from ew.utils.rutils import debug17
+    from ew.utils.rutils_dummy import debug17
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
