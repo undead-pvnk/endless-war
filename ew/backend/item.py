@@ -1310,16 +1310,22 @@ def get_fashion_stats(user_data):
     return result
 
 
-def get_freshness(user_data):
-    cosmetics = inventory(
-        id_user=user_data.id_user,
-        id_server=user_data.id_server,
-        item_type_filter=ewcfg.it_cosmetic
-    )
-
+def get_freshness(user_data, adorned_id_list = None):
     cosmetic_items = []
-    for cosmetic in cosmetics:
-        cosmetic_items.append(EwItem(id_item=cosmetic.get('id_item')))
+    # Allow a list of adorned ids to be passed in lieu of searching for them
+    if adorned_id_list is None:
+        cosmetics = inventory(
+            id_user=user_data.id_user,
+            id_server=user_data.id_server,
+            item_type_filter=ewcfg.it_cosmetic
+        )
+        for cosmetic in cosmetics:
+            cosmetic_items.append(EwItem(id_item=cosmetic.get('id_item')))
+    else:
+        # build cosmetic_items from passed in ids
+        for it_id in adorned_id_list:
+            cosmetic_items.append(EwItem(id_item=it_id))
+
 
     adorned_cosmetics = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['adorned'] == 'true')
 
