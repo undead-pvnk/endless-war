@@ -8,7 +8,7 @@ from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.market import EwStock
 from ew.backend.market import EwCompany
-from ew.cmd import debug as ewdebug
+#from ew.cmd import debug as ewdebug
 from ew.backend.player import EwPlayer
 from ew.backend.fish import EwRecord
 from ew.backend.dungeons import EwGamestate
