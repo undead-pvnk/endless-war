@@ -212,11 +212,28 @@ class ObjCache():
                 copied_matches.append(self.entries.get(id))
 
         else:
+            # Create list to search
+            ids_to_search = []
+            # Use indexes to narrow searches
+            for key, value in criteria.items():
+                key = str(key)
+                value = str(value)
+                if key in self.indexes.keys() and value in self.indexes.get(key).keys():
+                    if ids_to_search == []:
+                        # Limit search to found index
+                        ids_to_search = self.indexes.get(key).get(value)
+                    else:
+                        # Limit search to items that share all indexes
+                        ids_to_search = list(set(ids_to_search).intersection(set(self.indexes.get(key).get(value))))
 
-
+            # grab the actual entry data to be vetted
+            if ids_to_search != []:
+                valid_data = list(map(lambda ident: self.entries.get(ident), ids_to_search))
+            else:
+                valid_data = self.entries.values()
 
             # iterate through all entered data
-            for data in self.entries.values():
+            for data in valid_data:
 
                 # Check against all given criteria
                 meets = True
