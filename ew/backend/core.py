@@ -29,6 +29,7 @@ class ObjCache():
     identifiers = []
     nested_props = []
     entries = {}
+    indexes = {}
 
     def __init__(self, ew_obj_type=None):
         """
@@ -51,7 +52,13 @@ class ObjCache():
         if ew_obj_type in ewcfg.obj_type_to_nested_props.keys():
             self.nested_props = ewcfg.obj_type_to_nested_props.get(ew_obj_type)
 
-        # Leave a pointer to this object so it can actually be found
+        # Setup any common search parameters as indexes
+        if ew_obj_type in ewcfg.obj_type_indexes.keys():
+            self.indexes = {}
+            for prop_name in ewcfg.obj_type_indexes.get(ew_obj_type):
+                self.indexes.update({prop_name: {}})
+
+        # Leave a pointer to this object, so it can actually be found
         caches.append(self)
 
         # Load the cache if there are instructions for doing so
@@ -134,6 +141,24 @@ class ObjCache():
 
         # Save it if it's real, if it's missing a property it should have, one of these should return false
         if (entry_id is not False) and (unique_data is not False):
+            # Grab old data if it exists (for index purposes)
+            old_data = self.entries.get(entry_id, None)
+            # Update any necessary indexes
+            for index_prop_name, index_dict in self.indexes.items():
+                # Remove old index entries
+                if old_data is not None:
+                    # Remove the entry from the list of items within that index, assume it's properly indexed.
+                    index_dict.get(str(old_data.get(index_prop_name))).remove(entry_id)
+
+                # Index the new data
+                new_index_value = str(unique_data.get(index_prop_name))
+                # Create the index if it doesn't exist yet, or add the entry id to its existing contents
+                if new_index_value not in index_dict.keys():
+                    index_dict.update({new_index_value: [entry_id]})
+                else:
+                    index_dict.get(new_index_value).append(entry_id)
+
+            # Now save the data
             self.entries.update({entry_id: unique_data})
             return True
         else:
@@ -163,6 +188,11 @@ class ObjCache():
         id_str = self.get_data_id(unique_vals)
 
         if id_str in self.entries.keys():
+            # Remove entry from any indexes
+            old_data = self.entries.get(id_str)
+            for index_prop_name, index_dict in self.indexes.items():
+                index_dict.get(str(old_data.get(index_prop_name))).remove(id_str)
+
             # Delete the entry if it exists
             self.entries.pop(id_str)
 
@@ -364,7 +394,7 @@ def remove_entry(obj_type = None, obj = None, **kwargs):
 
 def get_cache(obj_type=None, obj = None, create=False):
     """
-        Takes the type().__name__ of an object or an object, and bool determining creation
+        Takes the type().__name__ of an object, or an object, and bool determining creation
         Returns a cache of the specified type if create, or if it already exists, otherwise False
     """
 
