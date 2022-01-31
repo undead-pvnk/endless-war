@@ -5114,14 +5114,14 @@ obj_type_to_nested_props = {
 }
 
 obj_type_indexes = {
-    "EwItem": ["id_owner"]
+    "EwItem": ["id_owner", "item_type"]
 }
 
-# scream = ""
-# for i in range(1, 10000):
-#     scream += "A"
-#     
-# print(scream)
+scream = ""
+for i in range(1, 10000):
+    scream += "A"
+
+print(scream)
 
 debugroom = None
 debugroom_short = None
