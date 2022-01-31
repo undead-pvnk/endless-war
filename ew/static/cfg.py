@@ -5113,6 +5113,10 @@ obj_type_to_nested_props = {
     # "EwEnemy": ["enemy_props"],
 }
 
+obj_type_indexes = {
+    "EwItem": ["id_owner"]
+}
+
 # scream = ""
 # for i in range(1, 10000):
 #     scream += "A"
