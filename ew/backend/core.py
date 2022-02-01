@@ -213,28 +213,34 @@ class ObjCache():
 
         else:
             # Create list to search
-            ids_to_search = []
+            ids_to_search = None
+            criteria_indexed = []
             # Use indexes to narrow searches
             for key, value in criteria.items():
-                key = str(key)
+                skey = str(key)
                 value = str(value)
-                if key in self.indexes.keys() and value in self.indexes.get(key).keys():
-                    if ids_to_search == []:
+                if skey in self.indexes.keys() and value in self.indexes.get(skey).keys():
+                    # Index found, Note that the term doesnt need to be checked later
+                    criteria_indexed.append(key)
+                    if ids_to_search is None:
                         # Limit search to found index
-                        ids_to_search = self.indexes.get(key).get(value)
+                        ids_to_search = self.indexes.get(skey).get(value)
                     else:
                         # Limit search to items that share all indexes
-                        ids_to_search = list(set(ids_to_search).intersection(set(self.indexes.get(key).get(value))))
+                        ids_to_search = list(set(ids_to_search).intersection(set(self.indexes.get(skey).get(value))))
+
+            # Remove indexed criteria
+            for k in criteria_indexed:
+                criteria.pop(k)
 
             # grab the actual entry data to be vetted
-            if ids_to_search != []:
+            if ids_to_search is not None:
                 valid_data = list(map(lambda ident: self.entries.get(ident), ids_to_search))
             else:
                 valid_data = self.entries.values()
 
             # iterate through all entered data
             for data in valid_data:
-
                 # Check against all given criteria
                 meets = True
                 for key, value in criteria.items():
