@@ -2927,7 +2927,7 @@ poi_list = [
 	EwPoi(
 		id_poi = "northwestoutskirtsedge",
 		alias = ['nwoedge', 'nwoe'],
-		str_name = "Northwest Outskirts Edge",
+		str_name = "Northwest Outskirts Edge - Charcoal Park Ruins",
 		str_desc = "You've never seen ruins this... recent. This area used to be a part of Charcoal Park, but now it's a complete ghost town. You might even mistake it for a bonafide part of the city were it not for all the desert raiders and bubbling acid pools everywhere. It really makes you think about what could've been, you know? Maybe if the Veteran center wasn't shielding Charcoal Park from this mess, we could've gotten rid of that stupid-ass district ages ago. This outskirt is connected to West Outskirts Edge, Northwest Outskirts, North Outskirts, Charcoal Park, Toxington and Maimridge.",
 		channel = "northwest-outskirts-edge",
 		major_role = "nullmajorrole",
@@ -2991,9 +2991,9 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "westoutskirts",
-		alias = ['wo'],
-		str_name = "West Outskirts",
-		str_desc = "It's a wasteland, devoid of all life except for slime beasts. This outskirt is connected to Southwest Outskirts, West Outskirts Depths, West Outskirts Edge, and Northwest Outskirts.",
+		alias = ['wo', 'poudringraveyard'],
+		str_name = "West Outskirts - Poudrin Graveyard",
+		str_desc = "The red sand slowly starts to turn green as you approach the center of this place. It's full of poudrin dust, a substance too small to crush and too solid to refine or melt down. Walking barefoot here is like constantly stepping on thumbtacks, and the secreatures of the region are hardened as a result. So many questions, so much wasted slime. This outskirt is connected to Southwest Outskirts, West Outskirts Depths, West Outskirts Edge, and Northwest Outskirts.",
 		channel = "west-outskirts",
 		major_role = "nullmajorrole",
 		minor_role = "nullminorrole",

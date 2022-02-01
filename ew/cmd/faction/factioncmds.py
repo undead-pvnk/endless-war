@@ -1,3 +1,4 @@
+import asyncio
 from ew.backend import item as bknd_item
 from ew.backend import core as bknd_core
 from ew.backend.item import EwItem
@@ -7,6 +8,7 @@ from ew.static import weapons as static_weapons
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils.combat import EwUser
+from functools import partial
 
 """ allow a juvie to join your gang """
 
@@ -69,7 +71,7 @@ async def store(cmd):
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if cmd.tokens[1] == 'all':
-        cmd.tokens[1] = '4000'
+        cmd.tokens[1] = '100'
 
     multistow = 1
     startparse = 1
@@ -79,6 +81,8 @@ async def store(cmd):
     if cmd.tokens[1].isnumeric() and cmd.tokens_count > 2:
         startparse = 2
         multistow = int(cmd.tokens[1])
+        if multistow > 100:
+            multistow = 100
 
     item_search = ewutils.flattenTokenListToString(cmd.tokens[startparse:])
 
@@ -123,7 +127,11 @@ async def store(cmd):
                 cache_item.update({'id_owner': poi.community_chest})
                 item_cache.set_entry(data=cache_item)
 
-                loop_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
+                #= await event_loop.run_in_executor(None, item_cache.find_entries, criteria)
+                func = partial(bknd_item.find_item, item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
+                event_loop = asyncio.get_event_loop()
+                loop_sought = await event_loop.run_in_executor(None, func)
+
                 items_had += 1
                 multistow -= 1
 
@@ -169,11 +177,13 @@ async def take(cmd):
     multisnag = 1
     startparse = 1
     if cmd.tokens[1] == 'all':
-        cmd.tokens[1] = '4000'
+        cmd.tokens[1] = '100'
 
     if cmd.tokens[1].isnumeric() and cmd.tokens_count > 2:
         startparse = 2
         multisnag = int(cmd.tokens[1])
+        if multisnag > 100:
+            multisnag = 100
 
     item_search = ewutils.flattenTokenListToString(cmd.tokens[startparse:])
 
@@ -247,7 +257,12 @@ async def take(cmd):
             item_cache.set_entry(data=cache_item)
 
 
-            loop_sought = bknd_item.find_item(item_search=item_search, id_user=poi.community_chest, id_server=cmd.guild.id if cmd.guild is not None else None, admin=admin)
+            #loop_sought = bknd_item.find_item(item_search=item_search, id_user=poi.community_chest, id_server=cmd.guild.id if cmd.guild is not None else None, admin=admin)
+
+            func = partial(bknd_item.find_item, item_search=item_search, id_user=poi.community_chest,
+                           id_server=cmd.guild.id if cmd.guild is not None else None, admin=admin)
+            event_loop = asyncio.get_event_loop()
+            loop_sought = await event_loop.run_in_executor(None, func)
 
         if items_snagged > 1:
             name_string = "{}(x{})".format(item_sought.get("name"), items_snagged)
