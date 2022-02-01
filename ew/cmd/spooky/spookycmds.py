@@ -22,7 +22,10 @@ from ew.utils.item import EwItem
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
-from ew.cmd.debugr import debug13
+try:
+    from ew.cmd.debugr import debug13
+except:
+    from ew.cmd.debugr_dummy import debug13
 
 async def negapool(cmd):
     # Add persisted negative slime.

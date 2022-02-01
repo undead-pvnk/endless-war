@@ -8,6 +8,7 @@ cmd_debug7 = "debug7"
 cmd_debug8 = "debug8"
 cmd_debug9 = "debug9"
 debug_state_1 = 'debugstate1'
+debug_content_1= 'nothing to find, goons'
 debugitem_set = []
 debugpois = []
 debugpiers = []

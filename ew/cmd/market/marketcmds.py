@@ -8,7 +8,7 @@ from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.market import EwStock
 from ew.backend.market import EwCompany
-from ew.cmd import debug as ewdebug
+#from ew.cmd import debug as ewdebug
 from ew.backend.player import EwPlayer
 from ew.backend.fish import EwRecord
 from ew.backend.dungeons import EwGamestate
@@ -519,7 +519,7 @@ async def art_donate(id_item, cmd):
 
     else:
         #gamestate = EwGamestate(id_server=item_obj.id_server, id_state='artplayer')
-        if 1 is not None:
+        if 1 != None:
 
             if item_obj.item_props.get('title') is not None:
                 new_record = EwRecord(id_server=cmd.guild.id, record_type = item_obj.item_props.get('title'))

@@ -20,6 +20,7 @@ relic_list = [
 
 debug1 = 'suckdick'
 debug2 = 'clownfart'
+debugsmoke = 'debugsmoke'
 
 relic_map = {}
 relic_names = []
