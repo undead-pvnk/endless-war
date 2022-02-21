@@ -231,7 +231,7 @@ async def on_ready():
                 neighbor_ids.append(neighbor.id_poi)
 
         poi_static.poi_neighbors[poi.id_poi] = set(neighbor_ids)
-        ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, poi_static.poi_neighbors[poi.id_poi]))
+        # ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, poi_static.poi_neighbors[poi.id_poi]))
 
     for id_poi in poi_static.landmark_pois:
         ewutils.logMsg("beginning landmark precomputation for " + id_poi)
