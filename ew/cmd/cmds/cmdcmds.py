@@ -3,10 +3,8 @@ import random
 import sys
 import time
 from ew.backend import core as bknd_core
-from ew.backend import hunting as bknd_hunt
 from ew.backend import item as bknd_item
 from ew.backend import worldevent as bknd_worldevent
-from ew.backend.hunting import EwOperationData
 
 from ew.backend.apt import EwApartment
 
@@ -33,13 +31,11 @@ from ew.utils import cmd as cmd_utils
 from ew.utils import combat as cmbt_utils
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
-from ew.utils import hunting as hunt_utils
 from ew.utils import item as itm_utils
 from ew.utils import leaderboard as bknd_leaderboard
 from ew.utils import prank as prank_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils import stats as ewstats
-from ew.utils.combat import EwEnemy
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
@@ -61,13 +57,17 @@ from ..wep import wepcmds as wep_cmds
 """ show player's slime score """
 
 
-async def score(cmd):
-    time_now_cmd_start = int(time.time())
+async def score(cmd: cmd_utils.EwCmd):
     user_data = None
     member = None
+    response = ""
+
     slime_alias = ewutils.flattenTokenListToString(cmd.tokens[0])
     if len(cmd.mention_ids) == 0:
-        target_type = "self"
+        if ewrolemgr.check_clearance(cmd.message.author) <= 3 and cmd.tokens_count > 1:
+            target_type = "district"
+        else:
+            target_type = "self"
     else:
         target_type = ewutils.mention_type(cmd, cmd.mention_ids[0])
 
@@ -84,6 +84,17 @@ async def score(cmd):
 
         # return my score
         response = "You currently have {:,} {}{}.".format(user_data.slimes, slime_alias, (" and {} {} poudrin{}".format(poudrin_amount, slime_alias, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
+
+    elif target_type == "district":
+        district_search = cmd.tokens[1:]
+        district_search = ewutils.flattenTokenListToString(district_search)
+        found_district = poi_static.id_to_poi.get(district_search)
+        if found_district: 
+            district_search = found_district.id_poi # use this to clean up the search, so we always specific get the right name for the db call
+            district = EwDistrict(cmd.guild.id, district_search)
+            response = "There's currently {:,} {} in {}.".format(district.slimes, slime_alias, district_search)
+        else:
+            response = "That's not a district. Hit the books, dweeb."
 
     # other user slime check
     else:
