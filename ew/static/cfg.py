@@ -3237,6 +3237,8 @@ style_smart = "smart"
 style_beautiful = "beautiful"
 style_cute = "cute"
 
+fashion_styles = [style_cool, style_tough, style_smart, style_beautiful, style_cute]
+
 freshnesslevel_1 = 500
 freshnesslevel_2 = 1000
 freshnesslevel_3 = 2000

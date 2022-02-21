@@ -2588,7 +2588,7 @@ async def arrest(cmd):
     author = cmd.message.author
 
 
-    if not 0 < ewrolemgr.checkClearance(member=author) < 4:
+    if not 0 < ewrolemgr.check_clearance(member=author) < 4:
         return await cmd_utils.fake_failed_command(cmd)
     market = EwMarket(id_server=cmd.guild.id)
     time_done = ""
@@ -2597,7 +2597,7 @@ async def arrest(cmd):
 
     if cmd.mentions_count == 1:
         member = cmd.mentions[0]
-        if 0 < ewrolemgr.checkClearance(member=member) < 4:
+        if 0 < ewrolemgr.check_clearance(member=member) < 4:
             response = "I'm sorry, {}. I can't let you do that.".format(cmd.message.author)
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
@@ -2630,7 +2630,7 @@ async def arrest(cmd):
 
 async def release(cmd):
 
-    if not 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
+    if not 0 < ewrolemgr.check_clearance(member=cmd.message.author) < 4:
         return await cmd_utils.fake_failed_command(cmd)
 
     if cmd.mentions_count == 1:
@@ -2650,7 +2650,7 @@ async def release(cmd):
 
 
 async def dual_key_ban(cmd):
-    if not 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
+    if not 0 < ewrolemgr.check_clearance(member=cmd.message.author) < 4:
         return await cmd_utils.fake_failed_command(cmd)
     final_ban_text = ""
 
@@ -2662,7 +2662,7 @@ async def dual_key_ban(cmd):
 
     if cmd.mentions_count == 1:
         member = cmd.mentions[0]
-        if 0 < ewrolemgr.checkClearance(member=member) < 4:
+        if 0 < ewrolemgr.check_clearance(member=member) < 4:
             response = "I'm sorry, {}. I can't let you do that.".format(cmd.message.author.display_name)
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
@@ -2709,7 +2709,7 @@ async def dual_key_ban(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def dual_key_release(cmd):
-    if not 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
+    if not 0 < ewrolemgr.check_clearance(member=cmd.message.author) < 4:
         return await cmd_utils.fake_failed_command(cmd)
     response = ""
     final_unban_text = ""

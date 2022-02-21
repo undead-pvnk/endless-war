@@ -552,7 +552,7 @@ async def art_donate(id_item, cmd):
 
 
 async def populate_image(cmd):
-    if 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
+    if 0 < ewrolemgr.check_clearance(member=cmd.message.author) < 4:
         if cmd.tokens_count != 4:
             response = "Invalid command. Try !addart <fish/relic> <title> <link>."
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
