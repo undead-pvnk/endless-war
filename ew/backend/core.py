@@ -279,7 +279,6 @@ class ObjCache():
 
         # Figure out what to change
         for data in entries:
-            print(data)
             entry_id = self.get_data_id(data)
             old_data = self.entries.get(entry_id)
 
@@ -304,20 +303,24 @@ class ObjCache():
             # Compile Entry updates
             entries_update.update({entry_id: data})
 
-        print(index_removals)
-        print(index_additions)
         # Remove old index values
         for prop_name, index_data in index_removals.items():
             for index_val, ids_to_remove in index_data.items():
+                # We assume that the items are already properly indexed, that way if they aren't, this can warn us :)
                 list_to_edit = self.indexes.get(prop_name).get(index_val)
                 for removed_id in ids_to_remove:
                     list_to_edit.remove(removed_id)
 
         # add new index values
         for prop_name, index_data in index_additions.items():
+            # iterating through all property indexes, and all of the subsequent indexed values and their id lists
             for index_val, ids_to_add in index_data.items():
+                # Get the id list for the target prop and value, or make it if it doesnt exist
                 list_to_edit = self.indexes.get(prop_name).get(index_val)
-                list_to_edit += ids_to_add
+                if list_to_edit is None:
+                    self.indexes.get(prop_name).update({index_val: ids_to_add})
+                else:
+                    list_to_edit += ids_to_add
 
         # Update stored data
         self.entries.update(entries_update)
