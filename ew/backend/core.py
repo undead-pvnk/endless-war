@@ -209,7 +209,7 @@ class ObjCache():
 
         if id_list != None:
             for id in id_list:
-                copied_matches.append(self.entries.get(id))
+                copied_matches.append(self.copy_entry(self.entries.get(id)))
 
         else:
             # Create list to search
