@@ -259,7 +259,7 @@ class ObjCache():
                 if meets:
                     copied_matches.append(self.copy_entry(data))
 
-            return copied_matches
+        return copied_matches
 
     def bulk_set_entry(self, entries = None):
         """
