@@ -25,6 +25,10 @@ from ew.utils import frontend as fe_utils
 from ew.utils import move as move_utils
 from ew.utils import prank as prank_utils
 from ew.utils import rolemgr as ewrolemgr
+try:
+    from ew.utils import rutils as rutils
+except:
+    from ew.utils import rutils_dummy as rutils
 from ew.utils import stats as ewstats
 from ew.utils.ads import format_ad_response
 from ew.utils.combat import EwEnemy
@@ -298,6 +302,8 @@ async def move(cmd = None, isApt = False, isSplit = 0, continuousMove = -1):
 
             return
 
+        rutils.movement_checker(user_data, poi_current, poi)
+
         user_data.poi = poi.id_poi
         user_data.time_lastenter = int(time.time())
 
@@ -410,8 +416,10 @@ async def move(cmd = None, isApt = False, isSplit = 0, continuousMove = -1):
                     if walking_into_sewers and poi_current.id_poi == ewcfg.poi_id_thesewers:
                         user_data.die(cause=ewcfg.cause_suicide)
 
-                    poi_previous = user_data.poi
+                    poi_previous = poi_static.id_to_poi.get(user_data.poi)
                     # print('previous poi: {}'.format(poi_previous))
+
+                    rutils.movement_checker(user_data, poi_previous, poi_current)
 
                     user_data.poi = poi_current.id_poi
                     user_data.time_lastenter = int(time.time())
@@ -970,6 +978,9 @@ async def teleport(cmd):
             user_data = EwUser(member=cmd.message.author)
 
             ewutils.moves_active[cmd.message.author.id] = 0
+
+            rutils.movement_checker(user_data, poi_static.id_to_poi.get(user_data.poi), poi)
+
             user_data.poi = poi.id_poi
             user_data.time_lastenter = int(time.time())
 

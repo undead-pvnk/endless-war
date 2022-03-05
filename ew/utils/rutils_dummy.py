@@ -1,5 +1,5 @@
 from ew.backend.dungeons import EwGamestate
-
+from ew.static.poi import id_to_poi
 
 
 debug3 = 'gatekeep'
@@ -32,3 +32,26 @@ def debug16(one, two, three):
 
 def debug17(one):
     return " "
+
+def movement_checker(user_data, poi_from, poi_to):
+    return
+
+def poi_is_pvp(poi_name = None):
+    poi = id_to_poi.get(poi_name)
+
+    if poi != None:
+        return poi.pvp
+
+    return False
+
+def eg_check1(t, user_data):
+    return False
+
+def eg_check2(t, shootee_data):
+    return True if poi_is_pvp(shootee_data.poi) == False else False
+
+def eg_check3(t, shootee_data, user_data):
+    poi = id_to_poi.get(user_data.poi)
+    user_isshambler = user_data.life_state == 3
+
+    return True if not poi.pvp and not (shootee_data.life_state == 3 or shootee_data.get_inhabitee() == user_data.id_user or user_isshambler) else False
