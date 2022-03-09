@@ -711,7 +711,7 @@ def check_clearance(member = None) -> int:
 
     roles_map_user = ewutils.getRoleMap(member.roles)
 
-    if ewcfg.role_bpadmin or ewcfg.role_rowdyfucker or ewcfg.role_copkiller in roles_map_user:
+    if (ewcfg.role_bpadmin in roles_map_user) or (ewcfg.role_rowdyfucker in roles_map_user) or (ewcfg.role_copkiller in roles_map_user):
         return 1 #currently in admin
     elif ewcfg.role_brimstoneprog in roles_map_user:
         return 2 #casual admin
