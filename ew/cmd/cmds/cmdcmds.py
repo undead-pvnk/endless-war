@@ -64,7 +64,7 @@ async def score(cmd: cmd_utils.EwCmd):
 
     slime_alias = ewutils.flattenTokenListToString(cmd.tokens[0])
     if len(cmd.mention_ids) == 0:
-        if cmd.message.author.guild_permissions.administrator and cmd.tokens_count > 1:
+        if ewrolemgr.check_clearance(cmd.message.author) <= 3 and cmd.tokens_count > 1:
             target_type = "district"
         else:
             target_type = "self"
