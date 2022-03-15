@@ -309,6 +309,7 @@ async def on_ready():
 
         ewdebug.initialize_gamestate(id_server=server.id)
 
+
         # get or make the weapon items for fists and fingernails
         combat_utils.set_unarmed_items(server.id)
         #ewutils.logMsg("Global fists are {}\nGlobal fingernails are {}".format(combat_utils.fist_item, combat_utils.fingernails_item))

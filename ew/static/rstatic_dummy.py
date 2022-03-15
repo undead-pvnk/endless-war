@@ -27,6 +27,16 @@ relic_names = []
 alt_relics = []
 dontfilter_relics = []
 
+cv_relics = {}
+tt_relics = {}
+jr_relics = {}
+
+digup_relics = {
+    'juviesrow':jr_relics,
+    'toxington':tt_relics,
+    'cratersville':cv_relics
+}
+
 for relic in relic_list:
     relic_map[relic.id_relic] = relic
     relic_names.append(relic.id_relic)
@@ -34,6 +44,12 @@ for relic in relic_list:
         alt_relics.append(relic.id_relic[1:])
     if relic.str_use == 'dontfilter':
         dontfilter_relics.append(relic.id_relic)
+    if relic.acquisition == 'cvdigup':
+        cv_relics[int(relic.str_use)] = relic.id_relic
+    if relic.acquisition == 'ttdigup':
+        tt_relics[int(relic.str_use)] = relic.id_relic
+    if relic.acquisition == 'jrdigup':
+        jr_relics[int(relic.str_use)] = relic.id_relic
 
 
 

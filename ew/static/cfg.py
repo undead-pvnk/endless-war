@@ -49,7 +49,10 @@ swilldermuk_active = False
 
 public_gamestates = {
     'dhorsemankills': [1, '4'], #determines spawn frequency in double halloween. the bit is set to true(unused) and the value is set to 4, indicating he has been killed 4 times.
-    'slimernaliakingpin':[1, '-1'] #The existing slimernalia kingpin
+    'slimernaliakingpin':[1, '-1'], #The existing slimernalia kingpin
+    'cratersvillehole':[1, '0'],
+    'toxingtonhole':[1, '0'],
+    'juviesrowhole':[1, '0']
 }
 
 
@@ -677,6 +680,8 @@ cmd_reload = cmd_prefix + 'reload'
 cmd_reload_alt1 = cmd_prefix + 'loadthegun'
 cmd_devour = cmd_prefix + 'devour'
 cmd_mine = cmd_prefix + 'mine'
+cmd_digmine = cmd_prefix + 'dig'
+cmd_hole = cmd_prefix + 'hole'
 cmd_flag = cmd_prefix + 'flag'
 cmd_score = cmd_prefix + 'slimes'
 cmd_score_alt1 = cmd_prefix + 'slime'

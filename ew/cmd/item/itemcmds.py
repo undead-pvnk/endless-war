@@ -2081,6 +2081,7 @@ async def bury(cmd):
         if item_sought:
             if item_sought.get('soulbound'):
                 response = "You can't bury that. It's bound to your essence, stupid."
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
             ground_recipient = "{}-{}-{}".format('bury', user_data.poi, coords.lower())
 

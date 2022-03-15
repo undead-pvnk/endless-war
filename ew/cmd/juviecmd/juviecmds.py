@@ -31,7 +31,14 @@ from .juviecmdutils import get_mining_yield_by_grid_type
 from .juviecmdutils import init_grid
 from .juviecmdutils import mismine
 from .juviecmdutils import print_grid
+from ew.backend.dungeons import EwGamestate
 
+try:
+    from ew.static.rstatic import digup_relics
+    from ew.static.rstatic import relic_map
+except:
+    from ew.static.rstatic_dummy import digup_relics
+    from ew.static.rstatic_dummy import relic_map
 
 async def crush(cmd):
     member = cmd.message.author
@@ -416,6 +423,27 @@ async def mine(cmd):
                 weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
                 if (weapon.id_weapon == ewcfg.weapon_id_pickaxe or weapon.id_weapon == ewcfg.weapon_id_diamondpickaxe)  and user_data.life_state != ewcfg.life_state_juvenile:
                     has_pickaxe = True
+                elif (weapon.id_weapon == ewcfg.weapon_id_shovel)  and user_data.life_state != ewcfg.life_state_juvenile and cmd.tokens[0] == '!dig':
+
+                    print(poi.mother_districts[0] + 'hole')
+                    minestate = EwGamestate(id_server=user_data.id_server, id_state=poi.mother_districts[0] + 'hole')
+                    added = random.randint(5, 15)
+                    checked_dict = digup_relics.get(poi.mother_districts[0])
+                    print(checked_dict)
+                    dug_relics = [x for x in checked_dict.keys() if int(minestate.value) <= int(x) <= int(minestate.value) + added]
+
+
+                    if len(dug_relics) > 0:
+                        props = itm_utils.gen_item_props(relic_map.get(dug_relics[0]))
+                        bknd_item.item_create(
+                            item_type=ewcfg.it_relic,
+                            id_user=cmd.message.author.id,
+                            id_server=cmd.guild.id,
+                            item_props=props
+                        )
+                        response += "You ram your shovel back into the ground and hear a CLANK. Oh shit, we got one! You pull out a {}! ".format(relic_map.get(dug_relics[0]).str_name)
+                    minestate.value = str(int(minestate.value) + added)
+                    minestate.persist()
             # if user_data.sidearm >= 0:
             #	sidearm_item = EwItem(id_item=user_data.sidearm)
             #	sidearm = static_weapons.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
@@ -900,3 +928,18 @@ async def scrub(cmd):
 
     if response != "-":
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def hole_depth(cmd):
+    user_data = EwUser(member = cmd.message.author)
+    poi = poi_static.id_to_poi.get(user_data.poi)
+
+    if poi.mother_districts[0] not in['cratersville', 'juviesrow', 'toxington']:
+        response = "Well, I never!"
+    else:
+        mother_poi = poi_static.id_to_poi.get(poi.mother_districts[0])
+        gamestate = EwGamestate(id_server=cmd.guild.id, id_state= '{}hole'.format(poi.mother_districts[0]))
+        current_depth = float(gamestate.value)/3000
+
+        response = "The hole in {} is {:.2f} feet deep.".format(mother_poi.str_name, current_depth)
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

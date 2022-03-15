@@ -13,6 +13,8 @@ cmd_map = {
 
     # gives slime to the miner (message.author)
     ewcfg.cmd_mine: juviecmds.mine,
+    ewcfg.cmd_digmine: juviecmds.mine,
+    ewcfg.cmd_hole: juviecmds.hole_depth,
 
     # flags a vein as dangerous
     ewcfg.cmd_flag: juviecmds.flag,
