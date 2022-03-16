@@ -4,7 +4,7 @@ import random
 import time
 
 from ew.backend import hunting as bknd_hunt
-from ew.backend.dungeons import EwGamestate
+#from ew.backend.dungeons import EwGamestate
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.player import EwPlayer
@@ -15,8 +15,12 @@ from ew.static import weapons as static_weapons
 from ew.utils import combat as cmbt_utils
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
-from ew.utils import move as move_utils
+#from ew.utils import move as move_utils
 from ew.utils import stats as ewstats
+try:
+    from ew.utils import rutils as rutils
+except:
+    from ew.utils import rutils_dummy as rutils
 from ew.utils.combat import EwEnemy
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
@@ -436,6 +440,8 @@ def canAttack(cmd):
         response = "You can't commit violence from here."
     # elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
     # 	response = "You must go elsewhere to commit gang violence."
+    elif rutils.eg_check1(time_now, user_data):
+        response = "you must go elsewhere to commit gang violence."
     elif channel_poi.id_poi != user_data.poi and user_data.poi not in channel_poi.mother_districts:
         # Only way to do this right now is by using the gellphone
         response = "Alas, you still can't shoot people through your phone."
@@ -550,7 +556,7 @@ def canAttack(cmd):
             user_data.hunger += hunger_penalty
             user_data.persist()
 
-        elif move_utils.poi_is_pvp(shootee_data.poi) == False:
+        elif rutils.eg_check2(time_now, shootee_data):
             response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
         elif user_isshambler == True and len(district_data.get_enemies_in_district(classes=[ewcfg.enemy_class_gaiaslimeoid])) > 0:
@@ -583,7 +589,7 @@ def canAttack(cmd):
             # Target is possessing user's weapon
             response = "{}'s contract forbids you from harming them. You should've read the fine print.".format(member.display_name)
 
-        elif not poi.pvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.get_inhabitee() == user_data.id_user or user_isshambler):  # or (shootee_data.life_state == ewcfg.life_state_juvenile and shootee_data.slimelevel <= ewcfg.max_safe_level):
+        elif rutils.eg_check3(time_now, shootee_data, user_data):  # or (shootee_data.life_state == ewcfg.life_state_juvenile and shootee_data.slimelevel <= ewcfg.max_safe_level):
             # Target is neither flagged for PvP, nor a shambler, nor a ghost inhabiting the player, nor a juvie above a certain threshold slime. Player is not a shambler.
             response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
