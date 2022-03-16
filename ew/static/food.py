@@ -1339,7 +1339,7 @@ food_list = [
     ),
     EwFood(
         id_food = "krakacolafuckenergy",
-        alias = ['dffu'],
+        alias = ['kcfu'],
         recover_hunger = 1200,
         price = 12000,
         str_name = "Kraka Kola FUCK ENERGY Drink",
