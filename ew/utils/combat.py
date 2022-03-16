@@ -954,20 +954,6 @@ class EwEnemy(EwEnemyBase):
             destinations = set(poi_static.poi_neighbors.get(self.poi))
             all_destinations = set(destinations)
 
-            if self.enemytype in ewcfg.gvs_enemies:
-                path = [ewcfg.poi_id_assaultflatsbeach, ewcfg.poi_id_vagrantscorner, ewcfg.poi_id_greenlightdistrict,
-                        ewcfg.poi_id_downtown]
-
-                if self.poi == path[0]:
-                    destinations = [path[1]]
-                elif self.poi == path[1]:
-                    destinations = [path[2]]
-                elif self.poi == path[2]:
-                    destinations = [path[3]]
-                elif self.poi == path[3]:
-                    # Raid boss has finished its path
-                    return
-
             # Filter subzones and gang bases out.
             # Nudge raidbosses into the city.
             for destination in all_destinations:
@@ -1023,6 +1009,8 @@ class EwEnemy(EwEnemyBase):
                     channels = ewcfg.hideout_channels
                     for ch in channels:
                         resp_cont.add_channel_response(ch, gang_base_response)
+        except Exception as e:
+            ewutils.logMsg("Failed to move creature. {}".format(e))
         finally:
             self.persist()
             return resp_cont
@@ -1780,6 +1768,7 @@ async def enemy_perform_action(id_server):
 
     time_now = int(time.time())
 
+    # Only select enemies that are either in a zone with a player in it, or that act autonomously (raid bosses)
     enemydata = bknd_core.execute_sql_query(
         "SELECT {id_enemy} FROM enemies WHERE ((enemies.poi IN (SELECT users.poi FROM users WHERE NOT (users.life_state = %s OR users.life_state = %s) AND users.id_server = {id_server})) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.expiration_date < %s) OR (enemies.id_target != -1)) AND enemies.id_server = {id_server}".format(
             id_enemy=ewcfg.col_id_enemy,
@@ -1791,14 +1780,6 @@ async def enemy_perform_action(id_server):
             ewcfg.enemy_lifestate_dead,
             time_now
         ))
-    # enemydata = bknd_core.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
-    #	id_enemy = ewcfg.col_id_enemy
-    # ),(
-    #	id_server,
-    # ))
-
-    # Remove duplicates from SQL query
-    # enemydata = set(enemydata)
 
     for row in enemydata:
         enemy = EwEnemy(id_enemy=row[0], id_server=id_server)

@@ -740,7 +740,7 @@ def cull_slime_sea(
         #print(seainv)
         to_delete = []
         if sea_size <= 500:
-            return
+            return 0
         else:
             for seaitem in seainv:
                 try:
@@ -778,17 +778,22 @@ def cull_slime_sea(
                 except Exception as e:
                     ewutils.logMsg("Error when trying to cull item {}: {}".format(seaitem.get('id_item'), e))
 
-            #delete_string = [str(element) for element in to_delete]
-            drop_list = ','.join(map(str, to_delete))
-            bknd_core.execute_sql_query("DELETE FROM items WHERE {id_item} IN ({drop_list})".format(id_item=ewcfg.col_id_item, drop_list=drop_list), ())
+            # Make sure there's something to delete, or otherwise the bot will crash out trying to delete nothing
+            if len(to_delete) > 0:    
+                #delete_string = [str(element) for element in to_delete]
+                drop_list = ','.join(map(str, to_delete))
 
-            item_cache = bknd_core.get_cache(obj_type="EwItem")
-            num = len(to_delete)
-            if item_cache:
-                for itemid in to_delete:
-                    bknd_core.remove_entry(obj_type="EwItem", id_entry=int(itemid))
-                    #item_cache.entries.pop(itemid)
-            return num
+                bknd_core.execute_sql_query("DELETE FROM items WHERE {id_item} IN ({drop_list})".format(id_item=ewcfg.col_id_item, drop_list=drop_list), ())
+
+                item_cache = bknd_core.get_cache(obj_type="EwItem")
+                num = len(to_delete)
+                if item_cache:
+                    for itemid in to_delete:
+                        bknd_core.remove_entry(obj_type="EwItem", id_entry=int(itemid))
+                        #item_cache.entries.pop(itemid)
+                return num
+            else:
+                return 0
 
 def get_root_owner(id_item):
     item = EwItem(id_item=id_item)

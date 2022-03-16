@@ -122,7 +122,7 @@ async def defect(cmd):
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     try:
-        message = await cmd.client.wait_for('message', timeout=30, check=lambda message: 0 < ewrolemgr.checkClearance(member=message.author) <= 4 and
+        message = await cmd.client.wait_for('message', timeout=30, check=lambda message: 0 < ewrolemgr.check_clearance(member=message.author) <= 4 and
                                                                                          message.content.lower() in [ewcfg.cmd_yes, ewcfg.cmd_no])
 
         if message != None:
@@ -210,32 +210,35 @@ async def banish(cmd):
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-"""
-    Command that creates a princeps cosmetic item
-"""
-
-
 async def create(cmd):
-    # if not cmd.message.author.guild_permissions.administrator:
-    #if EwUser(member=cmd.message.author).life_state != ewcfg.life_state_kingpin and not cmd.message.author.guild_permissions.administrator:
-    if not (0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4) or EwUser(member=cmd.message.author).life_state != ewcfg.life_state_kingpin:
+    
+    """ 
+    Command that creates a princeps cosmetic item. Usable only by admins and kingpins.
+        - !create item_name item_desc recipient style rarity context
+    
+    """
+    # Only BD admins and above can create princeps
+    if (ewrolemgr.check_clearance(member=cmd.message.author) > 3) and (EwUser(member=cmd.message.author).life_state != ewcfg.life_state_kingpin):
         response = 'Lowly Non-Kingpins cannot hope to create items with their bare hands.'
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_response(response, cmd)
 
-    if len(cmd.tokens) not in [4, 5, 6]:
-        response = 'Usage: !create "<item_name>" "<item_desc>" <recipient> <rarity(optional)>, <context>(optional)'
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    if len(cmd.tokens) not in [4, 5, 6, 7]:
+        response = 'Usage: !create "<item_name>" "<item_desc>" <recipient> <style>(optional) <rarity(optional)>, <context>(optional).\n'
+        return await fe_utils.send_response(response, cmd)
 
     item_name = cmd.tokens[1]
     item_desc = cmd.tokens[2]
-    rarity = cmd.tokens[4] if len(cmd.tokens) >= 5 and ewutils.flattenTokenListToString(cmd.tokens[4]) in ['princeps', 'plebeian', 'patrician'] else 'princeps'
-    context = cmd.tokens[5] if len(cmd.tokens) >= 6 else ''
+    # recipient is the third token
+    style = cmd.tokens[4] if len(cmd.tokens) >= 5 and ewutils.flattenTokenListToString(cmd.tokens[4]) in ewcfg.fashion_styles else ewcfg.style_cool
+    rarity = cmd.tokens[5] if len(cmd.tokens) >= 6 and ewutils.flattenTokenListToString(cmd.tokens[5]) in ['princeps', 'plebeian', 'patrician'] else 'princeps'
+    context = cmd.tokens[6] if len(cmd.tokens) >= 7 else ''
 
-    if cmd.mentions[0]:
+    if cmd.mentions and cmd.mentions[0]:
         recipient = cmd.mentions[0]
     else:
-        response = 'You need to specify a recipient. Usage: !create "<item_name>" "<item_desc>" <recipient>'
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        response = 'You need to specify a recipient. Usage: !create "<item_name>" "<item_desc>" <recipient> <style>(optional) <rarity>(optional) <context>(optional)'
+        return await fe_utils.send_response(response, cmd)
+    
     # princeps stopped assigning durability and stuff for... reasons (idk!!!! something with the caching update???? As far as I can tell????) so I just assigned them here lol
     item_props = {
         "id_cosmetic": "princep",
@@ -251,7 +254,7 @@ async def create(cmd):
         "ability": None,
         "durability": ewcfg.base_durability * 100,
         "size": 1,
-        "fashion_style": ewcfg.style_cool,
+        "fashion_style": style,
         "freshness": 100,
         "adorned": "false",
         "context": context
@@ -267,7 +270,7 @@ async def create(cmd):
     itm_utils.soulbind(new_item_id)
 
     response = 'Item "{}" successfully created.'.format(item_name)
-    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    return await fe_utils.send_response(response, cmd)
 
 
 """
@@ -375,7 +378,7 @@ async def exalt(cmd):
 
 async def hogtie(cmd):
 
-    if not 0 < ewrolemgr.checkClearance(member=cmd.message.author) < 4:
+    if not 0 < ewrolemgr.check_clearance(member=cmd.message.author) < 4:
         return await cmd_utils.fake_failed_command(cmd)
     else:
         if cmd.mentions_count == 1:
