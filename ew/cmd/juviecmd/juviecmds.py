@@ -434,14 +434,14 @@ async def mine(cmd):
 
 
                     if len(dug_relics) > 0:
-                        props = itm_utils.gen_item_props(relic_map.get(dug_relics[0]))
+                        props = itm_utils.gen_item_props(relic_map.get(checked_dict.get(dug_relics[0])))
                         bknd_item.item_create(
                             item_type=ewcfg.it_relic,
                             id_user=cmd.message.author.id,
                             id_server=cmd.guild.id,
                             item_props=props
                         )
-                        response += "You ram your shovel back into the ground and hear a CLANK. Oh shit, we got one! You pull out a {}! ".format(relic_map.get(dug_relics[0]).str_name)
+                        response += "You ram your shovel back into the ground and hear a CLANK. Oh shit, we got one! You pull out a {}! ".format(relic_map.get(checked_dict.get(dug_relics[0])).str_name)
                     minestate.value = str(int(minestate.value) + added)
                     minestate.persist()
             # if user_data.sidearm >= 0:
