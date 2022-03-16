@@ -670,7 +670,7 @@ async def item_look(cmd):
                         relative_change = round(current_durability / original_durability * 100)
 
                         if relative_change > 80:
-                            response += "It's got a few minor scratches on it.\n"
+                            response += "Its got a few minor scratches on it.\n"
                         elif relative_change > 60:
                             response += "It's a little torn from use.\n"
                         elif relative_change > 40:
@@ -687,28 +687,28 @@ async def item_look(cmd):
                     response += "It costs about {amount} space to adorn.\n".format(amount=item.item_props['size'])
 
                 if item.item_props['fashion_style'] == ewcfg.style_cool:
-                    response += "It's got a cool feel to it. "
+                    response += "Its got a cool feel to it. "
                 if item.item_props['fashion_style'] == ewcfg.style_tough:
                     response += "It's lookin' tough as hell, my friend. "
                 if item.item_props['fashion_style'] == ewcfg.style_smart:
-                    response += "It's got sort of a smart vibe. "
+                    response += "Its got sort of a smart vibe. "
                 if item.item_props['fashion_style'] == ewcfg.style_beautiful:
-                    response += "It's got a beautiful, refined feel. "
+                    response += "Its got a beautiful, refined feel. "
                 if item.item_props['fashion_style'] == ewcfg.style_cute:
                     response += "It's super cuuuutttiieeeeeeeeeeeee~ deeeessuusususususususuusususufuswvgslgerphi4hjetbhjhjbetbjtrrpo"
 
-                response += "\n\nIt's freshness rating is {rating}.".format(rating=item.item_props['freshness'])
+                response += "\n\nIts freshness rating is {rating}.".format(rating=item.item_props['freshness'])
 
                 hue = hue_static.hue_map.get(item.item_props.get('hue'))
                 if hue != None:
-                    response += " It's been dyed in {} paint.".format(hue.str_name)
+                    response += " Its been dyed in {} paint.".format(hue.str_name)
 
             if item.item_type == ewcfg.it_furniture:
                 furnlist = static_items.furniture_map
                 furn_obj = furnlist.get(item.item_props.get('id_furniture'))
                 hue = hue_static.hue_map.get(item.item_props.get('hue'))
                 if hue != None:
-                    response += " It's been dyed in {} paint.".format(hue.str_name)
+                    response += " Its been dyed in {} paint.".format(hue.str_name)
 
                 if furn_obj is not None and furn_obj.furn_set == 'collection':
 

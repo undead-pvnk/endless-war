@@ -696,15 +696,22 @@ async def remove_user_overwrites(cmd):
     return await fe_utils.send_message(client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-def checkClearance(member = None):
+def check_clearance(member = None) -> int:
+    
+    """
+    Returns an int showing the clearance of the user depending on the roles they have attached to their discord member.
+    The lower the number, the greater the clearance.
+    - 10 is a regular user
+    - 4 & 3 is moderators
+    - 1 & 2 is admins and kingpins
+    """
+
     if member is None:
         return -1
 
-
     roles_map_user = ewutils.getRoleMap(member.roles)
 
-
-    if ewcfg.role_bpadmin in roles_map_user:
+    if ewcfg.role_bpadmin or ewcfg.role_rowdyfucker or ewcfg.role_copkiller in roles_map_user:
         return 1 #currently in admin
     elif ewcfg.role_brimstoneprog in roles_map_user:
         return 2 #casual admin

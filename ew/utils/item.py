@@ -1,6 +1,8 @@
 import collections
 import random
 import time
+import traceback
+import sys
 
 from . import core as ewutils
 from . import frontend as fe_utils
@@ -84,7 +86,7 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
     # except:
     #	ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
 
-def die_dropall( #drops all items unless they have been rigor mortissed
+def die_dropall( # returns a list of all item ids to drop
         user_data,
         item_type ,
         kill_method = '',
@@ -99,25 +101,51 @@ def die_dropall( #drops all items unless they have been rigor mortissed
 
     try:
         if kill_method != ewcfg.cause_suicide and item_type == ewcfg.it_relic:
-            result = bknd_core.execute_sql_query(
-                "select id_item from items WHERE id_user = %s AND id_server = %s and soulbound = 0 {}".format(
-                    type_filter), (
-                    user_data.id_user,
-                    user_data.id_server
-                ))
+            item_cache = bknd_core.get_cache(obj_type="EwItem")
+            if item_cache:
+                search_criteria = {
+                    'id_owner': user_data.id_user,
+                    'id_server': user_data.id_server,
+                    'soulbound': False
+                }
+                if item_type != '':
+                    search_criteria.update({'item_type': item_type})
+                result = item_cache.find_entries(criteria=search_criteria)
+                result = list(map(lambda dat: [dat.get('id_item')], result))
+            else:
+                result = bknd_core.execute_sql_query(
+                    "select id_item from items WHERE id_user = %s AND id_server = %s and soulbound = 0 {}".format(
+                        type_filter), (
+                        user_data.id_user,
+                        user_data.id_server
+                    ))
         else:
-            result =bknd_core.execute_sql_query( #this query excludes preserved items
-                "select it.id_item from items it left join items_prop ip on it.id_item = ip.id_item and ip.name = 'preserved' and ip.value = %s WHERE id_user = %s AND id_server = %s and soulbound = 0 and ip.name IS NULL {}".format(type_filter), (
-                    user_data.id_user,
-                    user_data.poi,
-                    user_data.id_user,
-                    user_data.id_server
-                ))
+            item_cache = bknd_core.get_cache(obj_type="EwItem")
+            if item_cache:
+                search_criteria = {
+                    'id_owner': user_data.id_user,
+                    'id_server': user_data.id_server,
+                    'soulbound': False,
+                    'item_props': {'preserved': user_data.id_user}
+                }
+                if item_type != '':
+                    search_criteria.update({'item_type': item_type})
+                result = item_cache.find_entries(criteria=search_criteria)
+                result = list(map(lambda dat: [dat.get('id_item')], result))
+            else:
+                result =bknd_core.execute_sql_query( #this query excludes preserved items
+                    "select it.id_item from items it left join items_prop ip on it.id_item = ip.id_item and ip.name = 'preserved' and ip.value = %s WHERE id_user = %s AND id_server = %s and soulbound = 0 and ip.name IS NULL {}".format(type_filter), (
+                        user_data.id_user,
+                        user_data.poi,
+                        user_data.id_user,
+                        user_data.id_server
+                    ))
         if result is not None:
             for id in result:
                 end_list.append(id[0])
     except:
         ewutils.logMsg('Failed to drop items for user with id {}'.format(user_data.id_user))
+        traceback.print_exc(file=sys.stdout)
     return end_list
 
 
@@ -740,7 +768,7 @@ def cull_slime_sea(
         #print(seainv)
         to_delete = []
         if sea_size <= 500:
-            return
+            return 0
         else:
             for seaitem in seainv:
                 try:
@@ -778,17 +806,22 @@ def cull_slime_sea(
                 except Exception as e:
                     ewutils.logMsg("Error when trying to cull item {}: {}".format(seaitem.get('id_item'), e))
 
-            #delete_string = [str(element) for element in to_delete]
-            drop_list = ','.join(map(str, to_delete))
-            bknd_core.execute_sql_query("DELETE FROM items WHERE {id_item} IN ({drop_list})".format(id_item=ewcfg.col_id_item, drop_list=drop_list), ())
+            # Make sure there's something to delete, or otherwise the bot will crash out trying to delete nothing
+            if len(to_delete) > 0:    
+                #delete_string = [str(element) for element in to_delete]
+                drop_list = ','.join(map(str, to_delete))
 
-            item_cache = bknd_core.get_cache(obj_type="EwItem")
-            num = len(to_delete)
-            if item_cache:
-                for itemid in to_delete:
-                    bknd_core.remove_entry(obj_type="EwItem", id_entry=int(itemid))
-                    #item_cache.entries.pop(itemid)
-            return num
+                bknd_core.execute_sql_query("DELETE FROM items WHERE {id_item} IN ({drop_list})".format(id_item=ewcfg.col_id_item, drop_list=drop_list), ())
+
+                item_cache = bknd_core.get_cache(obj_type="EwItem")
+                num = len(to_delete)
+                if item_cache:
+                    for itemid in to_delete:
+                        bknd_core.remove_entry(obj_type="EwItem", id_entry=int(itemid))
+                        #item_cache.entries.pop(itemid)
+                return num
+            else:
+                return 0
 
 def get_root_owner(id_item):
     item = EwItem(id_item=id_item)

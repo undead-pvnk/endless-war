@@ -48,6 +48,11 @@ async def capture_progress(cmd):
         response += "{} have been capturing this district. ".format(district_data.capturing_faction.capitalize())
     else:
         response += "Nobody has staked a claim to this district yet. "
+    
+    if district_data.time_unlock > 0:
+        response += "\n\n**It's impossible to capture at the moment.**"
+        if not district_data.all_neighbors_friendly():
+            response += "But the lock is starting to decay..."
 
     response += "Current progress: {progress}%".format(progress=percent_progress_after)
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

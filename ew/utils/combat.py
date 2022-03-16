@@ -954,20 +954,6 @@ class EwEnemy(EwEnemyBase):
             destinations = set(poi_static.poi_neighbors.get(self.poi))
             all_destinations = set(destinations)
 
-            if self.enemytype in ewcfg.gvs_enemies:
-                path = [ewcfg.poi_id_assaultflatsbeach, ewcfg.poi_id_vagrantscorner, ewcfg.poi_id_greenlightdistrict,
-                        ewcfg.poi_id_downtown]
-
-                if self.poi == path[0]:
-                    destinations = [path[1]]
-                elif self.poi == path[1]:
-                    destinations = [path[2]]
-                elif self.poi == path[2]:
-                    destinations = [path[3]]
-                elif self.poi == path[3]:
-                    # Raid boss has finished its path
-                    return
-
             # Filter subzones and gang bases out.
             # Nudge raidbosses into the city.
             for destination in all_destinations:
@@ -1023,6 +1009,8 @@ class EwEnemy(EwEnemyBase):
                     channels = ewcfg.hideout_channels
                     for ch in channels:
                         resp_cont.add_channel_response(ch, gang_base_response)
+        except Exception as e:
+            ewutils.logMsg("Failed to move creature. {}".format(e))
         finally:
             self.persist()
             return resp_cont
@@ -1780,6 +1768,7 @@ async def enemy_perform_action(id_server):
 
     time_now = int(time.time())
 
+    # Only select enemies that are either in a zone with a player in it, or that act autonomously (raid bosses)
     enemydata = bknd_core.execute_sql_query(
         "SELECT {id_enemy} FROM enemies WHERE ((enemies.poi IN (SELECT users.poi FROM users WHERE NOT (users.life_state = %s OR users.life_state = %s) AND users.id_server = {id_server})) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.expiration_date < %s) OR (enemies.id_target != -1)) AND enemies.id_server = {id_server}".format(
             id_enemy=ewcfg.col_id_enemy,
@@ -1791,14 +1780,6 @@ async def enemy_perform_action(id_server):
             ewcfg.enemy_lifestate_dead,
             time_now
         ))
-    # enemydata = bknd_core.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
-    #	id_enemy = ewcfg.col_id_enemy
-    # ),(
-    #	id_server,
-    # ))
-
-    # Remove duplicates from SQL query
-    # enemydata = set(enemydata)
 
     for row in enemydata:
         enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
@@ -2467,8 +2448,6 @@ class EwUser(EwUserBase):
                 ids_to_drop.extend(itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_cosmetic, fraction=cosmetic_fraction, rigor=rigor))  # Drop a random fraction of your unadorned cosmetics on the ground.
                 # bknd_item.item_dedorn_cosmetics(id_server=self.id_server, id_user=self.id_user)  # Unadorn all of your adorned hats.
                 ids_to_drop.extend(itm_utils.die_dropall(user_data=self, item_type=ewcfg.it_relic, kill_method=cause))
-                  # Drop random fraction of your unequipped weapons on the ground.
-
 
                 ewutils.weaponskills_clear(id_server=self.id_server, id_user=self.id_user, weaponskill=ewcfg.weaponskill_max_onrevive)
 
@@ -2487,10 +2466,12 @@ class EwUser(EwUserBase):
                     ewutils.logMsg('Failed to drop items on death, {}.'.format(e))
 
                 item_cache = bknd_core.get_cache(obj_type="EwItem")
+                dropped_items_to_update = []
                 for id in ids_to_drop:
                     cache_item = item_cache.get_entry(unique_vals={"id_item": id})
                     cache_item.update({'id_owner':self.poi})
-                    item_cache.set_entry(data=cache_item)
+                    dropped_items_to_update.append(cache_item)
+                item_cache.bulk_set_entry(entries=dropped_items_to_update)
 
             try:
 

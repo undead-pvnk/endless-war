@@ -209,7 +209,7 @@ class ObjCache():
 
         if id_list != None:
             for id in id_list:
-                copied_matches.append(self.entries.get(id))
+                copied_matches.append(self.copy_entry(self.entries.get(id)))
 
         else:
             # Create list to search
@@ -259,7 +259,71 @@ class ObjCache():
                 if meets:
                     copied_matches.append(self.copy_entry(data))
 
-            return copied_matches
+        return copied_matches
+
+    def bulk_set_entry(self, entries = None):
+        """
+            Takes a list of entry data dictionaries
+            Returns true on success, false on failure
+            Prepares all index and entry changes to be run as simultaneously as possible with .update and adding lists
+        """
+        # Compile all changes into things to be run simultaneously
+        entries_update = {}
+        index_additions = {}
+        index_removals = {}
+
+        # Setup Index edit dictionaries
+        for key in self.indexes.keys():
+            index_removals.update({key: {}})
+            index_additions.update({key: {}})
+
+        # Figure out what to change
+        for data in entries:
+            entry_id = self.get_data_id(data)
+            old_data = self.entries.get(entry_id)
+
+            # Figure out index changes
+            for prop_name in self.indexes.keys():
+                # Compile index entries to be removed
+                old_val = old_data.get(prop_name)
+                removal_index = index_removals.get(prop_name)
+                if removal_index.get(old_val, None) is not None:
+                    removal_index.get(old_val).append(entry_id)
+                else:
+                    removal_index.update({old_val: [entry_id]})
+
+                # Compile index entries to be added
+                new_val = data.get(prop_name)
+                addition_index = index_additions.get(prop_name)
+                if addition_index.get(new_val, None) is not None:
+                    addition_index.get(new_val).append(entry_id)
+                else:
+                    addition_index.update({new_val: [entry_id]})
+
+            # Compile Entry updates
+            entries_update.update({entry_id: data})
+
+        # Remove old index values
+        for prop_name, index_data in index_removals.items():
+            for index_val, ids_to_remove in index_data.items():
+                # We assume that the items are already properly indexed, that way if they aren't, this can warn us :)
+                list_to_edit = self.indexes.get(prop_name).get(index_val)
+                for removed_id in ids_to_remove:
+                    list_to_edit.remove(removed_id)
+
+        # add new index values
+        for prop_name, index_data in index_additions.items():
+            # iterating through all property indexes, and all of the subsequent indexed values and their id lists
+            for index_val, ids_to_add in index_data.items():
+                # Get the id list for the target prop and value, or make it if it doesnt exist
+                list_to_edit = self.indexes.get(prop_name).get(index_val)
+                if list_to_edit is None:
+                    self.indexes.get(prop_name).update({index_val: ids_to_add})
+                else:
+                    list_to_edit += ids_to_add
+
+        # Update stored data
+        self.entries.update(entries_update)
 
 
 """ connect to the database """
