@@ -3,7 +3,7 @@
 
 
 
-version = "v4.100 Season 4 Act 1"
+version = "v4.101 S4A1 Digging"
 
 
 dir_msgqueue = 'msgqueue'
