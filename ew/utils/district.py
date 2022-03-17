@@ -494,6 +494,7 @@ class EwDistrict(EwDistrictBase):
     """ wether the district is still functional """
 
     def is_degraded(self):
+        return False
         checked_poi = poi_static.id_to_poi.get(self.name)
         if checked_poi is None:
             return True

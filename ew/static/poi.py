@@ -3335,6 +3335,7 @@ EwPoi(
 		channel="saloon",
 		permissions={'saloon': ['read', 'send', 'connect'], 'hang-em-square': ['read']},
 		property_class="",
+		vendors = ['saloon'],
 		is_subzone=True,
 		pvp=False,
 		neighbors={"hangemsquare": 20,  "dreadford":20}
