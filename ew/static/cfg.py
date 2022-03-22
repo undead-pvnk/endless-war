@@ -1222,7 +1222,7 @@ cmd_dress_slimeoid_alt1 = cmd_prefix + 'decorateslimeoid'
 cmd_dress_slimeoid_alt2 = cmd_prefix + 'dressnegaslimeoid'
 cmd_undress_slimeoid = cmd_prefix + 'undressslimeoid'
 cmd_undress_slimeoid_alt1 = cmd_prefix + 'undecorateslimeoid'
-cmd_undress_slimeoid_alt2 = cmd_prefix + 'undresnegasslimeoid'
+cmd_undress_slimeoid_alt2 = cmd_prefix + 'undressnegaslimeoid'
 
 #negaslimeoid-specific commands
 cmd_conjure_negaslimeoid = cmd_prefix + 'conjurenegaslimeoid'
@@ -1230,7 +1230,7 @@ cmd_conjure_negaslimeoid_alt1= cmd_prefix + 'summonnegaslimeoid'
 cmd_conjure_negaslimeoid_alt2 = cmd_prefix + 'summonnega'
 cmd_conjure_negaslimeoid_alt3 = cmd_prefix + 'summon'
 cmd_destroyslimeoid = cmd_prefix + 'destroyslimeoid'
-cmd_destroyslimeoid_alt1 = cmd_prefix = 'destroynegaslimeoid'
+cmd_destroyslimeoid_alt1 = cmd_prefix + 'destroynegaslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
 cmd_clear_quadrant = cmd_prefix + "clearquadrant"
