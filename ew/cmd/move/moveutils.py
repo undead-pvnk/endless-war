@@ -173,17 +173,6 @@ def get_enemies_look_resp(user_data, district_data):
     return enemies_resp
 
 
-def get_slimeoids_resp(id_server, poi):
-    slimeoids_resp = ""
-
-    slimeoids_in_district = ewutils.get_slimeoids_in_poi(id_server=id_server, poi=poi.id_poi)
-
-    for id_slimeoid in slimeoids_in_district:
-        slimeoid_data = EwSlimeoid(id_slimeoid=id_slimeoid)
-        if slimeoid_data.sltype == ewcfg.sltype_nega:
-            slimeoids_resp += "\n{} is here.".format(slimeoid_data.name)
-
-    return slimeoids_resp
 
 
 # SWILLDERMUK - Unused

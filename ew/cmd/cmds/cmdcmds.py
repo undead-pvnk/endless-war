@@ -329,9 +329,14 @@ async def data(cmd):
                 if status_flavor is not None:
                     response_block += status_flavor.str_describe_self.format_map(format_status) + " "
 
-        if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
-            response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
-
+        if (slimeoid.life_state == ewcfg.slimeoid_state_active):
+            # If the user isn't a corpse
+            if user_data.life_state != ewcfg.life_state_corpse:
+                response_block += "They are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
+            # If the user is a corpse, but has a negaslimeoid
+            elif slimeoid.sltype == ewcfg.sltype_nega:
+                response_block += "They are accompanied by {}, a {}-foot-tall Negaslimeoid. ".format(slimeoid.name, str(slimeoid.level))
+                
         server = ewutils.get_client().get_guild(user_data.id_server)
         if user_data.life_state == ewcfg.life_state_corpse:
             inhabitee_id = user_data.get_inhabitee()

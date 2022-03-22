@@ -731,13 +731,9 @@ cmd_crystalize_negapoudrin_alt1 = cmd_prefix + 'smeltnegapoudrin'
 cmd_crystalize_negapoudrin_alt2 = cmd_prefix + 'crystallise'
 cmd_crystalize_negapoudrin_alt3 = cmd_prefix + 'crystalize'
 cmd_favor = cmd_prefix + 'favor'
-cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
-cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
-cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
 cmd_summonenemy = cmd_prefix + 'summonenemy'
 cmd_summongvsenemy = cmd_prefix + 'summongvsenemy'
 cmd_deleteallenemies = cmd_prefix + 'deleteallenemies'
-cmd_negaslimeoid = cmd_prefix + 'negaslimeoid'
 cmd_battlenegaslimeoid = cmd_prefix + 'battlenegaslimeoid'
 cmd_battlenegaslimeoid_alt1 = cmd_prefix + 'negaslimeoidbattle'
 cmd_battlenegaslimeoid_alt2 = cmd_prefix + 'battlenega'
@@ -1189,6 +1185,7 @@ cmd_growarmor = cmd_prefix + 'growarmor'
 cmd_growspecial = cmd_prefix + 'growspecial'
 cmd_growbrain = cmd_prefix + 'growbrain'
 cmd_nameslimeoid = cmd_prefix + 'nameslimeoid'
+cmd_nameslimeoid_alt1 = cmd_prefix + 'namenegaslimeoid'
 cmd_raisemoxie = cmd_prefix + 'raisemoxie'
 cmd_lowermoxie = cmd_prefix + 'lowermoxie'
 cmd_raisegrit = cmd_prefix + 'raisegrit'
@@ -1196,8 +1193,11 @@ cmd_lowergrit = cmd_prefix + 'lowergrit'
 cmd_raisechutzpah = cmd_prefix + 'raisechutzpah'
 cmd_lowerchutzpah = cmd_prefix + 'lowerchutzpah'
 cmd_spawnslimeoid = cmd_prefix + 'spawnslimeoid'
+cmd_spawnslimeoid_alt1 = cmd_prefix + 'spawnnegaslimeoid'
 cmd_dissolveslimeoid = cmd_prefix + 'dissolveslimeoid'
+cmd_dissolveslimeoid_alt1 = cmd_prefix + 'dissolvenegaslimeoid'
 cmd_slimeoid = cmd_prefix + 'slimeoid'
+cmd_slimeoid_alt1 = cmd_prefix + 'negaslimeoid'
 cmd_challenge = cmd_prefix + 'challenge'
 cmd_instructions = cmd_prefix + 'instructions'
 cmd_playfetch = cmd_prefix + 'playfetch'
@@ -1206,8 +1206,12 @@ cmd_abuseslimeoid = cmd_prefix + 'abuseslimeoid'
 cmd_walkslimeoid = cmd_prefix + 'walkslimeoid'
 cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
+cmd_slimeoidbattle_alt1 = cmd_prefix + 'battleslimeoid'
+cmd_slimeoidbattle_alt2 = cmd_prefix + 'negaslimeoidbattle'
+cmd_slimeoidbattle_alt3 = cmd_prefix + 'battlenegaslimeoid'
 cmd_saturateslimeoid = cmd_prefix + 'saturateslimeoid'
 cmd_restoreslimeoid = cmd_prefix + 'restoreslimeoid'
+cmd_restoreslimeoid_alt1 = cmd_prefix + 'restorenegaslimeoid'
 cmd_bottleslimeoid = cmd_prefix + 'bottleslimeoid'
 cmd_bottleslimeoid_alt1 = cmd_prefix + 'bottle'
 cmd_unbottleslimeoid = cmd_prefix + 'unbottleslimeoid'
@@ -1215,8 +1219,18 @@ cmd_unbottleslimeoid_alt1 = cmd_prefix + 'unbottle'
 cmd_feedslimeoid = cmd_prefix + 'feedslimeoid'
 cmd_dress_slimeoid = cmd_prefix + 'dressslimeoid'
 cmd_dress_slimeoid_alt1 = cmd_prefix + 'decorateslimeoid'
+cmd_dress_slimeoid_alt2 = cmd_prefix + 'dressnegaslimeoid'
 cmd_undress_slimeoid = cmd_prefix + 'undressslimeoid'
 cmd_undress_slimeoid_alt1 = cmd_prefix + 'undecorateslimeoid'
+cmd_undress_slimeoid_alt2 = cmd_prefix + 'undresnegasslimeoid'
+
+#negaslimeoid-specific commands
+cmd_conjure_negaslimeoid = cmd_prefix + 'conjurenegaslimeoid'
+cmd_conjure_negaslimeoid_alt1= cmd_prefix + 'summonnegaslimeoid'
+cmd_conjure_negaslimeoid_alt2 = cmd_prefix + 'summonnega'
+cmd_conjure_negaslimeoid_alt3 = cmd_prefix + 'summon'
+cmd_destroyslimeoid = cmd_prefix + 'destroyslimeoid'
+cmd_destroyslimeoid_alt1 = cmd_prefix = 'destroynegaslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
 cmd_clear_quadrant = cmd_prefix + "clearquadrant"
@@ -1528,8 +1542,8 @@ bleed_half_life = 60 * 5  # five minutes
 bleed_tick_length = 10
 
 # how often to decide whether or not to spawn an enemy
-enemy_spawn_tick_length = 60 * 3 # Three minutes
-# enemy_spawn_tick_length = 1
+# enemy_spawn_tick_length = 60 * 3 # Three minutes
+enemy_spawn_tick_length = 1
 # enemy_spawn_tick_length = 30
 # how often it takes for hostile enemies to attack
 enemy_attack_tick_length = 5
@@ -2536,6 +2550,7 @@ stats_clear_on_death = [
 ]
 
 context_slimeoidheart = 'slimeoidheart'
+context_negaslimeoidheart = 'negaslimeoidheart'
 context_slimeoidbottle = 'slimeoidbottle'
 context_slimeoidfood = 'slimeoidfood'
 context_wrappingpaper = 'wrappingpaper'
@@ -2847,6 +2862,7 @@ item_id_dye_magenta = "magentadye"
 item_id_dye_cobalt = "cobaltdye"
 item_id_dye_white = "whitedye"
 item_id_dye_rainbow = "rainbowdye"
+item_id_dye_negative = "negativedye"
 item_id_paint_copper = "copperpaint"
 item_id_paint_chrome = "chromepaint"
 item_id_paint_gold = "goldpaint"
@@ -3315,6 +3331,7 @@ hue_id_brown = "brown"
 hue_id_copper = "copper"
 hue_id_chrome = "chrome"
 hue_id_gold = "gold"
+hue_id_negative = "negative"
 
 # Things a slimeoid might throw
 thrownobjects_list = [
@@ -3339,7 +3356,8 @@ thrownobjects_list = [
     "chunk of broken concrete",
     "piece of rusted scrap metal",
     "box overflowing with KFC branded bbq sauce",
-    "Nokia 3310"
+    "Nokia 3310",
+    "mom"
 ]
 
 mutation_id_spontaneouscombustion = "spontaneouscombustion"

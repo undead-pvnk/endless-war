@@ -20,6 +20,7 @@ body_list = [
             "a"
         ],
         str_create="You press a button on the body console labelled 'A'. Through the observation port, you see the rapidly congealing proto-Slimeoid take on a roughly teardrop-shaped form.",
+        str_create_nega="You move the planchette to spell \"BODY\", then move the planchette to \"A\". In front of you, you see the undulating proto-Negaslimeoid take on a roughly teardrop-shaped form.",
         str_body="It is teardrop-shaped.",
         str_observe="{slimeoid_name} is bobbing its top-heavy body back and forth."
     ),
@@ -32,6 +33,7 @@ body_list = [
             "b"
         ],
         str_create="You press a button on the body console labelled 'B'. Through the observation port, you see the rapidly congealing proto-Slimeoid begin to stretch into an elongated form.",
+        str_create_nega="You move the planchette to spell \"BODY\", then move the planchette to \"B\". In front of you, you see the undulating proto-Negaslimeoid begin to stretch into an elongated form.",
         str_body="It is long and wormlike.",
         str_observe="{slimeoid_name} is twisting itself around, practicing tying its knots."
     ),
@@ -44,6 +46,7 @@ body_list = [
             "c"
         ],
         str_create="You press a button on the body console labelled 'C'. Through the observation port, you see the rapidly congealing proto-Slimeoid take on a roughly spherical form.",
+        str_create_nega="You move the planchette to spell \"BODY\", then move the planchette to \"C\". In front of you, you see the undulating proto-Negaslimeoid take on a roughly spherical form.",
         str_body="It is generally orb-shaped.",
         str_observe="{slimeoid_name} flops over onto one side of its round body."
     ),
@@ -55,6 +58,7 @@ body_list = [
             "d"
         ],
         str_create="You press a button on the body console labelled 'D'. Through the observation port, you see the rapidly congealing proto-Slimeoid curl into a foetal, vaguely humanoid form.",
+        str_create_nega="You move the planchette to spell \"BODY\", then move the planchette to \"D\". In front of you, you see the undulating proto-Negaslimeoid curl into a foetal, vaguely humanoid form.",
         str_body="It is vaguely humanoid.",
         str_observe="{slimeoid_name} is scraping at something on the ground with its arms."
     ),
@@ -68,6 +72,7 @@ body_list = [
             "e"
         ],
         str_create="You press a button on the body console labelled 'E'. Through the observation port, you see the rapidly congealing proto-Slimeoid begin to sprout long tendrils from its nucleus.",
+        str_create_nega="You move the planchette to spell \"BODY\", then move the planchette to \"E\". In front of you, you see the undulating proto-Negaslimeoid begin to sprout long tendrils from its nucleus.",
         str_body="It is a mass of tendrils.",
         str_observe="{slimeoid_name} is moving its tentacles around, running them over one another."
     ),
@@ -79,6 +84,7 @@ body_list = [
             "f"
         ],
         str_create="You press a button on the body console labelled 'F'. Through the observation port, you see the rapidly congealing proto-Slimeoid accreting itself together with no distinct shape to speak of.",
+        str_create_nega="You move the planchette to spell \"BODY\", then move the planchette to \"F\". In front of you, you see the undulating proto-Negaslimeoid accreting itself together with no distinct shape to speak of",
         str_body="It has no defined shape.",
         str_observe="{slimeoid_name}'s body is spread out on the floor like a kind of living puddle."
     ),
@@ -89,6 +95,7 @@ body_list = [
             "g"
         ],
         str_create="You press a button on the body console labelled 'G'. Through the observation port, you see the rapidly congealing proto-Slimeoid beginning to grow bones and vertebrae as it starts to resemble some kind of quadruped.",
+        str_create_nega="You move the planchette to spell \"BODY\", then move the planchette to \"G\". In front of you, you see the undulating proto-Negaslimeoid beginning to grow bones and vertebrae as it starts to resemble some kind of quadruped.",
         str_body="It has a body shape vaguely reminiscent of a quadruped.",
         str_observe="{slimeoid_name} has its hindquarters lowered in a sort of sitting position."
     )
@@ -117,6 +124,7 @@ head_list = [
             "a"
         ],
         str_create="You press a button on the head console labelled 'A'. Through the observation port, you see a dark cluster within the proto-Slimeoid begin to form into what looks like a large eye.",
+        str_create_nega="You move the planchette to spell \"HEAD\", then move the planchette to \"A\". In front of you, you see a bright cluster within the proto-Negaslimeoid begin to form into what looks like a large eye.",
         str_head="Its face is a single huge eye.",
         str_feed="{slimeoid_name} swallows the {food_name} whole.",
         str_fetch="You toss a ball for {slimeoid_name} to fetch. {slimeoid_name}'s huge eye follows the ball's arc, and it makes a leap to catch it!!\n\n...only to get socked right in the eye, sending it to the floor in pain. Depth perception... it's truly a gift."
@@ -128,6 +136,7 @@ head_list = [
             "b"
         ],
         str_create="You press a button on the head console labelled 'B'. Through the observation port, you see an opening form in what you think is the proto-Slimeoid's face, which begins to sprout large pointed teeth.",
+        str_create_nega="You move the planchette to spell \"HEAD\", then move the planchette to \"B\". In front of you, you see an opening form in what you think is the proto-Negaslimeoid's face, which begins to sprout large pointed teeth.",
         str_head="Its face is a huge toothy mouth.",
         str_feed="{slimeoid_name} crunches the {food_name} to paste with its huge teeth.",
         str_fetch="You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} slavers and drools as it awaits the throw, and when it sees the ball start to fly, it lunges to grab it out of the air in its huge toothy maw, slicing it to shreds with its teeth in seconds."
@@ -139,6 +148,7 @@ head_list = [
             "c"
         ],
         str_create="You press a button on the head console labelled 'C'. Through the observation port, you see what you thought was the proto-Slimeoid's face suddenly sucked down into its body, as though by a black hole.",
+        str_create_nega="You move the planchette to spell \"HEAD\", then move the planchette to \"C\". In front of you, you see what you thought was the proto-Negaslimeoid's face suddenly sucked down into its body, as though by a black hole.",
         str_head="Its face is an empty black void.",
         str_feed="The {food_name} disappears into the unknowable depths of {slimeoid_name}'s face hole.",
         str_fetch="You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} positions itself to catch the ball in it's... face? The ball falls into the empty void of {slimeoid_name}'s face, then just keeps falling, falling, falling, down into the depths, falling so far it disappears forever."
@@ -151,6 +161,7 @@ head_list = [
             "d"
         ],
         str_create="You press a button on the head console labelled 'D'. Through the observation port, you see the beginnings of an animal-like face forming on your proto-Slimeoid, with what might be eyes, a nose, teeth... maybe.",
+        str_create_nega="You move the planchette to spell \"HEAD\", then move the planchette to \"D\". In front of you, you see the beginnings of an animal-like face forming on your proto-Negaslimeoid with what might be eyes, a nose, teeth... maybe.",
         str_head="Its face is that of a vicious beast.",
         str_feed="{slimeoid_name} gobbles up the {food_name} greedily.",
         str_fetch="You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} focuses its eyes and bares its teeth, then makes a flying leap, snapping the ball clean out of the air in its jaws! It comes back to you and drops the ball at your feet. Good boy!"
@@ -163,6 +174,7 @@ head_list = [
             "e"
         ],
         str_create="You press a button on the head console labelled 'E'. Through the observation port, you see the proto-Slimeoid suddenly bulge with a series of hard orbs which congeal into what appear to be large compound eyes.",
+        str_create_nega="You move the planchette to spell \"HEAD\", then move the planchette to \"E\". In front of you, you see the proto-Negaslimeoid suddenly bulge with a series of hard orbs which congeal into what appear to be large compound eyes.",
         str_head="It has bulging insectoid eyes and mandibles.",
         str_feed="{slimeoid_name} cuts the {food_name} into pieces with its mandibles.",
         str_fetch="You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} stands motionless, presumably watching the ball with its large compound eyes, before darting toward it as it sails through the air, snapping its mandibles around the ball and slicing it cleanly in two."
@@ -174,6 +186,7 @@ head_list = [
             "f"
         ],
         str_create="You press a button on the head console labelled 'F'. Through the observation port, you see the proto-Slimeoid's frontal features twist into a ghastly death's-head.",
+        str_create_nega="You move the planchette to spell \"HEAD\", then move the planchette to \"F\". In front of you, you see the proto-Negaslimeoid's frontal features twist into a ghastly death's-head.",
         str_head="Its face resembles a skull.",
         str_feed="{slimeoid_name} spills half the {food_name} on the floor trying to chew it with its exposed teeth.",
         str_fetch="You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} moves as quickly as it can to make the catch, making it just before the ball lands! With a thunk, the ball lodges itself in {slimeoid_name}'s open eye socket. {slimeoid_name} yanks it out and tosses the ball back to you. Euughh."
@@ -184,6 +197,7 @@ head_list = [
             "g"
         ],
         str_create="You press a button on the head console labelled 'G'. Through the observation port, you see the proto-Slimeoid's front end melt into an indistinct mass.",
+        str_create_nega="You move the planchette to spell \"HEAD\", then move the planchette to \"G\". In front of you, you see the proto-Negaslimeoid's front end melt into an indistinct mass.",
         str_head="It has no discernable head.",
         str_feed="{slimeoid_name} just sort of... absorbs the {food_name} into its body.",
         str_fetch="You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} moves under the ball as it flies through the air, but makes no attempt to catch it in its mouth on account of having none. The ball lands next to {slimeoid_name}, who merely looks on. Actually, you can't tell where it's looking."
@@ -221,6 +235,7 @@ mobility_list = [
         str_advance_weak="{active} limps toward {inactive}!",
         str_retreat_weak="{active} limps away from {inactive}!",
         str_create="You press a button on the mobility console labelled 'A'. Through the observation port, you see jointed limbs begin to sprout from the proto-Slimeoid's underside.",
+        str_create_nega="You move the planchette to spell \"LEGS\", then move the planchette to \"A\". In front of you, you see jointed limbs begin to sprout from the proto-Negaslimeoid's underside.",
         str_mobility="It walks on legs.",
         str_defeat="{slimeoid_name}'s knees buckle under it as it collapses to the ground, defeated!",
         str_walk="{slimeoid_name} walks along beside you."
@@ -236,6 +251,7 @@ mobility_list = [
         str_advance_weak="{active} rolls itself unsteadily towards {inactive}!",
         str_retreat_weak="{active} rolls unsteadily away from {inactive}!",
         str_create="You press a button on the mobility console labelled 'B'. Through the observation port, you see the proto-Slimeoid becoming smoother and rounder.",
+        str_create_nega="You move the planchette to spell \"LEGS\", then move the planchette to \"B\". In front of you, you see the proto-Negaslimeoid becoming smoother and rounder.",
         str_mobility="It moves by rolling its body around.",
         str_defeat="{slimeoid_name} rolls itself over before collapsing on the ground, defeated!",
         str_walk="{slimeoid_name} rolls itself along the ground behind you."
@@ -253,6 +269,7 @@ mobility_list = [
         str_advance_weak="{active} drags itself toward {inactive}!",
         str_retreat_weak="{active} drags itself away from {inactive}!",
         str_create="You press a button on the mobility console labelled 'C'. Through the observation port, you see masses of writhing flagella begin to protrude from the proto-Slimeoid's extremities.",
+        str_create_nega="You move the planchette to spell \"LEGS\", then move the planchette to \"C\". In front of you, you see masses of writhing flagella begin to protrude from the proto-Negaslimeoid's extremities.",
         str_mobility="It moves by pulling itself around with its flagella.",
         str_defeat="{slimeoid_name}'s flagella go limp as it collapses to the ground, defeated!",
         str_walk="{slimeoid_name} writhes its way along the ground on its flagella next to you."
@@ -269,6 +286,7 @@ mobility_list = [
         str_advance_weak="{active} sputters towards {inactive}!",
         str_retreat_weak="{active} sputters away from {inactive}!",
         str_create="You press a button on the mobility console labelled 'D'. Through the observation port, you see openings forming in the proto-Slimeoid's body, which begin to vent fluid.",
+        str_create_nega="You move the planchette to spell \"LEGS\", then move the planchette to \"D\". In front of you, you see openings forming in the proto-Negaslimeoid's body, which begin to vent fluid.",
         str_mobility="It moves via jet-propulsion by squirting fluids.",
         str_defeat="{slimeoid_name} fires its fluid jets wildly in a panic until it completely deflates and collapses, defeated!",
         str_walk="{slimeoid_name} tries to keep pace with you, spurting jets of fluid to propel itself along behind you."
@@ -284,6 +302,7 @@ mobility_list = [
         str_advance_weak="{active} heaves itself slowly toward {inactive}!",
         str_retreat_weak="{active} heaves itself slowly away from {inactive}!",
         str_create="You press a button on the mobility console labelled 'E'. Through the observation port, you see the base of the proto-Slimeoid's body widen and flatten out.",
+        str_create_nega="You move the planchette to spell \"LEGS\", then move the planchette to \"E\". In front of you, you see the base of the proto-Negaslimeoid's body widen and flatten out.",
         str_mobility="It moves like a slug, undulating its underside along the ground.",
         str_defeat="{slimeoid_name} stops moving entirely and collapses to the ground, defeated!",
         str_walk="{slimeoid_name} glacially drags its way along behind you in its slug-like way. Your walk ends up taking fucking forever."
@@ -298,7 +317,8 @@ mobility_list = [
         str_retreat="{active} floats away from {inactive}!",
         str_advance_weak="{active} bobs unsteadily through the air towards {inactive}!",
         str_retreat_weak="{active} bobs unsteadily away from {inactive}!",
-        str_create="You press a button on the mobility console labelled 'F'. Through the observation port, you see the of the proto-Slimeoid's body start to inflate itself.",
+        str_create="You press a button on the mobility console labelled 'F'. Through the observation port, you see the bottom of the proto-Slimeoid's body start to inflate itself.",
+        str_create_nega="You move the planchette to spell \"LEGS\", then move the planchette to \"F\". In front of you, you see the bottom of the proto-Negaslimeoid's body start to inflate itself.",
         str_mobility="It floats in the air with the use of super-low-density gas bladders.",
         str_defeat="{slimeoid_name} spins wildly in the air before careening to the ground, defeated!",
         str_walk="{slimeoid_name} bobs along next to you on its leash like a balloon."
@@ -313,7 +333,8 @@ mobility_list = [
         str_retreat="{active} flaps away from {inactive}!",
         str_advance_weak="{active} flaps its way doggedly towards {inactive}!",
         str_retreat_weak="{active} flaps doggedly away from {inactive}!",
-        str_create="You press a button on the mobility console labelled 'G'. Through the observation port, you see the proto-slimeoid start to sprout wide, flat, thin appendages.",
+        str_create="You press a button on the mobility console labelled 'G'. Through the observation port, you see the proto-Slimeoid start to sprout wide, flat, thin appendages.",
+        str_create_nega="You move the planchette to spell \"LEGS\", then move the planchette to \"G\". In front of you, you see the proto-Negaslimeoid start to sprout wide, flat, thin appendages.",
         str_mobility="It moves by making short flights through the air with its wings.",
         str_defeat="{slimeoid_name} flaps helplessly as it spins out and crashes into the ground, defeated!",
         str_walk="{slimeoid_name} flaps along through the air next to you, occasionally perching in trees or windowsills along the route."
@@ -350,6 +371,7 @@ offense_list = [
         str_attack_weak="{active} desperately swipes at {inactive} with its blades!",
         str_attack_coup="{active} slices deep into {inactive}! Green goo splatters onto the ground from the wound!!",
         str_create="You press a button on the weapon console labelled 'A'. Through the observation port, you see long, sharp protrusions begin to form on the proto-Slimeoid's extremities.",
+        str_create_nega="You move the planchette to spell \"WEAPON\", then move the planchette to \"A\". In front of you, you see long, sharp protrusions begin to form on the proto-Negaslimeoid's extremities.",
         str_offense="It slices foes with retractible blades.",
         str_observe="{slimeoid_name} is sharpening its retractible blades on a stone nearby."
     ),
@@ -366,6 +388,7 @@ offense_list = [
         str_attack_weak="{active} gnashes its teeth, biting {inactive} wherever it can!",
         str_attack_coup="{active} bites hard into {inactive}, tearing off a piece and chewing it hungrily!",
         str_create="You press a button on the weapon console labelled 'B'. Through the observation port, you see large bony structures resembling teeth forming in the proto-Slimeoid's... mouth?",
+        str_create_nega="You move the planchette to spell \"WEAPON\", then move the planchette to \"B\". In front of you, you see large bony structures resembling teeth forming in the proto-Negaslimeoid's... mouth?",
         str_offense="It can bite foes with deadly fangs.",
         str_observe="{slimeoid_name} is idly picking its sharp teeth."
     ),
@@ -385,6 +408,7 @@ offense_list = [
         str_attack_weak="{active} grabs at {inactive}, trying to fend it off!",
         str_attack_coup="{active} grips {inactive} like a vice, squeezing until you hear a sickening pop!",
         str_create="You press a button on the weapon console labelled 'C'. Through the observation port, you see the proto-Slimeoid's limbs becoming thicker and stronger, beginning to twist and writhe, seeking something to grip onto.",
+        str_create_nega="You move the planchette to spell \"WEAPON\", then move the planchette to \"C\". In front of you, you see the proto-Negaslimeoid's limbs becoming thicker and stronger, beginning to twist and writhe, seeking something to grip onto.",
         str_offense="It can grab and crush its foes with its limbs.",
         str_observe="{slimeoid_name} picks up a rock off the ground and squeezes it like a stress ball."
     ),
@@ -405,6 +429,7 @@ offense_list = [
         str_attack_weak="{active} flails its limbs to strike back at {inactive}!",
         str_attack_coup="{active} winds back and smashes {inactive}, dealing a knockout blow!",
         str_create="You press a button on the weapon console labelled 'D'. Through the observation port, you see the ends of the proto-Slimeoid's limbs becoming harder and heavier.",
+        str_create_nega="You move the planchette to spell \"WEAPON\", then move the planchette to \"D\". In front of you, you see the ends of the proto-Negaslimeoid's, limbs becoming harder and heavier.",
         str_offense="It can smash foes with one or more of its limbs.",
         str_observe="{slimeoid_name} spots an insect on the ground nearby and smashes it."
     ),
@@ -419,6 +444,7 @@ offense_list = [
         str_attack_weak="{active} tries to defend itself from {inactive} with its spikes!",
         str_attack_coup="{active} punctures {inactive} with its spikes, opening a hole that oozes green fluid all over the ground!",
         str_create="You press a button on the weapon console labelled 'E'. Through the observation port, you see hard spikes forming out of the congealing slime biomatter.",
+        str_create_nega="You move the planchette to spell \"WEAPON\", then move the planchette to \"E\". In front of you, you see hard spikes forming out of the congealing negaslime biomatter.",
         str_offense="It can puncture its enemies with the spikes on its body.",
         str_observe="{slimeoid_name} carefully adjusts its position so as not to prick itself with its own spikes."
     ),
@@ -432,6 +458,7 @@ offense_list = [
         str_attack_weak="{active} sparks and flickers with electricity, shocking {inactive}!",
         str_attack_coup="{active} charges up and sends a bolt of electricity through {inactive}, making it sizzle!",
         str_create="You press a button on the weapon console labelled 'F'. Through the observation port, you see the proto-Slimeoid begin to spark with small electrical discharges.",
+        str_create_nega="You move the planchette to spell \"WEAPON\", then move the planchette to \"F\". In front of you, you see the proto-Negaslimeoid begin to spark with small electrical discharges.",
         str_offense="It crackles with stored electrical energy.",
         str_observe="A fly flies a little too near {slimeoid_name} and is zapped with a tiny bolt of electricity, killing it instantly."
     ),
@@ -445,6 +472,7 @@ offense_list = [
         str_attack_weak="{active} flails itself back against {inactive}'s onslaught!",
         str_attack_coup="{active} hurls its whole weight into {inactive}, crushing it to the ground!",
         str_create="You press a button on the weapon console labelled 'G'. Through the observation port, you see the ends of the proto-Slimeoid's congealing body condense, becoming heavier and more robust.",
+        str_create_nega="You move the planchette to spell \"WEAPON\", then move the planchette to \"G\". In front of you, you see the ends of the proto-Negaslime's congealing body condense, becoming heavier and more robust.",
         str_offense="It can slam its body into its foes with tremendous force.",
         str_observe="{slimeoid_name} shifts its weight back and forth before settling down in a kind of sumo-squat position."
     )
@@ -478,6 +506,7 @@ defense_list = [
         str_pet="You carefully run your hand over {slimeoid_name}'s hide, making sure to go with the grain so as not to slice your fingers open on its sharp scales.",
         str_abuse="You pick up {slimeoid_name} by the hind legs, swinging them over your head and repeatedly slamming them to the ground.",
         str_create="You press a button on the armor console labelled 'A'. Through the observation port, you see the proto-Slimeoid's skin begin to glint as it sprouts roughly-edged scales.",
+        str_create_nega="You move the planchette to spell \"ARMOR\", then move the planchette to \"A\". In front of you, you see the proto-Negaslimeoid's skin begin to glint as it sprouts roughly-edged scales.",
         str_armor="It is covered in scales.",
         id_resistance=ewcfg.slimeoid_weapon_electricity,
         id_weakness=ewcfg.slimeoid_special_TK,
@@ -500,6 +529,7 @@ defense_list = [
         str_pet="You pat one of the hard, bony plates covering {slimeoid_name}'s skin.",
         str_abuse="You take a stick and hit {slimeoid_name}'s face with it.",
         str_create="You press a button on the armor console labelled 'B'. Through the observation port, you see hard bony plates begin to congeal on the proto-Slimeoid's surface.",
+        str_create_nega="You move the planchette to spell \"ARMOR\", then move the planchette to \"B\". In front of you, you see hard bony plates begin to congeal on the proto-Negaslimeoid's surface.",
         str_armor="It is covered in bony plates.",
         id_resistance=ewcfg.slimeoid_weapon_blades,
         id_weakness=ewcfg.slimeoid_special_spines,
@@ -519,6 +549,7 @@ defense_list = [
         str_pet="You pat {slimeoid_name}, and your hand tingles as it passes through the quantum field that surrounds its body.",
         str_abuse="You grab hold of {slimeoid_name} and shake them aggressively, until their quantum static is splayed out and they look nauseous.",
         str_create="You press a button on the armor console labelled 'C'. Through the observation port, start to notice the proto-Slimeoid begin to flicker, and you hear a strange humming sound.",
+        str_create_nega="You move the planchette to spell \"ARMOR\", then move the planchette to \"C\". In front of you, you start to notice the proto-Negaslimeoid begin to flicker, and you hear a strange humming sound.",
         str_armor="It is enveloped in a field of quantum uncertainty.",
         id_resistance=ewcfg.slimeoid_weapon_slam,
         id_weakness=ewcfg.slimeoid_special_laser,
@@ -538,6 +569,7 @@ defense_list = [
         str_pet="You pat {slimeoid_name}, its fluid, shapeless body squishing and deforming in response to even slight pressure.",
         str_abuse="You stick your fist into {slimeoid_name}'s squishy body and jostle its vital organs.",
         str_create="You press a button on the armor console labelled 'D'. Through the observation port, you see the proto-Slimeoid suddenly begin to twist itself, stretching and contracting as its shape rapidly shifts.",
+        str_create_nega="You move the planchette to spell \"ARMOR\", then move the planchette to \"D\". In front of you, you see the proto-Negaslimeoid suddenly begin to twist itself, stretching and contracting as its shape rapidly shifts.",
         str_armor="It is malleable and can absorb blows with ease.",
         id_resistance=ewcfg.slimeoid_weapon_bludgeon,
         id_weakness=ewcfg.slimeoid_special_webs,
@@ -556,6 +588,7 @@ defense_list = [
         str_pet="You pat {slimeoid_name}. Its skin is hot, and you can feel it pulsing rhythmically.",
         str_abuse="You take a blowtorch to {slimeoid_name}'s pulsating skin and watch as it wears itself out trying to regenerate the rapidly burning tissue.",
         str_create="You press a button on the armor console labelled 'E'. Through the observation port, you see the proto-Slimeoid begin to pulse, almost like a beating heart.",
+        str_create_nega="You move the planchette to spell \"ARMOR\", then move the planchette to \"E\". In front of you, you see the proto-Negaslimeoid begin to pulse, almost like a beating heart.",
         str_armor="It can regenerate damage to its body rapidly.",
         id_resistance=ewcfg.slimeoid_weapon_spikes,
         id_weakness=ewcfg.slimeoid_special_spit,
@@ -574,6 +607,7 @@ defense_list = [
         str_pet="You pat {slimeoid_name}, taking care not to inhale through your nose, as one whiff of its odor has been known to make people lose their lunch.",
         str_abuse="You try to humiliate {slimeoid_name} by plugging your nose and kicking it around.",
         str_create="You press a button on the armor console labelled 'F'. Through the observation port, you see the proto-Slimeoid give off bubbles of foul-colored gas.",
+        str_create_nega="You move the planchette to spell \"ARMOR\", then move the planchette to \"F\". In front of you, you see the proto-Negaslimeoid give off bubbles of foul-colored gas.",
         str_armor="It exudes a horrible stench.",
         id_resistance=ewcfg.slimeoid_weapon_teeth,
         id_weakness=ewcfg.slimeoid_special_throw,
@@ -591,6 +625,7 @@ defense_list = [
         str_pet="You pat {slimeoid_name}'s slick wet skin, and your hand comes away coated in a viscous, slippery oil.",
         str_abuse="You turn {slimeoid_name} upside down and push their oily body, sending them slipping down the sidewalk.",
         str_create="You press a button on the armor console labelled 'G'. Through the observation port, you see the surface of the proto-Slimeoid become shiny with some kind of oily fluid.",
+        str_create_nega="You move the planchette to spell \"ARMOR\", then move the planchette to \"G\". In front of you, you see the surface of the proto-Negaslimeoid become shiny with some kind of oily fluid.",
         str_armor="It is covered in a coating of slippery oil.",
         id_resistance=ewcfg.slimeoid_weapon_grip,
         id_weakness=ewcfg.slimeoid_special_fire,
@@ -636,6 +671,7 @@ special_list = [
         str_special_attack_weak="{active} coughs and spurts up a sputtering spray of acid at {inactive}!",
         str_special_attack_coup="{active} vomits a torrent of acid onto {inactive}, deteriorating it to the point that it can no longer fight!",
         str_create="You press a button on the special attack console labelled 'A'. Through the observation port, you see the proto-Slimeoid's body begin to excrete a foul, toxic ooze.",
+        str_create_nega="You move the planchette to spell \"SPECIAL\", then move the planchette to \"A\". In front of you, you see the proto-Negaslimeoid's body begin to excrete a foul, toxic ooze.",
         str_special="It can spit acidic ooze.",
         str_observe="A bit of acidic fluid drips from {slimeoid_name} onto the ground, where it smokes and sizzles."
     ),
@@ -651,6 +687,7 @@ special_list = [
         str_special_attack_weak="{active} starts to flicker before firing an unsteady beam of light at {inactive}!",
         str_special_attack_coup="{active} blasts {inactive} with a beam of green energy, searing it all over its body!",
         str_create="You press a button on the special attack console labelled 'B'. Through the observation port, you see the proto-Slimeoid's body begin to glow with energy as the gestation vat's built-in Geiger Counter begins to click frantically.",
+        str_create_nega="You move the planchette to spell \"SPECIAL\", then move the planchette to \"B\". In front of you, you see the proto-Negaslimeoid's body begin to glow with energy as the Ouija Board's built-in Geiger Counter begins to click frantically.",
         str_special="It can fire beams of radiation.",
         str_observe="{slimeoid_name} suddenly glows with radioactive energy. Best not to look directly at it until it settles down..."
     ),
@@ -667,6 +704,7 @@ special_list = [
         str_special_attack_weak="{active} desperately fires a few of its last quills into {inactive}!",
         str_special_attack_coup="{active} fires a rapid burst of sharp quills into {inactive}, filling it like a pincushion!",
         str_create="You press a button on the special attack console labelled 'C'. Through the observation port, you see the proto-Slimeoid's congealing body suddenly protruding with long, pointed spines, which quickly retract back into it.",
+        str_create_nega="You move the planchette to spell \"SPECIAL\", then move the planchette to \"C\". In front of you, you see the proto-Negaslimeoid's congealing body suddenly protruding with long, pointed spines, which quickly retract back into it.",
         str_special="It can fire sharp quills.",
         str_observe="{slimeoid_name} shudders and ejects a few old quills onto the ground. You can see new ones already growing in to replace them."
     ),
@@ -682,6 +720,7 @@ special_list = [
         str_special_attack_weak="{active} unsteadily hefts a nearby {object} before throwing it into {inactive}!",
         str_special_attack_coup="{active} hurls a {object}, which smashes square into {inactive}, knocking it to the ground! A direct hit!",
         str_create="You press a button on the special attack console labelled 'D'. Through the observation port, you see the proto-Slimeoid's limbs become more articulate.",
+        str_create_nega="You move the planchette to spell \"SPECIAL\", then move the planchette to \"D\". In front of you, you see the proto-Negaslimeoid's limbs become more articulate.",
         str_special="It can hurl objects at foes.",
         str_observe="{slimeoid_name} is idly picking up stones and seeing how far it can toss them."
     ),
@@ -696,6 +735,7 @@ special_list = [
         str_special_attack_weak="{active}'s cranium bulges and throbs! {inactive} convulses!",
         str_special_attack_coup="{active} emanates a strange static sound as {inactive} is inexplicably rendered completely unconscious!",
         str_create="You press a button on the special attack console labelled 'E'. You momentarily experience an uncomfortable sensation, sort of like the feeling you get when you know there's a TV on in the room even though you can't see it.",
+        str_create_nega="You move the planchette to spell \"SPECIAL\", then move the planchette to \"E\". You momentarily experience an uncomfortable sensation, sort of like the feeling you get when you know there's a TV on in the room even though you can't see it.",
         str_special="It can generate harmful frequencies with its brainwaves.",
         str_observe="You momentarily black out. When you come to, your nose is bleeding. {slimeoid_name} tries to look innocent."
     ),
@@ -711,6 +751,7 @@ special_list = [
         str_special_attack_weak="{active} fires an unsteady, sputtering stream of fluid that ignites and singes {inactive}!",
         str_special_attack_coup="{active} empties its fluid bladders in a final burst of liquid! {inactive} is completely engulfed in the conflagration!",
         str_create="You press a button on the special attack console labelled 'F'. Through the observation port, you see fluid bladders forming deep under the still-forming proto-Slimeoid's translucent skin.",
+        str_create_nega="You move the planchette to spell \"SPECIAL\", then move the planchette to \"F\". In front of you, you see fluid bladders forming deep under the still-forming proto-Negaslimeoid's translucent skin.",
         str_special="It can fire a stream of pyrophoric fluid at its foes.",
         str_observe="A bit of fluid drips from {slimeoid_name} onto the floor and ignites, but you manage to smother the small flame quickly before it spreads."
     ),
@@ -725,6 +766,7 @@ special_list = [
         str_special_attack_weak="{active} is running out of webbing! It shoots as much as it can onto {inactive}!",
         str_special_attack_coup="{active} gathers itself up before spurting a blast of webbing that coats {inactive}'s body, completely ensnaring it!",
         str_create="You press a button on the special attack console labelled 'G'. Through the observation port, you see large glands forming near the surface of the still-forming proto-Slimeoid's translucent skin.",
+        str_create_nega="You move the planchette to spell \"SPECIAL\", then move the planchette to \"G\". In front of you, you see large glands forming near the surface of the still-forming proto-Negaslimeoid's translucent skin.",
         str_special="It can spin webs and shoot webbing fluid to capture prey.",
         str_observe="{slimeoid_name} is over in the corner, building itself a web to catch prey in."
     )
@@ -1049,6 +1091,7 @@ brain_list = [
             "type a"
         ],
         str_create="You press a button on the brain console labelled 'A'.\nA cluster of neurons coagulates within your newly-forming Slimeoid. The proto-Slimeoid begins to move, thrashing about as if in frustration.",
+        str_create_nega="You move the planchette to spell \"BRAIN\", then move the planchette to \"A\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. the proto-Negaslimeoid begins to move, thrashing about as if in frustration.",
         str_brain="It is extremely irritable.",
         str_observe="{slimeoid_name} is snarling. You're not sure if it's angry at you, or at the world in general.",
         str_pet="{slimeoid_name} hisses at you.",
@@ -1075,6 +1118,7 @@ brain_list = [
             "type b"
         ],
         str_create="You press a button on the brain console labelled 'B'.\nA cluster of neurons coagulates within your newly-forming Slimeoid. The proto-Slimeoid begins to move about its gestation tank, exploring its surroundings.",
+        str_create_nega="You move the planchette to spell \"BRAIN\", then move the planchette to \"B\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. the proto-Negaslimeoid begins to move about its spawning area, exploring its surroundings.",
         str_brain="It is enthusiastic about almost everything.",
         str_observe="{slimeoid_name} notices you looking at it and seems delighted!",
         str_pet="{slimeoid_name} purrs happily.",
@@ -1100,6 +1144,7 @@ brain_list = [
             "type c"
         ],
         str_create="You press a button on the brain console labelled 'C'.\nA cluster of neurons coagulates within your newly-forming Slimeoid. The proto-Slimeoid draws its congealing body together, as if trying to gather its strength.",
+        str_create_nega="You move the planchette to spell \"BRAIN\", then move the planchette to \"C\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. The proto-Negaslimeoid draws its congealing body together, as if trying to gather its strength.",
         str_brain="It is quiet and withdrawn.",
         str_observe="{slimeoid_name} seems to be resting, possibly deep in thought.",
         str_pet="{slimeoid_name} doesn't react.",
@@ -1125,6 +1170,7 @@ brain_list = [
             "type d"
         ],
         str_create="You press a button on the brain console labelled 'D'.\nA cluster of neurons coagulates within your newly-forming Slimeoid. The proto-Slimeoid lazily turns over in its gestation vat, floating and doing little else.",
+        str_create_nega="You move the planchette to spell \"BRAIN\", then move the planchette to \"D\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. The proto-Negaslimeoid lazily spins in its congealing mass, flopping and doing little else.",
         str_brain="It is usually staring off into space.",
         str_observe="{slimeoid_name} stares off into the distance. Who knows if it's actually looking at anything in particular.",
         str_pet="{slimeoid_name} is startled out of a stupor by your touch.",
@@ -1150,6 +1196,7 @@ brain_list = [
             "type e"
         ],
         str_create="You press a button on the brain console labelled 'E'.\nA cluster of neurons coagulates within your newly-forming Slimeoid. The proto-Slimeoid starts to sporadically twitch and shiver.",
+        str_create_nega="You move the planchette to spell \"BRAIN\", then move the planchette to \"E\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. The proto-Negaslimeoid starts to sporadically twitch and shiver.",
         str_brain="It is extremely skittish and jumpy.",
         str_observe="{slimeoid_name} is glancing around furtively, seemingly scanning for threats.",
         str_pet="{slimeoid_name} flinches nervously at your touch.",
@@ -1175,6 +1222,7 @@ brain_list = [
             "type f"
         ],
         str_create="You press a button on the brain console labelled 'F'.\nA cluster of neurons coagulates within your newly-forming Slimeoid. The proto-Slimeoid darts to the opposite side of the gestation vat. You're not sure, but you feel like it's watching you.",
+        str_create_nega="You move the planchette to spell \"BRAIN\", then move the planchette to \"F\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. The proto-Negaslimeoid darts away from you. You're not sure, but you feel like it's watching you.",
         str_brain="It acts secretive, as though it's up to something.",
         str_observe="{slimeoid_name} is moving around, apparently searching for... something.",
         str_pet="{slimeoid_name} seems nonplussed, but doesn't object.",
@@ -1200,6 +1248,7 @@ brain_list = [
             "type g"
         ],
         str_create="You press a button on the brain console labelled 'G'.\nA cluster of neurons coagulates within your newly-forming Slimeoid. The proto-Slimeoid begins to flit around the gestation vat, seemingly unsure where to go.",
+        str_create_nega="You move the planchette to spell \"BRAIN\", then move the planchette to \"G\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. The proto-Negaslimeoid begins to flit around its spawning area, seemingly unsure where to go.",
         str_brain="It seems to have no idea what it's doing.",
         str_observe="{slimeoid_name} seems unsure of whether it wants to wander around or just stay put.",
         str_pet="{slimeoid_name} seems confused about how to react.",

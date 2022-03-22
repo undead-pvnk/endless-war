@@ -40,7 +40,6 @@ from ew.utils.move import EwPath
 from ew.utils.transport import EwTransport
 from .moveutils import get_enemies_look_resp
 from .moveutils import get_players_look_resp
-from .moveutils import get_slimeoids_resp
 from .moveutils import get_slimes_resp
 from .moveutils import get_void_connections_resp
 from .moveutils import one_eye_dm
@@ -586,16 +585,12 @@ async def look(cmd):
     slimes_resp = get_slimes_resp(district_data)
     players_resp = get_players_look_resp(user_data, district_data)
     enemies_resp = get_enemies_look_resp(user_data, district_data)
-    slimeoids_resp = get_slimeoids_resp(cmd.guild.id, poi)
     soul_resp = ""
     extra_resp = ""
 
-    if slimeoids_resp != "":
-        slimeoids_resp = "\n" + slimeoids_resp
     if poi.is_apartment:
         slimes_resp = ""
         players_resp = ""
-        slimeoids_resp = ""
     if user_data.has_soul == 0:
         soul_resp = "\n\nYour soul brought color to the world. Now it all looks so dull."
     else:
@@ -643,7 +638,6 @@ async def look(cmd):
                 capped_resp,
                 slimes_resp,
                 players_resp,
-                slimeoids_resp,
                 enemies_resp,
                 soul_resp,
                 extra_resp,
@@ -677,14 +671,10 @@ async def survey(cmd):
     slimes_resp = get_slimes_resp(district_data)
     players_resp = get_players_look_resp(user_data, district_data)
     enemies_resp = get_enemies_look_resp(user_data, district_data)
-    slimeoids_resp = get_slimeoids_resp(cmd.guild.id, poi)
 
-    if slimeoids_resp != "":
-        slimeoids_resp = "\n" + slimeoids_resp
     if poi.is_apartment:
         slimes_resp = ""
         players_resp = ""
-        slimeoids_resp = ""
 
     # post result to channel
     if poi != None:
@@ -696,7 +686,6 @@ async def survey(cmd):
                 capped_resp,
                 slimes_resp,
                 players_resp,
-                slimeoids_resp,
                 enemies_resp,
                 ("\n\n{}".format(
                     ewutils.weather_txt(market_data)

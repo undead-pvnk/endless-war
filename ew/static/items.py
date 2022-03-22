@@ -237,6 +237,13 @@ item_list = [
         acquisition=ewcfg.acquisition_smelting,
     ),
     EwGeneralItem(
+        id_item=ewcfg.item_id_dye_negative,
+        context="dye",
+        str_name="||Negative Dye||",
+        str_desc="A small vial of ||negative dye||.",
+        acquisition=ewcfg.acquisition_smelting,
+    ),
+    EwGeneralItem(
         id_item=ewcfg.item_id_dye_pink,
         context="dye",
         str_name="Pink Dye",

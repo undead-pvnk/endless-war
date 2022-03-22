@@ -7,6 +7,7 @@ import time
 
 from ew.backend import item as bknd_item
 from ew.backend import worldevent as bknd_worldevent
+from ew.backend import item
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.worldevent import EwWorldEvent
@@ -140,14 +141,22 @@ async def crush(cmd):
                     )
 
                     gristcount += 1
+
         elif item_data.item_props.get("id_item") == ewcfg.item_id_negapoudrin:
-            # delete a negapoudrin from the player's inventory
+
+            # Delete a negapoudrin from the player's inventory
             bknd_item.item_delete(id_item=sought_id)
             crush_slimes = -1000000
-            # kill player if they have less than 1 million slime
+
+            # Kill player if they have less than 1 million slime
             if user_data.slimes < 1000000:
                 user_data.die(cause=ewcfg.cause_suicide)
-            # remove 1 million slime from the player
+
+                response = "You {} your hard-earned slime crystal with your bare teeth.\nAs the nerve endings in your teeth explode, you realize you bit into a negapoudrin! You writhe on the ground as slime gushes from all of your orifices. You fucking die. {}".format(command, ewcfg.emote_slimeskull)
+
+                user_data.persist()
+
+            # Remove 1 million slime from the player
             else:
                 levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
                 user_data.persist()
@@ -155,7 +164,49 @@ async def crush(cmd):
                 response = "You {} your hard-earned slime crystal with your bare teeth.\nAs the nerve endings in your teeth explode, you realize you bit into a negapoudrin! You writhe on the ground as slime gushes from all of your orifices.".format(command)
             
                 if len(levelup_response) > 0:
-                    response += "\n\n" + levelup_response	
+                    response += "\n\n" + levelup_response
+                    	
+        # If the item is a negaslimeoidheart
+        elif item_data.item_props.get("context") == ewcfg.context_negaslimeoidheart:
+            
+            # Delete a core from the player's inventory
+            bknd_item.item_delete(id_item=sought_id)
+            crush_slimes = -1000000
+
+            # Kill player if they have less than 1 million slime
+            if user_data.slimes < 1000000:
+                user_data.die(cause=ewcfg.cause_suicide)
+                
+                response = "You {} the Negaslimeoid core with your bare teeth.\nAs the nerve endings in your teeth explode, you recoil in pain! You writhe on the ground as slime gushes from all of your orifices. You fucking die. {}".format(command, ewcfg.emote_slimeskull)
+
+                user_data.persist()
+
+            # Remove 1 million slime from the player
+            else:
+                levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
+                user_data.persist()
+
+                # Give the player a negative dye
+                bknd_item.item_create(
+                    item_type=ewcfg.it_item,
+                    id_user=cmd.message.author.id,
+                    id_server=cmd.guild.id,
+                    item_props={
+                        'context': 'dye',
+                        'item_name': '||Negative Dye||',
+                        'item_desc': 'A small vial of ||negative dye||.',
+                        'id_item': 'negativedye'
+                                }
+                )
+
+                response = "You {} the Negaslimeoid core with your bare teeth.\nAs the nerve endings in your teeth explode, you recoil in pain! You writhe on the ground as slime gushes from all of your orifices. \n\nFrom within the Negaslimeoid's core, you recover a sample of ||Negative Dye||! This piece here is pretty rare, so don't waste it!".format(command)
+            
+                if len(levelup_response) > 0:
+                    response += "\n\n" + levelup_response
+
+
+
+
 
     else:
         if item_search:  # if they didnt forget to specify an item and it just wasn't found
