@@ -2466,12 +2466,10 @@ class EwUser(EwUserBase):
                     ewutils.logMsg('Failed to drop items on death, {}.'.format(e))
 
                 item_cache = bknd_core.get_cache(obj_type="EwItem")
-                dropped_items_to_update = []
                 for id in ids_to_drop:
                     cache_item = item_cache.get_entry(unique_vals={"id_item": id})
-                    cache_item.update({'id_owner':self.poi})
-                    dropped_items_to_update.append(cache_item)
-                item_cache.bulk_set_entry(entries=dropped_items_to_update)
+                    cache_item.update({'id_owner': self.poi})
+                    item_cache.set_entry(data=cache_item)
 
             try:
 
