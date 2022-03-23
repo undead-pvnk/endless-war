@@ -279,7 +279,7 @@ food_list = [
     ),
     EwFood(
         id_food = "chickenbucket",
-        alias = ['bucket', 'cucket', 'chicken'],
+        alias = ['bucket', 'cucket', 'chicken', 'cockbucket'],
         recover_hunger = 320,
         price = 3200,
         str_name = "8-piece bucket of fried chicken",
@@ -631,7 +631,7 @@ food_list = [
     ),
     EwFood(
         id_food = "doubledown",
-        alias = ['double', 'down'],
+        alias = ['double', 'down', 'cocksandwich'],
         recover_hunger = 80,
         price = 800,
         str_name = "Double Down",
@@ -653,7 +653,7 @@ food_list = [
     ),
     EwFood(
         id_food = "plutoniumchicken",
-        alias = ['pluto', 'plutonium'],
+        alias = ['pluto', 'plutonium', 'plutoniumcock', 'cock'],
         recover_hunger = 160,
         price = 1600,
         str_name = "whole plutonium-battered fried baby chicken",
@@ -2037,6 +2037,17 @@ food_list = [
         str_desc="It's a blue drink. They say if you down 1000 of these blue drinks in one sitting you'll start coming up with a bunch of brilliant ideas.",
         time_expir=43200,
     ),
+    EwFood(
+        id_food="purpledrink",
+        alias=['purpledrank', 'lean'],
+        recover_hunger=-1200,
+        str_name="purple drink",
+        str_eat="You chug the virulent mixture of red drink and blue drink. It's aggressively noxious, so sugary you can't feel your taste buds. You get a stomachache.",
+        inebriation=1000,
+        str_desc="It's a \"purple drink\", created by mixing red drink and blue drink. You've heard the rumors, and apparently drinking this concoction can give you the ability to see the future! Either that or a crippling codeine addiction.",
+        time_expir=43200,
+        acquisition = "smelting",
+),
 ]
 
 # A map of id_food to EwFood objects.

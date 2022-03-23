@@ -73,8 +73,12 @@ async def score(cmd: cmd_utils.EwCmd):
 
     # endless war slime check
     if target_type == "ew":
-        total = bknd_core.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.guild.id))
-        totalslimes = total[0][0]
+        # get total amount of player slime and total amount of district ground slime
+        totalplayerslime = bknd_core.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.guild.id))
+        totalgroundslime = bknd_core.execute_sql_query("SELECT SUM(slimes) FROM districts WHERE slimes > 0 AND id_server = '{}'".format(cmd.guild.id))
+        
+        # add those two numbers together
+        totalslimes = totalplayerslime[0][0] + totalgroundslime[0][0]
         response = "ENDLESS WAR has amassed {:,} {}.".format(totalslimes, slime_alias)
 
     # self slime check
