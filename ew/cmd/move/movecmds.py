@@ -41,6 +41,7 @@ from ew.utils.transport import EwTransport
 from .moveutils import get_enemies_look_resp
 from .moveutils import get_players_look_resp
 from .moveutils import get_slimes_resp
+from .moveutils import get_items_resp
 from .moveutils import get_void_connections_resp
 from .moveutils import one_eye_dm
 from .moveutils import send_arrival_response
@@ -582,7 +583,8 @@ async def look(cmd):
         controlled_data = district_data
 
     capped_resp = "This district is controlled by {}.\n\n".format("the " + controlled_data.controlling_faction.capitalize() if controlled_data.controlling_faction != "" else "no one")
-    slimes_resp = get_slimes_resp(district_data)
+    slimes_resp = get_slimes_resp(user_data, district_data)
+    items_resp = get_items_resp(user_data, district_data)
     players_resp = get_players_look_resp(user_data, district_data)
     enemies_resp = get_enemies_look_resp(user_data, district_data)
     soul_resp = ""
@@ -590,6 +592,7 @@ async def look(cmd):
 
     if poi.is_apartment:
         slimes_resp = ""
+        items_resp = ""
         players_resp = ""
     if user_data.has_soul == 0:
         soul_resp = "\n\nYour soul brought color to the world. Now it all looks so dull."
@@ -637,6 +640,7 @@ async def look(cmd):
             "{}{}{}{}{}{}{}{}{}".format(
                 capped_resp,
                 slimes_resp,
+                items_resp,
                 players_resp,
                 enemies_resp,
                 soul_resp,
@@ -668,23 +672,26 @@ async def survey(cmd):
         controlled_data = district_data
 
     capped_resp = "This district is controlled by {}.\n\n".format("the " + controlled_data.controlling_faction.capitalize() if controlled_data.controlling_faction != "" else "no one")
-    slimes_resp = get_slimes_resp(district_data)
+    slimes_resp = get_slimes_resp(user_data, district_data)
+    items_resp = get_items_resp(user_data, district_data)
     players_resp = get_players_look_resp(user_data, district_data)
     enemies_resp = get_enemies_look_resp(user_data, district_data)
 
     if poi.is_apartment:
         slimes_resp = ""
+        items_resp = ""
         players_resp = ""
 
     # post result to channel
     if poi != None:
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(
             cmd.message.author,
-            "You stand {} {}.\n\n{}{}{}{}{}".format(
+            "You stand {} {}.\n\n{}{}{}{}{}{}".format(
                 poi.str_in,
                 poi.str_name,
                 capped_resp,
                 slimes_resp,
+                items_resp,
                 players_resp,
                 enemies_resp,
                 ("\n\n{}".format(
