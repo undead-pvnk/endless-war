@@ -1572,14 +1572,14 @@ crime_status = {
 5:"{they} appear to be trying to appear \"hard\". Oh, how {they} have failed.",
 20:"{they}'re still a civilian, basically, {they}'ve just tried a few things once.",
 100:"Most gangsters would eat {them} for breakfast.",
-1000:"{they}'re a hardended criminal by anywhere else's standards, but {they} decided to squat down here. {they}'re still in diapers, honestly.",
+1000:"{they}'re a hardened criminal by anywhere else's standards, but {they} decided to squat down here. {they}'re still in diapers, honestly.",
 5000:"{they}'ve ravaged the streets hard enough to be called a rookie.",
 10000:"{their} bloodlust and debauchery have caused the police to view {them} as a wild and dangerous threat.",
-25000:"{their} boundlesss malice has risen above the average gangster, which has placed {them} on many watchlists.",
+25000:"{their} boundless malice has risen above the average gangster, which has placed {them} on many watchlists.",
 50000:"The remnants of the police lose sleep over {them} every night.",
-250000:"{they}'re a veteran of war, and all those around {them} see the undying chaos in {their} eyes and in {their} soul",
+250000:"{they}'re a veteran of war, and all those around {them} see the undying chaos in {their} eyes and in {their} soul.",
 500000: "The civilians who see {their} face believe {them} to be a plague incarnate. Maybe they're right.",
-1000000:"Not even {their} fellow gangsters can tolerate the sight of {them} now. {their} voice is spun of poison and {their} footseps leave destruction in {their} wake. Fucking goons."
+1000000:"Not even {their} fellow gangsters can tolerate the sight of {them} now. {their} voice is spun of poison and {their} footsteps leave destruction in {their} wake. Fucking goons."
 }
 
 
