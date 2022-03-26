@@ -71,10 +71,12 @@ cmd_map = {
     ewcfg.cmd_feedslimeoid: slimeoidcmds.feedslimeoid,
     ewcfg.cmd_dress_slimeoid: slimeoidcmds.dress_slimeoid,
     ewcfg.cmd_dress_slimeoid_alt1: slimeoidcmds.dress_slimeoid,
-    ewcfg.cmd_dress_slimeoid_alt2: slimeoidcmds.dress_slimeoid,    
+    ewcfg.cmd_dress_slimeoid_alt2: slimeoidcmds.dress_slimeoid,
+    ewcfg.cmd_dress_slimeoid_alt3: slimeoidcmds.dress_slimeoid,        
     ewcfg.cmd_undress_slimeoid: slimeoidcmds.undress_slimeoid,
     ewcfg.cmd_undress_slimeoid_alt1: slimeoidcmds.undress_slimeoid,
     ewcfg.cmd_undress_slimeoid_alt2: slimeoidcmds.undress_slimeoid,
+    ewcfg.cmd_undress_slimeoid_alt3: slimeoidcmds.undress_slimeoid,
 
 
     # Negaslimeoids

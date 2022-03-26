@@ -185,7 +185,14 @@ async def slimeoid(cmd):
                 adorned_cosmetics.append((hue.str_name + " colored " if hue != None else "") + cos.item_props.get('cosmetic_name'))
 
         if len(adorned_cosmetics) > 0:
-            response += "\n\nIt has {} adorned.".format(ewutils.formatNiceList(adorned_cosmetics, "and"))
+            response += "\n\nIt has a {} adorned.".format(ewutils.formatNiceList(adorned_cosmetics, "and"))
+    
+            if len(adorned_cosmetics) >= 2:
+                outfit_map = item_utils.get_outfit_info(id_user=cmd.message.author.id, id_server=cmd.guild.id, slimeoid = True)
+
+                if outfit_map is not None:
+                    response += " Its total freshness rating is a {} {}.".format(outfit_map['dominant_style'], outfit_map['total_freshness'])
+
 
     # Send the response to the player.
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

@@ -469,29 +469,9 @@ async def battle_slimeoids(id_s1, id_s2, challengee_name, challenger_name, chann
 
     s1_combat_data.apply_weapon_matchup(s2_combat_data)
     s2_combat_data.apply_weapon_matchup(s1_combat_data)
-    print(challengee_slimeoid.name)
-    print(s1_combat_data.grit)
-    print(s1_combat_data.moxie)
-    print(s1_combat_data.chutzpah)
-    
-    print(challenger_slimeoid.name)
-    print(s2_combat_data.grit)
-    print(s2_combat_data.moxie)
-    print(s2_combat_data.chutzpah)
-
 
     s1_combat_data.apply_hue_matchup(s2_combat_data)
     s2_combat_data.apply_hue_matchup(s1_combat_data)
-
-    print(challengee_slimeoid.name)
-    print(s1_combat_data.grit)
-    print(s1_combat_data.moxie)
-    print(s1_combat_data.chutzpah)
-    
-    print(challenger_slimeoid.name)
-    print(s2_combat_data.grit)
-    print(s2_combat_data.moxie)
-    print(s2_combat_data.chutzpah)
 
     # decide which slimeoid gets to move first
     s1_active = False

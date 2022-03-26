@@ -341,10 +341,10 @@ async def data(cmd):
         if (slimeoid.life_state == ewcfg.slimeoid_state_active):
             # If the user isn't a corpse
             if user_data.life_state != ewcfg.life_state_corpse:
-                response_block += "They are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
+                response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
             # If the user is a corpse, but has a negaslimeoid
             elif slimeoid.sltype == ewcfg.sltype_nega:
-                response_block += "They are accompanied by {}, a {}-foot-tall Negaslimeoid. ".format(slimeoid.name, str(slimeoid.level))
+                response_block += "You are accompanied by {}, a {}-foot-tall Negaslimeoid. ".format(slimeoid.name, str(slimeoid.level))
                 
         server = ewutils.get_client().get_guild(user_data.id_server)
         if user_data.life_state == ewcfg.life_state_corpse:
@@ -1255,7 +1255,32 @@ async def fashion(cmd):
             if space_remaining == 0:
                 response += "You don't have cosmetic space left."
             else:
-                response += "You have about {amount} adornable space.\n".format(amount=space_remaining)
+                response += "You have about {amount} adornable space.".format(amount=space_remaining)
+
+            # 1/3 chance of slimeoid also being included in the fashion check. No extra flavor text is generated if the slimeoid isn't wearing clothes.
+            if random.randint(0, 2) == 0 and user_data.active_slimeoid != -1:
+                # Get the slimeoid
+                slimeoid = EwSlimeoid(member=cmd.message.author)
+                slimeoid_adorned_cosmetics = []
+
+                # Get the slimeoid's adorned cosmetics
+                for cosmetic in cosmetic_items:
+                    c = EwItem(id_item=cosmetic.get('id_item'))
+                    if c.item_props.get('slimeoid') == 'true':
+                        slimeoid_hue = hue_static.hue_map.get(c.item_props.get('hue'))
+                        slimeoid_adorned_cosmetics.append((slimeoid_hue.str_name + " colored " if slimeoid_hue != None else "") + c.item_props.get('cosmetic_name'))
+
+                # If the slimeoid has adorned cosmetics, generate flavor text.
+                if len(slimeoid_adorned_cosmetics) > 0:
+                    response += "\n\n{} butts in to the camera view! It has a {} adorned.".format(slimeoid.name, ewutils.formatNiceList(slimeoid_adorned_cosmetics, "and"))
+    
+                    # If the slimeoid has more than one adorned cosmetic, give it a freshness rating.
+                    if len(slimeoid_adorned_cosmetics) >= 2:
+                        outfit_map = itm_utils.get_outfit_info(id_user=cmd.message.author.id, id_server=cmd.guild.id, slimeoid = True)
+
+                        if outfit_map is not None:
+                            response += " Its total freshness rating is a {} {}.".format(outfit_map['dominant_style'], outfit_map['total_freshness'])
+
 
         else:
             response = "You aren't wearing anything!"
@@ -1352,6 +1377,30 @@ async def fashion(cmd):
                 response += "They don't have cosmetic space left."
             else:
                 response += "They have about {amount} adornable space.\n".format(amount=space_remaining)
+
+            # 1/3 chance of slimeoid also being included in the fashion check. No extra flavor text is generated if the slimeoid isn't wearing clothes.
+            if random.randint(0, 2) == 0 and user_data.active_slimeoid != -1:
+                # Get the slimeoid
+                slimeoid = EwSlimeoid(member=member)
+                slimeoid_adorned_cosmetics = []
+
+                # Get the cosmetics worn by the slimeoid
+                for cosmetic in cosmetic_items:
+                    c = EwItem(id_item=cosmetic.get('id_item'))
+                    if c.item_props.get('slimeoid') == 'true':
+                        slimeoid_hue = hue_static.hue_map.get(c.item_props.get('hue'))
+                        slimeoid_adorned_cosmetics.append((slimeoid_hue.str_name + " colored " if slimeoid_hue != None else "") + c.item_props.get('cosmetic_name'))
+
+                # Create flavor text if the slimeoid is wearing clothes
+                if len(slimeoid_adorned_cosmetics) > 0:
+                    response += "\n\nThey've also recently posted with their {} {} in the background. It has a {} adorned.".format("Slimeoid" if slimeoid.sltype == ewcfg.sl_type_lab else "Negaslimeoid", slimeoid.name, ewutils.formatNiceList(slimeoid_adorned_cosmetics, "and"))
+    
+                    # Give the slimeoid a freshness rating if it's wearing more than 1 article of clothing.
+                    if len(slimeoid_adorned_cosmetics) >= 2:
+                        outfit_map = itm_utils.get_outfit_info(id_user=member, id_server=cmd.guild.id, slimeoid = True)
+
+                        if outfit_map is not None:
+                            response += " Its total freshness rating is a {} {}.".format(outfit_map['dominant_style'], outfit_map['total_freshness'])
 
         else:
             response = "...But they aren't wearing anything!"
