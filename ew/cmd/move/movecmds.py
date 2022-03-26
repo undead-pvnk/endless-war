@@ -113,8 +113,7 @@ async def move(cmd = None, isApt = False, isSplit = 0, continuousMove = -1):
                                            fe_utils.formatMessage(cmd.message.author, "Never heard of it."))
 
     if not ewutils.DEBUG and not isApt and poi_static.chname_to_poi.get(cmd.message.channel.name).id_poi != user_data.poi:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author,
-                                                                                                   "You must {} in your current district.").format(
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in your current district.").format(
             cmd.tokens[0]))
 
     if user_data.poi == ewcfg.debugroom:
@@ -148,9 +147,6 @@ async def move(cmd = None, isApt = False, isSplit = 0, continuousMove = -1):
                                            fe_utils.formatMessage(cmd.message.author, "You're already there, bitch."))
     elif isApt and poi.id_poi == user_data.poi[3:]:
         return await ewapt.aptcmds.depart(cmd=cmd)
-    flamestate = EwGamestate(id_server=user_data.id_server, id_state='flamethrower')
-    if 'n4office' == poi.id_poi and flamestate.bit == 1:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You open the elevator, and are immediately met with fire spitting out of the elevator. Over the crackling flames you can hear a woman screaming \"AAAAAAAAGH FUCK YOU DIE DIE DIE DIE!!!!!\". You're guessing entering now is a bad idea."))
 
     if move_utils.inaccessible(user_data=user_data, poi=poi):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author,

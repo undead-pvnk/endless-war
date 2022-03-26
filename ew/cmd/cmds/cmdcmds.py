@@ -54,6 +54,10 @@ from .. import item as ewitem
 from ..apt import aptcmds as apt_cmds
 from ..faction import factioncmds as faction_cmds
 from ..wep import wepcmds as wep_cmds
+try:
+    from ..debug import debug24
+except:
+    from ..debug_dummy import debug24
 
 """ show player's slime score """
 
@@ -637,7 +641,7 @@ async def coinflip(cmd):
 
 
 """
-    Bass weilders JAM OUT
+    Bass wielders JAM OUT
 """
 
 
@@ -663,6 +667,9 @@ async def jam(cmd):
             else:
                 for x in range(1, cycle):
                     response += random.choice([":musical_note:", ":notes:"])
+
+            await debug24(cmd)
+
         else:
             response = "You place your mouth on the {} but it makes no noise. Either that's not an instrument or you aren't good enough.".format(item_sought.get('name'))
     else:

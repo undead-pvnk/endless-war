@@ -3407,24 +3407,6 @@ for poi in poi_list:
 	if poi.is_district:
 		poi.major_role = '{}_major'.format(poi.id_poi)
 		streets_resp = ''
-		"""
-		district_streets_list = []
-		for street_poi in poi_list:
-			if street_poi.father_district == poi.id_poi:
-				district_streets_list.append(street_poi.str_name)
-			
-		if len(district_streets_list) > 0:
-			poi.str_desc += " This area is connected to "
-			if len(district_streets_list) == 1:
-				poi.str_desc += district_streets_list[0]
-			else:
-				for i in range(len(district_streets_list)):
-		
-					if i == (len(district_streets_list) - 1):
-						poi.str_desc += 'and {}.'.format(district_streets_list[i])
-					else:
-						poi.str_desc += '{}, '.format(district_streets_list[i])
-		"""
 
 	placeholder_channel_names_used = False
 
@@ -3509,19 +3491,6 @@ for poi in poi_list:
 		# print('Null Minor Role give to {}'.format(poi.str_name))
 		poi.minor_role = ewcfg.role_null_minor_role
 
-	# poi coords cause json import problems because poi.coords imports as a list type
-	# if poi.coord != None:
-	#	# Populate the map of coordinates to their point of interest, for looking up from the map.
-	#	coord_to_poi[poi.coord] = poi
-	#
-	#	# for poi_2 in poi_list:
-	#	# 	if (poi.coord == poi_2.coord) and (poi.id_poi != poi_2.id_poi):
-	#	# 		print('{} has same coords as {}, please fix this.'.format(poi.id_poi, poi_2.id_poi))
-	#
-	#	# Populate the map of coordinate aliases to the main coordinate.
-	#	for coord_alias in poi.coord_alias:
-	#		alias_to_coord[coord_alias] = poi.coord
-	#		coord_to_poi[coord_alias] = poi
 
 	# Populate the map of point of interest names/aliases to the POI.
 	id_to_poi[poi.id_poi] = poi
