@@ -215,7 +215,7 @@ mutations = [
     EwMutationFlavor(
         id_mutation=ewcfg.mutation_id_aposematicstench,
         str_name="Aposematic Stench",
-        alias=['as', 'stench'],
+        alias=['as', 'stench', 'aposematic'],
         str_describe_self="A putrid stench permeates around you all hours of the day due to **Aposematic Stench**.",
         str_describe_other="A putrid stench permeates around them all hours of the day due to **Aposematic Stench**.",
         str_acquire="Your eyes water as you begin secreting pheromones into the air from every indecent nook and cranny on your body. You smell so unbelievably terrible that even you are not immune from frequent coughs and wheezes when you catch a particularly bad whiff. You have developed the mutation **Aposematic Stench**. For every 5 levels you gain, you appear as 1 more person when being scouted. Use !stink to put on secreature repellent at any time.",

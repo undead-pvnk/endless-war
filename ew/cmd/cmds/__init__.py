@@ -15,6 +15,7 @@ cmd_map = {
     # Show a player's mutations.
     ewcfg.cmd_mutations: cmdcmds.mutations,
     ewcfg.cmd_mutations_alt_1: cmdcmds.mutations,
+    ewcfg.cmd_mutations_alt_2: cmdcmds.mutations,
 
     # Check how hungry you are.
     ewcfg.cmd_hunger: cmdcmds.hunger,

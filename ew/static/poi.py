@@ -1199,7 +1199,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "theminessweeper",
-		alias = ['minesweeper', 'ms', 'jrms'],
+		alias = ['minesweeper', 'ms', 'jrms', 'jrmms'],
 		str_name = "The Mines - Minesweeper",
 		str_desc = "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR. There's a lot of slime to be mined in here, however some sick fucks thought it'd be really funny to turn the floor into a minefield. Be careful not to set off any explosives when you !mine.\n\nExits into The Mines.",
 		channel = "the-mines-minesweeper",
@@ -1215,7 +1215,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "theminesbubble",
-		alias = ['bubblebreaker', 'bubble', 'mb', 'jrmb'],
+		alias = ['bubblebreaker', 'bubble', 'mb', 'jrmb', 'jrmbb'],
 		str_name = "The Mines - Bubble Breaker",
 		str_desc = "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR. Explosions from the neighboring floor have caused this place to become highly dangerous. Try not to get caught under a collapsing mineshaft.\n\nExits into The Mines.",
 		channel = "the-mines-bubble-breaker",
@@ -1264,7 +1264,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "cratersvilleminessweeper",
-		alias = ['minesweeper2', 'cvminesweeper', 'cminesweeper', 'cvmsweeper', 'cvms'],
+		alias = ['minesweeper2', 'cvminesweeper', 'cminesweeper', 'cvmsweeper', 'cvms', 'cvmms'],
 		str_name = "The Cratersville Mines - Minesweeper",
 		str_desc = "A veritable slime-mine of slime, rejuvenated by the revival of ENDLESS WAR. There's a lot of slime to be mined in here, however some sick fucks thought it'd be really funny to turn the floor into a minefield. Be careful not to set off any explosives when you !mine.\n\nExits into Cratersville.",
 		channel = "cratersville-mines-minesweeper",
@@ -1280,7 +1280,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "cratersvilleminesbubble",
-		alias = ['bubblebreaker2', 'cvmbubblebreaker', 'cmbubblebreaker', 'cvbubblebreaker', 'bubble2', 'cvbubble', 'cbubble', 'cvbubble', 'cvmb'],
+		alias = ['bubblebreaker2', 'cvmbubblebreaker', 'cmbubblebreaker', 'cvbubblebreaker', 'bubble2', 'cvbubble', 'cbubble', 'cvbubble', 'cvmb', 'cvmbb'],
 		str_name = "The Cratersville Mines - Bubble Breaker",
 		str_desc = "A veritable slime-mine of slime, rejuvenated by the revival of ENDLESS WAR. Explosions from the neighboring floor have caused this place to become highly dangerous. Try not to get caught under a collapsing mineshaft.\n\nExits into Cratersville.",
 		channel = "cratersville-mines-bubble-breaker",
@@ -1312,7 +1312,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "toxingtonminessweeper",
-		alias = ['minesweeper3', 'ttminesweeper', 'ttmsweeper', 'toxmsweeper', 'toxingtonminesweeper', 'toxingtonmsweeper', 'ttms'],
+		alias = ['minesweeper3', 'ttminesweeper', 'ttmsweeper', 'toxmsweeper', 'toxingtonminesweeper', 'toxingtonmsweeper', 'ttms', 'ttmms'],
 		str_name = "The Toxington Mines - Minesweeper",
 		str_desc = "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR. There's a lot of slime to be mined in here, however some sick fucks thought it'd be really funny to turn the floor into a minefield. Be careful not to set off any explosives when you !mine.\n\nExits into Toxington.",
 		channel = "toxington-mines-minesweeper",
@@ -1328,7 +1328,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "toxingtonminesbubble",
-		alias = ['bubblebreaker3', 'ttminebubblebreaker', 'ttmbubblebreaker', 'toxmbubblebreaker', 'toxingtonbubblebreaker', 'toxingtonmbubblebreaker', 'bubble3', 'ttminebubble', 'ttmbubble', 'toxmbubble', 'toxingtonbubble', 'toxingtonmbubble', 'ttmb', 'ttb'],
+		alias = ['bubblebreaker3', 'ttminebubblebreaker', 'ttmbubblebreaker', 'toxmbubblebreaker', 'toxingtonbubblebreaker', 'toxingtonmbubblebreaker', 'bubble3', 'ttminebubble', 'ttmbubble', 'toxmbubble', 'toxingtonbubble', 'toxingtonmbubble', 'ttmb', 'ttb', 'ttmbb'],
 		str_name = "The Toxington Mines - Bubble Breaker",
 		str_desc = "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR. Explosions from the neighboring floor have caused this place to become highly dangerous. Try not to get caught under a collapsing mineshaft.\n\nExits into Toxington.",
 		channel = "toxington-mines-bubble-breaker",
@@ -1986,7 +1986,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "dreadfordblimptower",
-		alias = ['dreadfordblimptower', 'dreadfordhblimp', 'dreadfordtower', 'dreadblimptower', 'dreadblimp', 'dreadtower', 'dfblimptower', 'dfblimp', 'dftower'],
+		alias = ['dreadfordblimptower', 'dreadfordhblimp', 'dreadfordtower', 'dreadblimptower', 'dreadblimp', 'dreadtower', 'dfblimptower', 'dfblimp', 'dftower', 'dfbt', 'dft'],
 		str_name = "The Dreadford Blimp Tower",
 		str_desc = "This mooring mast is mostly used for amassing millionaire mooks and unmarked helium canisters into the marvelous Neo Milwaukee multi-story zeppelin, m'lady. Basically, you can board a blimp here. All you have to do is walk up an extremely narrow spiral staircase without an adequate handrail for about 40 feet straight up and then you can embark onto the highest airship this side of the River of Slime! It'll be great! Don't mind the spontaneously combusting zeppelins crashing into the earth in the distance. That's normal.\n\nExits into Dreadford.",
 		channel = "dreadford-blimp-tower",
@@ -2002,7 +2002,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "assaultflatsblimptower",
-		alias = ['assaultflatsbeachblimptower', 'assaultflatsbeachblimp', 'assaultflatsbeachtower', 'assaultflatsblimptower', 'assaultflatsblimp', 'assaultflatstower', 'beachblimptower', 'beachblimp', 'beachtower', 'afbblimptower', 'afbblimp', 'afbtower'],
+		alias = ['assaultflatsbeachblimptower', 'assaultflatsbeachblimp', 'assaultflatsbeachtower', 'assaultflatsblimptower', 'assaultflatsblimp', 'assaultflatstower', 'beachblimptower', 'beachblimp', 'beachtower', 'afbblimptower', 'afbblimp', 'afbtower', 'afbbt', 'afbt'],
 		str_name = "The Assault Flats Beach Blimp Tower",
 		str_desc = "This mooring mast is mostly used for amassing millionaire mooks and unmarked helium canisters into the marvelous Neo Milwaukee multi-story zeppelin, m'lady. Basically, you can board a blimp here. All you have to do is walk up an extremely narrow spiral staircase without an adequate handrail for about 40 feet straight up and then you can embark onto the highest airship this side of the River of Slime! It'll be great! Don't mind the spontaneously combusting zeppelins crashing into the earth in the distance. That's normal.\n\nExits into Assault Flats Beach.",
 		channel = "assault-flats-blimp-tower",
