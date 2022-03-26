@@ -13,6 +13,7 @@ from ew.backend.market import EwMarket
 from ew.backend.status import EwEnemyStatusEffect
 from ew.backend.status import EwStatusEffect
 from ew.backend.worldevent import EwWorldEvent
+from ew.backend.mutation import EwMutation
 
 from ew.utils.transport import EwTransport
 
@@ -76,7 +77,7 @@ async def score(cmd: cmd_utils.EwCmd):
         # get total amount of player slime and total amount of district ground slime
         totalplayerslime = bknd_core.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.guild.id))
         totalgroundslime = bknd_core.execute_sql_query("SELECT SUM(slimes) FROM districts WHERE slimes > 0 AND id_server = '{}'".format(cmd.guild.id))
-        
+
         # add those two numbers together
         totalslimes = totalplayerslime[0][0] + totalgroundslime[0][0]
         response = "ENDLESS WAR has amassed {:,} {}.".format(totalslimes, slime_alias)
@@ -438,7 +439,14 @@ async def mutations(cmd):
             mutation_flavor = static_mutations.mutations_map[mutation]
             total_levels += mutation_flavor.tier
             if "level" in cmd.tokens:
-                response += "**LEVEL {}**:{} \n".format(mutation_flavor.tier, mutation_flavor.str_describe_self)
+                # Get the object each mutation is from.
+                mutation_obj = EwMutation(id_mutation=mutation, id_user=user_data.id_user, id_server=cmd.message.guild.id)
+
+                # If a mutation is artificial on self-check, have it be labelled as grafted
+                if mutation_obj.artificial == 1:
+                    response += "**LEVEL {}**:{} *Grafted*. \n".format(mutation_flavor.tier, mutation_flavor.str_describe_self)
+                else:
+                    response += "**LEVEL {}**:{} \n".format(mutation_flavor.tier, mutation_flavor.str_describe_self)
             else:
                 response += "{} ".format(mutation_flavor.str_describe_self)
         if len(mutations) == 0:
