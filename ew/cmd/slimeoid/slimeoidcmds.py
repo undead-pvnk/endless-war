@@ -732,7 +732,7 @@ async def slimeoidbattle(cmd):
             await fe_utils.send_message(cmd.client, cmd.message.channel, response)
             
             bknd_hunting.delete_enemy(challengee)
-            challengee_slimeoid.delete()
+            
     else:
         response = "{} was too cowardly to accept your challenge.".format(member.display_name).replace("@", "\{at\}")
 

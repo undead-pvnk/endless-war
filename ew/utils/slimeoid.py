@@ -3,7 +3,6 @@ import random
 import time
 
 from . import core as ewutils
-from .frontend import EwResponseContainer
 from ..backend import core as bknd_core
 from ..backend.user import EwUserBase as EwUser
 from ..backend.market import EwMarket

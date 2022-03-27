@@ -3,6 +3,7 @@ import time
 from . import core as bknd_core
 from ..static import cfg as ewcfg
 from ..utils import core as ewutils
+from ew.utils.slimeoid import EwSlimeoid
 
 """ Enemy data model for database persistence """
 
@@ -483,6 +484,12 @@ def check_death(enemy_data):
 def delete_enemy(enemy_data):
     # print("DEBUG - {} - {} DELETED".format(enemy_data.id_enemy, enemy_data.display_name))
     enemy_data.clear_allstatuses()
+    
+    # If the enemy is a Slimeoid Trainer, delete its slimeoid.
+    if enemy_data.enemytype in ewcfg.slimeoid_trainers:
+        trainer_slimeoid = EwSlimeoid(id_user=enemy_data.id_enemy, id_server=enemy_data.id_server)
+        trainer_slimeoid.delete()
+    
     bknd_core.execute_sql_query("DELETE FROM enemies WHERE {id_enemy} = %s".format(
         id_enemy=ewcfg.col_id_enemy
     ), (
