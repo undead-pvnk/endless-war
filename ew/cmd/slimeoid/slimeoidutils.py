@@ -437,13 +437,25 @@ async def battle_slimeoids(id_s1, id_s2, challengee_name, challenger_name, chann
 
     client = ewutils.get_client()
 
+    # Nerf level to 10 if it's above 11.
+    if challengee_slimeoid.level >= 10:
+        challengee_level = 10
+    else:
+        challengee_level = challengee_slimeoid.level
+
+    if challenger_slimeoid.level >= 10:
+        challenger_level = 10
+    else:
+        challenger_level = challenger_slimeoid.level
+
+
     # calculate starting hp
-    s1hpmax = 50 + (challengee_slimeoid.level * 20)
-    s2hpmax = 50 + (challenger_slimeoid.level * 20)
+    s1hpmax = 50 + (challengee_level * 20)
+    s2hpmax = 50 + (challenger_level * 20)
 
     # calculate starting sap
-    s1sapmax = challengee_slimeoid.level * 2
-    s2sapmax = challenger_slimeoid.level * 2
+    s1sapmax = challengee_level * 2
+    s2sapmax = challenger_level * 2
 
     # initialize combat data for challengee
     s1_combat_data = EwSlimeoidCombatData(
