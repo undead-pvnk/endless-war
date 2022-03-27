@@ -202,6 +202,26 @@ class EwSlimeoidCombatData:
         elif self.coating == ewcfg.hue_id_gold:
             self.chutzpah += 2
 
+    # Nerfs slimeoids 11-foot and up to have 10-foot stats
+    def apply_size_nerf(self, enemy_combat_data = None):
+        size = self.moxie + self.grit + self.chutzpah
+
+        # If the slimeoid is bigger than 10 feet. Comes before other matchups, so stats together should equal size. Stats are 1 at minimum in CombatData
+        if size > 13:
+            oversize = size - 13
+            points_nerfed = 0
+
+            while points_nerfed != oversize:
+                # Lower grit first, then moxie, then chutzpah
+                if self.grit > 1:
+                    self.grit -= 1
+                elif self.moxie > 1:
+                    self.moxie -= 1
+                else:
+                    self.chutzpah -= 1
+                
+                points_nerfed += 1
+
     # roll the dice on whether an action succeeds and by how many degrees of success
     def attempt_action(self, strat, sap_spend, in_range):
         # reduce sap available by shock
@@ -466,6 +486,9 @@ async def battle_slimeoids(id_s1, id_s2, challengee_name, challenger_name, chann
         slimeoid=challenger_slimeoid,
         owner=challenger_name,
     )
+
+    s1_combat_data.apply_size_nerf(s2_combat_data)
+    s2_combat_data.apply_size_nerf(s1_combat_data)
 
     s1_combat_data.apply_weapon_matchup(s2_combat_data)
     s2_combat_data.apply_weapon_matchup(s1_combat_data)

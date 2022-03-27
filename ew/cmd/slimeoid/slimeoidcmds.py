@@ -85,7 +85,7 @@ async def dissolveslimeoid(cmd):
             if slimeoidtype == "Slimeoid":
                 response = "You hit a large red button with a white X on it. Immediately a buzzer goes off and the half-formed body of what would have been your new Slimeoid is flushed out of the gestation tank and down a drainage tube, along with your poudrin and slime. What a waste."                
             else:
-                response = "The planchette lands upon \"NO\" and you hear ghastly screaches from ahead. The Negaslimeoid you were conjuring is torn apart into space, sending negaslime across the ether. The planchette moves to \"GOOD BYE\". It seems your communion with the Ancient Ones has come to an end."
+                response = "The planchette lands upon \"NO\" and you hear ghastly screeches from ahead. The Negaslimeoid you were conjuring is torn apart into space, sending negaslime across the ether. The planchette moves to \"GOOD BYE\". It seems your communion with the Ancient Ones has come to an end."
 
 
         cosmetics = bknd_item.inventory(
@@ -343,7 +343,7 @@ async def abuseslimeoid(cmd):
 
     if slimeoid.sltype == ewcfg.sltype_nega:
         if user_data.life_state == ewcfg.life_state_corpse:
-            response = "As much as you would love to abuse your negaslimeoid, you can't exactly beat it as a ghost. And you can't verbally, either, as the only langauge your negaslimeoid speaks is the whisperings of the great Negaslime."
+            response = "As much as you would love to abuse your negaslimeoid, you can't exactly beat it as a ghost. And you can't verbally, either, as the only langauge your negaslimeoid speaks is the whisperings of the Ancient Ones."
         else:
             response = "Why don't you !slimeoidbattle? No point in abusing something you could just kill."
 
@@ -689,7 +689,7 @@ async def slimeoidbattle(cmd):
                     'item_name': "Core of {}".format(dead_slimeoid.name),
                     'item_desc': "A smooth, inert rock. If you listen carefully you can hear otherworldly whispering."
                 }
-            # And now actually create the item # ZUG - I THINK LOSER HASN'T BEEN ESTABLISH AND YOU NEED TO CALL IT (EwUser(_member=author), what happens below)  
+
             bknd_item.item_create(
                 id_user=loser.id_user,
                 id_server=cmd.guild.id,
@@ -700,7 +700,7 @@ async def slimeoidbattle(cmd):
             # RIP :,(             
             dead_slimeoid.die()
             dead_slimeoid.persist()
-            loser = EwUser(member=loser)  # ZUG - is this needed? I think removing it might make the cigarette bug happen again. gotta test.
+            loser = EwUser(member=loser)
             loser.active_slimeoid = -1
             loser.persist()
 
@@ -732,7 +732,7 @@ async def slimeoidbattle(cmd):
             await fe_utils.send_message(cmd.client, cmd.message.channel, response)
             
             bknd_hunting.delete_enemy(challengee)
-            
+
     else:
         response = "{} was too cowardly to accept your challenge.".format(member.display_name).replace("@", "\{at\}")
 
@@ -884,9 +884,9 @@ async def restoreslimeoid(cmd):
 
     bknd_item.item_delete(id_item=item_data.id_item)
 
-    # Change player's slime, and give corresponding response # ZUG - CHANGE THE UPPER FLAVOR TEXT
+    # Change player's slime and give corresponding response
     if user_data.life_state == ewcfg.life_state_corpse:
-        response = "You insert the heart of your beloved {} into one of the restoration tanks. A series of clattering sensors analyze the crystalline core. Then, just like when it was first incubated, the needle pricks you and extracts slime from your body, which coalesces around the poudrin-like heart. Bit by bit the formless mass starts to assume a familiar shape.\n\n{} has been restored to its former glory!".format(
+        response = "You place the core of your beloved {} in front of the Ouija Board. You place your ghastly appendages on the board. Then, just like when it was first conjured, whispers awake around you and negaslime flows from your body. It coalesces around the inert core and, bit by bit, the formless mass starts to assume a familiar shape.\n\n{} has been restored to its former glory!".format(
         slimeoid.name, slimeoid.name)
         user_data.change_slimes(n=slimes_to_restore, source=ewcfg.source_spending)
     else:
@@ -1313,74 +1313,3 @@ async def undress_slimeoid(cmd):
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-
-# RIP code (ZUG REMOVE THIS COMMENT ONCE YOU GET WORD FROM STOTLE)
-
-# Check if a negaslimoid exists and describe it
-# async def summon_negaslimeoid(cmd):
-#     response = ""
-#     user_data = EwUser(member=cmd.message.author)
-#     if user_data.life_state != ewcfg.life_state_corpse:
-#         response = "Only the dead have the occult knowledge required to summon a cosmic horror."
-#         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-#     if user_data.poi not in poi_static.capturable_districts:
-#         response = "You can't conduct the ritual here."
-#         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-#     name = None
-#     if cmd.tokens_count > 1:
-#         # value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True, negate = True)
-#         slimeoid = EwSlimeoid(member=cmd.message.author, sltype=ewcfg.sltype_nega)
-#         if slimeoid.life_state != ewcfg.slimeoid_state_none:
-#             response = "You already have an active negaslimeoid."
-#             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-#         negaslimeoid_name = cmd.message.content[(len(cmd.tokens[0])):].strip()
-
-#         if len(negaslimeoid_name) > 32:
-#             response = "That name is too long. ({:,}/32)".format(len(negaslimeoid_name))
-#             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-#         market_data = EwMarket(id_server=cmd.message.author.guild.id)
-
-#         if market_data.negaslime >= 0:
-#             response = "The dead haven't amassed any negaslime yet."
-#         else:
-#             max_level = min(len(str(user_data.slimes)) - 1, len(str(market_data.negaslime)) - 1)
-#             level = random.randint(1, max_level)
-#             value = 10 ** (level - 1)
-#             # user_data.change_slimes(n = int(value/10))
-#             market_data.negaslime += value
-#             slimeoid.sltype = ewcfg.sltype_nega
-#             slimeoid.life_state = ewcfg.slimeoid_state_active
-#             slimeoid.level = level
-#             slimeoid.id_user = str(user_data.id_user)
-#             slimeoid.id_server = user_data.id_server
-#             slimeoid.poi = user_data.poi
-#             slimeoid.name = negaslimeoid_name
-#             slimeoid.body = random.choice(sl_static.body_names)
-#             slimeoid.head = random.choice(sl_static.head_names)
-#             slimeoid.legs = random.choice(sl_static.mobility_names)
-#             slimeoid.armor = random.choice(sl_static.defense_names)
-#             slimeoid.weapon = random.choice(sl_static.offense_names)
-#             slimeoid.special = random.choice(sl_static.special_names)
-#             slimeoid.ai = random.choice(sl_static.brain_names)
-#             for i in range(level):
-#                 rand = random.randrange(3)
-#                 if rand == 0:
-#                     slimeoid.atk += 1
-#                 elif rand == 1:
-#                     slimeoid.defense += 1
-#                 else:
-#                     slimeoid.intel += 1
-
-#             user_data.persist()
-#             slimeoid.persist()
-#             market_data.persist()
-
-#             response = "You have summoned **{}**, a {}-foot-tall Negaslimeoid.".format(slimeoid.name, slimeoid.level)
-#             desc = slimeoid_utils.slimeoid_describe(slimeoid)
-#             response += desc
-
-#     else:
-#         response = "To summon a negaslimeoid you must first know its name."
-#     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

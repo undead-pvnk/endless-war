@@ -142,12 +142,11 @@ async def incubate_slimeoid(cmd):
     # Final response
     await send_response(response, cmd)
 
-# Use a different command for incubating Negaslimeoids :P
+# Just use a different command for incubating Negaslimeoids
 async def incubate_negaslimeoid(cmd):
     user_data = EwUser(member=cmd.message.author)
     slimeoid_data = EwSlimeoid(member=cmd.message.author)
 
-    print(slimeoid_data.id_slimeoid)
     # Check for if the player is a corpse
     if user_data.life_state != ewcfg.life_state_corpse:
         if cmd.message.channel.name == ewcfg.channel_blackpond:
@@ -730,7 +729,6 @@ def basic_slimeoid_incubation_checks(channel_name, user_data, slimeoid_data):
     # Check for incubating slimeoid
     # TODO: other checks for slimeoid lifestates?
     elif slimeoid_data.life_state == ewcfg.slimeoid_state_none:
-        print(slimeoid_data.life_state)
         if slimeoidtype == "Slimeoid":
             return "You must begin incubating a new Slimeoid first."
         else:
