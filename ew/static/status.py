@@ -666,7 +666,12 @@ trauma_list = [
         str_trauma="They've still got a black eye from that pummeling.",
         trauma_class=ewcfg.trauma_class_hunger,
     ),
-
+    EwTrauma(  # 17
+        id_trauma=ewcfg.weapon_id_sledgehammer,
+        str_trauma_self="Your head is dented in with a huge crater.",
+        str_trauma="Their head is dented in with a huge crater.",
+        trauma_class=ewcfg.trauma_class_accuracy,
+    ),
 ]
 
 trauma_map = {}

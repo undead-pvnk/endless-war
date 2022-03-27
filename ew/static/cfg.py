@@ -2485,6 +2485,7 @@ stat_huntingrifle_kills = 'huntingrifle_kills'
 stat_whistle_kills = 'whistle_kills'
 stat_harpoon_kills = 'harpoon_kills'
 stat_sniper_kills = 'sniper_kills'
+stat_sledgehammer_kills = 'sledgehammer_kills'
 
 
 # Categories of events that change your slime total, for statistics tracking
@@ -2931,6 +2932,7 @@ weapon_id_awp = 'awp'
 weapon_id_diamondpickaxe = 'dpick'
 weapon_id_monofilamentwhip = 'monowhip'
 weapon_id_fists = 'fists'
+weapon_id_sledgehammer = 'sledgehammer'
 
 
 weapon_id_spraycan = 'spraycan'
