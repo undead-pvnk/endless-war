@@ -77,6 +77,10 @@ cmd_map = {
     ewcfg.cmd_undress_slimeoid_alt1: slimeoidcmds.undress_slimeoid,
     ewcfg.cmd_undress_slimeoid_alt2: slimeoidcmds.undress_slimeoid,
     ewcfg.cmd_undress_slimeoid_alt3: slimeoidcmds.undress_slimeoid,
+    ewcfg.cmd_tagslimeoid: slimeoidcmds.tagslimeoid,
+    ewcfg.cmd_tagslimeoid_alt1: slimeoidcmds.tagslimeoid,
+    ewcfg.cmd_untagslimeoid: slimeoidcmds.untagslimeoid,
+    ewcfg.cmd_untagslimeoid_alt1: slimeoidcmds.untagslimeoid,
 
 }
 

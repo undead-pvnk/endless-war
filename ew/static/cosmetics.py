@@ -1317,6 +1317,16 @@ cosmetic_items_list = [
         freshness = 10,
     ),
     EwCosmeticItem(
+        id_cosmetic = "dogtag",
+        str_name = "Dog Tag",
+        str_desc = "A plastic Waffle House-branded dog tag. The chain attached is far too short for your neck, so you can only really shimmy it around your wrist.",
+        durability = 1500,
+        style = "tough",
+        vendors = ['Waffle House'],
+        price = 2000,
+        freshness = 2,
+    ),
+    EwCosmeticItem(
         id_cosmetic = "programmersocks",
         str_name = "Programmer Socks",
         str_desc = "Long stripey socks that programmers wear when they inevitably come out as trans. Oddly rare around here...",

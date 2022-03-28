@@ -1226,6 +1226,10 @@ cmd_undress_slimeoid = cmd_prefix + 'undressslimeoid'
 cmd_undress_slimeoid_alt1 = cmd_prefix + 'undecorateslimeoid'
 cmd_undress_slimeoid_alt2 = cmd_prefix + 'unadornslimeoid'
 cmd_undress_slimeoid_alt3 = cmd_prefix + 'undressnegaslimeoid'
+cmd_tagslimeoid = cmd_prefix + 'tagslimeoid'
+cmd_tagslimeoid_alt1 = cmd_prefix + 'tagnegaslimeoid'
+cmd_untagslimeoid = cmd_prefix + 'untagslimeoid'
+cmd_untagslimeoid_alt1 = cmd_prefix + 'untagnegaslimeoid'
 
 #negaslimeoid-specific commands
 cmd_conjure_negaslimeoid = cmd_prefix + 'conjurenegaslimeoid'
@@ -2143,6 +2147,7 @@ col_time_defeated = 'time_defeated'
 col_clout = 'clout'
 col_hue = 'hue'
 col_coating = 'coating'
+col_dogtag = 'dogtag'
 
 # Database columns for enemies
 col_id_enemy = 'id_enemy'

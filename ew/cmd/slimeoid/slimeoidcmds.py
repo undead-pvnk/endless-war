@@ -193,6 +193,9 @@ async def slimeoid(cmd):
                 if outfit_map is not None:
                     response += " Its total freshness rating is a {} {}.".format(outfit_map['dominant_style'], outfit_map['total_freshness'])
 
+        if slimeoid.dogtag != "":
+            response += "\n\nThere's a dog tag embedded in it: {}".format(slimeoid.dogtag)
+
 
     # Send the response to the player.
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -1313,3 +1316,71 @@ async def undress_slimeoid(cmd):
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+async def tagslimeoid(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
+    outofspace = False
+    
+    # Lifestate check as well as establishing slimeoidtype
+    if user_data.life_state != ewcfg.life_state_corpse:
+        slimeoidtype = "Slimeoid"
+    elif user_data.life_state == ewcfg.life_state_corpse and slimeoid.sltype == ewcfg.sltype_nega:
+        slimeoidtype = "Negaslimeoid"
+    else:
+        response = "Slimeoids don't fuck with ghosts."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    # Gotta have a response
+    if cmd.tokens_count == 1:
+        response = "Hmm? Tag your {}? Uhh, spraying your slimeoid with paint sounds like abuse, and that's a different command. Specify something to put on your dog tag.".format(slimeoidtype)
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    # If the player doesn't have a dog tag, they can't tag their slimeoid.
+    dogtag = bknd_item.find_item(item_search='dogtag', id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter=ewcfg.it_cosmetic)
+    if dogtag is None:
+        response = "You can't tag your {} without a dog tag. Idiot.".format(slimeoidtype)
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))        
+
+    # Turn the rest of the message into the dog tag message.
+    message_text = ' '.join(word for word in cmd.tokens[1:])
+
+    if len(message_text) > 1000:
+        outofspace = True
+        message_text = message_text[:1000]
+
+    # Delete dog tag
+    bknd_item.item_delete(id_item=dogtag.get('id_item'))
+    
+    # Give the slimeoid the tag
+    slimeoid.dogtag = message_text
+    slimeoid.persist()
+
+    response = "You attach the dog tag to {} the {} and it slowly sinks into its body.\n\n{}".format(slimeoid.name, slimeoidtype, message_text)
+    if outofspace is True:
+        response += "\nYou run out of space on the dog tag. You really went ham on that little tag, huh?"
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+async def untagslimeoid(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
+
+    # Lifestate check as well as establishing slimeoidtype
+    if user_data.life_state != ewcfg.life_state_corpse:
+        slimeoidtype = "Slimeoid"
+    elif user_data.life_state == ewcfg.life_state_corpse and slimeoid.sltype == ewcfg.sltype_nega:
+        slimeoidtype = "Negaslimeoid"
+    else:
+        response = "Slimeoids don't fuck with ghosts."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    
+    # Slimeoid has to have a tag
+    if slimeoid.dogtag == "":
+        response = "Your {} is already free of any tagging. No tags in sight.".format(slimeoidtype)
+    else:
+        # Erase the tag
+        slimeoid.dogtag = ""
+        slimeoid.persist()
+        response = "You reach into your {} and rip out the dog tag within it.".format(slimeoidtype)
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
