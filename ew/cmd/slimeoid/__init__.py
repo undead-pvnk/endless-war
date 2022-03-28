@@ -78,19 +78,6 @@ cmd_map = {
     ewcfg.cmd_undress_slimeoid_alt2: slimeoidcmds.undress_slimeoid,
     ewcfg.cmd_undress_slimeoid_alt3: slimeoidcmds.undress_slimeoid,
 
-
-    # Negaslimeoids
-    # ewcfg.cmd_negaslimeoid: slimeoidcmds.negaslimeoid,
-    # ewcfg.cmd_battlenegaslimeoid: slimeoidcmds.negaslimeoidbattle,
-    # ewcfg.cmd_battlenegaslimeoid_alt1: slimeoidcmds.negaslimeoidbattle,
-    # ewcfg.cmd_battlenegaslimeoid_alt2: slimeoidcmds.negaslimeoidbattle,
-    # ewcfg.cmd_battlenegaslimeoid_alt3: slimeoidcmds.negaslimeoidbattle,
-
-    # Ghosts can spawn a (mostly) randomly generated negaslimeoid
-    # ewcfg.cmd_summonnegaslimeoid: slimeoidcmds.summon_negaslimeoid,
-    # ewcfg.cmd_summonnegaslimeoid_alt1: slimeoidcmds.summon_negaslimeoid,
-    # ewcfg.cmd_summonnegaslimeoid_alt2: slimeoidcmds.summon_negaslimeoid,
-
 }
 
 apt_dm_cmd_map = {

@@ -17,11 +17,11 @@ from ew.backend.item import EwItem
 # Print lab instructions
 async def instructions(cmd):
 
-    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab and cmd.message.channel.name != ewcfg.channel_blackpond:
         response = "There's no instructions to read here."
-        return await send_response(response, cmd)
+        return await send_response(response, cmd)  
 
-    else:
+    elif cmd.message.channel.name == ewcfg.channel_slimeoidlab:
         response = "Welcome to NLACU's Brawlden Laboratory Facilities."
 
         response += "\n\nThis facility specializes in the emerging technology of Slimeoids, or slime-based artificial lifeforms. Research into the properties of Slimeoids is ongoing, but already great advancements in the field have been made and we are proud to continue providing public access to Slimeoid creation."
@@ -51,6 +51,40 @@ async def instructions(cmd):
 
         # Send the response to the player.
         return await send_response(response, cmd, format_name = False)
+
+    else:
+        # Shoutouts to Hasbro
+        response = "There's a scribbled-over sheet of paper on the ground next to the suspiciously-placed Ouija Board."
+
+        # Introduce sheet of paper idea.
+        response += "\n\n**The Ouija® Board**\nThe Ouija® Board (pronounced WEE-JA) has always been mysterious and mystifying. Ask it a question and it will respond by spelling out your answer in the window of the Message Indicator (Planchette)."
+
+        # Explain Conjuration
+        response += "\n\n**Assembly**\nRemove the 3 glide feet from the runner. Discard ~~the▬r~~▓**▓1 NEGAPOUDRIN. !CONJURENEGASLIMEOID AND GIVE NEGASLIME.**"
+
+
+        # Explain grow body commands
+        response += "\n\n**How Do I Make It Work?**\nAt night, leave the Board and the Planchet~~te▬si~~▓**▓SPELL** ***!GROWBODY/HEAD/LEGS/WEAPON/ARMOR/SPECIAL/BRAIN*** **AND A/B/C/D/E/F/G.** ***!NAMENEGASLIMEOID*** **TOO.**"
+
+        # Explain add stat commands
+        response += "\n\n**Set-Up**\nIf desired, set the mood by dimm~~ing▬~~▓**▓SPELL** ***!RAISEMOXIE/GRIT/CHUTZPAH*** **OR** ***!LOWERMOXIE/GRIT/CHUTZPAH*** **FOR STATS.**"
+        
+        # Send half of instructions here because this is a lot of text
+        await send_response(response, cmd)
+        
+
+        # Spawn negaslimeoid and explain that reviving will kill it 
+        response = "\n\n**Set-Up** (cont.)\nSet the Ouija® Board either on the players' la~~ps▬or▬~~▓**▓TO FINISH** ***!SPAWNNEGASLIMEOID.*** **REVIVAL WILL KILL.**"
+
+        # Explains to do !destroyslimeoid if you have a living slimeoid.
+        response += "\n\n**What Do I Do Now?**\nPlayers take turns asking questions and all s~~houl~~▓**▓IF THE ANCIENT ONES ARE DISPLEASED** ***!DESTROYSLIMEOID.*** **DEFEAT SLIMEOIDS. WIN.**"
+
+        # Ouija Board catchphrase
+        response += "\n\n*Look Into The Future. Have Fun! And Remember. The Ouija® Board is just a game...                      or is it?*"
+
+        # Send the response to the player.
+        return await send_response(response, cmd, format_name = False)
+
 
 """
     Initialize incubation process
@@ -690,6 +724,9 @@ async def destroy_slimeoid(cmd):
         slimeoid_data.die()
         slimeoid_data.persist()
         user_data.active_slimeoid = -1
+
+        # Take some of the player's negaslime for destroying a slimeoid.
+        user_data.slimes -= user_data.slimes / 10
         user_data.persist()
         
         # Go to final response
