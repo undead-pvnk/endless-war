@@ -7,7 +7,6 @@ import time
 
 from ew.backend import item as bknd_item
 from ew.backend import worldevent as bknd_worldevent
-from ew.backend import item
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.worldevent import EwWorldEvent
