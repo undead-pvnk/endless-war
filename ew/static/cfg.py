@@ -5046,13 +5046,6 @@ defined_races = {
         "racial_cmd": cmd_entomize,
         "soul_behavior":"is floating around in a weird loop."
     },
-    race_other: {
-        "race_prefix": "peculiar ",
-        "race_suffix": "",
-        "acknowledgement_str": 'ENDLESS WAR struggles to categorize you, and files you under "other". Your peculiar form can be used to **{cmd}** those around you.',
-        "racial_cmd": cmd_confuse,
-        "soul_behavior":"rattles seductively through the glass."
-    },
     race_shambler: {
         "race_prefix": "",
         "race_suffix": "",
@@ -5079,7 +5072,14 @@ defined_races = {
         "acknowledgement_str": "ENDLESS WAR acknowledges you as the hellspawn you are. You can now **{cmd}**. ",
         "racial_cmd": cmd_strike_deal,
         "soul_behavior":"has established dominance in here."
-    }
+    },
+    race_other: {  # Keep this one at the end, or else
+        "race_prefix": "peculiar ",
+        "race_suffix": "",
+        "acknowledgement_str": 'ENDLESS WAR struggles to categorize you, and files you under "other". Your peculiar form can be used to **{cmd}** those around you.',
+        "racial_cmd": cmd_confuse,
+        "soul_behavior":"rattles seductively through the glass."
+    },    
 }
 
 # slime twitter stuff

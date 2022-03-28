@@ -310,7 +310,7 @@ async def inventory_print(cmd):
             item_type = ewcfg.it_item
 
         # Filter to Weapon items
-        if 'weapon' in lower_token_list:
+        if 'weapon' in lower_token_list or 'weapons' in lower_token_list:
             item_type = ewcfg.it_weapon
 
         # Filter to furniture items
@@ -318,12 +318,16 @@ async def inventory_print(cmd):
             item_type = ewcfg.it_furniture
 
         # Filter to cosmetic items
-        if 'cosmetic' in lower_token_list:
+        if 'cosmetic' in lower_token_list or 'cosmetics' in lower_token_list:
             item_type = ewcfg.it_cosmetic
 
         # Filter to food items
         if 'food' in lower_token_list:
             item_type = ewcfg.it_food
+
+        # Filter to zines
+        if 'book' in lower_token_list or 'zines' in lower_token_list:
+            item_type = ewcfg.it_book
 
         #Filter to relic items
         if 'relic' in lower_token_list:
