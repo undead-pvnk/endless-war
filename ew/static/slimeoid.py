@@ -687,7 +687,7 @@ special_list = [
         str_special_attack_weak="{active} starts to flicker before firing an unsteady beam of light at {inactive}!",
         str_special_attack_coup="{active} blasts {inactive} with a beam of green energy, searing it all over its body!",
         str_create="You press a button on the special attack console labelled 'B'. Through the observation port, you see the proto-Slimeoid's body begin to glow with energy as the gestation vat's built-in Geiger Counter begins to click frantically.",
-        str_create_nega="You move the planchette to spell \"SPECIAL\", then move the planchette to \"B\". In front of you, you see the proto-Negaslimeoid's body begin to glow with energy as the Ouija Board's built-in Geiger Counter begins to click frantically.",
+        str_create_nega="You move the planchette to spell \"SPECIAL\", then move the planchette to \"B\". In front of you, you see the proto-Negaslimeoid's body begin to glow with energy as the  Ouija® Board's built-in Geiger Counter begins to click frantically.",
         str_special="It can fire beams of radiation.",
         str_observe="{slimeoid_name} suddenly glows with radioactive energy. Best not to look directly at it until it settles down..."
     ),

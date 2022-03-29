@@ -36,13 +36,13 @@ async def dissolveslimeoid(cmd):
     slimeoid = EwSlimeoid(member=cmd.message.author)
     # roles_map_user = ewutils.getRoleMap(message.author.roles)
 
-    if cmd.message.channel.name != ewcfg.channel_slimeoidlab and cmd.message.channel.name != ewcfg.channel_blackpond:
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab and cmd.message.channel.name != ewcfg.channel_wafflehouse:
         response = "You must go to the SlimeCorp Laboratories in Brawlden to dissolve a Slimeoid."
 
-    elif user_data.life_state == ewcfg.life_state_corpse and cmd.message.channel.name != ewcfg.channel_blackpond:
+    elif user_data.life_state == ewcfg.life_state_corpse and cmd.message.channel.name != ewcfg.channel_wafflehouse:
         response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-    elif user_data.life_state != ewcfg.life_state_corpse and cmd.message.channel.name == ewcfg.channel_blackpond:
+    elif user_data.life_state != ewcfg.life_state_corpse and cmd.message.channel.name == ewcfg.channel_wafflehouse:
         response = "You feel as though there is some ancient power here, but the slime coursing through your veins prevents you from using it."
 
     elif slimeoid.life_state == ewcfg.slimeoid_state_none:
@@ -815,9 +815,9 @@ async def restoreslimeoid(cmd):
     item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
 
     # Check for if you're in the the correct location
-    if cmd.message.channel.name != ewcfg.channel_slimeoidlab and cmd.message.channel.name != ewcfg.channel_blackpond:
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab and cmd.message.channel.name != ewcfg.channel_wafflehouse:
         if user_data.life_state == ewcfg.life_state_corpse:
-            response = "You must go to the Black Pond to restore a Negaslimeoid."
+            response = "You must go to Waffle House to restore a Negaslimeoid."
         else:
             response = "You must go to the NLACU Laboratories in Brawlden to restore a Slimeoid."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -825,8 +825,8 @@ async def restoreslimeoid(cmd):
     poi = poi_static.id_to_poi.get(user_data.poi)
     district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-    # Corresponding lifestate checks for locations - ghosts black pond, everyone else slimeoidlab. Player is already in one of those two locations, because of the above check
-    if user_data.life_state == ewcfg.life_state_corpse and cmd.message.channel.name != ewcfg.channel_blackpond:
+    # Corresponding lifestate checks for locations - ghosts waffle house, everyone else slimeoidlab. Player is already in one of those two locations, because of the above check
+    if user_data.life_state == ewcfg.life_state_corpse and cmd.message.channel.name != ewcfg.channel_wafflehouse:
         response = "Ghosts cannot interact with the NLACU Lab apparati."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     elif user_data.life_state != ewcfg.life_state_corpse and cmd.message.channel.name != ewcfg.channel_slimeoidlab:
@@ -889,7 +889,7 @@ async def restoreslimeoid(cmd):
 
     # Change player's slime and give corresponding response
     if user_data.life_state == ewcfg.life_state_corpse:
-        response = "You place the core of your beloved {} in front of the Ouija Board. You place your ghastly appendages on the board. Then, just like when it was first conjured, whispers awake around you and negaslime flows from your body. It coalesces around the inert core and, bit by bit, the formless mass starts to assume a familiar shape.\n\n{} has been restored to its former glory!".format(
+        response = "You place the core of your beloved {} in front of the Ouija® Board. You place your ghastly appendages on the board. Then, just like when it was first conjured, whispers awake around you and negaslime flows from your body. It coalesces around the inert core and, bit by bit, the formless mass starts to assume a familiar shape.\n\n{} has been restored to its former glory!".format(
         slimeoid.name, slimeoid.name)
         user_data.change_slimes(n=slimes_to_restore, source=ewcfg.source_spending)
     else:
@@ -1355,7 +1355,7 @@ async def tagslimeoid(cmd):
     slimeoid.dogtag = message_text
     slimeoid.persist()
 
-    response = "You attach the dog tag to {} the {} and it slowly sinks into its body.\n\n{}".format(slimeoid.name, slimeoidtype, message_text)
+    response = "You attach the dog tag to {} the {}. The tag slowly sinks into its slimy body.\n\n{}".format(slimeoid.name, slimeoidtype, message_text)
     if outofspace is True:
         response += "\nYou run out of space on the dog tag. You really went ham on that little tag, huh?"
 

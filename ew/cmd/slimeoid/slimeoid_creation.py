@@ -17,7 +17,7 @@ from ew.backend.item import EwItem
 # Print lab instructions
 async def instructions(cmd):
 
-    if cmd.message.channel.name != ewcfg.channel_slimeoidlab and cmd.message.channel.name != ewcfg.channel_blackpond:
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab and cmd.message.channel.name != ewcfg.channel_wafflehouse:
         response = "There's no instructions to read here."
         return await send_response(response, cmd)  
 
@@ -54,7 +54,7 @@ async def instructions(cmd):
 
     else:
         # Shoutouts to Hasbro
-        response = "There's a scribbled-over sheet of paper on the ground next to the suspiciously-placed Ouija Board."
+        response = "There's a scribbled-over sheet of paper on the table next to the suspiciously-placed Ouija® Board."
 
         # Introduce sheet of paper idea.
         response += "\n\n**The Ouija® Board**\nThe Ouija® Board (pronounced WEE-JA) has always been mysterious and mystifying. Ask it a question and it will respond by spelling out your answer in the window of the Message Indicator (Planchette)."
@@ -183,14 +183,14 @@ async def incubate_negaslimeoid(cmd):
 
     # Check for if the player is a corpse
     if user_data.life_state != ewcfg.life_state_corpse:
-        if cmd.message.channel.name == ewcfg.channel_blackpond:
+        if cmd.message.channel.name == ewcfg.channel_wafflehouse:
             response = "You feel as though there is some ancient power here, but the slime coursing through your veins prevents you from using it."
         else:
             response = "Huh? What'd you say?"
 
-    # Check for if the player is at the Black Pond
-    elif cmd.message.channel.name != ewcfg.channel_blackpond:
-        response = "You can't exactly summon anything in {}. Go to the Black Pond first.".format(cmd.message.channel.name)
+    # Check for if the player is at Waffle House
+    elif cmd.message.channel.name != ewcfg.channel_wafflehouse:
+        response = "You can't exactly summon anything in {}. Go to Waffle House first.".format(cmd.message.channel.name)
 
     # Check if the player already has a Slimeoid or a Negaslimeoid.
     elif slimeoid_data.life_state == ewcfg.slimeoid_state_active:
@@ -262,7 +262,7 @@ async def incubate_negaslimeoid(cmd):
                     slimeoid_data.persist()
                     user_data.persist()
 
-                    response = "Floating in front of the Ouija Board, you place both of your ghastly appendages on the planchette. {sacrificed_negaslime:,} negaslime rises from your body, flowing towards your negapoudrin. The negapoudrin appears to lift into the air, held up by a pool of rising negaslime. Whispers awake around you, indiscernible and unknowable. It feels as though the planchette beneath your ghastly fingers has more than one set of hands on it. \n\nThe conjuration of a Negaslimeoid has begun! {negaslime_emote}".format(
+                    response = "Floating in front of the Ouija® Board, you place both of your ghastly appendages on the planchette. {sacrificed_negaslime:,} negaslime rises from your body, flowing towards your negapoudrin. The negapoudrin appears to lift into the air, held up by a pool of rising negaslime. Whispers awake around you, indiscernible and unknowable. It feels as though the planchette beneath your ghastly fingers has more than one set of hands on it. \n\nThe conjuration of a Negaslimeoid has begun! {negaslime_emote}".format(
                         sacrificed_negaslime = sacrificed_negaslime, 
                         negaslime_emote = ewcfg.emote_negaslime
                     )
@@ -494,6 +494,7 @@ async def change_stat(cmd):
 async def name_slimeoid(cmd):
     user_data = EwUser(member=cmd.message.author)
     slimeoid_data = EwSlimeoid(member=cmd.message.author)
+    command_used = ""
 
     # Check if player is in the labs and has a slimeoid incubating
     response = basic_slimeoid_incubation_checks(channel_name = cmd.message.channel.name, user_data = user_data, slimeoid_data = slimeoid_data)
@@ -501,29 +502,27 @@ async def name_slimeoid(cmd):
 
     # Lifestate check for flavor text
     if slimeoid_data.sltype == ewcfg.sltype_nega:
-        slimeoidtype = "Negalimeoid"
+        slimeoidtype = "Negaslimeoid"
     else:
         slimeoidtype = "Slimeoid"
 
     if response is None: # Slimeoid is incubating
-
 
         # Check if player has specified a name
         if cmd.tokens_count < 2:
             response = "You must specify a name."
             # Go to final response
 
-
         else:
 
             # Turn entire message minus "!nameslimeoid" in to name variable
-            name = cmd.message.content[(len(ewcfg.cmd_nameslimeoid)):].strip()
+            command_used = ewutils.flattenTokenListToString(cmd.tokens[0])
+            name = cmd.message.content[(len(command_used) + 1):].strip() # It's 1 short for some reason? IDK
 
             # Limit name length to 32 characters
             if len(name) > 32:
                 response = "That name is too long. ({:,}/32)".format(len(name))
                 # Go to final response
-
 
             else:
                 # Save slimeoid name
@@ -626,7 +625,7 @@ async def spawn_slimeoid(cmd):
                         slime_heart_emote = ewcfg.emote_slimeheart
                     )
                 else:
-                    response = "You move the Ouija planchette to 'GOOD BYE'. The whispering around you explodes into a roaring chorus, nearly deafening your ghost ears. The pile of negaslime in front of you, now resembling a Negaslimeoid, ambles towards you. With a blood-curdling screech, the chorus around you dies. Your unholy abomination {slimeoid_name} the Negaslimeoid has been conjured!! {negaslime_emote}".format(
+                    response = "You move the Ouija® planchette to 'GOOD BYE'. The whispering around you explodes into a roaring chorus, nearly deafening your ghost ears. The pile of negaslime in front of you, now resembling a Negaslimeoid, ambles towards you. With a blood-curdling screech, the chorus around you dies. Your unholy abomination {slimeoid_name} the Negaslimeoid has been conjured!! {negaslime_emote}".format(
                         slimeoid_name = slimeoid_data.name, 
                         negaslime_emote = ewcfg.emote_negaslime
                     )
@@ -656,8 +655,8 @@ async def destroy_slimeoid(cmd):
     if user_data.life_state != ewcfg.life_state_corpse:
         response = "You... want to destroy your Slimeoid? That's, like, sorta illegal."
 
-    # Check if the player isn't at the black pond as a ghost
-    elif user_data.life_state == ewcfg.life_state_corpse and cmd.message.channel.name != ewcfg.channel_blackpond:
+    # Check if the player isn't at Waffle House as a ghost
+    elif user_data.life_state == ewcfg.life_state_corpse and cmd.message.channel.name != ewcfg.channel_wafflehouse:
         response = "Slimeoids don't fuck with ghosts."
 
     # Check if the player has a slimeoid
@@ -696,9 +695,9 @@ async def destroy_slimeoid(cmd):
             'item_name': "Core of {}".format(slimeoid_data.name),
             'item_desc': "A smooth, inert rock. If you listen carefully you can hear otherworldly whispering."
             }
-            # Creates the item in the black pond
+            # Creates the item at Waffle House
             bknd_item.item_create(
-            id_user=ewcfg.channel_blackpond,
+            id_user=ewcfg.channel_wafflehouse,
             id_server=cmd.guild.id,
             item_type=ewcfg.it_item,
             item_props=item_props
@@ -718,7 +717,7 @@ async def destroy_slimeoid(cmd):
                 cos.persist()
         
         # Craft the response
-        response = "You think upon your past and spiritually connect with {} the {}. With the Ouija Board in front of you, you spell out the forbidden words: \n\n\"lol\" \"lmao\" \n\nYour former companion is rended across space and time. All that remains is their {}, though unobtainable by you. {}".format(slimeoid_data.name, slimeoid_type, "heart" if slimeoid_type == "Slimeoid" else "core", ewcfg.emote_slimeskull)
+        response = "You think upon your past and spiritually connect with {} the {}. With the Ouija® Board in front of you, you spell out the forbidden words: \n\n\"lol\" \"lmao\" \n\nYour former companion is rended across space and time. All that remains is their {}, though unobtainable by you. {}".format(slimeoid_data.name, slimeoid_type, "heart" if slimeoid_type == "Slimeoid" else "core", ewcfg.emote_slimeskull)
         
         # Kill the slimeoid and persist
         slimeoid_data.die()
@@ -750,15 +749,15 @@ def basic_slimeoid_incubation_checks(channel_name, user_data, slimeoid_data):
     else:
         slimeoidtype = "Slimeoid"
 
-    # Check for if player is in the Slimeoid Labs or the Black Pond
-    if channel_name != ewcfg.channel_slimeoidlab and channel_name != ewcfg.channel_blackpond: 
+    # Check for if player is in the Slimeoid Labs or Waffle House
+    if channel_name != ewcfg.channel_slimeoidlab and channel_name != ewcfg.channel_wafflehouse: 
         if slimeoidtype == "Slimeoid":
             return "You must go to the NLACU Laboratories in Brawlden to create a Slimeoid."
         else:
-            return "You must go to the Black Pond in order to conjure a Negaslimeoid."
+            return "You must go to Waffle House in order to conjure a Negaslimeoid."
 
     # checks for correct lifestate in corresponding locations
-    elif channel_name == ewcfg.channel_blackpond and slimeoidtype == "Slimeoid":
+    elif channel_name == ewcfg.channel_wafflehouse and slimeoidtype == "Slimeoid":
         return "You feel as though there is some ancient power here, but the slime coursing through your veins prevents you from using it."
     elif channel_name == ewcfg.channel_slimeoidlab and slimeoidtype == "Negaslimeoid":
         return "Ghosts cannot interact with the NLACU Lab apparati."
