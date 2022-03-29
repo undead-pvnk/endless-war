@@ -255,6 +255,7 @@ async def incubate_negaslimeoid(cmd):
                     slimeoid_data.life_state = ewcfg.slimeoid_state_forming
                     slimeoid_data.level = level
                     slimeoid_data.sltype = ewcfg.sltype_nega
+                    slimeoid_data.hue = ewcfg.hue_id_negative
                     slimeoid_data.id_user = str(user_data.id_user)
                     slimeoid_data.id_server = user_data.id_server
                     
