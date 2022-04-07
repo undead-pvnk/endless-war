@@ -150,6 +150,10 @@ apt_dm_cmd_map = {
     # !setalarm
     ewcfg.cmd_setalarm: aptcmds.set_alarm,
 
+    # Framing commands
+    ewcfg.cmd_frame: aptcmds.frame,
+    ewcfg.cmd_titleframe: aptcmds.frame_title,
+
 }
 if ewcfg.dh_active:
     # !trickortreat

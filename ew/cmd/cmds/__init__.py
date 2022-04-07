@@ -135,6 +135,8 @@ cmd_map = {
     ewcfg.cmd_wiki: cmdcmds.wiki,
     ewcfg.cmd_booru: cmdcmds.booru,
     ewcfg.cmd_bandcamp: cmdcmds.bandcamp,
+    ewcfg.cmd_github: cmdcmds.github,
+    ewcfg.cmd_github_alt1: cmdcmds.github,
     ewcfg.cmd_tutorial: cmdcmds.tutorial,
     ewcfg.cmd_leaderboard: cmdcmds.leaderboard,
     ewcfg.cmd_leaderboard_alt1: cmdcmds.leaderboard,
@@ -246,6 +248,10 @@ apt_dm_cmd_map = {
 
     # !wiki
     ewcfg.cmd_wiki: cmdcmds.wiki,
+
+    # !github
+    ewcfg.cmd_github: cmdcmds.github,
+    ewcfg.cmd_github_alt1: cmdcmds.github,
 
     # !unsalute
     ewcfg.cmd_unsalute: cmdcmds.unsalute,

@@ -1082,8 +1082,10 @@ def get_strat_g(combat_data, in_range, first_turn, active):
     return strat_used, sap_spend
 
 
-# All brain attributes in the game.
+# All brain attributes in the game. 1-7 are for slimeoids, 8-14 for negaslimeoids
 brain_list = [
+    # Slimeoid brains
+
     EwBrain(  # brain 1
         id_brain="a",
         alias=[
@@ -1091,7 +1093,6 @@ brain_list = [
             "type a"
         ],
         str_create="You press a button on the brain console labelled 'A'.\nA cluster of neurons coagulates within your newly-forming Slimeoid. The proto-Slimeoid begins to move, thrashing about as if in frustration.",
-        str_create_nega="You move the planchette to spell \"BRAIN\", then move the planchette to \"A\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. the proto-Negaslimeoid begins to move, thrashing about as if in frustration.",
         str_brain="It is extremely irritable.",
         str_observe="{slimeoid_name} is snarling. You're not sure if it's angry at you, or at the world in general.",
         str_pet="{slimeoid_name} hisses at you.",
@@ -1118,7 +1119,6 @@ brain_list = [
             "type b"
         ],
         str_create="You press a button on the brain console labelled 'B'.\nA cluster of neurons coagulates within your newly-forming Slimeoid. The proto-Slimeoid begins to move about its gestation tank, exploring its surroundings.",
-        str_create_nega="You move the planchette to spell \"BRAIN\", then move the planchette to \"B\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. the proto-Negaslimeoid begins to move about its spawning area, exploring its surroundings.",
         str_brain="It is enthusiastic about almost everything.",
         str_observe="{slimeoid_name} notices you looking at it and seems delighted!",
         str_pet="{slimeoid_name} purrs happily.",
@@ -1144,7 +1144,6 @@ brain_list = [
             "type c"
         ],
         str_create="You press a button on the brain console labelled 'C'.\nA cluster of neurons coagulates within your newly-forming Slimeoid. The proto-Slimeoid draws its congealing body together, as if trying to gather its strength.",
-        str_create_nega="You move the planchette to spell \"BRAIN\", then move the planchette to \"C\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. The proto-Negaslimeoid draws its congealing body together, as if trying to gather its strength.",
         str_brain="It is quiet and withdrawn.",
         str_observe="{slimeoid_name} seems to be resting, possibly deep in thought.",
         str_pet="{slimeoid_name} doesn't react.",
@@ -1170,7 +1169,6 @@ brain_list = [
             "type d"
         ],
         str_create="You press a button on the brain console labelled 'D'.\nA cluster of neurons coagulates within your newly-forming Slimeoid. The proto-Slimeoid lazily turns over in its gestation vat, floating and doing little else.",
-        str_create_nega="You move the planchette to spell \"BRAIN\", then move the planchette to \"D\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. The proto-Negaslimeoid lazily spins in its congealing mass, flopping and doing little else.",
         str_brain="It is usually staring off into space.",
         str_observe="{slimeoid_name} stares off into the distance. Who knows if it's actually looking at anything in particular.",
         str_pet="{slimeoid_name} is startled out of a stupor by your touch.",
@@ -1181,7 +1179,7 @@ brain_list = [
         str_victory="{slimeoid_name} keeps attacking for a moment before realizing it's already won.",
         str_battlecry="{slimeoid_name} is weighing its options! ",
         str_battlecry_weak="{slimeoid_name} is desperately trying to come up with a plan! ",
-        str_movecry="{slimeoid_name} Isn't really feeling this. ",
+        str_movecry="{slimeoid_name} isn't really feeling this. ",
         str_movecry_weak="{slimeoid_name} tries to buy itself some time to think! ",
         str_revive="{slimeoid_name} is exactly where you left it when you died.",
         str_spawn="{slimeoid_name} flops over on the floor and stares up at you. Its gaze wanders around the room for a while before it finally picks itself up to follow you.",
@@ -1196,7 +1194,6 @@ brain_list = [
             "type e"
         ],
         str_create="You press a button on the brain console labelled 'E'.\nA cluster of neurons coagulates within your newly-forming Slimeoid. The proto-Slimeoid starts to sporadically twitch and shiver.",
-        str_create_nega="You move the planchette to spell \"BRAIN\", then move the planchette to \"E\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. The proto-Negaslimeoid starts to sporadically twitch and shiver.",
         str_brain="It is extremely skittish and jumpy.",
         str_observe="{slimeoid_name} is glancing around furtively, seemingly scanning for threats.",
         str_pet="{slimeoid_name} flinches nervously at your touch.",
@@ -1222,7 +1219,6 @@ brain_list = [
             "type f"
         ],
         str_create="You press a button on the brain console labelled 'F'.\nA cluster of neurons coagulates within your newly-forming Slimeoid. The proto-Slimeoid darts to the opposite side of the gestation vat. You're not sure, but you feel like it's watching you.",
-        str_create_nega="You move the planchette to spell \"BRAIN\", then move the planchette to \"F\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. The proto-Negaslimeoid darts away from you. You're not sure, but you feel like it's watching you.",
         str_brain="It acts secretive, as though it's up to something.",
         str_observe="{slimeoid_name} is moving around, apparently searching for... something.",
         str_pet="{slimeoid_name} seems nonplussed, but doesn't object.",
@@ -1248,7 +1244,6 @@ brain_list = [
             "type g"
         ],
         str_create="You press a button on the brain console labelled 'G'.\nA cluster of neurons coagulates within your newly-forming Slimeoid. The proto-Slimeoid begins to flit around the gestation vat, seemingly unsure where to go.",
-        str_create_nega="You move the planchette to spell \"BRAIN\", then move the planchette to \"G\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. The proto-Negaslimeoid begins to flit around its spawning area, seemingly unsure where to go.",
         str_brain="It seems to have no idea what it's doing.",
         str_observe="{slimeoid_name} seems unsure of whether it wants to wander around or just stay put.",
         str_pet="{slimeoid_name} seems confused about how to react.",
@@ -1266,7 +1261,185 @@ brain_list = [
         str_dissolve="{slimeoid_name} is perplexed by the laboratory machinery. Taking advantage of its confusion, you point it towards the Dissolution Vats, and it gormlessly meanders up the ramp and over the edge. You hear a gloopy SPLOOSH sound, then nothing. You approach the vats and peer over the edge, but see no trace of your former companion.\n\n{slimeoid_name} is no more.",
         get_strat=get_strat_g,
         str_abuse="{slimeoid_name} still hasn't caught up to all this chaos, and is lost and confused."
-    )
+    ),
+
+    # Negaslimeoid Brains
+     
+    EwBrain(  # brain 8
+        id_brain="h",
+        alias=[
+            "typeh",
+            "type h"
+        ],
+        str_create="You move the planchette to spell \"BRAIN\", then move the planchette to \"A\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. The proto-Negaslimeoid stares at you maliciously.", 
+        str_brain="It exudes malevolence.",
+        str_observe="{slimeoid_name} is quietly shaking. Poor guy, probably has a fever!",
+        str_pet="{slimeoid_name} bites your arm! Shit!",
+        str_walk="You carefully put a leash around {slimeoid_name}, sure to keep your distance.",
+        str_feed="{slimeoid_name} takes the {food_name} from you calmly! It tosses it on the street, catching the attention of another nearby slimeoid. As the slimeoid eats the {food_name}, {slimeoid_name} dives in.",
+        str_kill="unused",
+        str_death="unused",
+        str_victory="{slimeoid_name} is content standing above their prey.",
+        str_battlecry="{slimeoid_name} takes control of the situation. ",
+        str_battlecry_weak="{slimeoid_name} tries to take control of the situation. ",
+        str_movecry="{slimeoid_name} stares daggers at its prey. ",
+        str_movecry_weak="{slimeoid_name} shakes violently in anger. ",
+        str_revive="unused",
+        str_spawn="{slimeoid_name} picks itself up off the floor, then stares at you with an empty expression. You should probably keep a careful eye on this one.",
+        str_dissolve="unused",
+        get_strat=get_strat_a,
+        str_abuse="{slimeoid_name} takes the blow before charging at you. You barely avoid its gnashing!"
+    ),
+    EwBrain(  # brain 9
+        id_brain="i",
+        alias=[
+            "typei",
+            "type i"
+        ],
+        str_create="You move the planchette to spell \"BRAIN\", then move the planchette to \"B\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. The proto-Negaslimeoid begins muttering self-affirmations.",
+        str_brain="It's admiring itself.",
+        str_observe="{slimeoid_name} notices you looking at it and starts showing off.",
+        str_pet="{slimeoid_name} loves the attention.",
+        str_walk="{slimeoid_name} makes sure to look its best before being leashed.",
+        str_feed="{slimeoid_name} grabs the {food_name} quickly, before carefully eating it in a photogenic way. It makes sure to snap a few photos for its Instagrime.",
+        str_kill="unused",
+        str_death="unused",
+        str_victory="{slimeoid_name} boasts about its victory loudly.",
+        str_battlecry="{slimeoid_name} throws an insult at the opponent! ",
+        str_battlecry_weak="{slimeoid_name} throws slurs at the opponent! Yikes! ",
+        str_movecry="{slimeoid_name} prattles on about their strength! ",
+        str_movecry_weak="{slimeoid_name} prattles on about their superiority! ",
+        str_revive="unused",
+        str_spawn="{slimeoid_name} rolls off the floor. From seemingly nowhere, {slimeoid_name} pulls out a gellphone and sets up a Slime Twitter. It begins to move about the Waffle House, seeking drama.",
+        str_dissolve="unused",
+        get_strat=get_strat_b,
+        str_abuse="{slimeoid_name} screams in terror! Expect a 5-part docuseries on this interaction shortly."
+    ),
+    EwBrain(  # brain 10
+        id_brain="j",
+        alias=[
+            "typej",
+            "type j"
+        ],
+        str_create="You move the planchette to spell \"BRAIN\", then move the planchette to \"C\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. The proto-Negaslimeoid starts to roll around on the floor, looking for a dark space.",
+        str_brain="It is raucous and withdrawn.",
+        str_observe="{slimeoid_name} jeers at passerbys, hissing at couples, women, and attractive men.",
+        str_pet="{slimeoid_name} is wayyyyyyyyy too into this.",
+        str_walk="{slimeoid_name} sniffles as you rope a leash around it. It preens itself, preparing for a trick encounter.",
+        str_feed="{slimeoid_name} absolutely tears through the {food_name}. Not even crumbs remain.",
+        str_kill="unusued",
+        str_death="unused",
+        str_victory="{slimeoid_name} can't bask in the victory.",
+        str_battlecry="{slimeoid_name} starts sending hate mail! ",
+        str_battlecry_weak="{slimeoid_name} starts sending death threats. ",
+        str_movecry="{slimeoid_name} posts on SlimeChan about how loose their enemy is. ",
+        str_movecry_weak="{slimeoid_name} cries in agony! ",
+        str_revive="unused",
+        str_spawn="{slimeoid_name} gets up, walks to the counter, and orders a Wet Waffle. Sitting down, they begin harassing women online while eating the absolutely nasty waffle. It completely ignores your existence.",
+        str_dissolve="unused",
+        get_strat=get_strat_c,
+        str_abuse="{slimeoid_name} gets smacked across the street. Just, like, absolutely launched."
+    ),
+    EwBrain(  # brain 11
+        id_brain="k",
+        alias=[
+            "typek",
+            "type k"
+        ],
+        str_create="You move the planchette to spell \"BRAIN\", then move the planchette to \"D\". \nA cluster of antineurons begins coagulating, but is ripped apart by the proto-Negaslimeoid's developing body. Oh shit, dude! You're pretty sure there's now no brain at all within the proto-Negaslimeoid.",
+        str_brain="Its only actions are autonomous body processes.",
+        str_observe="{slimeoid_name} stands unmoving",
+        str_pet="{slimeoid_name} is unreactive to your touch.",
+        str_walk="{slimeoid_name} stands as you leash it. You pull it along.",
+        str_feed="You have to shove the {food_name} into {slimeoid_name}'s mouth for it to begin chewing. It makes no noise as it swallows.",
+        str_kill="unused",
+        str_death="unused",
+        str_victory="{slimeoid_name} stands unmoving.",
+        str_battlecry="{slimeoid_name} stands unmoving. ",
+        str_battlecry_weak="{slimeoid_name} slouches unmoving. ",
+        str_movecry="{slimeoid_name} moves autonomously. ",
+        str_movecry_weak="{slimeoid_name} crawls autonomously ",
+        str_revive="unused",
+        str_spawn="{slimeoid_name} stands up. It exists in the Waffle House, but within its shell is nothing. It follows your every command. ",
+        str_dissolve="unused",
+        get_strat=get_strat_d,
+        str_abuse="{slimeoid_name} is hit, but has no reaction."
+    ),
+    EwBrain(  # brain 12
+        id_brain="l",
+        alias=[
+            "typel",
+            "type l"
+        ],
+        str_create="You move the planchette to spell \"BRAIN\", then move the planchette to \"E\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. But a Waffle House worker notices your conjuration, and tosses a burnt waffle at the proto-Negaslimeoid! It painfully smacks the side of the undulating proto-Negaslimeoid, and the entire anticreature recoils.",
+        str_brain="It's terrified of others.",
+        str_observe="{slimeoid_name} is hiding from everyone around it.",
+        str_pet="{slimeoid_name} recoils from your touch.",
+        str_walk="{slimeoid_name} runs from your leash, before dejectedly being backed into a corner. It soullessly follows along during the walk.",
+        str_feed="{slimeoid_name} backs up anxiously as you reach out with the {food_name} in your hand. You just toss the {food_name} at {slimeoid_name}, slamming it into its side. It cries in pain, before eating the food.",
+        str_kill="unused",
+        str_death="unused",
+        str_victory="{slimeoid_name} stands still, unhappy.",
+        str_battlecry="{slimeoid_name} screams incredibly loudly. ",
+        str_battlecry_weak="{slimeoid_name} screaches incredibly loudly. ",
+        str_movecry="{slimeoid_name} skitters away! ",
+        str_movecry_weak="{slimeoid_name} skitters away quietly. ",
+        str_revive="unused",
+        str_spawn="{slimeoid_name}'s eyes dart frantically around the room. It sees you and carefully approaches, before the Waffle House worker comes back! She smacks the shit out of {slimeoid_name} with a spatula, before running to the back to grab some fryer grease. It'd probably be best if you got out of here.",
+        str_dissolve="unused",
+        get_strat=get_strat_e,
+        str_abuse="{slimeoid_name} takes the hit, crying."
+    ),
+    EwBrain(  # brain 13
+        id_brain="m",
+        alias=[
+            "typem",
+            "type m"
+        ],
+        str_create="You move the planchette to spell \"BRAIN\", then move the planchette to \"F\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. The proto-Negaslimeoid looks up towards you from the floor, watching your every move.",
+        str_brain="It's silently observing all those around it.",
+        str_observe="You go to look at {slimeoid_name}, but it was already staring at you. Unblinking.",
+        str_pet="{slimeoid_name} looks at your hand. You're a bit too unsettled to actually pet it.",
+        str_walk="{slimeoid_name} gets put on a leash, and moves along with you, staring at its surroundings.",
+        str_feed="{slimeoid_name} only looks at the {food_name}. You mimic eating the food, and eventually {slimeoid_name} begins to slowly peck at it.",
+        str_kill="unused",
+        str_death="unused",
+        str_victory="{slimeoid_name} looks at the remains of its opponent, unmoving.",
+        str_battlecry="{slimeoid_name} lets out a quiet coo. ",
+        str_battlecry_weak="{slimeoid_name} sheds single tear. ",
+        str_movecry="{slimeoid_name} tactically stays within range!. ",
+        str_movecry_weak="{slimeoid_name} tries to tactically stay within range. ",
+        str_revive="unused",
+        str_spawn="{slimeoid_name} carefully picks itself up, then looks at you. It looks out the blackened windows of Waffle House, chittering at its reflection. It doesn't seem to like this place.",
+        str_dissolve="unused",
+        get_strat=get_strat_f,
+        str_abuse="{slimeoid_name} saw your abuse coming, but isn't fast enough to get beat up."
+    ),
+    EwBrain(  # brain 14
+        id_brain="n",
+        alias=[
+            "typen",
+            "type n"
+        ],
+        str_create="You move the planchette to spell \"BRAIN\", then move the planchette to \"G\". \nA cluster of antineurons coagulates within your newly-forming Negaslimeoid. The proto-Negaslimeoid begins muttering incomprehensibly.",
+        str_brain="It's muttering  ̷̢̧̛̞̮͕̫͂̀͐̅̀̏̓̏̽̅͋̈́̌̃̽͘͘̚͝͠͝▐̷̨̢̲͙̦̤̮̞͈̠̬͖̀̈̂̅͗̑̓͝▄̸̡̧̧̛̱͓̜͍͎̹̟̣̰̞̤̹̝̹̼̘̺̳̈́̔́͑͐̑͋͛̆̄̅̍͘͝█̷̧̨̛͉͚̟͍̙͓̻͖̝̗̅́͊͜ ̶̡̗̺̦͉̲̝̼͗͗█̶̠̗͔͙͖̺̣̑̃͌̆̑̒͂͗̾̒̋̔͛̚̕ ̴̢̨̰̝͇̘͒́̔̀̉͆̇͝▮̸̧̛̛̜̱͇̰͙͉̩̭̘̠̞̹̜̳̤͖̯͚̳̇̃̄̇̏̐̈́͒͂͋̑͊̎͆͠⯊̶̡̛̘͕͈̀͆̅̍͂͌͠  to itself.",
+        str_observe="{slimeoid_name} is seeking children to torment, trying to incur upon them nightmares.",
+        str_pet="In exchange for the pets, {slimeoid_name} mutters ░̸̢̡̡̢̻̯̱̗̤͔͈̯̮̞͙̱̹͔̹͍̱̜͖̱̭̰̖͇̦̝̣̝̓̒̓̈́͒̈́̍̿́͂̊́̏̏̂͋̑̍͒̓̋̐̌̀̃̇̾͊͘͜͝▄̵̧̨̛͚̟͉̬͚̩̹̝̪̜͉͕͙͔̭͇̻̘̰͎̠̳̦̫̥̤̘̆͋̀̌̾͑̓̉̓̆͗̀̔̆́͌̐͘̕͜͜͠͝▀̵̨̗̟̩̺͗͒͑̂͂̍͑͌̄͐̿̀͐̽̋̒̊̎̂͌̂̓̚͠͝▄̵̧̡̢͕̱͎̝̭̹̖͙̺͍̤͎̮͈͖̟͎̤̞͔̖͇͔͙̐̀͆̈́̓̽̋͑͊̂͐̎͛̅̏́̏̃͒͗̂͐͊͒͒́̓̋͛̀̃͂̓̾̓̐͑̅̀̅̐͆̒̆͘͝ͅ░̴̨̢̢̡̛̘̘̜͚̩͚̠̦͔̜̘̙͍̻̥͖̱͓̞͓̫̩͚̥̰̫̪̩̰̙̟͔̰͚͍̆̏͐̆̋̐̇͒͊̌͂̈́͂̓͊̽́̌̅͋͗̍̒̀͋̍͆̈́̋̃̏̂́͂̒̐̈̓̓̿͋̕͘͜͝͝▀̶̧̢̧̡͚̲̳͓̥̱̤̝̱͓̼͇̟͓͓̬̮̮̼̱͕͙̖̙͍͉̲͔̘͔̉̐͊̇̿̌̂̋̀̾̇́̿̔͛̓͛͐͗́̈́̓̕̚̕͜͜͝͝͝ͅ█̶̡̨̧̟̹̮̭̪͈͙̣̙̖͉͍̱̭͙̭̪̣͇̱͎̺͆̌̏̎̆̽́͒̇́̽̉̊͂̿̈́̔͆̚͝░̴̢̨̛͉̖̯͇͓̭̘͈̮̹̳̼͔̦̟̻̦̥̼̬̯͚̜̭̯͉̠̤̦̩̫̿̓̚͝ͅͅͅͅ█̴̬̬̘͙̪̽̎̂̓̋̓̈́́̈́̈́̏̄̑̄̆̈́̑́̾̕̚͝͠͠͠▀̶̧̢̢̢̠̟̣̖̼̲̞̙̫͔̫̯̪͈͖̙͔͕̈́͒͌͋͛̓̔̒̈̾̈̐̍̀̋̓̋̃̿̈̀̏̀̀̐͗͑̑͑̊̎̇͌̈́͋̕͘͝͝ͅ▄̵̧̧̢̢̧̨̧̡̜͔̱̙̞̱̙̠͚̱͙͈̹͓̰̥͎̗̲̹̪͎̳̯̜̯̣̟̜̖̳̤̙̤̽̅̽̀̓̕̕͜ͅ░̴̡̢̢̡̡̛̲͙͖͍͈̭̣̬̰͙̩͋̏̃̑̎̉͊̊̎̌̍̈́̂͐́͛́͆̿̇͊̏͌͋͛̋̕͘͜͜͠͝͝█̵̢̢̢̡͎̲̟͔͓̥̘̙̠̠͖̝̭͇̮̟̙̗̳̳̞̗̜͐͑́̃͂͂̒̋͑̕͘̚͜͠͝ͅͅ  in your ear. It's strangely comforting.",
+        str_walk="Once leashed, {slimeoid_name} follows alongside you slowly. You feel like you're walking mor̶e than just it.",
+        str_feed="{slimeoid_name} begins eating the {food_name} without much instruction. With each bite, it sputters out ඞ̵̨̧̥̫͕̰͉͖̥̈̏̀̽̆░̸͖͉̮̼͎̜̦̻͖̓̍̐̿̒̄̃͜ͅ░̵̵̧̢̯̲͇͕̤̩͇̺̳̲̫̺̺̽̓̈́̃̏̏͜͝▒̸̡̡̢͔̲̤̖̮̺̖̘̄̓̀͠░̴̺̥̥͉̩̞͊̀͜ . Kinda spooky.",
+        str_kill="ǘ̴͔͉̋n̸̝̈́̊u̷̧̱̎s̸̹̎e̴̮͝d̴̠̬̎",
+        str_death="ǘ̴͔͉̋n̸̝̈́̊u̷̧̱̎s̸̹̎e̴̮͝d̴̠̬̎",
+        str_victory="{slimeoid_name} steals the losing slimeoid's soul. Not like it's worth anything, though.",
+        str_battlecry="{slimeoid_name} screams ·̵̳̄̈͊͝▄̴̼͙̯͚̓̽̚͝▄̷̢̱͈̳̠̩͉͌͜▄̸̛͙̣̙͕̇͌̐͒̚▄̴̥̘̗̺̍̅̍̓̌̕ ̴̢̛̲̣̻́̊̽̔ ̸̡̡̰̘̮̿̉̅̃͠͠▪̷̨̺̲̞̳̳͗̇̓̊̄̕͝ ̷͇̫͉̉̎ ̶̰̏̕▄̴̹̺͕̱̠͒̓̋ͅ▄̸͔̾̅̔̂̌͘̕▄̵̮̣̩̫̓͆̏̈͌̿ ̷͔̯̏̓̈́̓͐̋̿͌.̵̷͙̻͇̣̩̼̟͐̿́̎̿͋͆̎█̶͎̜͇͓͗͆͐█̴͈̖̰̟̦̻̈́͗̄̓͂͗̊͜ͅ▪̸͓̹̭̖̰͚̎̑̏̌̎͝ ̶̜̰̲̹̰͆̈̍̈́ͅ!!",
+        str_battlecry_weak="{slimeoid_name} roars  ̴̨̘̻̳͙͖̼͇̺̜̘͖̠̅̓̃̂̓̉̋̀͗̋̌̕͘̚͝͝|̷͉̖̬̠̱̣̳̣̗̗̗̎̾̌̑̃̊̈́͋̏͗̈́͗͗͑́̈́͌̓̃̉͝͝ͅͅ ̸̛͕̭͒́͛̇́́́̋̾̂͑̾̓̈́̂̈̑̂̿̏͊̄͌̆̉̾̓̽̄̋͜͝/̷̧̨̛̭̳̥̰̥͇͙͇̗̠̗̱̥̫̱̫̙͔̥̦͎͓̩̬̯̻̥͈͈͔̟̮͙͉́̍̂̊̀̌͋̀̈̈͆̂̇͒͆́̆̋̈́̕͠ͅͅ ̴̧̡̧̛̛̼̣̹̳̫̺̘̳͕͎̤̱͈͓̬̮̟͓͎̟̭̭̹͚̱̪̣̞̜͂́̄́̏̓̒́͊͌̍̿́́̌̈́͆͊̉̋͘͝ͅͅ_̴̡̨̧̡̡̡̛͓̜̙̞̻̗̼̦̦͔̱̪͈̼͖̭͕̗̗̘̱̗͕͈̰͔̑̃̂̈́͒̍͊̒̾͊̃̒͐́͑̑̄̓̏̆̏͗̏̑̑̏͒͐̒̂̀̂̽̈́͊̚͜͝͝͠͝░̷̛̩̹͈̪͉̹̂̔̽̀̑̇̽͌̅̒̌̍͂͂̏͆̎͆̾͐͑̊̃̾͘̕̚͝͝͠▒̵̡̧̨̡̡̜͚̟̗̯̹̙͔̻̖̥̳͓͔̰̲̥̱̥̳̖͈̻͔̭̟͙̙̺̙̙͙͆̀̇̒̄̒͐̊̎̀̀̌̈́͌̔̋̽͘͠͠▓̵̨̧͓͕̮̤̩̥̞͎͚͚̲͙͗͒̎̓́͑̑̓̓͆̽̔͂̔̿̒̏̂́̾̀́̐̽͐̇͂̄̄͂̈́̈́̀́̇̈́͋̃̚͠͝░̴̧̡̢̟͎͓͇͉̜̰̳͇̮͈͍̟͓̩̗͔̪̜̊͆̀̈́̐̒̊̎̄̈́͂̌̇̆̾́̂̊͌̄̒̈̓̉̽̒̎̉͋́̂͘͜͜͠͠͝▒̸̢̞͔̳͕͙̪̫̬̣̙͔͓̩̟̭̩̯͇͇̖̱̗̬͉̲͗͐̓̾̽͛́͗̄̃̕͠ !",
+        str_movecry="{slimeoid_name} communes before making a move. ",
+        str_movecry_weak="{slimeoid_name} tries to contact ▀̶̴̶̴̸̶̵̷̸̸̵̶̷̴̷̴̴̵̷̴̶̴̷̶̶̸̶̸̶̴̷̵̴̴̵̴̴̴̶̵̸̴̸̴̷̷̸̵̶̶̶̶̷̶̷̵̸̴̸̶̷̷̷̸̶̵̵̵̵̷̷̷̸̴̶̷̵̴̶̶̵̡̧̡̢̨̨̧̨̡̨̢̢̨̢̧̡̧̧̧̧̡̡̧̨̢̢̢̧̡̢̧̡̨̨̧̡̢̨̡̢̧̨̧̧̧̧̨̨̧̡̛̛̛̛̛̛̛̛̛̛̛̛̛̬̞̪͇͉̭̥͕͓̥̞͍̦̼̩̞̖̠̲͖̮͉̞̞̹͕͔̮̱̰͙̦̜͇̼̜̜͚͈̝͈̻͙͚̜̖̜̦̩̮͉̦͎̜̭̜̙̼̫̺̦̺̳̣̳̣͕̘̗̬͖̘̭̦͙̼̖͖͍̦͇̹̤͈͇̖̩̗͚̮̰͉̲͎̼͚͉̯̟̠͓̮̻̳̬͔̼̗̱͕̪̟̞̱̖͚̦͍̞̤̯̞̦̜̤̻̠͔̬̹̗̼̜̖̳͍̱̘̺̬͖̫̻̻͚̼̺͎̱̙͚͇̣̳̭͔̦͙͙̱̯̼͉̳͓̖̭̘̹̹̯͖̯͍̬̭̯͇̟͔̲̼̞̙̬̝͙̣͓̖͈̩̤͇͈̱͓̭̻̦͚̤̤̘̦̰̟͇͈̮̫͔͕͖̱͍͚̱͎̟̪̖͍̼̺̟̤̻̼̙͕̮̠̘͔͖̜͉̪͖͙̩̗̞̩̣̟̞͔̟͖̬͓̻͈͎̬̠̫͓̗͔̩͎̬͈̰̠̲̘̘͇̭̹̮̠͕̰̠̱͕̜̘̮̳̣̤̪͈͎͚͉͎̝͈͚͚̫͉̳̼̱͚͇̠̪̫̹̙̫̬̭͓͔̣͍̰͇̞̼̠̲͉͎͇͓̟͉̫̪̭̠͖̫͙̺̳͕͕̬̱̘͎̺͕͖̥̠̝̥̠̣͔̞̩̙̙̼͓̥̻̤̯̪̘̟̜̭̠̝̣̩̮̮̣̞̼̹̙͕̞̹̭̻̱̙̝͈͖͙̦͚͕͉̯͚͓̳̼̮̺͇̺̭͎̥͎̝̩̰̦̤̱͙͖͓̱̯̯̦̟͚̥̖̳̻͖̝̘̬̟̘̘̲̮̞̝̪̱̪̺͔̪̝̱̦͕̣̤̜̰̬̺̯̪̜̣̮̰͚͉̲̘͙̗̞͚̘̗͇̳͚̫̩͈̭̖͉̱͓̙͕͙̙͇̘̩̺̣͔̺͖̗̼̱̤̜̟̠͎͎͙̱͙̖̪̱̟͎̗̥̻̝̜̦͕̗̥̙̹̻́̓̇̒̍̍͗̀͊͛̉̀̆̑͒͗̉̾̈́̏͆̾̒̀̂͛̾́͐͆̽̎̾́͑͂̊̑͑͒̓͊̀̏͊͐̊̈́̈̂͊̑̑̀̔͆͐̉̑͌̃̄͐͂̒̋̏̓̑̀͂̐͂̄̆́̋̒̅͐̒̍̐̎̈̾̃̐̇̈́̑͛̋́̈́̋̀̏̒̈̏̀̅͒͑̐́̑͌͆͛̀́̾̃̆̐̄͊͋̌̾͋͂͑̾̎̄͋́́͛͋̒́̊̑̅̋̌͌͒́̿͌͌̆̈́́̔̉̄̉̐̉̊̎̅̅̓̀͐̆͑̍̽̋͛̽̾͆͛͂̄͒͌͛̃̃̾͒̽͑̆̇͌̊̂̈́͗̏͊̽̾̍̀͒̍͋̆̈́́̄͋͊̊͐̌͛̈̐̇̅̊́͊̅̂̇̏̏̉̀̑̎͑̿̅̈̎̆̄͂͆̍̀̅̄͗͋͗͛̌̀̿̾̑͒͂͂̃̋͒͊̿́̅̓̈́̈́̿̏̓̔͐̾̀͌̾̇͂̃͌͆̓͋̒̽͋́̽̈̋̈́͛̎̓́́̋̒̾̿̒̋̑͊̍͊̅̓̏̈́̄̍̑̽́̊̈́̄̆́́̃̔̀̓͒͐͆͗̔̃͒̇̈́̏͌̓͋̿̌̍̀̊͋́͗̏̐͊̀̿̍̀̄̐̃͐̿̆̋̌͂́̃̋̏̈́̃͗͗̈́̂̉̀̓̿͋͊͗͋̈́̌̈̈́̀̿̈̐̓͂̆̄̓͂̐̔̐͊̆̇̃͒͐͆͋̀͐̂͒̉̐̈́̃̂̉̅̏̾͆͛̿̔̆̈́̄̐̒͒̔̏͒̊͂̅̍̏̓̊̂̂̈́̃̒̔̅̌̉̋̎̿̅̓̐̋́̆͂̋̀̍̉̓̏̄͗͒͑́̎̐̓́̽̈̃̈́͐̃̊̊̿̅̐̿́̾̀̈́͐̌̏̾̃̾̊̎̋͌͑̿̿͊̿͊̄̇̄̿̑̏̀͑̀̽̊̊͆͆̆̉͋̏̏͌̽͒͆̀͆̃̔̅̃̈́̐̂̈͋̅͋̒͌̐̈́͑̒͊̃̒̾̃̓̓̽̀̄̓̆̓̓̄͆̐́̒̏̿̕̕̚̕̕̕̚͘̚̕̕͘̕͘̕̚͘̕̕̚͘̕̚̚̕̚̕̕̕̕̕͘͜͜͜͜͜͜͜͜͜͜͜͜͜͝͠͝͝͠͝͝͝͝͝͝͝͠͠͠͠͠͝͝͝͠͠͝͝͝͝͠͝͝͠͠͝͝͝͝͝͝͝͝͠͝͝͠͝͠͝͝͠ͅͅͅͅͅͅͅͅͅͅͅͅͅͅ▒̶̸̴̴̸̵̵̷̷̶̷̸̵̷̵̵̶̴̴̵̸̸̸̷̴̵̶̷̵̶̴̴̵̸̴̶̸̴̵̸̵̷̸̴̵̵̸̴̷̴̴̸̢̢̨̢̧̧̨̧̨̨̢̧̢̢̧̡̨̢̧̧̡̢̨̢̨̧̢̡̡̡̨̨̧̡̡̢̨̢̡̧̨̢̨̧̧̛̛̛̛̛̛̛̛̛̹̹͖̟̩̹̰̮̺̙͎̬̰͇͍͇͍̠̗̜̱͉̥̹̰̞͙̜̺̘̤͉̗̙̜̼͓̬̻̲̗̭͎̭̦̠̖̜̫̻̪̠͔͍̼̤̠͎͇̗͉̺͖͚̞̮̻̼͔͔̬͎̤͈̥̠̘̬̜̗̬̱͓̺͈̻̹̼̹̘͈͎̺͍̬̠̳̙̩͕̫̝̜͕͚̮̲͉̳̹̟̣̯̥̹̯̫̙͍̜̙̟͚̦͈̭̼̲͚̺͕͚̪͖̺̖̱̰͙̰͍͉̬͍͎͓̘͍̻̘̤̩̩̳̝͚͉̲̺̬͕̗̳̯̬̠̻͙̫̟͎̖̫̣̜̗̭̥̞͕̭̖͈̠̼̟̬͓͔̠̣̞̩̳͙̼͚̝̱̺̰̬͖̙̜͚̤̦̯̭̣̖̮̘͓̣̝̱̟̹͖̮̹͎͈̥͈̺̞̼̻͓͚͖̗̹̻̜̠̭̰̫͔̗̲͙̺̗̙̺̙̟̠̣̘̮̺̪̪̻̱̗̩̪͇͎͚̱͕͇̦̹̱͚͉̙̹̺͍̠̞̪̳͔̮̣͕͖̗̱̹͖̩͎̯̬̦̘̗͍͈͓̦̠̟̳̙̙̲̥͉̣̘̠̩̱̠͇̭͉̱̻̣̘̘̥̩̯̠͔͈̣̝̝̦̳͈̰͉̰͈̖̺̤̪̤̝̺̙͇͇͍̹̘͉̱̰̖̫̺͖̟̆̿̐̆̅̽̆̏̋͛̀̃͑̈́̿͌̑́̃̎̓̄͊̿̐̈́̔̊̃͑͆͆͂̈̌̊̎͋̋́̓͒̑̍̈̔̔̊̓̉̌̅̍̐͂͗̈́͋̄̈́̊̾͊̀̾̀̄̉̄͒̈́͗̀̾̉̈́́̍̈́͐̌̆̇̀̾̈́́̀̍̔̈̿̽͌̎̇̀͊͂̏͑̾͐̊͑̈́̄͌̈̽̒̎͑͐̋͑̊̓̉̋͊̎̓͒̓̐̒̍͆̃̊̈́̍̇̈́̒͐͋͛̽̉̋̉͗̇͑̅̒͐̿̊́͛̋͂̈́̑̓͑̍̾͆̆̀̒̎̈́̐̿̉̃̔̆͂͑͆̇͑͛͗͌̿̄̎͊̌̂̏͆̐̄̐͛͒̈̊͋̎̽́̂̈́̽̑͒̆̆̉̔̏͊̑̔͊̄̿̄̈́̽̿̅̽́̈́̈́͂͒͛͑̐͐̑̇̈̃͛̀́̉͌̈́̍̊͒̂͗̃̏̆͆́̌̆̒̈́̽̑̀̍̿̀̉̔͋͊̌̒͒̑̀̇̌̓͑̊̃̿͌͗͊̊͑́̀̓̿̓̅̄̎͗̅̒̆̓̉͊̾͑̀͛͆̍̌̄̈́͒̈́̕̕̕̚̕͘̚͘̕̚̕̚̕̚͘͜͜͜͜͜͜͜͜͜͜͝͝͝͝͝͝͝͝͝͠͝͝͠͝͝͠͠͝͝ͅͅͅͅͅͅͅͅ░̴̸̴̴̶̴̵̵̷̴̷̶̷̷̵̵̴̷̷̸̶̵̴̵̵̸̶̵̵̶̸̶̴̸̵̴̶̸̴̷̸̸̶̵̸̴̴̸̢̨̨̧̨̡̡̡̡̢̧̢̨̧̡̨̢̢̧̨̧̧̨̧̢̡̧̧̢̛̛̛̛̛̛̛̼̟͉̗̣͍̹̝͎̻̫̜̼̺̥͔̟̳͈̥͕̗̟̯̼̗̫̩͚̹̖͙͉̥̦̳̫͓͙̺̦͙͔͓͉̜̼͍͓̳͙͓̝͍̹̬̖̻̖̻͔̻̭͕͈̦̪͔̖̞͕̹̝͉͇͔̻͖͓̥̮̭̪̪̭̲͈̻͕̻̝̳͙̖̠̮̮̪̖͇̣̦͙̻̩̖̫̬̦̭̗̠͔̯̦̜͍͙̼̖̪̠͔͈͓͔͇̙͕̳̭̫̤̣͕͍̯̰̻͇̝͎͎̼̰͔͙͖͖̩̪͍̼̦̳͕͔͓͚̻̫̤̜̗͓̦̻̬͖̠̣̤̣̬̜̬͇̰̭̗͉͕̖̠̜̻̫͇̥̫͔͔̪̘̣̳͈͔͈̬̰̣̠̜̱̝̮̝̬͈̼̦̣͈͍̝̺͓̘͚̣̙͍̪̯̣̭̬͈̫̗͉͎̪̞̦̻̯̣͇̪̮͚͔̺͇͈͙̹̩̞̣̟̼̯͇͇̬̗̳͙̫̠̼̠̺͎̟͍̤̟͈͔̗̗̹̳͈͇̥͓̹̰̻͎͓͓̻̟̺̘̤̰̙̟̝͎͓̻̰̗̤̮̤̝̻̼͍̙̗̙̗̜͚̳͔̰̤̬͖͕̬̗͓͓͕̹͕͈͉͈̬̲̩͙̭̣̰̪̬͙͈̭̖̱̤̀̆́́̅̆͒̿̓͑͊̓̈́͗̄̆̾̓́̒̎̅͊͗͛̅̐̓̉̄̔̃̎̄͆͊̍̒͊͊̆̀̆̊̐́͑̀́̓́̋́̿̀͆͋͗̀́̈̃̈́́̿͑͆̊̆͐̅̂̍̔̓́̈̈̑̈́̀̉̅͂͒͂͗̈́̊̅̒̊̈͛̂̀̋̔͑̄̀̆͑́̍͆̎͒̈͂̈́͗͆̐̆̈̒̄͊̃͒̀̈́̆̆̐̒͂͒͑͊̄̈͌̌̂̈́̇̈̍̒̽̅͑̔́̌̓̏͐̂̿͐̒̍̎͛̊́̆̒͋́̂̌͒̊͂̈͗́͆̑̂͋͗̃͗̇̋̓̂͑̀̀̍̐̃́͂͌̏̓̍̐̆̔͂̍͛͋̂̉̌͗̓̀̈̂̂̾̋͑̔̀̾͑͂̅̿̂̀̑̃̍̉͑͛̒̈́͋͛̊͂̎̈́͑̅́̏͊͐̽̄́̎̇̀͒͋͊͊̏̊̌̒̄͆̽͂̌̉̈̈́̅̃̐̂͒͑̔̓̑̀́̒̎̐̀̓̾͐̌̎̋̎͒͛̿͐͊̒̍̀́̍͋̉͗̓̌̀͌̈́͐̉̀̾̔̽́̓̋͊̔̽͂̀́̓͛̇̈́̉̈́̾̈́̎̐̆̾̓̇́̔̎́̇̈́̆̅̓͗̂̌̄̎̈́͐̾̀̂̽̕͘̚̚̚͘͘͘͘͘̕̚̚̚̚̕͘̕̕̕̚͘̚̕̚̚̕͜͜͜͜͜͜͜͝͠͝͠͝͝͝͝͠͠͝͝͠͠͠͝͝͝͝͠͝͝͝͝͠͠ͅͅͅͅͅͅͅͅͅͅͅͅͅ▀̸̷̵̸̶̸̸̸̴̸̸̶̶̴̶̷̷̵̶̵̵̸̴̴̷̷̶̴̸̸̵̴̷̶̶̷̶̵̶̶̶̶̵̶̵̴̴̸̶̸̷̸̴̵̷̵̵̸̶̵̴̸̷̸̶̸̴̶̴̸̡̧̡̡̡̧̢̧̧̢̧̢̨̨̢̡̡̧̨̧̡̢̡̨̡̨̡̨̧̨̧̨̧̨̨̢̨̧̨̧̧̨̧̢̢̢̢̛̛̛̛̛̛̛̛̛̛̛̛̛̛̺̟͇͙͓̫̝̩͍̘̠̭̤͔̪̦̖͕̬̼̤̪̱̦͙̙̦̞̝͇̥̻̣̣͔͇͕̖͖̼̺̱͙̜̱̹̱̮̝̮̥͍̮͇̠͈̗̦̼̲͈͇̫̘̝̯͖͙̘͍͇̪̰̝̠̳̯̩̻͔̥̖̻͓̤̯̞̦͔̼̼͎͍͎̖̩͕̹͔̗͍̥̼̝̙͙̺̩̱͎̫̬̟̼͚͖̱̟̖̼̰̥͈̥͎̠͍̣̠͎̦̮͓͚̺̤͎͓̙̯̪͚̮͓͉̖̰̫̞̣̯̬̜̹̭̟̼̠̠̳̝̤̖̦̻̹̞͉̫͓̼̮̝͚̹̞̘͉̦͔͔̱̞͎̩͇͍̯̟̠̣͕͈̬̞͇͕̺̝͈͕͕͉͚̹͇͈̯͚͉̱̗͇͚̜̦̭͎̲̟͓̱̞͙̯̗̭̜̣̙̰̼̪͉̦͉͈̦͎͓̺̦̪̪̹̤̞̺͔͈̙͍̰̜͚͓̮̺̼͔̘̥͓̥̱̲̱̖̱͉͈̱̙̭͖̖̥̘̻͖̰̩͉̲̤̩͕̝͔̞͔͕̹̫̣̯̣̩̭̫͇̗̠̦͙̰̺̞̯̙͈̭̮̦͍̗̹̝͍͚̫͍̼̝̰̲̱͕̤̲̹̱͍̩̰͎̻̻̖̙͉̹͉͉̜̳̩͚͖͚͓͔̞̫̟͙̬̫̼̞̖̖̻͙̖͍̙̳̠̰̬͈͍̗͎̞̤̫̩̱̪͓͇̠̮̝͎͔̯͇̬̝̪͖̫̝̻͉̘͙̟̩̫̮̠͎̳̟͔̯̺̠̼̫̣̰̮̼͚̝̞͔̩̜̺̞͈̺͇̪̱̬̠͎͍̩̗̬͎͎̥̩͉̖̬̣̝̥̻͎͙̞͔͂͗͛̓̍̎͑̋͆̍̽̓̋̀͋̋̐̈́̌͋́̿͆̔̎̽̊̊̈́̏̂̉̔̈́̃̾͋͛́̽͋̀̔̈́̉̇͆̃̌̂̀͂̀͛̈̒͋͑̍̓̋͗̿̉̄̄̇̃̾̃͐̀̎̽͒́̒̇̄͌͋͌͋̃̋̋͗̇͆͆̌͂͐͋̆̾͐̄͌̉̆̃̎̋͂̑̈̓̀́̊́̄̈́̅̍̐̐̑̆͛̆̋͐̌͂̐͆͌͋̌̀̄͑̑̑͋̾̏̈́̈́̀̑͌̌͒̽̽̈̓̃͛̉̑̒̌̀͐̀̇͂͗͂̿̏̎̎̆́͌̔͗̋̅́̀͒͛͆͆̇͗̏̿́̋̽̌͌͛́́̏̄̈̈́̄͛̑̍̏̊̈́͌͑͂͊͌̋͊̎̇̈̆̍̓̍̈́̈́̀͗̎̈́̋̉̅͊̏̃̿͊̈́͑̆̉̂̉̈́̀͐͂͒͊̈́̋̇̅̓͋̋̈́̏̓̒͊̂̇̔̑͆͌̏̈́̍̏͆̀͆̂̍̈͆̈́̊̇̿̆̄̂́̊̓̇̈́̓̄̈́͗͆̍̔̐̀̄́̇͑͋̅͐̒̒̐͆̽͊͌͗͂́̿͆̃́͆́̒̇̇̉̋̽̉̿̾̇̓̈́͐́̊̈́̓͌́͗̎̂̍̆̾͊̊̃̈́̽̒̑͌̀̊̊̏̃̀̄͒̊̋͐̍̿̽̐̈́̅̆̔̆́͑̂̈́̋̈́͂̽͋̈͛̃̽̀̈́͐̆̄͑͂̌̀̆͆̊̓̆́͆͆̿̉̄͌̓̃̓̓͌͋̓́͂̇͗̓͑͛̀͑̽̓̍̾̇̀̈́́̋̾̊͊̂͌͋̈́̍̄̏̍͌͆̆̽̀̈́̆̇̌̈͑̄̆̍̌̒̄̀͂̍̓̽̅́́̊̽̎̀́̄̀̆̇̉͌͆̂́̆̀̎̐̉͌͋̄̒̈́̔͒̇̅̂̓̚͘̕̚͘̕̚̕̕̚͘͘͘̚̚͘̕̕͘͘̚̕̕̚̚͘͘̕̕͘͘͘͘͘̚̕̕̕͜͜͜͜͜͜͜͜͜͜͜͜͜͜͜͝͠͝͝͠͝͠͝͠͝͠͝͠͝͝͝͝͠͠͠͝͝͠͠͝͝͠͝͠͠͠͝͝͝͠͠͝͝͝͠͝͝͝͝͠ͅͅͅͅͅͅͅͅͅͅͅͅͅͅͅͅͅͅͅ▒̸̸̷̷̴̷̵̴̷̵̵̶̵̵̸̷̶̶̷̶̸̸̶̴̷̷̸̸̴̵̴̶̴̷̸̴̷̶̵̵̶̴̸̶̶̷̴̴̸̵̸̸̧̢̢̢̢̢̧̢̧̡̡̧̡̢̨̡̡̡̧̧̢̨̧̧̨̢̡̢̨̢̨̢̢̡̨̡̢̨̢̨̡̧̨̡̨̛̛̛̛̛̛̛̛̛̛̛̛̰̟͍̰͚̞̗̜͇̙͓͇͚̖̥̝̤͈͓͚̩̣͍͕̩̠̞͔̟͍̦̻͇̼̳̺̫̜̰̮̠̞̞̞̩̲͖̹̰̼̖̞̼̲̮̬̯͚̳͈̼̞̟̰̜͇͓͈̳̼̭̜̬͇͚̼̹͉̮̱̯͎̺͍̲̪̹͇̲̥̯͍̤̳̝͖͔̲͕̬̩̪̦͚̲̤̣̭͈͚̘͎͚̭͔̝̜͉͕̙͔͙̫̘͖̙̤̼̫̯͉̺̻͍̱̫̞͔̼̘̝͍̘͈̟͉͖̱̦̰̰̮̭̯̖̠͉͓͉͙͕̫̲̭̜̮̤̹̫̻͇̱̦͙̲̥̬͍̞͉̮̫̟̼̝͙̘͙̙̺̺͚̰̥̠͍̺͇̯̺̯̖̲̦̻͎̻̞͉̤͕̗̠͕̦̠̗͎̹̞͔̫̱̠̦͓̫͈͕̫̮̦̙̘̙̹̤͓̜͙͓͖̗̲̦̜̼̭̞͎͇̞̤̭̞̘͇̦̻̯̘̱̮̮͇͙͖̠̬̜̦̘̦̝̟̖̻͇͙̱̟͚̺̰̝̞̜̞̩͔̮͈̗͕͙̟͔̗̮̦͔͔͎̻̘̹̜̯͍̮̮̥̦͓̻̟̻̰͈͎̠͓̯̹̪̥̩̦͚͕͕͙͈̟̬̯͈̹͉̳̰̞̣͎̣̖̟̻̬̹͕̜͍͇͇̟͔͕̖͕͙͖̰̗̘͔͚̩̺̹̝̲̬̲̙͎̫̗̞͚̫͓̲̝̥͍͕̘̯̦̥̲̟̖̗̥͔̤͚͚̹͍̞͚̩̟̹̦̘̞͉̘̻̖̭͚͙̰̹̣̪̩͔͎͉͔̄́͂͂̂̋̈͛̈͛͒͋̌̈́̒͒̽̋̈́͛̀̎͛͊̂͊̈͆̏͑͗̓̍̈́̇̏̈́̈́͆̇͂̈́̿͒̓̓͋́̆͗̔̾̆̒́̽̓̈́̂͗̐̀̐̋̽̇̉̆̀͗͂̉̎̂̑̎͐͆̈̽̓͌̌̏̏̿͊̓̾̾̏̊̔́̿͂̎̓̃̒͛͑̄̇̐̔͒͒̓̇̉̆̈́͌͆͆̿̇́̈̂͋̏̽̇̏̈́͐͑̿̃̐͒͌̀̓̈̂͆͂̔̾͌̌̎̏͂̎̂̏̾͆̀̿̀̌̅͂̈́̾͗͒͆͑́̄́̌̍̃̑͛̆͐͋̋̿͌́̈́̿́̔̄̊͗̌͐͋͛̅́̈́͋͗͐̅̀͋̌̇͂͒̐͛͌̑̿͂͆̋̌͆͂́́̀͆͂̐͋̎͒̿̓͋̓̆̔̽͋̍̅͌̀̈́̓́̋̇̈́̿̈́͗͗̈͗͂̈́͗͂̊̐͗̎̌͐͛͋̓̀̎̀̿̈̏̊̍͆̔̉́̊̃̿̓̎̀̂̄̃͗͋̓̍̍̒͌̉̿̓̊͋̔̂̃̌͆̀̒̈́̾̊̽̾̒̊̓͊̽́̇̿̅̅̐̓̑̈́̑̀̉̈̚͘̕̕̕̕̕̚̕̚̚͘̕̕̕͘͘̕̚̚̚̚̕̕͘͜͜͜͜͜͜͜͠͝͝͠͝͝͝͠͠͝͠͠͝͠͝͝͝͝͝͝ͅͅͅͅͅͅͅͅͅͅͅ▄̴̴̵̴̵̵̸̶̵̵̵̸̶̷̵̴̷̶̷̸̴̴̶̶̵̶̸̷̵̸̢̡̡̧̧̡̡̡̡̡̢̧̨̢̡̢̡̨̢̨̡̡̧̡̢̢̛̛̛̛͎͈̩͎͔̖͉͈̹̬̘̘͇̪̳̟̙̖̻͍̻̼̤̞͔̠̖̬̱̝̪̤͕̩̲̣̰̪͍̬̱͈͕̦͕̰͍̱͚͇͇̯̖̗͍̜̰̲̖̰̲̬͎͍̹̼̝̙̟̱̥͈̻͖͚͉̯̭̻̩͉̬̬͎̳͎̩̼͈̩̹̳̞̳̣͚̻̖͎̯͇͎͚̳̖̼̟̪̫̖̯̺̹̰̰̤̙̭̤̟̣̳̳̻̝̲͉͉͚̪͉͓͔̹͙̫̹̖̣̲̦̤̹̤͇͍̦̼͙̞͔̳̙͙̱̪̟͈̣̱̣̝̬̗̤̜̫̦͙̹̯͚̫̠̣͙̰̫̞̦̟̮̱̲͙̳̬̤̟̥͕̦͖̫̠̜̗̖̮̹̹̥͕̤̉̔͆͊̉̍̒͒̔͋̽̓̊́̑̇̊͋͐̆̎́́̂̄̊̈́͛́̾̊̉̄͌̉̃̈̑͗͒̎̐͒̄̎̌̈̍͋͐͗̐̽̋͑̈́̐̈́̋̿͌́͌͐̒̔̐͆̀̏͆̎͗̐̃̓̐̂̓͌͋̒̆͋̽̈́̏̊̀̈́̐̔̍͛̉͑͆̄̏̿͛͐̆̄̏̎̓́̃̍̈̎͆̍͐͊͛̈́́͒͛̽̓͒̓̈̇̔͂̄͂̂̾͊̿̌͆́͗́̈́̌͊̿̈́̍͊͑̿̈́̊͛̀͋͋̇̌̆͋̂̿̌̓̄̇̽̅̏̈͂͆̈̈́͒̆̃͌̌̐̅̊̀̓̉́̈̌̂͋͛̾̅̐̀͂́͋̒̎̋͘̚̕̕̚̚̚͘̚͘̕̚̕͘̕͜͠͠͝͝͝͝͠͠͝͝͠͝͝͠͝͠͝͝ͅͅͅͅͅͅͅͅͅ▀̷̵̷̸̸̸̸̴̸̵̶̸̵̷̷̵̴̵̶̵̴̸̷̵̵̸̶̷̷̴̷̶̸̸̵̷̶̷̷̨̧̢̡̨̧̨̡̧̧̧̧̨̡̢̧̧̡̢̡̢̡̡̡̨̨̡̧̨̡̨̛̛̛̛̛̛̛̛̛͎̪͖̬͇̬̘̯̲̳̝͕̙̼̘̹͓͙̖̟̝̫͔̣̥̘̲̜̫̤̠̩̙̺̱̲͈̠͙̮̳͚̟͔̳̰̗̪̘̣̮͕̫̺̼̜̦̦̙̥͔̯͈͕͈̬̝̹̦͎̭̗͉̙̺̘̠̙̝̼͔͙͉̥͍̼̟̫̫̹͙͉͙̯̦̺̖͇̮̱̬̼̘̣͈̬̻̫̥̲̼̯̰̻͕̜̯̹͙͈̺̬̣̭͔̙̤̟̼̫͓̤̹̥͙̻͚̭̞͚̖͙͕͈̼͈̩̦̟͔̻̺͓̥̪̪̤̟̼̠̬̘͇̦̬̤͉̹̗̼̗̬̻̟̺̠͎͎̘͎̩̤͖͖̫̥̜̘̘̠̳͍̠̲͎̯͈̬̞̘̣͚͚͓͓̜͍̟̞̼̟͙̤͍̭͉̘͎̺̮̻̖̝̹̬̹͍̳̲͍̞̰͚̼̼̥̗̬̼̫̪̘̣͇͖̮̘̞̹̹̝̭̺͕̤̘̘̬͖̙̯̫͇͇͎̻̰̟͍̮͉̗̮̳̽͊̅̆̑̊̀̏͋͒͛̓̆̀̍̈͆͗̈͊̈́͂̅̉̅̀͛̽̆̔̏̀̾͐̓̀̃́̐͑̊̋̀͌̓̀̈̆̒̀́̍̑́̐͛̔́̀̈́̐̾͆̊̏͂́̿̀̉̂̆̍̒̊͂̓̽̿̽̊̂͛̔̌͒̔̀̑͋̒͐̈̈́̀͂͐̆̔͛̔̏͋̃̓̾̍̂̏̆̃̀̄̅̍̾̅͗͐̎̈́͒̎̆̓̀̎͒̀̓̉͐̈́̂̀̀͐̆̃͂̀͛̀̀͆̈̂̉́͛̂̎̌͐̾͂̓̔̂́͂̈́̉͒͂̈̉́͗̓̃̈̊͂̑̂̃̂́̌̑͒̅̉̿̿͒͆̎̋̀́̋̓́̓͂͒̄̎̇͑̍̄̽͐̏́̈̍̀̆̓̍͊̒̈́̈̅͋̇́́̉͂͛̈́͐̈́͘̕̚̕͘̚̚̕͘͘̚̕̕͘͘̚͘̚̕̕͘͘͘͘͜͜͜͜͜͜͝͝͝͠͝͠͝͝͠͝͝͠ͅͅͅͅͅͅͅ▄̴̴̵̷̴̸̵̵̵̷̵̵̴̸̶̸̸̵̵̸̶̷̸̴̷̸̶̷̷̸̶̶̸̸̸̵̵̶̵̷̷̷̴̴̴̸̷̶̶̶̵̴̴̵̡̧̨̡̨̧̡̡̧̢̢̢̨̨̧̢̧̡̨̡̧̨̢̨̧̨̡̢̧̨̡̧̨̢̢̡̢̡̛̛̛̛̛̛̗̘̺̩̙̞̫̩̫̠͉̫͇͔͚̼̜̪̦͙̼̳̩͈͚̜̗̰̰̫͕͉̺̖͔̖̮̘͔̬̭̟̜͓͙̬̪̻͉͇̻̭͍̖̱̖̲͕͓̯̙̭͓̩̗̬̜̱̲͙͇̭̼̹̯̙̥̼̳̳̤͉̗̺̼̗̥̹̘͚̱̥̹̮̬̳̯̙̱̬͇̱͇̖̮̱̮̘̩̝̣̹̻̟̹̦͕̙̯̪̼̫̩̬͖̪̬̙̟͖̳̳̻̮̮̱̱̟͖͔̞̪̮̦͚̭̦̹̮̮̺̗̲̻̩̮̩͍̯̺̯͇̹͖̩̰̠̯̯̰̳͍͍̝̰͈̗̺̗͓̩̥̮̯͈̤̜͓̻̙͕͔͚̻̤͎̦̳̞͇̝̰̣̥͈̟̣̥͎̩̥̩̞̣̮̖̯̺͙͔͉̭̦̩̳̯̙͙̣͔̪̟͔͎͕̩̙̜̪̘͖͓͓̥̯̱͉̰̻͕͙̮̻̩͖̘̣͉̯̲̣̬͓̳̟͈͕̘͕̗̗͎̙̞̬͍̮̹̮̮͚̼̱̹̰͍͈̗̳͖̖̪͙͍̫̙̙͎͉̱͎͖̩͚̟̼̣̝̗̳͓͙̦͕͎̠͚̥̗̖̙̘̱̫͕̘̗̞͈̩̮̹̮̫̙̝̪̹͇̰͚͈͓̙̺̖̺͉̩̤͔̹̠̱̭͎̜̝̬̩̥͖́̀͑̆̓̋͊̏̈́̾̓̂̐͒͆͂̒̊̅̉̍͂̓̂̎̆̒̐̎̎͒̂͌̉̂̔͛̑̑̌͌̑̀̆́̿̈̒͊̆̽̓̄̐̋̊̂͐̋̏͑̒͂͒́̐͗͆͑̓͂̂̔̌̍͐̃̄̽̒͆̈̇̇̈͌̆̃͑̽͋̍̓́͂̎̎̀́̾͌̓̋̈́́̑̀̅̏̒̌̑͐̒̈́͊͑͋̆́̏͆̎͊̇͆̅̋̇̈́̃͗̏̀͂̓̔̈́̈̎̆̐͆̈́̒̿͛́̍͒̓͂͗͑̀̓̐͌̋̈̽͂̍̈́̌̐̉̐̅̃̉̐̐̊̋̐͋͂̀͒͋͂̽̂̅̋̒̃͒̏̈́̋̆͒̉̇͊͗̈́̑̀̓͒̈̐̈́̉̌́̈́͑̇͒̽̃́̅̓̎̍̏̅͐̅̌̅̒̒̆̃̍̒͗̈͂́͑̽̈́̔̀̊̃̒̔͗̑́̑̀̏͒̅́̿̿̐̓͆̍̈́̀̋̐͋̽̎̃̽̓̈́͂̊̊̄͋̆͂͋͑̆̔̌̀͒͋̃̓̔̉͛̍́͛̆̀͐̿̽̽̆͊͐́̐̋̆̆̓̾̓̒̿͊̏̈̋͑̓̓̂̑̽̓̈̊̒̉͆͌͛͛̒̈́͊̔͛̃̊̂̉́͑̉̿̃͆̔͊̑͗͒́̓̆̀̀̎̽́̂̉͂̈́̿̔̅̈̅͑͗͛͛͊̓͌̀̾͂̽́͐̈́̀̓͂̈̉̍̆͒̽̿̆̀̒̏̃̚͘̚͘̚͘̚̕̚̕̚̕̕͘̚̚̕̚̚͜͜͜͜͜͜͜͜͝͝͠͝͝͝͠͝͝͠͠͝͠͝͝͝͠͝͠͝͠͝͠͠ͅͅͅͅͅͅͅͅͅͅͅͅͅ▒̷̵̴̶̷̴̷̸̶̶̸̵̷̷̸̷̶̸̷̶̶̶̶̶̴̶̸̶̸̵̨̨̢̢̢̡̧̨̨̡̢̡̢̡̡̨̡̢̨̛̛̛̛̣̥͍͇͔̹̲͓͎̻̰̳̠̭͍̳͕̪͉͙̝̘͕̰̟͖̣̳͙̙̘͖̙̖̤͎̼͕̠̞̘̮͕̞̬͓̭̖̣̪͖̙̼̝̙̠̤̼͔̼̖̹̯̩̜̖͍̣̭̙̺̲̮̜̱̞͈͔̣͈̗̜͕̼̪̗͕̭͎̟̹̬̣͎̥̳͉͈̣̘̜̣̩͖͎̭̝̯̬̺͙̜̱̟̺̼̥̘̪̮̣̯͉̤̹͈̲͓̹̦͍̞̹̭̟̼̙̥̱͉͇͎͖̣͚̠̥̘̭̙̺̲̪͇̺̖̳͚̺̤̪̯̹̜̜͕̖͖̳̭͎͔̠̺̳̟̩̝͚̯̱̘̘̪̦̮̱̯̻̺͖̦̮̲̹̰̮͎̖̜͕̯̝̞̟͚͚̞͕̻̻̭̣̻͍͖͉͚̖̱̙̘̦̗̞͉̲̩̰̐̓̏͛̊̋̿̎́̇̿́̓͛͆́̇̽̿́̍́̀́̔̔̍͋̊̔̑́́̆̉̐̂̇̋̈̈́͆̈́͗́̇̐͂̓͆̌̈́̄́͊̽̃̊͑͐̔̉̒̎̇̋̈́̇͋̑̈̑̍͊̑́̑̎̄͆̃̍̒͂̀͑͗͋̏̆͛̑̏͐͌̇̽̾͐̋̆́̎̋̓̈̂̓̏̅̑̎̒̉̄͋̾͋̇̔̈́̏̄͛̈́̉̋̽͌̅̈́̀̈́̇̂̊̐͑̌̾̽͋̓͐̄̈́͂̈͑͌̄́̂̀̾͂́̆̈́͊̇͂̀͑̅̐͑͋̈́̌̕̕̕̕͘̕͘͘̕̕͘͘̕͘͜͜͜͜͜͜͜͝͠͝͠͝͠͝͝͝͝͠͠͝͝͝͝͠ͅͅͅͅͅͅͅͅͅͅ█̸̷̷̴̷̸̶̵̸̸̸̵̴̸̸̶̶̶̶̵̴̴̸̴̵̶̴̷̷̵̶̸̶̵̸̵̶̵̶̸̸̷̶̵̵̶̸̴̷̵̵̷̵̷̷̴̸̷̴̸̶̵̶̢̨̧̢̨̢̡̨̧̢̡̢̢̨̡̡̧̧̨̧̡̢̧̢̡̢̡̢̡̨̨̢̡̨̧̢̡̨̡̢̡̢̨̡̧̛̛̛̛̛̛̛̛̛̛̛̛̳̼̯͓̙̭͙͕̤͈͖̱̭͉̗̗̟͈̳̭͙̰͖͔͈̪̼̟͚͍̰̮̻͔̰̠̭͇̙͓͙͖̤̰̫̘̼̩̬͕̳̭͓͇̭͓͍̤̞̘̟̼͙̖̯̞̺̩̘͇̞̳͍̩̥͓̞͈̰̼̻͎͉͖͖͚͍̤̮͉̱̲̭͈̗̤̘̞͚̮͎͎̤͈̟̘̥̦̻̠̫̹͙̥͖̪͓̦͚̬̼̼̮̫̳͓̩̯̹̬̬̱͈̳͓͙̙̪͚͔̳̣̺̯͎̣̱̖̰̻͙̼͈̰̣͎̭͎̭̮̱̪̩̰̙̪̹̳͔̳͍͕͚̖͙̯͙̞̭̥͎̙̖͓̬̻͚̗̥̥̩̥̘̹̱̣̪͔̬͙̞͚͔̯͚̺͔̞͙̥͇̣̮͇̜̪̭̖̪̠͍̦͓͍̝̖̰̲̥̘͕̫͕̗͇̹̝͓̭̱̱̜͔̝̹̮͇͓͖̠͙̦͔̝̰̱͇͈̞̱͕̤̺̣̱̯̰̞̹̝͎̣͉̟̳͓͈̞͉̗̖̮͔͙͈̤̬̩̗̪̭̟̫̯̘͎̝̠͚͇͓̩̫̬̘̝͖̦̟̟̖̞̬̭͖̘̣̹͉͚̞͇̻͉̻̻̲̖̹̘̱̹̥͈͇̠̩̘̻̰̲͔͇̭͔̮̜̣͖͔̲̖͎̜̥̟̥̭̻͔̖͙̰̞̝͖̩̝͙̼͚̝̯̲̠͍̻̫̯̗̭̯͚̼̺̻̼̟̜̟̭̱̥̲̪͚̹͓̖̥̖̱̪̹̬̲͕̗̭̫̥̰̦̺̙͖͉̹̖̜̯͔̯̼̖͇̭͎̞͔̝̱̤͙̌̉̇͒̏̽̂̂̃̈͑̾͊͐̀͋̉̈̄͂͐̒̓̄͌̉͆͑̈́́͑̈̅̾̈́̓̇̍̀̇͌̏͌̎́̎̃̄̏͌̄͆̽͐̈́͛͊͐͊͆̽̆͗͆̈́̆̀͛̀̒̄̆̋̊̆͆̀̑̌̋͐̾̈͊̀̃̂́̑͗̔̎̇̊̏̋̎͊͑̇̋̅̌̋͌͒̋̂͋̔̏̿̏̍͊́̃̾̓͛́̐̒̀̌͒̈́̃͑͌̊̎̉̎̃̽̓̅͌̈́̀̈́̔̐̽̈́̊̈̈́̎̀͒̋͒͆́̀̎̒̈͑̑̃̓̍͂̂̅͒̓͌́̆̔͆̎̂̋͊̅̽͛̂̅̏̔̾̍̐̓̉͛̉̈́́̈́̋̉͗̃̈̑̏͊́͊̿̾͗̐͐͊̔̄̿̄̅̉̏͌̎̌̀̓̈́̈͆̏̈́̇̈̎̍͗̓̋̊̓͂̈́̀̄̔͐̃̽̑̔̉̊̅̏̄̌̔̓͆̌̂̈̍̔̈́͑̓͐̐̇̑͒͐̊͑̄͂̔̍̀͒͗̂̉̔̒͂̀̔̄̈́̀̓́̑͛͌̊̈́̋́̆̊͒̇̀͒͋́͗̾̈͌̑͐̀̈́̀̉̊̿͛̇̿̅́̊̾̓̃́̊́͂̐̀̐̓̽͋̎̾̑̀͌̓́͑͌͛̋̐̔̍̂̓̐̅͑̂͐̌͆̍̑͛͒̀͂͋̋̈́̾̂͐̂̆̓̇̊̽͆̑̆̀̉̉̋̏̇̃͛̄̇̈́̓̑̉̔̾͒̒̑̏̈́͗̈́͆͑͌͌͊͐́̑̏͂͗̅́͋̚̕͘͘͘͘̚̕̚̚̚̚̚̕̚̕͘͘͘̕̕̕͘͘̚̚̚̕̕̕͘͜͜͜͜͜͜͜͜͜͜͜͜͜͜͝͝͝͝͠͝͠͝͠͝͠͠͠͠͝͝͝͠͝͠͝͝͝͠͠͝͠͠͝͝͝͠͝ͅͅͅͅͅͅͅͅͅͅͅͅͅͅ█̵̴̵̵̷̵̴̶̶̴̷̴̷̵̶̶̴̷̵̵̸̶̸̶̷̶̷̵̷̸̸̵̸̵̶̶̷̶̷̴̵̸̸̵̴̵̸̶̷̷̸̶̵̵̷̴̴̴̷̴̸̴̷̷̵̷̸̷̴̵̸̵̷̸̶̧̢̧̢̡̧̧̢̢̨̢̨̧̨̡̨̨̧̡̧̡̢̡̨̢̧̨̧̢̧̨̡̡̨̡̡̡̧̡̡̡̡̨̡̧̡̡̛̛̛̛̛̛̛̛̛̛̛̛̛̛͔̳͙̣̗̜͕̜͉̖̟̩͙͈͇̜͖̥͚͎̜̫̗̞̭̭̗͖͔̳̺̪̫̳̘͈̮̜͍̞̠̣͉̣̯̝̤͉̦̼̞̦̣̗͈̯̣̬̝͇̳̰̗̤̘̤̞͖̭̱͚̩͓̰̙̯͕̖͍̻͚͙̙͉͈̱̗̟̜̲̜͕̰̼̝͎̪̫̰̙̰͈͈̰̲͙͇̹̯͚̦͕̯͇͚̟͇̳͖̭̱̺̺̹̭͖̮͎̣͖̫̦͖̦̠̰̮̠̗̘̺̘̲̣̞̜̱̤͙͎̪͈̠̹͔̺͓̜̠̬̭̦̞̘̝͔̰̤͎͔̖̖̖͖̫̺̻̰̱̱̘̟̰̜̜̤̩̟̙͙̲̗͍̭͈̳͉̥̬̙̣͉̼͚̘͔͓͙̜͕̗̗̮̲͕̤̬͖̻͉̣͈͉̖̹̳̰̹͈͓̬͖̟̥͍̯̥͎̲͎̥̟͔̼̥̦͓̥͇͎̰̤̞̹̘͍̪̠̻̭̬͉͔̹̪͖͎͈̠̹͖͈̰̰͈͉͔̰̟̳̩̤̻̫̘̲͍͔̟͉͈̻͔̦̗͉̣̦͕̼̼̟͍̩̫̻͕̩̜̲̜̤͈̲͈̪̤͎̻̦̹͉̥̳͚̤͇͙͖̝̺̝̤̪̘̪̜̰̲̯̼̦̪̠̳̳͔̤͎̞̦͓̘̳̣̲̫̻̦̮̲̤̦̪̗̞̰̠̖̠͓̥̼̤̜̤͖̙̠̩͙̳̭͎͕͓͓̩̦̻̬̜͚̱̠̞̺̜̤͕̲̘̬̜̪͈̟͙̹͕̩͈̱͇̥̟͉̠̯̗̫̻̠͉̙͕͇͓̪͖̳̞̯̻̘̗̦̰͎̥̼̗̗̜͚̦̰̪̫̱͚̼̤̘̱̱͎͔̯̮̪̗̰̹̬̗̮̞̳̖̻̪̖̫̼͉̘̞̩̥̮͉̦̭̜̮͔̱̣̖͕̟̭̺̲̟̯͉̳̘̭̱̓̿̐̄̍͂̓̂́͆̔͗͊̈́̍̃̏̆͛͌̑̆͐̏̊̊̄̂̓͂̈́̀͐͒̋̈̽̈́̀̓̐̀͑́̔̋̆́̿̌͛͐̿̏͐͑̍̎̿̈́̑́́͛͊͆̍͒̾͑̓́̅̊̇͛̍̌̏͗͐͊͌̍̋̔̇̑͗͑̒̑͌͒̓͛̏̆̔̎̊̎̀̏̓̓̈́́̓̎̃̓̿͑͆̈̄̃̑̐̐̐̿͑̏̅͌̒̄̾͂̅̃̈́̅͊̇̋̊͋͑͛̌̄̋́͌̓̀̓̋͒͌͆̈́̔͌̋́̾͌̇́͂̎̇͋̈́͋͆̋̇͆̾́̉̂̆̿̂̑̈̿̈͐̾̓̅̅̔̉̄̈́͗̽͑͌͗͂͌̈̋͌̃͋̔̓̽̀́̀͐̒̃̅̔̓̓̈̆̈̌̿̈̔̀͗͐̔̈́̏͆̔̂͑̍͐͂̽͛̂̀̆̂͌̓̈̏͋͐̒̄̈́͌͛̑̾͐̎̀͛̿͑̆̇͊͂̀͋͛̅͗͛̓̿̽̌̿̑̽̈̒̾͐͂̆̾̌̅̽͗͂̋̄͒̇͛̀̓́̓̈̇̂̾̿͒̉̄̋͆̈́͆̒̅̑̈́͑̄͋͑͐̎̀͌̃́̏̔͆͌̔͛́̄̈͊̽͛͊́̀̌̓̈̀̍́̋̂̉̀͌̿̋̏͂͌͂̇͊̐̂́̈͂̓̀̓̌̿̾͒̈̈́̀̈̿̾̃̐̃́̏͋̓͑̈́̑̄̋̄̐̆̍̽̌͗̉̒̇̑̍͌̅̍̏̽̉̄͗̅͊͛̒̂̀̏̒̐̌̏̎̌̈̆́̉̌̒͂͌͑̃̄̊́͊́̽̎̈̔̈́͒̈́͊̿̌͆͗́̔̃̀̋̋̈̋̔͆̍́̂̕̚͘̕͘̕̕̕̚͘̕͘̚̚̚̚̕̕̚͘̚̕͘̚̚͘̚̕͘͘͘͘͜͜͜͜͜͜͜͜͜͠͝͠͠͝͠͝͠͝͝͠͝͝͝͝͠͝͝͠͝͝͝͝͝͠͝͠͝͝͝͝͝͝͝͝ͅͅͅͅͅͅͅͅͅͅ▀̷̸̶̷̶̷̷̴̸̵̷̸̵̸̸̶̸̸̵̸̷̶̸̴̢̨̡̧̡̡̢̧̡̢̨̧̢̧̨̨̡̨̧̛̛̜̼̳̱̙̥̺͕̣̭͕̫̭̭͕̟̺̱̣̹͕͚̞͍͎̝̗̜̪̝̬͙̼̜̪̖̯͓̤̙̟̦͉̩͖̜̮͍̱̹̲̜͎̗̝̪̦̝͔̤̹̩͓͔͓͙̹͚̻̙͉̗̪͉̘͚͓̮̮̥̮̦͔̺͍̠̪͉͍̠̥̰̘̳̞̟̦̱̫̘̝͖͇̙̮̥̗̙̳̗̫̻̹̩̙̞̩̰̝̗̺̺̗̠̱̞̯̤̳̼͕̙̙̠͓̦̣̼͈̮̹̭̥̱̫̟͕̗̖͓̩̙̟̼͍͈̝̠͔͔̜̼͖̜̞͙̪̯̬̗̬̰̳̲̮͍͖̹̺̫̙͈͈̺̘̱͙̉̔̍̂́͗́̓̐̅̀͂̈́͆̿̇̂̐́͛̇̽̈́̋̌̏͐̄̇͐͒̐̐̑̈́̄̈́̍̎̒́̆̈̌͆̒̎͗̀́̿̍͛̽̽̑͆͗͛̀͊̔̂̑́̋̉̓̓̿̍͌͗͆͊̈́̂̂͋̈́̇̾̇̔̂̈́͋̀̊̓̈́̍̌́̓̂̂̌̀̽͗̂̂͗̈́͒̑́͛̌́̔̓̀̑́͗̐͒̏̍̆͆͊͆̅̍͂̿̓̃͐̋̐̾̍̂̇̋̊̌̇͊̀̄̎͐͗̋̈́͌̄̎̐͗̕̚̕̚̚̕͘͜͜͜͝͠͠͝͝͝͝͝͝ͅͅͅͅͅ░̸̷̶̷̸̶̸̶̶̴̷̷̴̵̸̵̸̸̶̶̵̷̵̴̷̴̶̡̨̧̡̡̨̡̡̢̡̧̧̡̡̨̡̡̨̛̛̛̭̳̝͉̫͈̬͈̗̝͈̩̟̺̼̰̰̩̹͇͕̫̮̩̳̺͎̪̱͈͙̭̞͈͕̦͉̥͕̙̠̯̼̠̥̭̩͕̣͉̭͕̯̜̖̺̣̠͚̟͓̞̼̺͍̙̺̪̟̬̜̤̠̫̞̮̤̮̩̜͉̙͕̬̠͖͖̙̠̠̝̻͎̤̩͔̜̰̭̲̟͍͙͈̭͓̭̲̣͎͖̦̤͉̖̺̻̞̠̙̬̯̱͍̪͍͖̹̥̦̠̫̞̱̟͙̼̪̦̻̖̯̟̬̟͍̰͚̞̖̝͈̰̻̖͉̳̭̗̗̳͎͔͍͍̘̺̙̩̬͔͎̼̗̱͙͌͐̈́̀̑̃̉̄̅̈̽͛̂̾̿̈́̇̇͗̂̇́̊̍̽́̒̄͆͌͆̂̐͊̇̅͆̅̈͌̈́̏̓́̿̿̋̄̉̌͑̀͌́̍͑͗̊́̐̈́̍͂͛͂͋͋̌̐͛̇̓͆̉͛̄̾̄͗̋͌̏̇́̐͑̅͒̾̒̍̔̓̀̈́͋̾͌̋̑̔͑͛̋̇̔̽̎̾́̒̑͆̿̇̆̓̇͛̍͂̀́̈́̒̐̿̆̂̊̍̓̅͊̋̑͑͂͛̎̽̈̈̅̽̃̀̍̈́͊́͛̀͑̈́͐̃̉͛͂̀̔͐̉̄͆̏́́̕̕̚͘̚̕̚̕̚̚̚̕͜͜͜͜͠͠͝͠͝͠͝͝͝͝͝͝͝͝ͅͅͅͅͅͅ█̴̸̷̶̶̶̶̴̶̷̷̸̴̵̸̴̴̸̷̶̸̵̶̷̸̴̵̵̸̴̷̸̴̷̴̶̵̴̷̸̷̶̷̸̵̶̶̵̸̵̵̸̨̢̨̧̨̢̡̧̧̢̨̢̢̡̨̨̧̨̢̡̨̧̨̨̡̢̢̨̡̢̡̢̢̛̛̛̛̛̛̛̛͙̣͚̜̬̫̞̱̲̘̻̠̗͇͚̰̙͙͕̣̝̣̖̤̼͚̟͙͙͇͓̳̮̮̼̣͕̰̭͓̥̰̠̖̠̞͎̯̯̝̺̩͈̠̺͍̝̺͚͍̤͓͎͚̣̝̞̠̩̪̝̼̜̞̤̘̭̟̗̝̜̬̳͓̺̯͎̠̬̥̲͇̥̦͉̪̥͓̗̠̥̲̩̬̤̥͈̜͓̭̣̳̙͕̺̤̳̣̘̼̙̦̜̤̝͕͓̗̖̭̮͔̫̠͈̹̫̯̰̗̟̖̰͙̞͎̖͇̤̻͈̦̯͈̗̭̘̳̪̬͎̩̤͚̹̱̬̰̬̤͖̻͉͍͙̝͔͓͔̰͓̰̝̥̝̬͈̜̼͈̫̪̼̬̬̖̲̪͎̩͓͓̬̤̘̩̖͍̜̯͙̣̳̲͓͉͎̮̟̱͉̞͇͙̰̞̦͕̞̼̱̮̦͍̻̩͚̻͎̥̫̹̟͓͖͚̳̦̰̻̲͓̩̖̣̫̜͙̤̘͉̞̠̬̞̟͕̬̪͙̱̪̫͕͙̝̟̫̻͙̪̭͚̗͕͚̫͖͔̻̘̺̮̱̝̹̠͎̣̦̗͇̙͎̪̠̞̟̤͚̤̟͚͍͎̟̙͖͓̯̪̩̝̲̹̩͓̪̻̞͓͕̩͍̟̬̯͉̖̳̹͓̫̱̝̤͔̳̰͚͍͉̰͛͂̿́̏̏̽͊̀̿̈́̎͒̏̈́̈́̎͑̄̋̐̀́̽̾̈͆̂̈́́̿͌̋̉̀̓͛̌̓͛̑̋̀̊́̅̄̄̓̏͂̋́͛̊̒͒͆̓̾́͒͐̔͆̒̂̃̓̃͂́͒́͗́̉̈̀̆͐͗͛̀̒̒̊̔̓̓̆͑̊͌̓̑͊͑̀͒͑͗͛͆̽̾͗̀̎͐̇͊͐̅̉̋̌͛̍̓́͂̃̈́͂̀͌̋͌̌̔̑̌̓͛͛͆̊͗̆̐̄̉̈̑̈́͒̔̈́͌͑͆͗̈́͂̈͒̓͌́̑̈́͛͋̽̈́̎̐̽̄̽̃͂̍̒͗͌̑̀͌͛̎͒̉͒̃̋̇͋͗̒̏̉̆̒̎̓̋͌̿̆̆̌͊̂̓̀̌͂̄̄̾͊͗͐̍̍̈́̀̃̿͂̋́̾̊̑͒̓̓̆͋͛̊̂͒̿͛̆̌̏̂͆̋̓̀̔̉̑̊̈́͆̔̆͑̈́͋̀͌͑̾̍̄̆͊̈́͊̂̌̈́̈́̀̇̆̊͂̍̀̈́͒̌̔̿̍̈̔͛̄́̊̃̀͋̀̌̒̋̌͂͆̋̇̐̆̌͛̃̈́̅̓͛̑̒́̑̓̄̓̔̋̔̍̈́̉̈́̓͊̍̄̌̒̏̕̕̚͘̕̕̚̕͘̕͘̚̕̕͘̚͘̕̚͘͘͘͘͘̕͘̕̕͘̚͜͜͜͜͜͜͜͜͜͜͜͜͝͠͠͝͠͝͝͝͠͝͝͠͝͝͝͝͝͝͠͠͝͝͝͠͝͝͠͝ͅͅͅͅͅͅͅͅͅ▒̶̶̷̷̸̸̵̵̵̷̴̴̶̷̴̶̵̵̷̶̸̵̵̷̸̴̶̴̸̵̶̷̶̷̵̸̵̷̵̸̸̴̸̵̴̸̵̢̧̡̢̨̧̢̧̨̨̢̨̧̢̡̢̢̢̨̨̢̡̡̧̡̧̢̨̢̛̛̛̛̛̛̛̛̗̜̰͓̖͍̪̯̱̰͚̤̣͚̝̭͙̺̰̭̗̖̲̭̣͖̠̳͎̳̝̭̤̬͇̮̯̫͈͓͖͕̯̺̟̟̙͍̗̺̥̰͎̳̹͈͚͈̦͚͙̣͕̪̜̗̰̘͚̖̟͓̻̬͖̪̞͔̺͖̪̮̞̘͚͚͉͙͙̩̙͕̫̬̪̭̘͉̩̜̠̰͚͇̜̼͍͇̖͍͙̼̘̦͚͍͇͉̥̰̪̺̤̹͈̮͚͕̯͔̬̝̫̻͎͍̻̯͚̝͓͍̭̹̼͉̼̜͍̩̯̟͎̣͈̭̯̘̙͇̬̠̹̻͚͙̲̭̩̙̪͔̗̠̯̝͔̼͈̮̤̖̲͖̠̫̼̰͚͙̜̩̟͓̯͕͈͍̤̳͉̲͉̻̤̲̻̥̫̲̩͙̦̘̪̼̯̣̼̖͇͉̦͇̱͚͍̳̩͓̯̖͍̘͍̖̖͉͔̬̥͓̤͎̖̰͙̠͕͍̜͈͖̪̹̺̤̮͈̖̲̘̮͎̙͖̖̯͖͓̠̮̣̩͓̳͖̜̳͉͇͇̝̮̯̰̣̺̠̬͉͓̤͖̬͖̠͍̅͊̐̂̒̂͗̔̉̋̇̀͒͌͊͌̌͋̑̾̇̃̈́̽͋̆̊̐̄̂̌̓̈́̉̄͒̀͊̈́̈́̀́̿̊͌͋̂̍̅̄͌̈́̀̑͒̈̒̋͌̌̃͋͒̀̓͑͑̾̓͗̏͆̅̒̉̓̿̀̋̔́͆͊͐͑̉̆͊̎͐̌͂͑̓̍͂̋̿̽̓̓̓͌̈̓̀̈́͒̑̓̇̓̾͌͛͛̔̓͒̉͗́́͊̓͊͆͊̀̆͂̾͒̾̅̓̇̀͂̋̋̔͂̐͋́͒͋͒̅̿͒̉̈́̑̍̑͂̊̓́͛̾́̽̽̍͆͗̄̓̓̐̏͊̊͑̊̓͆̍̆̽̾͆̈́̂̈́́̎͆̃͊̿̅͂̓̑̎̎̑́͂́͑̉̈́̉̿̀͒̽̎̽̋̆̈́͐̏̓̉͛̿͊̌́̾̇̐̒̿͌͋̈̎͋̎̓͒̀͐͌͋͊̈́̔͐̎͒̓̌̋̽͆̄͑̂̍͑̊̀͌͐͒̆͊̓͊͑̎͌͗̽́̎̄̓̃͆́̓̆͗͌͌̈́̾̐̌̑̔͆̈̑̂̾́̓́̀̍͌̎̆̾͋̋̀͛̊̀̈́̇͌̅̀̓̐̕̚̚̚̚͘̚̕͘͘̕͘͘͘̕̕͘̕̚̚̕͘̚͘̚͘͘͘͘̚̚̚̚͜͜͜͜͜͜͜͜͝͠͝͝͠͝͝͠͝͠͝͝͝͝͝͝͠͝͠͝͝͝͠ͅͅͅͅͅͅͅͅͅ░̷̷̸̷̸̵̴̶̸̷̴̸̷̵̨̨̡̢̢̨̡̢̡̡̢̢̢̧̡̛̛̛̱̹͙̝̖̦̪̫̩͈̺͔̠̟̙͓͇͙̝̥̼̦̦̬̰̬̱͚̯̰̜̘͔̯̠̰̬̠͖̗̺̘̜̣͖̻̝̣̤̮̙̫͙̫̰̻͙͔̪̭͇͓͍̘̳͎̥͙͈̼̯̞̟͙̫͍̫̭͍͕͖̩͍͓̺͎̲͍͈̞̜̥̤̼̤̀͒̀̐̎̃̑̾̔̃̋̐̔̎͑̋̽͂͊̔̅́͛̃͂̌̌͊́͆͑̃͂̒̄̏̂̈͑̋̾̈́̆̏̀̌̿̀̑̎̔͋͐͂̽̀͑̔̆̓̅́̓́̿͛̔̉̑̆́̾̀͛̈́͛̾̇̚̕̕̚͘̕͘̕̕͜͜͝͝͝͝͝ͅͅͅ░̶̷̵̸̴̴̵̶̴̸̶̷̴̷̴̴̷̸̵̸̶̵̵̴̸̸̷̸̸̶̷̷̴̷̶̴̶̴̴̵̵̸̷̴̵̵̷̷̸̷̶̸̸̷̶̸̸̴̢̢̡̧̡̨̡̧̡̡̡̡̧̢̧̢̨̧̢̡̧̢̧̧̧̨̨̧̨̢̨̡̨̡̨̢̧̨̡̨̧̢̢̨̧̨̢̧̛̛̛̛̛̛̛̛̛̛̛̛̛̛̛̻͇̦͖̠̞̯̩̳̤̹̙̮͕̲̳̼͈̪͈̭̭̹̪̝̙̙͓̦͚̟̳̰͕͈̦̬͓̟̝̥͓̥̲͖͈̲͓̩͔͔̖͎̯̮͖̬̹̰̟̬̰̖̜͙̩̪͍̙͖̺͉͇̥̖̺̙̻̰̝̮͔͈͈̤̘̟̯̹̬̘͚̲̳͔͕͓̩̝͖̠̥̝̠͖̞̤͍̖̙͖̳̯͇̟̜͚̰̦̩̫͇̩̪̰͉̠͔̪͕̳̘̮̠͕̣̹͖̙̙͙̖̤͕̹̗͇͙̬̜̣̭͖͚̖̘̣͈̮͙͖̻̤̺̳͓̝͓̼͇͖̭̭̝͚̭̱̥͚͙̟͖͇̥͎͈̺̹̟͙̻̪̝̪͍͈̘̤̖͙̪̺̪̣͙̝͙̟̣͇̬̱̙̖͙̖͍̩̺̹̞̤̱̮͉̩͖̼͉͎̬͇̖̪͕͚͙̙̞̫̳̪̙̝̙̬̦̖͖͉̥̻̥͍̳̙̭̻͓̻̞̜̣̦̳̼̙̳̫͔͎̤̤̻̞̪͍̣̠͍̝̙̙͍̜̭̥̗̬͈̱͎̥̱̱̻̩̞͈̜͉̹̱͔̬͕̤͙̯̫͔͍͖̣̭̟̠͇̰͖̜̙̦͖͇̤̞̯̙̳̙̗̜͇̣̲̻̻̗͕̻̣͎̹͕̣̦̜̳̣̹͎̣͓̯̱̟̖̳͈̟͔̞̬͉͍̲̱͈̯̥̝̲̬͔̯͌͂̐͊͊̃͋͊̑̅̆́̂͆̓͗̿̅̐̓̉̿̄́̓̓̍̽̎̓̔̐̀̅͌̇̌̆̾̒͆̑̍̒͂̇͋̅́̽́̂͂̈́͐̏̃̑͛̏̑̀̽̇̊̃̋̽͗̒̒͗͐̄̀̎̀̍̀̄̊̇͌̂̎̈͗͑̓͐̈̉̊̆̒̈́̋͒͗̈́̃͑́̈́̀̆̾̎̿͊̈̋̽̎͋̌͒̈̈́̀͊̓́͆̾̔̐̉̈̈́̓̉̓̈̇̆̌̐̆̾͗̔̿̏̄̽͐̋̒̉̂̔͊́̑̋̌̎́̾̏̇̏͑͑͛̽̈́̾̀̅͆͑̌́͐̅̽͐͛̄́̀͋̈́̽͗̏̀́͐̾̿̿̎̓̉̓̔̀̊̎̂̎̊̄̓̎͑͑͂̄̂͛̀̊̅́͐̆̓̿̿̋͋̀̓̇́̇̂̀̎̔̏̾͌͆̌͋̉͋͑̂̽͆̏́̐͌̈͆͛̓̆̿́̉̑̂̋̍̅̊̐̓̊̅̄̅̈́͊͌͌͂̉͋̈́͂̈́̋̈͗́̉̈̊̾̾̿̅̃̔̆̑̎̂̍͆̿͂͗̈́̀̿̇̂̌̏̐͋̈́̆͂̄͐̈́̔̓̐̉̔̒̐́͗́̍̈́̈́̌̎́̉̊̅͐̊͆̋̌͗̌̋̓̐̆̆͂͋̓͊̈̇̀̏̽̒͛̌͗̌͋͗̂͗̐́͛̌͌̾̃̓̉̈́͌͗̈́̊̀̑͋̃̆̒̓́̅̅̒͊̈͆͋̃̓̉́̒̿̒́̓̔̄̈̉͆̌̕̚͘͘̚͘͘͘͘͘͘̚̕̕̚̕̚̕͘͘̕̕̚͘̚͘̕̕͜͜͜͜͜͜͜͜͜͜͜͜͝͠͠͠͝͝͠͠͝͠͝͝͠͠͝͝͠͠͝͝͝͠͝͠͝͝͝͝͝͠͠͠ͅͅͅͅͅͅͅͅͅͅͅͅ▄̴̷̵̷̷̴̶̸̵̶̵̴̷̷̸̵̴̴̵̶̴̴̸̸̶̸̶̸̵̶̸̴̷̷̶̸̷̶̷̴̸̶̷̷̷̢̧̨̡̨̧̨̡̡̢̡̢̧̧̨̨̨̨̨̧̢̨̨̡̨̡̡̧̢̧̨̧̢̡̨̛̛̛̛̛̛̛̛̛̛̯̭͎͖͈̹̪̯̱͔͔̫̫̩̻̝̞͙̼̫̩̥̲̬̫͉͉͍̲̩͓̳̰̬͚͉̣̫͚͕̙̘͈̰̖͈̜̙͈̱͎̭̬̭̟̰͕̰͚͎̤̩̹̥͍͓̘̣̙̮͙̻̰̪͍̠̖̱͈͍̗̯̦̣̮͍̗̰̬̖̤̖̳̦͍̟̫̮͓̙͍͉͓̜̤͚̻͎͚͙̼̟͎̼̻͍̪̼͍̱̱̩̞̙̼͎̯̠̹͈͍̤͖͎̹͖̮̬̼̜̮̲̥̭̬̠̙̺̙̫̙̭͎̖͔̣͎̼͇̝̬̗͙̩͔̣̙̫̙̤͓͓̻̠̭̗̥̲̠͎̮̖̹̺̭̹̤̱̥̲̲͎̜̝̘͉͈͚̺̦̖̣̞͍͈̭͈̲̬͈̹̥̰̻͈̲̞̤̥̯̬̞̹̘̙̤̺̜̫͓͇̜͙͓̺͚͓̥̘̰̭̺͉̪̱̲̝̘͔̗̩̬̣͚͓̫̤͉̤̠͔̙̙̺͇̩̳̭̲͓͈̲̟̮̯̜͖̦̳̺̟̯̲̗̻͔̲͙̪̣̩̼̲̹͓̤̹̮͉͓̯̥̫͍̻̗̥̬̤̮̟͕̥͔͕̭̠̥̹̺̞̈́̉͑̅͐̿͑͋̐̀̊̔͆̈́͂̌͋̃̌͒́͂̿͛̏̇̆̉͊̀͛̈́̂̍͒͐͂̒́̐̋̋͑̑̊̏͑́̊͂̾̈́̽̽̐̃͑̄͌̂̿̀̇̑́̿̀̈́͆͆̿̽̔̃͌̓͛̂͛̏̀̄͊͂͋̿̋͌͒̓̄̋̓̈̂́̎͗̊̀͑̆̔̿̌̐̍̂͑̒̋́̀̍̄̐̈́̀́̎̏̆̍͆̽͗̀͂̅̓͂̿̾̌̈́̊̿̎̊͋̓̈́̅̾̓̑̈́͊͌̊͆̽̈͐̓́̅̓͛̋̎̒͛̔̈̿̀͋̎̏̔͛̑̎̄͌̀̀͂̇̎͑͋̆̇̽̊̑̾͛̎̐́̅͒̓͗̂̓̔̑͊̏̿͐̋̑̽͑̈́̅̓̾̔̈̈̆̈́͆̊͐͑͑̈́̀̄͒̉͌͊̉͌͋͂̂̽̅̓͊̈́̈͆͒̋̾͋͑̆͑͌͐͛̐̏̌̀̊̿̽̑̓͒̂̔́̀̂́͑̂̍͋͐̔́̎́̒̃̊̀̇̒̀̌̆̿̃͒͛̒̈́͒̀͊͌́̊̾͑̌̾̽̇̋̀̄̽̓̑͂̈́̀̔̓͊́͆̒̈́̈́͌͘̚̕̕͘͘̚̚͘̕̕͘̚̕͘̕̕̚͘̕̕͘̕͜͜͜͜͜͜͠͠͝͝͝͠͝͝͝͝͠͝͝͝͠͠͠͠͝͠ͅͅͅͅͅͅͅͅͅͅ▀̷̴̶̴̷̷̵̷̶̷̸̶̴̶̴̵̴̸̴̴̶̶̸̵̵̷̷̸̸̴̷̶̸̴̶̵̸̶̷̸̶̶̴̷̸̵̶̵̢̢̨̧̧̨̧̧̨̨̨̧̨̧̧̡̡̡̧̡̨̧̡̡̨̧̡̧̛̛̛̛̛̛̛̛̛̛̛̪̣͉̲͍̮̳̼̺̟̘̟̪̙̻͇͕̥̼̦̮̣̳͈͔͇͉̳̟̫͉̳͙͎͕̲͙̤̰̭͔̰̟̺̝̰̠̣͇̠͖̫̤͖̯̟̼̳̰̯͙̹̭̘̳̰̗͎̝͎͖̗̭̝̟͇̜̘̭̪̯̺͚̙̣̯̙̦̙̬̩̺̲̦̯̝̟͉͚̮͍͉͎̠͍͍͇̱͕̜̰̺̥̤̝̖̹̱͓̗͚̝͚͚͖̙̰̤͇͙̘̪͎̰͇̳̳̩͙̭̻̗͇̫̼̤̻̰̣̤̮͍͖͚̭̗̙̩͍̗͉̰̗̜͈̩̺̹͎̜̳͓̞͚̳̱̯͇̗̞̤̙͕̫̥̰̳̭͉̻̤̦̳̱̜̱̙͔͕̤̹̻̰͍̠̭̗̲̬͍͕̬̩̟̜̬̙̙̮̗̘̟͓̗̠̩̮̪̱͍̗͍͚̜̯̯̝̖̠̲̭̪̠̝̩̞̳̪̭̫͚̗̰̟̟̩̻͇̥̮̬̦̞̬̠̩̠̳̼̞̯͉̫͚̻̜̭̜͈̪̟͓̲̼̯̬͕̖͚͉̪̘̞̯̞̪͔̳͎̻̩̙̝̭̮̬̻͎̭̝̤̥̜̲̭̬̥̟̺̳̮̞̜͕̙̱͈͚̘͍̰͓̌̐̒̅̃̀͊̿̇̽̈́̓̋̍́̊͂̈̓̎͛̃̓͋̄̈́̆̇͌͂̍́̑͒͊́́̾̓͐̄̊͊̇̃̒͆́̀̀̑̀̊̀̆̀̇͊͋̂̏͑̄͐̓̀̓̉̒͗͐̊̍̍͂̉̔͑̈́̊͛̅̌̄̒͛̒̔̔̈́͆̌̉̒̔̓͒̅́͑͋͐͗̆̽͆̎̆͂̋̾͆͐̀̓̃͌͛̎̆́̓̇̿̊͊̎́͋̏̊̓͊̆̑̿̅̑̎̽̉͐̾̐͌̈́̀́̎͐̌́̂͊̔͌́̂͊͛̿̈́̽̏̌͒̓͋͛̈́̈́̌̍͋͋̏̈́̌̋͊̀̏̒̆̈́̽́̅̄̒͆͒̆̊̇̍͋̍̇̉̅̑͗͆͂̅͐́̀͆̽̆̑͆̆̑͑̾͒̎̈́̿̓͛͐͊͋̓̈́̀̎̔͗̓̃̆̍͗̃͊̀͗́̉̅̉̀̔͑̃̔̽̍͋̍̎̈͑̾̈͐̇̆̑͌͑͌̀͌͑̏̉͌̌͑̑͐̏͑̓̊̍̌̃͌͂̒̅͗͑̓͊̀̏́̑̈́̐͌͐̉̊̇̎̉̈̏͗̾͋̈̅͂̽͂̆̾͑̓̈́͗̈͋͌̑̋̊̆̾͋̍̈͋̂͆̆͌͘̚̕͘͘̕̚̚̚̚͘̚̕͘̚̚̕͘̚͘͜͜͜͜͜͜͜͜͜͜͜͜͠͝͝͝͠͝͠͠͝͠͠͠͝͠͝͠͝͝͠͝͝͝͝͝͠͠͝͝͠͠͠ͅͅͅͅͅͅͅͅͅ▒̷̷̶̵̶̷̴̵̸̷̶̶̷̵̷̷̸̵̷̸̷̶̴̶̴̵̵̴̸̸̶̶̶̶̸̵̴̵̸̶̵̵̵̷̶̸̧̧̨̡̡̨̨̧̢̡̡̡̨̢̡̡̧̢̢̡̢̢̛̛̛̛̛̛̛̛̛̛̛̞̻̯͓̭̦̝͔̝̬̪̻͇̣̠͈͓̭̗̥̻̟̱̖͖̺̲̫̰̥̳̹̳̼͍̭͙͍̜͎͍̺̼̼̺͓̹̞̫̞͉̜͚̠̝͙̝̲̻̘̻̣̹͔̜͈͚̣̠͇͕͈͕͇̞̖͚̠̘͎̟̲͍̙̣͕̦̮͚͉͇̖̻͔̻͉̬͔͕̲̝̪̰̜͍͙̬̟̰͎̹͙͚̠͉̣͎̭̤̝͎̗̞̬̰͖̳͕̞͇̤̯̫̮̘̹̱̮̯̥̦͍̝͖̼͓̹̹̦̬̺̫̫̟̮͓͇̙̫̫̜͉̼̗̫̟͚̣̱̙͎͓͎̦̭͍̼̝̭̜͈̳̘̭̥̜̤̘̬̻̼̪͖͉̼̙̠̟̣͔̠̥̼̤̲̰̞̘̣͔̮̯̩̠̙͕̤͍̮̲̲̝̖͇̥̞͖̳͖̝̙̣̘͎̮̜̗̤̝͙̭̝̮̫̪̙̠̞̱̲̺̗̭͉͚̟͔͙̝̟̬̙͖̙͎̜̜̆͑̿͒̐̉͐́͛̄́̄͑̑̋̓̊̏͒̎͒̓̀͋͑̌̾͑͗̔͂̈́̉́̓̈́̀̃̾̃̑͛͑̅̾̑̎̈̉̔͂̏̿͗́͊̓͋̌͌͑̐̾͌͋͒͆̅̍̌̾̍͊̎̐̉̐͗̒̑̽̀̒̐̿͆͊͂̈̈́̉̎̈́̈́̒͗̓̿̈̆̿̑̈́̉̉͆̔̔͗͆̿͑̏̇̂̑͐͗̌̽͊̅̋̐̂̉̒̈́̎͗͆̂̍͆̀̈́̍̉͂̓́͂̍̍͂̅̿̆̍̾̔͒̐͋̑̎̂͐̒́͌͑͐͌͛̔͋̀͗̉̉͋̂͌͆̀́̉͑̿́̾͛̌̾̔̆̅͆̃͌̓̀͑̀͊̿̌́̎̔̋͋́̀̑͐̏̓͒̃̈́̈́̀̊́̓͆̏̋̂͒͗̅̀̇̆͊̈͆͒̓͂̃͋́̅́̈́̌̅̔́̎̎̃̎͂̀̾̄̈͋͆̈̍͛̀̄̽͒͑̓̔̃̐͑̆͗̈́͌̈́͌̽̋̒͑̍̀͒̉͐̓̋̀͆͗̓̎̇͐͋̅̑͗͒͆̋̔͑͐̈́̂̆̃͊̽̈̅͆̾̈́̈́̆̾̓̓̍̉̋̀̽̓͛̽̈́̄̓͌̚̕͘͘̕͘̕̕̕̚̕̕͘̚͘̕̕̚͘͘̕̚̕̕͘̕̕̚͜͜͜͜͜͝͝͠͝͝͠͝͝͝͝͝͠͠͝͝͝͝͠͝͝͝͝͝͝͠͝͠͠ͅͅͅͅ░̵̴̴̴̷̵̸̸̴̸̴̶̴̵̶̷̷̴̶̴̷̶̵̶̶̵̸̵̷̷̸̷̵̴̴̶̶̶̷̵̶̷̷̵̸̷̷̵̷̶̷̴̸̷̢̢̧̡̧̢̧̢̨̢̡̧̢̢̨̧̧̢̢̧̢̢̨̡̡̡̨̢̨̡̨̢̨̧̛̛̛̛̛̛̛̛̛̳͍͉̬̟͉̝̣̤̹̩̖̳̫̺̞̺̭̣̖̱͚̼̻̞͖̰͈̙̙̺͔͕̖͎̯̮̣̳̺͈͍̲̺̬̲̭͔͖̦͎̮̹͉̳̟̠̗̣̹͉̯̹̱͖̗̘͓͈͓̥̥̯̜̰͉̦̗̲̭̝̝̖̺̝̼̲͙̗̱̫͎͔͈̹͖̹̦̬̬͈͚̫̻̟͖̦̲̟͖̝̫̞͖̪͉̻̥͚̤̹̺̬̤̬̘̳̮̲̙̻͖͈̬͉̗̰̠͙̤͙͈̩̰̜̘̠̮̟̤̖̱̭̬̦͖͕̩̗̼̻̗͇͇̤̼͚̖̟̬͉̦͙̰̩̲͖̳͇͚̝̫̘͉̮͕͍̘̜̝̯̳̺͖̤̱͎͈̮̭̠̗̯͔͎͈̖̼͖̟̮̯̣̲̤̲̩̩͖̥̭̜͈̥̗̗̜͍̮̳͇̖̰̙̼̰̗̯̙̹͓͍͖̬̪̜͎̣̖̤͇̼̳̦̮̫̥̙̟̥̼̫̮͚̩͎̦̪̰͙͔͍̬͔͈͇̹̣̟͖̥͙͔͓͍͍̼̰̺͕͚̻̹̈͌̈́̓̋̌͌̎̋͋͊̑̑̇̒̂̇̈́̒̇͛̂̍̎̂͋̿͊̎̾̑̐͋̈́́̆́̓̆̏͐̀̔́͗́̀̃͛̀́̄͐͛͋̔̑̄͋̓̌̾̈́̔̏͗̽̆̐̎͂̒̓͂̍͋̓̀̉͐̌̅̌̔̈́̈́̔̄̂̐̀̒̊̆̄͌͌̊̇̒̅͑́́̾̒̓̀́̐̿̾͌̓̽̍̽̓̄̉͛̃͑͗̏̑̔̓̈́̒͋͐̇͒͋͗̀͛͒̅̌̈̋̈́̍͌̅̎̅̔͐̌̀̍̾͛̓̄̂̊̀̿̏̃̈̿̾̄̍̌̒͂̐͑̀̒̋̀̈́̃͒̿̏́́̔̈́̂͊̔̆̆̒̒̋̂̏̉̅́̆͒͐͋̈́̋͗̈́̅̿̃̈́͒͆͑͂͑̔̾͑̊̐͗̐̌͂̂̍́̽̐̑̈́̍̓͗́̋̔̑̎̔̌͒́̃͗̆̋́́̇̎̀̃̊̊͛̏̿̆͑͆̅̈̏̂͆̊̒͐̇̃̌͛͐́͊̆̀̃͂̀̄͛͂͑̄̐̆͂͛̒̾͆̇̉͒̒́͂̔̅̈́́͌̄͆̓͋̇́͋̅̂͒̈̀͆͌̈͗̂͗̋̆̽̌̍̉̀͑̀̋͊̀̈̐̇̇̆̂̔̌̉͂̌̅̕̚̚͘̕̚͘̕͘̕̚͘̕̚̚̕͘̚͘̕̕͘̚͘͘̚͘̚͜͜͜͜͜͠͝͠͠͝͠͝͠͝͠͝͝͠͝͠͠͝͠͝͝͝͠͝͝͝͝ͅͅͅͅͅͅͅͅͅͅͅͅͅͅͅͅ▄̵̸̸̶̸̶̷̸̸̸̵̵̶̷̶̸̴̶̵̶̶̴̶̡̡̧̢̡̢̧̨̢̨̨̡̢̡̧̛̛̛͉͍͇͔͕̬̮̥̯̪͙͎̠̤̺̦̞̩̲̘͔̬͓̮͓͖̩͓̺̞̟̝̳̥̬̮̲͙̘̮̹̗̱͙̼͔͚̦̲̫̖̰͕̘̗̥̹̳̞͚̱̥̱͎̙̦̙̞̯̠̮̼͖̱͓̥̗͈͇̗̯͔̖̤̮̪̟͖͙̫̹̗̗̼̹̝̻͙̯͚̜̣̲͎͈͚̣̼̦͚̐́̂́̒̿̊̓͌̅̋̒̋͂͊̓̌̔̀̓̅̏̄́͌̇̈̊̀͋̒̀͊̌̽͂́̉͌̓̇̓̐̇̌̂̈́̂̾͌̌̉̓̉̋̌̈́́̄͋͑̀̏͐̾̑̒̇̏̅̈̀͒̀͗̋͐̑͌̾̇͛͌͆̀̓̈́̌̽͒̽̇̀̑͛̿͒̆̈́͌̃̿̀̍̑̇̒̿̅͐̅̾͆̂̃̓̂͌͊̌̏̐́͂̑̓̈́̒̄̀̓̓̄̄̃͂̍͛̏͛̚̚̕̕̚͘̚̕̚͘̕̚̕̚͘̚͜͜͜͜͠͝͠͠͠͝͝͠͠͝͝͝ͅͅͅͅͅ▀̸̵̷̷̷̸̵̷̸̶̶̶̸̵̵̵̸̸̵̷̴̴̶̷̶̸̴̴̴̶̴̴̴̵̶̶̷̶̷̵̶̸̷̴̷̴̵̶̸̴̸̶̸̴̶̨̡̡̧̨̢̡̨̨̡̢̧̧̡̧̡̢̧̢̧̡̡̢̧̢̢̢̨̢̧̧̧̡̢̢̨̧̡̢̧̡̛̛̛̛̛̛̛̛̛̛̛̛̛̛̤͖͚͚͕͎̙̺̠͔͕͙͎̫͖̼̱͙͎̣̻̟̣̻͇̩̘͕̙̦̬̰͔̰̬̖̗̘̱̙̜̪̙͙̞̰͈̗̥̩͚̫̲̩͔̹̺̜͚͔͙̟̤͔̖͈̟͈͕̱̞̜͓̱̖͓͕͉͎͖̥̥̯̖̪̮̻̝̦̳̱̟͓̞̳̯͚̖̥͓̤̦̤̩̬̲͇̼͎̣̭͚̝͚͕͚̺̻͉̖͈̳̱̺͉̯̜̘̘̺̮͍̗̳̗̝̟̖̙̥̺̹͖̩͙̖͈̤͉̙̤͙̗̼̝̼͎̻͓̗̞̪̳̘̰̞͍͇͉̟̰̫̲̹̜̻̗͔͍̤̬̦̭̯̜̺͙̝̬̭̟͔̲͕̞̫̲͇̺̣̱̥̼̲̳̞̦͚̠͍̣̤̠̭̜̝̟̖̲͈̱̻̲̙̙̙̗͖̭̱͈̫̞̹̠̖̩̤̞̤̱̟̮͇̘̗̩̻̰̼̫̩͉̻̤̹̪̝̞̮̦̥̩̥̻̠͉̱͍̳̜̯̻̜̬̬̠͓̟̘̜̘̪̥̪̘̺͇̦̣̮͚̤̫̺̪͙͚͔͉̫͔̣̻̣͇̙͖̪̦̫̲̩̭̖̲͉̦̭͈͉̼̘̩̯̫̰͙͚͇̤̼̝͔̭͈̺͚͈͚̻̼̗̻͉̺̟̘͙̭̪͉͈̥̺̭̯̹̳̼̼̰̦̠̙̻̲̟̞͉̜͕̭̣̑͆͆̿̈̊̌̎̈́̃̊̐̑͗̾̍̒͌̎̑͆̽͊̏͊͆̉̑̎̏̿̂͆̉̾͂́̈̉̌̊̔̓͐͋̋̉́͊̏̿͒͂̓̂̆́̀̔̇͗͒̒̏̋̃̊̄̅̽̀̎̀̔̐̓͗͗̂̌̂̎̎̆̽̅̊͒̌̆̑̌̆͒͌̈́̓͛̈̎̂̇͆̌̿͒̀̎̒̐̊̓̎͗͋̋̽̈̈́̽͗̽̊̃̽̾̋̔͗̽̂̅̈͗̍̄̿͋̎̃̓́̈́͒͆̀͗̅͌͋̈́̑̒̆̓̉͒̑̈́̀̋̓̈́̇̅̾̈̋̎̍̂̊̈́̓̀͊̾͐̊̆͐͗̂̉̾̓͂̉͌̊͌̄̏̑́̃̌͆̌̌͌͑̈́̏̎̉͌̈́̀̓̓̑͌̍̐̉̈́́̽̿̈̑̀͐̾̉͛̓͛̋̀̆̓̓̊͊̈́͑̾̅͒̐͊̿̿͊͋̓́̽̿͌́͛͛͊̃͗͛͌̀̌̄̿̒́̀̔́̽̏̀̈́̑̇̎̉̊̈́̈͗̉̎́̏̇̅̓̓͑̏̒͆̑̊̂͐́̄͑͛͌̄̍̌͌̾͊́͊̾̀̈̉̀̑͒̅̐̐̆̓̈́̃͑͒̀̃̈͌̀̓̂͂͌̓́͊͐͗̓̇̋̔̌͌́͐̈̈́̐̽́̋̇̇̌̑͑͆̽̀͛̆͒̓̂̋̑̏͐̂͐̔̎͐̄̾͌̏̊́̾̇͛̈́̎̿̐̀͐̓͂̿̋̅̅̒͌͒̃̈́̇̀͊́̑͛́̕̚̚̚̕̕̕͘͘̕̚̚͘͘̕̚̚̕̕̕̚͘͘͘̚͜͜͜͜͜͜͜͜͝͠͠͝͝͝͝͝͝͝͝͝͠͝͝͠͠͝͝͠͠͠͝ͅͅͅͅͅͅͅͅ▄̷̵̷̸̸̷̴̸̷̸̷̷̷̶̸̸̵̡̡̢̨̡̧̢̨̨̡̨̛̛̛̛̛̬̩̬̜̮̝͈̙̩̫̫̤̠̦̥͙͓̥̦͈̘̰̥̜̝̞̱̱̞̺̗͎͉̟̹̙̝̳̠̺̤̭̩̙̮̼̤̮̩̺͍͔̦̜̼̹͕͉̬̩̰͈̫̦̹̤̗̻̦̖̬̘̼͎͕̟̭̪̱̣̟̦̫̩̹̻̘̆͂̾̄̂́̿̌̈́̌̈̈̔͐̒̀̌͗̊̈́̿͊͑͒̊̈́̍̎̄̀́̃͂̽̈́͂̀̀̿̇̽͐́̊͛͗̐̄̈́̎͑̇͗̑̓̍̇̀̆̇̊̑͊̍́͛̊̆̈́͗̄̃̓͊͗̒̋̀́̏͆̆̄̃̾͐̽̈́̉͐̓̍̑͆̀̋͒̿̃͌́̀͋̒͘͘͘͘̚͜͜͜͜͝͠͝͝͝͝͠͠͝ͅ      by name. ",
+        str_revive="ǘ̴͔͉̋n̸̝̈́̊u̷̧̱̎s̸̹̎e̴̮͝d̴̠̬̎",
+        str_spawn="{slimeoid_name} momentarily levitates off the floor. The whispers around you seemed to really like this one, and it continues to mutter as it looks at you.",
+        str_dissolve="ǘ̴͔͉̋n̸̝̈́̊u̷̧̱̎s̸̹̎e̴̮͝d̴̠̬̎",
+        get_strat=get_strat_g,
+        str_abuse="{slimeoid_name} takes the hit. It takes note of this, for later."
+    ),
 ]
 
 # A map of id_brain to EwBrain objects.

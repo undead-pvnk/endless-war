@@ -1898,6 +1898,15 @@ async def bandcamp(cmd):
 
 
 """
+	Link to the current RFCK Github repo.
+"""
+
+# Make sure to change this if stotle's repo is no longer the used one :,(
+async def github(cmd):
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Rowdy Fuckers Cop Killers Github: https://github.com/aristotlepenguin/endless-war'))
+
+
+"""
 	Link to the Gameplay category in the RFCK wiki
 """
 

@@ -111,19 +111,22 @@ async def revive(cmd, player_auto = None):
             
             # Turn player's negaslimeoid into a core if they have one
             if slimeoid.sltype == ewcfg.sltype_nega:
-                # Turn negaslimeoid into a negaslimeoid core
-                item_props = {
-                    'context': ewcfg.context_negaslimeoidheart,
-                    'subcontext': slimeoid.id_slimeoid,
-                    'item_name': "Core of {}".format(slimeoid.name),
-                    'item_desc': "A smooth, inert rock. If you listen carefully you can hear otherworldly whispering."
-                }
-                bknd_item.item_create(
-                id_user=ewcfg.channel_sewers,
-                id_server=cmd.guild.id,
-                item_type=ewcfg.it_item,
-                item_props=item_props
-                )
+                
+                # Only create a negaslimeoid core if the negaslimeoid is fully conjured
+                if slimeoid.life_state != ewcfg.slimeoid_state_forming:
+                    # Turn negaslimeoid into a negaslimeoid core
+                    item_props = {
+                        'context': ewcfg.context_negaslimeoidheart,
+                        'subcontext': slimeoid.id_slimeoid,
+                        'item_name': "Core of {}".format(slimeoid.name),
+                        'item_desc': "A smooth, inert rock. If you listen carefully you can hear otherworldly whispering."
+                    }
+                    bknd_item.item_create(
+                    id_user=ewcfg.channel_sewers,
+                    id_server=cmd.guild.id,
+                    item_type=ewcfg.it_item,
+                    item_props=item_props
+                    )
 
                 # Kill the slimeoid and set player's active_slimeoid to -1
                 slimeoid.die()

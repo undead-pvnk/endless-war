@@ -326,11 +326,11 @@ async def inventory_print(cmd):
             item_type = ewcfg.it_food
 
         # Filter to zines
-        if 'book' in lower_token_list or 'zines' in lower_token_list:
+        if 'book' in lower_token_list or 'books' in lower_token_list or 'zines' in lower_token_list:
             item_type = ewcfg.it_book
 
         #Filter to relic items
-        if 'relic' in lower_token_list:
+        if 'relic' in lower_token_list or 'relics' in lower_token_list:
             item_type = ewcfg.it_relic
 
         # Search for a particular item. Ignore formatting parameters

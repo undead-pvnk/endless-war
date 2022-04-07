@@ -2047,7 +2047,7 @@ food_list = [
         str_desc="It's a \"purple drink\", created by mixing red drink and blue drink. You've heard the rumors, and apparently drinking this concoction can give you the ability to see the future! Either that or a crippling codeine addiction.",
         time_expir=43200,
         acquisition = "smelting",
-),
+    ),
 ]
 
 # A map of id_food to EwFood objects.

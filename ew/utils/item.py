@@ -59,7 +59,9 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
         for item in drop_candidates:
             cosmetic_id = item.get('id_item')
             cosmetic_item = EwItem(id_item=cosmetic_id)
-            if cosmetic_item.item_props.get('adorned') != "true" and cosmetic_item.item_props.get('slimeoid') != "true":
+            if cosmetic_item.item_props.get('id_cosmetic') == "dogtag": # Dog Tags always drop on death
+                end_drops.append(item.get('id_item'))
+            elif cosmetic_item.item_props.get('adorned') != "true" and cosmetic_item.item_props.get('slimeoid') != "true":
                 filtered_items.append(item)
 
     if item_type_filter == ewcfg.it_weapon:

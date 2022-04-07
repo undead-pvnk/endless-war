@@ -849,6 +849,8 @@ cmd_transportmap_alt1 = cmd_prefix + 'transitmap'
 cmd_wiki = cmd_prefix + 'wiki'
 cmd_booru = cmd_prefix + 'booru'
 cmd_bandcamp = cmd_prefix + 'bandcamp'
+cmd_github = cmd_prefix + 'github'
+cmd_github_alt1 = cmd_prefix + 'git'
 cmd_tutorial = cmd_prefix + 'tutorial'
 cmd_pardon = cmd_prefix + 'pardon'
 cmd_defect = cmd_prefix + 'defect'
@@ -1203,9 +1205,13 @@ cmd_challenge = cmd_prefix + 'challenge'
 cmd_instructions = cmd_prefix + 'instructions'
 cmd_playfetch = cmd_prefix + 'playfetch'
 cmd_petslimeoid = cmd_prefix + 'petslimeoid'
+cmd_petslimeoid_alt1 = cmd_prefix + 'petnegaslimeoid'
 cmd_abuseslimeoid = cmd_prefix + 'abuseslimeoid'
+cmd_abuseslimeoid_alt1 = cmd_prefix + 'abusenegaslimeoid'
 cmd_walkslimeoid = cmd_prefix + 'walkslimeoid'
+cmd_walkslimeoid_alt1 = cmd_prefix + 'walknegaslimeoid'
 cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
+cmd_observeslimeoid_alt1 = cmd_prefix + 'observenegaslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
 cmd_slimeoidbattle_alt1 = cmd_prefix + 'battleslimeoid'
 cmd_slimeoidbattle_alt2 = cmd_prefix + 'negaslimeoidbattle'
@@ -1218,14 +1224,19 @@ cmd_bottleslimeoid_alt1 = cmd_prefix + 'bottle'
 cmd_unbottleslimeoid = cmd_prefix + 'unbottleslimeoid'
 cmd_unbottleslimeoid_alt1 = cmd_prefix + 'unbottle'
 cmd_feedslimeoid = cmd_prefix + 'feedslimeoid'
+cmd_feedslimeoid_alt1 = cmd_prefix + 'feednegaslimeoid'
 cmd_dress_slimeoid = cmd_prefix + 'dressslimeoid'
 cmd_dress_slimeoid_alt1 = cmd_prefix + 'decorateslimeoid'
 cmd_dress_slimeoid_alt2 = cmd_prefix + 'adornslimeoid'
 cmd_dress_slimeoid_alt3 = cmd_prefix + 'dressnegaslimeoid'
+cmd_dress_slimeoid_alt4 = cmd_prefix + 'decoratenegaslimeoid'
+cmd_dress_slimeoid_alt5 = cmd_prefix + 'adornnegaslimeoid'
 cmd_undress_slimeoid = cmd_prefix + 'undressslimeoid'
 cmd_undress_slimeoid_alt1 = cmd_prefix + 'undecorateslimeoid'
 cmd_undress_slimeoid_alt2 = cmd_prefix + 'unadornslimeoid'
 cmd_undress_slimeoid_alt3 = cmd_prefix + 'undressnegaslimeoid'
+cmd_undress_slimeoid_alt4 = cmd_prefix + 'undecoratenegaslimeoid'
+cmd_undress_slimeoid_alt5 = cmd_prefix + 'unadornnegaslimeoid'
 cmd_tagslimeoid = cmd_prefix + 'tagslimeoid'
 cmd_tagslimeoid_alt1 = cmd_prefix + 'tagnegaslimeoid'
 cmd_untagslimeoid = cmd_prefix + 'untagslimeoid'
@@ -1549,8 +1560,8 @@ bleed_half_life = 60 * 5  # five minutes
 bleed_tick_length = 10
 
 # how often to decide whether or not to spawn an enemy
-enemy_spawn_tick_length = 60 * 3 # Three minutes
-# enemy_spawn_tick_length = 1
+# enemy_spawn_tick_length = 60 * 3 # Three minutes
+enemy_spawn_tick_length = 1
 # enemy_spawn_tick_length = 30
 # how often it takes for hostile enemies to attack
 enemy_attack_tick_length = 5
@@ -3285,6 +3296,7 @@ cosmetic_id_raincoat = "raincoat"
 
 cosmeticAbility_id_lucky = "lucky"
 cosmeticAbility_id_boost = "boost"  # Not in use. Rollerblades have this ability.
+cosmeticAbility_id_clout = "clout"
 
 # Slimeoid attributes.
 slimeoid_strat_attack = "attack"

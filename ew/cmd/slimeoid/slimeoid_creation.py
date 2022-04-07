@@ -230,9 +230,11 @@ async def incubate_negaslimeoid(cmd):
                 sacrificed_negaslime = None
                 if cmd.tokens_count > 1:
                     sacrificed_negaslime = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
-                    # -1 from getIntToken() means use all slime
+                    # -1 from getIntToken() means use all slime - sacrificed negaslime is a positive integer
                     if sacrificed_negaslime == -1:
                         sacrificed_negaslime = -user_data.slimes
+                    if sacrificed_negaslime < 0:
+                        sacrificed_negaslime = -sacrificed_negaslime
 
                 # Check if player sacrificed any negaslime or if they have enough to sacrifice.
                 if sacrificed_negaslime == None:
@@ -323,6 +325,22 @@ async def change_body_part(cmd):
             
             pressed_button = cmd.tokens[1].lower()
 
+            # If it's a negaslimeoid and the desired part is a brain, change letter to the corresponding Negaslimeoid brain.
+            if  desired_change == "brain" and slimeoidtype == "Negaslimeoid":
+                    
+                # This is done to keep abcdefg parity with between !growbrain and the other grow commands with negaslimeoids.
+                cmd_abcdefg_to_hijklmn = {
+                    "a": ("h"),
+                    "b": ("i"),
+                    "c": ("j"),
+                    "d": ("k"),
+                    "e": ("l"),
+                    "f": ("m"),
+                    "g": ("n"),
+                }
+
+                pressed_button = cmd_abcdefg_to_hijklmn.get(pressed_button)
+
             # Check if desired part is in part map 
             part = part_map.get(pressed_button)
 
@@ -358,6 +376,7 @@ async def change_body_part(cmd):
                     slimeoid_data.special = part.id_special
 
                 elif desired_change == "brain":
+                    print(part)
                     slimeoid_data.ai = part.id_brain
 
                 else:
@@ -367,7 +386,7 @@ async def change_body_part(cmd):
 
                 
                 slimeoid_data.persist()
-                response = "{}".format(part.str_create_nega if user_data.life_state == ewcfg.life_state_corpse else part.str_create)
+                response = "{}".format(part.str_create_nega if (user_data.life_state == ewcfg.life_state_corpse and desired_change != "brain") else part.str_create)
                 # Go to final response
 
 
@@ -518,7 +537,7 @@ async def name_slimeoid(cmd):
 
             # Turn entire message minus "!nameslimeoid" in to name variable
             command_used = ewutils.flattenTokenListToString(cmd.tokens[0])
-            name = cmd.message.content[(len(command_used) + 1):].strip() # It's 1 short for some reason? IDK
+            name = cmd.message.content[(len(command_used) + len(ewcfg.cmd_prefix)):].strip()
 
             # Limit name length to 32 characters
             if len(name) > 32:
@@ -671,38 +690,42 @@ async def destroy_slimeoid(cmd):
             # Creates string "Slimeoid"
             slimeoid_type = "Slimeoid"
 
-            # Creates the item props for the slimeoid heart
-            item_props = {
-            'context': ewcfg.context_slimeoidheart,
-            'subcontext': slimeoid_data.id_slimeoid,
-            'item_name': "Heart of {}".format(slimeoid_data.name),
-            'item_desc': "A poudrin-like crystal. If you listen carefully you can hear something that sounds like a faint heartbeat."
-            }
-            # Creates the item in downtown
-            bknd_item.item_create(
-            id_user=ewcfg.channel_downtown,
-            id_server=cmd.guild.id,
-            item_type=ewcfg.it_item,
-            item_props=item_props
-            )
+            # Forming slimeoids DON'T drop hearts
+            if slimeoid_data.life_state != ewcfg.slimeoid_state_forming:
+                # Creates the item props for the slimeoid heart
+                item_props = {
+                'context': ewcfg.context_slimeoidheart,
+                'subcontext': slimeoid_data.id_slimeoid,
+                'item_name': "Heart of {}".format(slimeoid_data.name),
+                'item_desc': "A poudrin-like crystal. If you listen carefully you can hear something that sounds like a faint heartbeat."
+                }
+                # Creates the item in downtown
+                bknd_item.item_create(
+                id_user=ewcfg.channel_downtown,
+                id_server=cmd.guild.id,
+                item_type=ewcfg.it_item,
+                item_props=item_props
+                )
         else:
             # Creates string "Negaslimeoid"
             slimeoid_type = "Negaslimeoid"
 
-            # Creates the item props for the negaslimeoid core
-            item_props = {
-            'context': ewcfg.context_negaslimeoidheart,
-            'subcontext': slimeoid_data.id_slimeoid,
-            'item_name': "Core of {}".format(slimeoid_data.name),
-            'item_desc': "A smooth, inert rock. If you listen carefully you can hear otherworldly whispering."
-            }
-            # Creates the item at Waffle House
-            bknd_item.item_create(
-            id_user=ewcfg.channel_wafflehouse,
-            id_server=cmd.guild.id,
-            item_type=ewcfg.it_item,
-            item_props=item_props
-            )
+            # Forming negaslimeoids DON'T drop cores
+            if slimeoid_data.life_state == ewcfg.slimeoid_state_forming:
+                # Creates the item props for the negaslimeoid core
+                item_props = {
+                'context': ewcfg.context_negaslimeoidheart,
+                'subcontext': slimeoid_data.id_slimeoid,
+                'item_name': "Core of {}".format(slimeoid_data.name),
+                'item_desc': "A smooth, inert rock. If you listen carefully you can hear otherworldly whispering."
+                }
+                # Creates the item at Waffle House
+                bknd_item.item_create(
+                id_user=ewcfg.channel_wafflehouse,
+                id_server=cmd.guild.id,
+                item_type=ewcfg.it_item,
+                item_props=item_props
+                )
         
         cosmetics = bknd_item.inventory(
             id_user=cmd.message.author.id,
@@ -726,8 +749,9 @@ async def destroy_slimeoid(cmd):
         user_data.active_slimeoid = -1
 
         # Take some of the player's negaslime for destroying a slimeoid.
-        user_data.slimes -= user_data.slimes / 10
-        user_data.persist()
+        if user_data.slimes < 0:
+            user_data.slimes -= user_data.slimes / 10
+            user_data.persist()
         
         # Go to final response
 

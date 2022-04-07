@@ -24,6 +24,7 @@ from ew.utils import rolemgr as ewrolemgr
 from ew.utils import stats as ewstats
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
+from ew.utils.frontend import EwResponseContainer
 from . import juviecmdutils
 from .juviecmdutils import create_mining_event
 from .juviecmdutils import gen_scavenge_captcha
@@ -43,6 +44,7 @@ except:
 async def crush(cmd):
     member = cmd.message.author
     user_data = EwUser(member=member)
+    resp_cont = EwResponseContainer(id_server=cmd.guild.id)
     response = ""  # if it's not overwritten
     crush_slimes = ewcfg.crush_slimes
 
@@ -149,7 +151,8 @@ async def crush(cmd):
 
             # Kill player if they have less than 1 million slime
             if user_data.slimes < 1000000:
-                user_data.die(cause=ewcfg.cause_suicide)
+                die_resp = user_data.die(cause=ewcfg.cause_suicide)
+                resp_cont.add_response_container(die_resp)
 
                 response = "You {} your hard-earned slime crystal with your bare teeth.\nAs the nerve endings in your teeth explode, you realize you bit into a negapoudrin! You writhe on the ground as slime gushes from all of your orifices. You fucking die. {}".format(command, ewcfg.emote_slimeskull)
 
@@ -174,7 +177,8 @@ async def crush(cmd):
 
             # Kill player if they have less than 1 million slime
             if user_data.slimes < 1000000:
-                user_data.die(cause=ewcfg.cause_suicide)
+                die_resp = user_data.die(cause=ewcfg.cause_suicide)
+                resp_cont.add_response_container(die_resp)
                 
                 response = "You {} the Negaslimeoid core with your bare teeth.\nAs the nerve endings in your teeth explode, you recoil in pain! You writhe on the ground as slime gushes from all of your orifices. You fucking die. {}".format(command, ewcfg.emote_slimeskull)
 
@@ -214,7 +218,8 @@ async def crush(cmd):
             response = "{} which item? (check **!inventory**)".format(command)
 
     # Send the response to the player.
-    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    resp_cont.add_channel_response(cmd.message.channel.name, fe_utils.formatMessage(cmd.message.author, response))
+    await resp_cont.post()
 
 
 """ player enlists in a faction/gang """

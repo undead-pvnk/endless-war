@@ -178,21 +178,33 @@ async def slimeoid(cmd):
 
         # get the cosmetics worn by the slimeoid
         adorned_cosmetics = []
+
         for item in cosmetics:
             cos = EwItem(id_item=item.get('id_item'))
             if cos.item_props.get('slimeoid') == 'true':
                 hue = hue_static.hue_map.get(cos.item_props.get('hue'))
                 adorned_cosmetics.append((hue.str_name + " colored " if hue != None else "") + cos.item_props.get('cosmetic_name'))
 
+        # List the cosmetics the slimeoid has adorned
         if len(adorned_cosmetics) > 0:
             response += "\n\nIt has a {} adorned.".format(ewutils.formatNiceList(adorned_cosmetics, "and"))
     
+            # If it has more than 2, give it a freshness rating
             if len(adorned_cosmetics) >= 2:
                 outfit_map = item_utils.get_outfit_info(id_user=cmd.message.author.id, id_server=cmd.guild.id, slimeoid = True)
 
                 if outfit_map is not None:
                     response += " Its total freshness rating is a {} {}.".format(outfit_map['dominant_style'], outfit_map['total_freshness'])
 
+        # If the user is wearing clout goggles, show the slimeoid's clout as a number.
+        cosmetic_abilities = item_utils.get_cosmetic_abilities(id_user=cmd.message.author.id, id_server=cmd.guild.id)
+        if ewcfg.cosmeticAbility_id_clout in cosmetic_abilities:
+            if slimeoid.clout == 0:
+                response += "\n\nUsing your *soul-searing clout goggles*, you can see the **CLOUTLETS** radiating off of {}. But... it doesn't have any clout! What a LOSER!!!".format(slimeoid.name)
+            else:
+                response += "\n\nUsing your *soul-searing clout goggles*, you can see the **CLOUTLETS** radiating off of {}. You determine that {} has approximately **{} clout**! Holy cow!".format(slimeoid.name, slimeoid.name, slimeoid.clout)
+
+        # Show the slimeoid's description.
         if slimeoid.dogtag != "":
             response += "\n\nThere's a dog tag embedded in it: {}".format(slimeoid.dogtag)
 
@@ -207,16 +219,15 @@ async def playfetch(cmd):
     slimeoid = EwSlimeoid(member=cmd.message.author)
     time_now = int(time.time())
 
-    # Ghosts can't play with their negaslimeoids
-    if slimeoid.sltype == ewcfg.sltype_nega:
-        response = "Your ghastly form cannot throw a stick and your Negaslimeoid is entirely uninterested in the concept of fetch. The scene depresses you."
-
-    elif user_data.life_state == ewcfg.life_state_corpse:
+    # Ghosts with living slimeoids can't play fetch.
+    if user_data.life_state == ewcfg.life_state_corpse and slimeoid.sltype != ewcfg.sltype_nega:
         response = "Slimeoids don't fuck with ghosts."
 
+    # Users with souls can't play fetch.
     elif user_data.has_soul == 0:
         response = "You reel back to throw the stick, but your motivation wears thin halfway through. You drop it on the ground with a sigh."
 
+    # Slimeoids that aren't active or have been recently defeated can play fetch.
     elif slimeoid.life_state == ewcfg.slimeoid_state_none:
         response = "You do not have a Slimeoid to play fetch with."
 
@@ -226,6 +237,7 @@ async def playfetch(cmd):
     elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
         response = "{} is too beat up from its last battle to play fetch right now.".format(slimeoid.name)
 
+    # Get the flavor text corresponding to the slimeoid's head.
     else:
         head = sl_static.head_map.get(slimeoid.head)
         response = head.str_fetch.format(
@@ -245,6 +257,7 @@ async def petslimeoid(cmd):
     list_ids = None
 
     # mentions[0]
+    # If a player is @'d in the command, pet their slimeoid if you're in the same POI, are both sharing quadrants, and pass lifestate checks.
     if cmd.mentions_count > 0:
         target = cmd.mentions[0]
         target_data = EwUser(member=target)
@@ -270,13 +283,12 @@ async def petslimeoid(cmd):
         else:
             slimeoid = EwSlimeoid(member=target)
 
-    if slimeoid.sltype == ewcfg.sltype_nega:
-        if user_data.life_state == ewcfg.life_state_corpse:
-            response = "You go to pet the Negaslimeoid, but you're a ghost. You can't \"pet\" things."
-        else:
-            response = "You go to pet the Negaslimeoid, but then you realize you're a fucking idiot. If you lay one finger on that unholy abomination your hand will evaporate."
+    # Living players in a ghost's quadrants can't pet negaslimeoids.
+    if slimeoid.sltype == ewcfg.sltype_nega and user_data.life_state != ewcfg.life_state_corpse:
+        response = "You go to pet the Negaslimeoid, but then you realize you're a fucking idiot. If you lay one finger on that unholy abomination your hand will evaporate."
 
-    elif user_data.life_state == ewcfg.life_state_corpse:
+    # Ghosts can't fuck with slimeoids.
+    elif user_data.life_state == ewcfg.life_state_corpse and slimeoid.sltype != ewcfg.sltype_nega:
         response = "Slimeoids don't fuck with ghosts."
 
     elif cmd.mentions_count > 1:
@@ -285,6 +297,7 @@ async def petslimeoid(cmd):
     elif user_data.has_soul == 0:
         response = "The idea doesn't even occur to you because your soul is missing."
 
+    # Slimeoids that aren't active or have been recently defeated can play fetch.
     elif slimeoid.life_state == ewcfg.slimeoid_state_none:
         response = "You do not have a Slimeoid to pet."
 
@@ -294,6 +307,7 @@ async def petslimeoid(cmd):
     elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
         response = "{} whimpers. It's still recovering from being beaten up.".format(slimeoid.name)
 
+    # Get the flavor text corresponding to the slimeoid's defense and brain.
     else:
 
         armor = sl_static.defense_map.get(slimeoid.armor)
@@ -319,6 +333,7 @@ async def abuseslimeoid(cmd):
     list_ids = None
 
     # mentions[0]
+    # If a player is @'d in the command, pet their slimeoid if you're in the same POI, are both sharing quadrants, and pass lifestate checks.
     if cmd.mentions_count > 0:
         target = cmd.mentions[0]
         target_data = EwUser(member=target)
@@ -344,13 +359,12 @@ async def abuseslimeoid(cmd):
         else:
             slimeoid = EwSlimeoid(member=target)
 
-    if slimeoid.sltype == ewcfg.sltype_nega:
-        if user_data.life_state == ewcfg.life_state_corpse:
-            response = "As much as you would love to abuse your negaslimeoid, you can't exactly beat it as a ghost. And you can't verbally, either, as the only langauge your negaslimeoid speaks is the whisperings of the Ancient Ones."
-        else:
-            response = "Why don't you !slimeoidbattle? No point in abusing something you could just kill."
+    # Living players in a ghost's quadrants can't pet negaslimeoids.
+    if slimeoid.sltype == ewcfg.sltype_nega and user_data.life_state != ewcfg.life_state_corpse:
+        response = "Why don't you !slimeoidbattle? No point in abusing something you could just kill."
 
-    elif user_data.life_state == ewcfg.life_state_corpse:
+    # Ghosts can't fuck with slimeoids.
+    elif slimeoid.sltype != ewcfg.sltype_nega and user_data.life_state == ewcfg.life_state_corpse:
         response = "Slimeoids don't fuck with ghosts."
 
     elif cmd.mentions_count > 1:
@@ -365,6 +379,7 @@ async def abuseslimeoid(cmd):
     # elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
     #		response = "{} whimpers. It's still recovering from being beaten up.".format(slimeoid.name)
 
+    # Get the flavor text corresponding to the slimeoid's defense and brain.
     else:
 
         armor = sl_static.defense_map.get(slimeoid.armor)
@@ -387,15 +402,14 @@ async def walkslimeoid(cmd):
     slimeoid = EwSlimeoid(member=cmd.message.author)
     time_now = int(time.time())
 
-    if slimeoid.sltype == ewcfg.sltype_nega:
-        response = "You tell your negaslimeoid to go on a walk, but it just... doesn't. It's a negaslimeoid - what did you expect?"
-
-    elif user_data.life_state == ewcfg.life_state_corpse:
+    # Ghosts with living slimeoids can't walk their slimeoid.
+    if user_data.life_state == ewcfg.life_state_corpse and slimeoid.sltype != ewcfg.sltype_nega:
         response = "Slimeoids don't fuck with ghosts."
 
     elif user_data.has_soul == 0:
         response = "Why take it on a walk? It's not like it understands your needs."
 
+    # Check for slimeoid life state and whether it has been defeated recently
     elif slimeoid.life_state == ewcfg.slimeoid_state_none:
         response = "You do not have a Slimeoid to take for a walk."
 
@@ -405,6 +419,7 @@ async def walkslimeoid(cmd):
     elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
         response = "{} can barely move. It's still recovering from its injuries.".format(slimeoid.name)
 
+    # Get the flavor text corresponding to the slimeoid's brain and legs.
     else:
         brain = sl_static.brain_map.get(slimeoid.ai)
         response = brain.str_walk.format(
@@ -431,9 +446,11 @@ async def observeslimeoid(cmd):
     else:
         slimeoidtype = "Negaslimeoid"
 
+    # Ghosts with living slimeoids can't observe them.
     if user_data.life_state == ewcfg.life_state_corpse and slimeoid.sltype != ewcfg.sltype_nega:
         response = "{}s don't fuck with ghosts.".format(slimeoidtype)
 
+    # Checks for slimeoid lifestate and whether it was defeated recently.
     elif slimeoid.life_state == ewcfg.slimeoid_state_none:
         response = "You do not have a {} to observe.".format(slimeoidtype)
 
@@ -443,6 +460,7 @@ async def observeslimeoid(cmd):
     elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
         response = "{} lies totally inert, recuperating from being recently pulverized.".format(slimeoid.name)
 
+    # Choose a random response between the slimeoid's body, weapon, special, and brain.
     else:
         options = [
             'body',
@@ -753,7 +771,7 @@ async def saturateslimeoid(cmd):
     item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter=ewcfg.it_item)
 
     if slimeoid.sltype == ewcfg.sltype_nega:
-        response = "You can't saturate Negaslimeoids, you dumbass. Negaslime can't exactly hold any color. If you wanted an ultra-custom-mega-deluxe negaslimeoid, maybe you should !revive. Huh? Oh, you don't want to !revive? 'Cuz you're a little pissy baby ghost who hates slime? Wow. So good for you. I'm SO PROUD OF YOU. I would tell you to !kill yourself, but you can't, because you're a fucking ghost and already dead. Maybe you should !revive yourself, if you love being dead so much. \"Wah wah, I'm a staydead, give me antislime!\" Go rot in the sewers. You're exactly what's wrong with RFCK, you know that? You just want to ruin the game for other players and then complain about the game in nurses-office. MAYBE, JUST MAYBE, you should leave the server. It's really easy, actually. Right-click the server icon and \"Leave Server\" should be there in big red text. It's like being the ULTIMATE staydead; you no longer participate in the game or the community, you longer have any voice, and your name becomes white (just like the Negaslime!!! OMG!!!). God. Next time you wanna saturate your negaslimeoid just saturate your ass and !revive to give yourself some fucking color. You could literally become a Shambler and it'd be better than being a staydead. Fuck you."
+        response = "As much as you may want to, you can't saturate Negaslime."
 
     elif user_data.life_state == ewcfg.life_state_corpse:
         response = "Slimeoids don't fuck with ghosts."
@@ -1049,11 +1067,8 @@ async def feedslimeoid(cmd):
     response = ""
 
     # Ghosts can't feed slimeoids or negaslimeoids
-    if user_data.life_state == ewcfg.life_state_corpse:
-        if slimeoid.sltype != ewcfg.sltype_nega:
-            response = "Slimeoids don't fuck with ghosts."
-        else:
-            response = "You try to feed your negaslimeoid, but they have no appetite."
+    if user_data.life_state == ewcfg.life_state_corpse and slimeoid.sltype != ewcfg.sltype_nega:
+        response = "Slimeoids don't fuck with ghosts."
 
     # Slimeoid has to be alive
     elif slimeoid.life_state == ewcfg.slimeoid_state_none:
@@ -1116,24 +1131,45 @@ async def feedslimeoid(cmd):
                 if slimeoid_brain != None and slimeoid_head != None:
                     response = "{} {}".format(slimeoid_brain.str_feed, slimeoid_head.str_feed)
                 
-                # Clout trouts make slimeoids cooooler kiddo
+                # Clout trouts make some gooooooggles kiddo
                 if item_data.item_props.get('id_food') == "clouttrout":
-                    # Increase clout
-                    slimeoid.clout = slimeoid.clout + 10
-                    if slimeoid.clout >= 100:
-                        slimeoid.clout = 100
+                    
+                    # Give the player some Clout Goggles
+                    bknd_item.item_create(
+                        item_type=ewcfg.it_cosmetic,
+                        id_user=cmd.message.author.id,
+                        id_server=cmd.guild.id,
+                        item_props={
+                            'id_cosmetic': 'cloutgoggles',
+                            'cosmetic_name': 'Clout Goggles',
+                            'cosmetic_desc': 'A pair of bulbous ovular sunglasses. They\'re way too tinted, but hot DAMN do these radiate sick shit energy. They maybe even radiate... cloutlets? You can see the hidden Clout in the world with these on!',
+                            'str_onadorn': 'You put on the Clout Goggles and feel... lamer. Other than cloutlets, you can\'t see anything with these on!',
+                            'str_unadorn': 'You take off the Clout Goggles. You lose 10,000 Instagrime followers nigh-instantaneously. The horror!',
+                            'str_onbreak': 'Whaaaa-? Your Clout Goggles **SHATTER!** Cloutlets scatter across the floor, splitting from your naked eyes.',
+                            'rarity': ewcfg.rarity_patrician,
+                            'attack': 3,
+                            'defense': 1,
+                            'speed': 1,
+                            'ability': 'clout',
+                            'durability': 2500000,
+                            'size': 2,
+                            'style': ewcfg.style_cool,
+                            'freshness': min(slimeoid.clout // 5, 10), # 1/5 of the slimeoid's clout, capped at 10 freshness.
+                            'adorned': 'false',
+                                    }
+                    )
 
                     # Add on to previous flavor text
-                    response += "\nThe clout trout is *soooooooo coooooool*, {slimeoid_name} gains some **SWAGGER** to their step. Other Slimeoids start to scream more at their **sick swag sauce!!!**"
+                    response += "\nThe clout trout is *soooooooo coooooool*, {slimeoid_name} can't fully digest it! The trout breaks down into Clout Fragments, recombobulates into Clout Scrap, and reforms into Clout Goggles. {slimeoid_name} spits the Clout Goggles out onto the ground in front of you. You just gained some **sick swag sauce!!!**"
 
-                # Persist the time_defeated and possible clout change.
+                # Persist the time_defeated.
                 slimeoid.persist()
 
                 # Format the response - change "slimeoid_name" and "food_name" to the actual names
                 response = response.format(slimeoid_name=slimeoid.name, food_name=item_sought.get('name'))
 
             # If the item is a negapoudrin
-            elif item_data.item_props.get("id_item") == ewcfg.item_id_negapoudrin:
+            elif item_data.item_props.get("id_item") == ewcfg.item_id_negapoudrin and slimeoid.sltype == ewcfg.sltype_lab:
 
                 # Delete the negapoudrin from the player's inventory
                 bknd_item.item_delete(id_item=item_data.id_item)
@@ -1152,7 +1188,26 @@ async def feedslimeoid(cmd):
                 user_data.active_slimeoid = -1
                 user_data.persist()
 
-            # Not a candy, food item, or negapoudrin
+            elif item_data.item_props.get("id_item") == ewcfg.item_id_slimepoudrin and slimeoid.sltype == ewcfg.sltype_nega:
+
+                # Delete the poudrin from the player's inventory
+                bknd_item.item_delete(id_item=item_data.id_item)
+    
+                # Flavor text. Unique for each brain and head type.
+                response = "{slimeoid_name} eats the {food_name}."
+                slimeoid_brain = sl_static.brain_map.get(slimeoid.ai)
+                slimeoid_head = sl_static.head_map.get(slimeoid.head)
+                if slimeoid_brain != None and slimeoid_head != None:
+                    response = "{} {} \n{slimeoid_name} nigh-instantaneously implodes in on itself, disappearing into nothingness. No core, no negaslime, no trace of its existence is left behind. The Ancient Ones are displeased. RIP {slimeskull}".format(slimeoid_brain.str_feed, slimeoid_head.str_feed, slimeskull = ewcfg.emote_slimeskull, slimeoid_name=slimeoid.name)
+                    # Double formatting so the formatting within the formatting works. Probably a better way to do this :/
+                    response = response.format(slimeoid_name=slimeoid.name, food_name=item_sought.get('name'))
+                    
+                # Erase the negaslimeoid
+                slimeoid.delete()
+                user_data.active_slimeoid = -1
+                user_data.persist()
+
+            # Not a candy, food item, or negapoudrin/poudrin for slimeoid/negaslimeoid
             else:
                 response = "That item is not suitable for slimeoid consumption."
 
@@ -1174,6 +1229,7 @@ async def dress_slimeoid(cmd):
     else:
         slimeoidtype = "Slimeoid"
 
+    # Ghosts can't dress their living slimeoids
     if user_data.life_state == ewcfg.life_state_corpse and slimeoid.sltype != ewcfg.sltype_nega:
         response = "Slimeoids don't fuck with ghosts."
 
@@ -1264,6 +1320,7 @@ async def undress_slimeoid(cmd):
     user_data = EwUser(member=cmd.message.author)
     slimeoid = EwSlimeoid(member=cmd.message.author)
 
+    # Ghosts can't undress their living slimeoids.
     if user_data.life_state == ewcfg.life_state_corpse and slimeoid.sltype != ewcfg.sltype_nega:
         response = "Slimeoids don't fuck with ghosts."
 
@@ -1316,6 +1373,7 @@ async def undress_slimeoid(cmd):
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def tagslimeoid(cmd):
     user_data = EwUser(member=cmd.message.author)
     slimeoid = EwSlimeoid(member=cmd.message.author)
@@ -1341,6 +1399,12 @@ async def tagslimeoid(cmd):
         response = "You can't tag your {} without a dog tag. Idiot.".format(slimeoidtype)
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))        
 
+    # If the player somehow is trying to tag with a different item, they can't tag their slimeoid.
+    dogtagitem = EwItem(id_item=dogtag.get('id_item'))
+    if dogtagitem.item_props.get('id_cosmetic') != "dogtag":
+        response = "You can't tag your {} with... whatever this is. Idiot.".format(slimeoidtype)
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))        
+
     # Turn the rest of the message into the dog tag message.
     message_text = ' '.join(word for word in cmd.tokens[1:])
 
@@ -1360,6 +1424,7 @@ async def tagslimeoid(cmd):
         response += "\nYou run out of space on the dog tag. You really went ham on that little tag, huh?"
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def untagslimeoid(cmd):
     user_data = EwUser(member=cmd.message.author)

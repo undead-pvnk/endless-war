@@ -202,25 +202,61 @@ class EwSlimeoidCombatData:
         elif self.coating == ewcfg.hue_id_gold:
             self.chutzpah += 2
 
-    # Nerfs slimeoids 11-foot and up to have 10-foot stats
+    # Nerfs slimeoids 11-foot and up to have 10-foot stats, as well as autobalancing slimeoids with negative stats 
     def apply_size_nerf(self, enemy_combat_data = None):
         size = self.moxie + self.grit + self.chutzpah
 
         # If the slimeoid is bigger than 10 feet. Comes before other matchups, so stats together should equal size. Stats are 1 at minimum in CombatData
         if size > 13:
             oversize = size - 13
-            points_nerfed = 0
 
-            while points_nerfed != oversize:
-                # Lower grit first, then moxie, then chutzpah
+            # Take 1/3 of oversize and subtract it from grit. Tries to shave off 1/3 of oversize from each stat.
+            to_subtract = oversize // 3
+            oversize -= to_subtract
+
+            while self.grit > 1 and to_subtract > 0:
+                self.grit -= 1
+                to_subtract -= 1
+            # if grit hits 1 (0 grit), add the leftover to_subtract back to oversize
+            oversize += to_subtract
+
+            # Take half of oversize and subtract it from moxie
+            to_subtract = oversize // 2
+            oversize -= to_subtract
+            
+            while self.moxie > 1 and to_subtract > 0:
+                self.moxie -= 1
+                to_subtract -= 1
+                print(to_subtract)
+            # if moxie hits 1 (0 moxie), add the leftover to_subtract back to oversize
+            to_subtract += oversize
+
+            # subtract the remaining oversize from chutzpah
+            while self.chutzpah > 1 and to_subtract > 0:
+                self.chutzpah -= 1
+                to_subtract -= 1
+
+            # If there are any points remaining, try subtracting from grit or moxie again
+            if to_subtract > 0:
                 if self.grit > 1:
-                    self.grit -= 1
-                elif self.moxie > 1:
-                    self.moxie -= 1
-                else:
-                    self.chutzpah -= 1
-                
-                points_nerfed += 1
+                    while self.grit > 1 and to_subtract > 0:
+                        self.grit -= 1
+                        to_subtract -= 1
+                if self.moxie > 1 and to_subtract > 0:
+                    while self.moxie > 1 and to_subtract > 0:
+                        self.moxie -= 1
+                        to_subtract -= 1
+                # If all else fails, autobalance to 4/3/3
+                if to_subtract > 0:
+                    self.grit = 5
+                    self.moxie = 4
+                    self.chutpah = 4
+        
+        # If the slimeoid has any negative stats, autobalance to 4/3/3
+        elif self.grit < 1 or self.moxie < 1 or self.chutzpah < 1:
+            self.grit = 5
+            self.moxie = 4
+            self.chutzpah = 4
 
     # roll the dice on whether an action succeeds and by how many degrees of success
     def attempt_action(self, strat, sap_spend, in_range):
@@ -438,16 +474,8 @@ async def battle_slimeoids(id_s1, id_s2, challengee_name, challenger_name, chann
     client = ewutils.get_client()
 
     # Nerf level to 10 if it's above 11.
-    if challengee_slimeoid.level >= 10:
-        challengee_level = 10
-    else:
-        challengee_level = challengee_slimeoid.level
-
-    if challenger_slimeoid.level >= 10:
-        challenger_level = 10
-    else:
-        challenger_level = challenger_slimeoid.level
-
+    challengee_level = min(challengee_slimeoid.level, 10)
+    challenger_level = min(challenger_slimeoid.level, 10)
 
     # calculate starting hp
     s1hpmax = 50 + (challengee_level * 20)
@@ -499,8 +527,28 @@ async def battle_slimeoids(id_s1, id_s2, challengee_name, challenger_name, chann
         owner=challenger_name,
     )
 
+    print(s1_combat_data.name)
+    print(s1_combat_data.grit)
+    print(s1_combat_data.moxie)
+    print(s1_combat_data.chutzpah)
+
+    print(s2_combat_data.name)
+    print(s2_combat_data.grit)
+    print(s2_combat_data.moxie)
+    print(s2_combat_data.chutzpah)
+
     s1_combat_data.apply_size_nerf(s2_combat_data)
     s2_combat_data.apply_size_nerf(s1_combat_data)
+
+    print(s1_combat_data.name)
+    print(s1_combat_data.grit)
+    print(s1_combat_data.moxie)
+    print(s1_combat_data.chutzpah)
+
+    print(s2_combat_data.name)
+    print(s2_combat_data.grit)
+    print(s2_combat_data.moxie)
+    print(s2_combat_data.chutzpah)
 
     s1_combat_data.apply_weapon_matchup(s2_combat_data)
     s2_combat_data.apply_weapon_matchup(s1_combat_data)
@@ -542,7 +590,7 @@ async def battle_slimeoids(id_s1, id_s2, challengee_name, challenger_name, chann
         turncounter -= 1
 
         response = ""
-        battlecry = random.randrange(1, 4)
+        battlecry = random.randrange(1, 3)
 
         first_turn = (turncounter % 2) == 1
 

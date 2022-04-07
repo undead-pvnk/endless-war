@@ -217,7 +217,6 @@ class EwBrain:
             id_brain = "",
             alias = [],
             str_create = "",
-            str_create_nega = "",
             str_brain = "",
             str_dissolve = "",
             str_spawn = "",
@@ -239,7 +238,6 @@ class EwBrain:
         self.id_brain = id_brain
         self.alias = alias
         self.str_create = str_create
-        self.str_create_nega = str_create_nega
         self.str_brain = str_brain
         self.str_dissolve = str_dissolve
         self.str_spawn = str_spawn
