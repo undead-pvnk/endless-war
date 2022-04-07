@@ -527,28 +527,8 @@ async def battle_slimeoids(id_s1, id_s2, challengee_name, challenger_name, chann
         owner=challenger_name,
     )
 
-    print(s1_combat_data.name)
-    print(s1_combat_data.grit)
-    print(s1_combat_data.moxie)
-    print(s1_combat_data.chutzpah)
-
-    print(s2_combat_data.name)
-    print(s2_combat_data.grit)
-    print(s2_combat_data.moxie)
-    print(s2_combat_data.chutzpah)
-
     s1_combat_data.apply_size_nerf(s2_combat_data)
     s2_combat_data.apply_size_nerf(s1_combat_data)
-
-    print(s1_combat_data.name)
-    print(s1_combat_data.grit)
-    print(s1_combat_data.moxie)
-    print(s1_combat_data.chutzpah)
-
-    print(s2_combat_data.name)
-    print(s2_combat_data.grit)
-    print(s2_combat_data.moxie)
-    print(s2_combat_data.chutzpah)
 
     s1_combat_data.apply_weapon_matchup(s2_combat_data)
     s2_combat_data.apply_weapon_matchup(s1_combat_data)

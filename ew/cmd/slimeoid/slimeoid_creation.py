@@ -376,7 +376,6 @@ async def change_body_part(cmd):
                     slimeoid_data.special = part.id_special
 
                 elif desired_change == "brain":
-                    print(part)
                     slimeoid_data.ai = part.id_brain
 
                 else:
