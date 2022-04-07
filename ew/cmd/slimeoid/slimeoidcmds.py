@@ -1390,7 +1390,7 @@ async def tagslimeoid(cmd):
 
     # Gotta have a response
     if cmd.tokens_count == 1:
-        response = "Hmm? Tag your {}? Uhh, spraying your slimeoid with paint sounds like abuse, and that's a different command. Specify something to put on your dog tag.".format(slimeoidtype)
+        response = "Hmm? Tag your {}? Uh, spraying your slimeoid with paint sounds like abuse, and that's a different command. Specify something to put on your dog tag.".format(slimeoidtype)
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     # If the player doesn't have a dog tag, they can't tag their slimeoid.
@@ -1419,7 +1419,7 @@ async def tagslimeoid(cmd):
     slimeoid.dogtag = message_text
     slimeoid.persist()
 
-    response = "You attach the dog tag to {} the {}. The tag slowly sinks into its slimy body.\n\n{}".format(slimeoid.name, slimeoidtype, message_text)
+    response = "You attach the dog tag to {} the {}. The tag slowly sinks into its gelatinous body.\n\n{}".format(slimeoid.name, slimeoidtype, message_text)
     if outofspace is True:
         response += "\nYou run out of space on the dog tag. You really went ham on that little tag, huh?"
 
@@ -1441,7 +1441,7 @@ async def untagslimeoid(cmd):
     
     # Slimeoid has to have a tag
     if slimeoid.dogtag == "":
-        response = "Your {} is already free of any tagging. No tags in sight.".format(slimeoidtype)
+        response = "Your {} is already free of any tags.".format(slimeoidtype)
     else:
         # Erase the tag
         slimeoid.dogtag = ""
