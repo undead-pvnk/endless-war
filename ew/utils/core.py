@@ -25,6 +25,8 @@ DEBUG_OPTIONS = {
 # Map of user IDs to their course ID.
 moves_active = {}
 
+last_warps = {}
+
 food_multiplier = {}
 
 # Contains who players are trading with and the state of the trades

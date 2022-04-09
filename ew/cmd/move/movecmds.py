@@ -944,9 +944,14 @@ async def teleport(cmd):
             response = "You can't {} that far.".format(cmd.tokens[0])
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-        # 15 second windup before teleport goes through (changing timeout to 15 is all i need to do right?)
+        # 15 second windup before teleport goes through (changing timeout to 15 is  = all i need to do right?)
         windup_finished = True
+
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You get a running start to charge up your Quantum Legs..."))
+
+        ewutils.last_warps[user_data] = time_now
+        await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+
         try:
             msg = await cmd.client.wait_for('message', timeout=15, check=lambda message: message.author == cmd.message.author and
                                                                                          cmd.message.content.startswith(ewcfg.cmd_prefix))
