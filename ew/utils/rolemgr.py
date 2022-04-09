@@ -394,7 +394,7 @@ async def updateRoles(
     #  If faction has an associated PVP role
     if faction_role in ewcfg.role_to_pvp_role:
 
-        if not (user_poi.is_apartment and \
+        if (not user_poi.is_apartment and \
                 user_poi.id_poi not in non_wanted_pois) or lastwarp > time_now:  # and \
             # (user_data.life_state != ewcfg.life_state_juvenile or user_data.slimelevel > ewcfg.max_safe_level):
             pvp_role = ewcfg.role_to_pvp_role.get(faction_role)

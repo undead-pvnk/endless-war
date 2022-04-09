@@ -56,9 +56,12 @@ async def move(cmd = None, isApt = False, isSplit = 0, continuousMove = -1):
     user_data = EwUser(id_user=cmd.message.author.id, id_server=player_data.id_server, data_level=1)
     poi_current = poi_static.id_to_poi.get(user_data.poi)
     time_move_start = int(time.time())
+    isDM = False
 
+    if not hasattr(cmd.message.channel, 'name'):
+        isDM = True
 
-    if isApt == False and ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+    if isApt == False and isDM == False and ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
         channelid = fe_utils.get_channel(cmd.guild, poi_current.channel)
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author,
                                                                                                    "You must {} in a zone's channel.\n{}".format(
@@ -112,7 +115,7 @@ async def move(cmd = None, isApt = False, isSplit = 0, continuousMove = -1):
         return await fe_utils.send_message(cmd.client, cmd.message.channel,
                                            fe_utils.formatMessage(cmd.message.author, "Never heard of it."))
 
-    if not ewutils.DEBUG and not isApt and poi_static.chname_to_poi.get(cmd.message.channel.name).id_poi != user_data.poi:
+    if not ewutils.DEBUG  and isDM == False and not isApt and poi_static.chname_to_poi.get(cmd.message.channel.name).id_poi != user_data.poi:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in your current district.").format(
             cmd.tokens[0]))
 
@@ -470,15 +473,11 @@ async def move(cmd = None, isApt = False, isSplit = 0, continuousMove = -1):
 
 
 async def dm_move(cmd):
-    user_data = EwUser(member=cmd.message.author, data_level=1)
+    user_data = EwUser(member=cmd.message.author)
     if user_data.poi not in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown]:
         response = "Nah, move in the gameplay channel. That only works in gang bases."
         await fe_utils.send_message(cmd.client, cmd.message.author, fe_utils.formatMessage(cmd.message.author, response))
     else:
-        if user_data.poi == ewcfg.poi_id_copkilltown:
-            cmd.message.channel.name = ewcfg.channel_copkilltown
-        else:
-            cmd.message.channel.name = ewcfg.channel_rowdyroughhouse
         return await move(cmd=cmd)
 
 """
