@@ -390,13 +390,12 @@ async def updateRoles(
     pvp_role = None
     active_role = None
     lastwarp = ewutils.last_warps.get(user_data.id_user)
-    lastwarp = 0 if lastwarp is None else lastwarp + 14
+    lastwarp = 0 if lastwarp is None else lastwarp + 19 #add 19 secs to the last time someone started a teleport to check pvp flagging
     #  If faction has an associated PVP role
     if faction_role in ewcfg.role_to_pvp_role:
 
         if not (user_poi.is_apartment and \
                 user_poi.id_poi not in non_wanted_pois) or lastwarp > time_now:  # and \
-            print('FLAGGED')
             # (user_data.life_state != ewcfg.life_state_juvenile or user_data.slimelevel > ewcfg.max_safe_level):
             pvp_role = ewcfg.role_to_pvp_role.get(faction_role)
             faction_roles_remove.remove(pvp_role)

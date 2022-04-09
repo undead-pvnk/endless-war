@@ -945,7 +945,7 @@ async def teleport(cmd):
 
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You get a running start to charge up your Quantum Legs..."))
 
-        ewutils.last_warps[user_data] = time_now
+        ewutils.last_warps[user_data.id_user] = time_now
         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
         try:
