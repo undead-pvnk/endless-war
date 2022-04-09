@@ -229,12 +229,16 @@ async def incubate_negaslimeoid(cmd):
                 # Get argument for how big the negaslimeoid should be made
                 sacrificed_negaslime = None
                 if cmd.tokens_count > 1:
-                    sacrificed_negaslime = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
-                    # -1 from getIntToken() means use all slime - sacrificed negaslime is a positive integer
-                    if sacrificed_negaslime == -1:
-                        sacrificed_negaslime = -user_data.slimes
-                    if sacrificed_negaslime < 0:
-                        sacrificed_negaslime = -sacrificed_negaslime
+                    # -1 from getIntToken() could possibly be gotten from player input, so do a check here.
+                    if cmd.tokens[1] == "all":
+                        if user_data.slimes < 0:
+                            sacrificed_negaslime = -user_data.slimes
+                        
+                    else:
+                        print(cmd.tokens[0])
+                        sacrificed_negaslime = ewutils.getIntToken(tokens=cmd.tokens) 
+                        if sacrificed_negaslime < 0:
+                                sacrificed_negaslime = -sacrificed_negaslime
 
                 # Check if player sacrificed any negaslime or if they have enough to sacrifice.
                 if sacrificed_negaslime == None:
