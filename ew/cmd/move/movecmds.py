@@ -469,6 +469,18 @@ async def move(cmd = None, isApt = False, isSplit = 0, continuousMove = -1):
                 pass
 
 
+async def dm_move(cmd):
+    user_data = EwUser(member=cmd.message.author, data_level=1)
+    if user_data.poi not in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown]:
+        response = "Nah, move in the gameplay channel. That only works in gang bases."
+        await fe_utils.send_message(cmd.client, cmd.message.author, fe_utils.formatMessage(cmd.message.author, response))
+    else:
+        if user_data.poi == ewcfg.poi_id_copkilltown:
+            cmd.message.channel.name = ewcfg.channel_copkilltown
+        else:
+            cmd.message.channel.name = ewcfg.channel_rowdyroughhouse
+        return await move(cmd=cmd)
+
 """
     Go down the rabbit hole
 """

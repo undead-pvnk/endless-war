@@ -51,6 +51,16 @@ cmd_map = {
 
 }
 
+dm_cmd_map ={
+    ewcfg.cmd_move_alt1: movecmds.dm_move,
+    ewcfg.cmd_move: movecmds.dm_move,
+    ewcfg.cmd_move_alt2: movecmds.dm_move,
+    ewcfg.cmd_move_alt3: movecmds.dm_move,
+    ewcfg.cmd_move_alt4: movecmds.dm_move,
+    ewcfg.cmd_move_alt5: movecmds.dm_move,
+    ewcfg.cmd_move_alt6: movecmds.dm_move
+}
+
 apt_dm_cmd_map = {
 
     # !goto. Navigate the world map.

@@ -1047,7 +1047,7 @@ async def marry(cmd):
             world_events = bknd_worldevent.get_world_events(user_data.id_server)
 
         bknd_worldevent.delete_world_event(marriage_world_event)
-
+        user_data = EwUser(member=cmd.message.author)
         if user_data.poi == ewcfg.poi_id_dojo:
             user_data.weaponmarried = True
             user_data.persist()
