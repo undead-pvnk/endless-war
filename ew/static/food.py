@@ -1279,7 +1279,7 @@ food_list = [
     ),
     EwFood(
         id_food = "justcumfuckenergy",
-        alias = ['jcfu'],
+        alias = ['jcfu', 'genderfluid'],
         recover_hunger = 1200,
         price = 12000,
         str_name = "Just Cum FUCK ENERGY Drink",
