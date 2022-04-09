@@ -215,7 +215,7 @@ mutations = [
     EwMutationFlavor(
         id_mutation=ewcfg.mutation_id_aposematicstench,
         str_name="Aposematic Stench",
-        alias=['as', 'stench'],
+        alias=['as', 'stench', 'aposematic'],
         str_describe_self="A putrid stench permeates around you all hours of the day due to **Aposematic Stench**.",
         str_describe_other="A putrid stench permeates around them all hours of the day due to **Aposematic Stench**.",
         str_acquire="Your eyes water as you begin secreting pheromones into the air from every indecent nook and cranny on your body. You smell so unbelievably terrible that even you are not immune from frequent coughs and wheezes when you catch a particularly bad whiff. You have developed the mutation **Aposematic Stench**. For every 5 levels you gain, you appear as 1 more person when being scouted. Use !stink to put on secreature repellent at any time.",
@@ -526,6 +526,16 @@ mutations = [
         str_acquire="You are a delinquent JUVENILE, recently busted for attempting a scandalous act of vandalism and distribution of highly coveted SLIME. Luckily for you, the juvenile detention center you’ve been assigned to is notoriously corrupt and it’s an open secret how easy escape is. All you have to do for freedom and protection is- Wait a moment, this isn't quite right. You were taken to a jail just now, weren't you? You have developed the mutation **Amnesia**. On a kill, 60 seconds pass before it shows on the kill feed. Your identity will be concealed in ENDLESS WAR's messages, and you can delete your commands without coutermessages.",
         tier=3,
         str_transplant="You are led to a cot in the back room and given an experimental dose of adrenaline and DMT. Once injected, you spend 54 years trapped on a 20 acre school playground, hunting and cannibalizing wayward 2nd graders to survive. You develop strong bonds and eventually marry into the local tribe that does the same as you. You are at your daughter's wedding near the old rock climbing wall when you wake up with a start. Where's Nancy and Luna? Why am I a teenager? \n\nYou have developed the mutation **Amnesia**. On a kill, 60 seconds pass before it shows on the kill feed. Your identity will be concealed in ENDLESS WAR's messages, and you can delete your commands without coutermessages.",
+    ),
+    EwMutationFlavor(
+        id_mutation=ewcfg.mutation_id_stinkeye,
+        str_name="Stink Eye",
+        alias=['se', 'stink'],
+        str_describe_self="Your eyes are secreting green due to **Stink Eye**.",
+        str_describe_other="Their eyes are secreting green due to **Stink Eye**.",
+        str_acquire="Drops of slime fly into your eyeballs, causing them to sting viciously. You quickly go to rub them, but that only makes the pain worse! After a prolonged writhing, you open your oozing eyes with a new view of your environment. You can truly SEE the slime around you. You can CONNECT with the slime MENTALLY. Your sight spheres become conduits for the world. You have developed the mutation **Stink Eye**. When surveying, the amount of slime on the ground is shown, along with 4 items starting with the lowest IDs.",
+        tier=4,
+        str_transplant="Dr. Dusttrap walks to the back of clinic and returns with a pickled punk. She unscrews the lid and carefully removes the preserved human fetus with tongs. \"This operation's a bit archaic, but it's not like you've got any real qualms, right?\" She instructs you to lie down, and holding your eyes open, Dr Dusttrap carefully positions the fetus above you horizontally. She lowers it inches from your head before giving it a harsh squeeze. Gallons of fetal juice pour directly into your eyes. Dusttrap puts the fetus back in the jar, then returns it to the back of the clinic. By the time she returns, your eyes have become horribly infected. You have developed the mutation **Stink Eye**. When surveying, the amount of slime on the ground is shown, along with 4 items starting with the lowest IDs.",
     ),
 ]
 

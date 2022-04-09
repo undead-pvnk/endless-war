@@ -3,7 +3,7 @@ import os
 
 from ..model.item import EwCosmeticItem
 
-unique_smeltables = ['skinsuit', 'eldritchsoul', 'programmersocks']
+unique_smeltables = ['skinsuit', 'eldritchsoul', 'safaribadge', 'cloutgoggles', 'programmersocks']
 
 cosmetic_items_list = [
     EwCosmeticItem(
@@ -1315,6 +1315,31 @@ cosmetic_items_list = [
         durability = 2500000,
         style = "beautiful",
         freshness = 10,
+    ),
+    EwCosmeticItem(
+        id_cosmetic = "dogtag",
+        str_name = "Dog Tag",
+        str_desc = "A plastic Waffle House-branded dog tag. The chain attached is far too short for your neck, so you can only really shimmy it around your wrist.",
+        str_onadorn = "You adorn the Dog Tag and get flashbacks to the trenches. If you die with these on, they aren't coming with you to the sewers.",
+        durability = 1500,
+        style = "tough",
+        vendors = ['Waffle House', 'bazaar'],
+        price = 2000,
+        freshness = 2,
+    ),
+    EwCosmeticItem(
+        id_cosmetic = "cloutgoggles",
+        str_name = "Clout Goggles",
+        str_desc = "A pair of bulbous ovular sunglasses. They're way too tinted, but hot DAMN do these radiate sick shit energy. They maybe even radiate... cloutlets? You can see the hidden Clout in the world with these on!",
+        str_onadorn = "You put on the Clout Goggles and feel... lamer. Other than cloutlets, you can't see anything with these on!",
+        str_unadorn = "You take off the Clout Goggles. You lose 10,000 Instagrime followers nigh-instantaneously. The horror!",
+        str_onbreak = "Whaaaa-? Your Clout Goggles **SHATTER!** Cloutlets scatter across the floor, splitting from your naked eyes.",
+        rarity="Patrician",
+        ability = "clout",
+        durability = 2500000,
+        size = 2,
+        style = "cool",
+        freshness = 10, # Actually variable, depending on slimeoid's freshness when created ingame. Max of 10.
     ),
     EwCosmeticItem(
         id_cosmetic = "programmersocks",

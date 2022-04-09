@@ -59,7 +59,9 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
         for item in drop_candidates:
             cosmetic_id = item.get('id_item')
             cosmetic_item = EwItem(id_item=cosmetic_id)
-            if cosmetic_item.item_props.get('adorned') != "true" and cosmetic_item.item_props.get('slimeoid') != "true":
+            if cosmetic_item.item_props.get('id_cosmetic') == "dogtag": # Dog Tags always drop on death
+                end_drops.append(item.get('id_item'))
+            elif cosmetic_item.item_props.get('adorned') != "true" and cosmetic_item.item_props.get('slimeoid') != "true":
                 filtered_items.append(item)
 
     if item_type_filter == ewcfg.it_weapon:
@@ -171,7 +173,7 @@ def get_cosmetic_abilities(id_user, id_server):
     return active_abilities
 
 
-def get_outfit_info(id_user, id_server, wanted_info = None):
+def get_outfit_info(id_user, id_server, wanted_info = None, slimeoid = False):
     cosmetic_items = bknd_item.inventory(
         id_user=id_user,
         id_server=id_server,
@@ -192,17 +194,30 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
     for cosmetic in cosmetic_items:
         item_props = cosmetic.get('item_props')
 
-        if item_props['adorned'] == 'true':
-            adorned_styles.append(item_props.get('fashion_style'))
+        if slimeoid == False:
+            if item_props['adorned'] == 'true':
+                adorned_styles.append(item_props.get('fashion_style'))
 
-            hue = hue_static.hue_map.get(item_props.get('hue'))
-            adorned_hues.append(item_props.get('hue'))
+                hue = hue_static.hue_map.get(item_props.get('hue'))
+                adorned_hues.append(item_props.get('hue'))
 
-            if item_props['id_cosmetic'] not in adorned_ids:
-                total_freshness += int(item_props.get('freshness'))
+                if item_props['id_cosmetic'] not in adorned_ids:
+                    total_freshness += int(item_props.get('freshness'))
 
-            adorned_ids.append(item_props['id_cosmetic'])
-            adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
+                adorned_ids.append(item_props['id_cosmetic'])
+                adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
+        else:
+            if item_props.get('slimeoid') == 'true':
+                adorned_styles.append(item_props.get('fashion_style'))
+
+                hue = hue_static.hue_map.get(item_props.get('hue'))
+                adorned_hues.append(item_props.get('hue'))
+
+                if item_props['id_cosmetic'] not in adorned_ids:
+                    total_freshness += int(item_props.get('freshness'))
+
+                adorned_ids.append(item_props['id_cosmetic'])
+                adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
     if len(adorned_cosmetics) != 0:
         # Assess if there's a cohesive style

@@ -148,26 +148,46 @@ class EwSlimeoidCombatData:
         self.weakness = weakness.format(self.name)
 
     # initializes the hue resistance and weakness strings and applies corresponding stat changes
+
     def apply_hue_matchup(self, enemy_combat_data = None):
         color_matchup = ewcfg.hue_neutral
         # get color matchups
+
+        # If hue is None and the enemy is Negative, give the opponent a complete buff.
+        if self.hue is None:
+            if enemy_combat_data.slimeoid.hue == "negative":
+                enemy_combat_data.grit += 2
+                enemy_combat_data.moxie += 2
+                enemy_combat_data.chutzpah += 2
+                enemy_combat_data.analogous = "It's not very effective against {}...".format(enemy_combat_data.name)
+                self.splitcomplementary_physical = "It's Super Effective against {}!".format(self.name)
+                self.splitcomplementary_special = "It's Super Effective against {}!".format(self.name) 
+
+        # If there is a hue
         if self.hue is not None:
+            # If the enemy slimeoid's hue is in the hue's effectiveness. analogous returns "-1", atk_complementary returns 1, special_complementary returns 2, full_complementary returns 3
             color_matchup = self.hue.effectiveness.get(enemy_combat_data.slimeoid.hue)
 
+        # If there's no relation between the two hues
         if color_matchup is None:
             color_matchup = ewcfg.hue_neutral
 
+        # If the opponent's hue is in your hue's effectiveness as "analogous"
         if color_matchup < 0:
             enemy_combat_data.grit += 2
             enemy_combat_data.analogous = "It's not very effective against {}...".format(enemy_combat_data.name)
 
+        # If the opponent's hue is in your hue's effectiveness as "complementary"
         elif color_matchup > 0:
+            # If the opponent's hue is listed as "hue_atk_complementary" in your hue's effectiveness
             if color_matchup == ewcfg.hue_atk_complementary:
                 self.moxie += 2
                 enemy_combat_data.splitcomplementary_physical = "It's Super Effective against {}!".format(enemy_combat_data.name)
+            # If the opponent's hue is listed as "hue_special_complementary" in your hue's effectiveness
             elif color_matchup == ewcfg.hue_special_complementary:
                 self.chutzpah += 2
                 enemy_combat_data.splitcomplementary_special = "It's Super Effective against {}!".format(enemy_combat_data.name)
+            # If the opponent's hue is listed as "hue_full_complementary" in your hue's effectiveness
             elif color_matchup == ewcfg.hue_full_complementary:
                 self.moxie += 2
                 self.chutzpah += 2
@@ -181,6 +201,62 @@ class EwSlimeoidCombatData:
             self.grit += 2
         elif self.coating == ewcfg.hue_id_gold:
             self.chutzpah += 2
+
+    # Nerfs slimeoids 11-foot and up to have 10-foot stats, as well as autobalancing slimeoids with negative stats 
+    def apply_size_nerf(self, enemy_combat_data = None):
+        size = self.moxie + self.grit + self.chutzpah
+
+        # If the slimeoid is bigger than 10 feet. Comes before other matchups, so stats together should equal size. Stats are 1 at minimum in CombatData
+        if size > 13:
+            oversize = size - 13
+
+            # Take 1/3 of oversize and subtract it from grit. Tries to shave off 1/3 of oversize from each stat.
+            to_subtract = oversize // 3
+            oversize -= to_subtract
+
+            while self.grit > 1 and to_subtract > 0:
+                self.grit -= 1
+                to_subtract -= 1
+            # if grit hits 1 (0 grit), add the leftover to_subtract back to oversize
+            oversize += to_subtract
+
+            # Take half of oversize and subtract it from moxie
+            to_subtract = oversize // 2
+            oversize -= to_subtract
+            
+            while self.moxie > 1 and to_subtract > 0:
+                self.moxie -= 1
+                to_subtract -= 1
+                print(to_subtract)
+            # if moxie hits 1 (0 moxie), add the leftover to_subtract back to oversize
+            to_subtract += oversize
+
+            # subtract the remaining oversize from chutzpah
+            while self.chutzpah > 1 and to_subtract > 0:
+                self.chutzpah -= 1
+                to_subtract -= 1
+
+            # If there are any points remaining, try subtracting from grit or moxie again
+            if to_subtract > 0:
+                if self.grit > 1:
+                    while self.grit > 1 and to_subtract > 0:
+                        self.grit -= 1
+                        to_subtract -= 1
+                if self.moxie > 1 and to_subtract > 0:
+                    while self.moxie > 1 and to_subtract > 0:
+                        self.moxie -= 1
+                        to_subtract -= 1
+                # If all else fails, autobalance to 4/3/3
+                if to_subtract > 0:
+                    self.grit = 5
+                    self.moxie = 4
+                    self.chutpah = 4
+        
+        # If the slimeoid has any negative stats, autobalance to 4/3/3
+        elif self.grit < 1 or self.moxie < 1 or self.chutzpah < 1:
+            self.grit = 5
+            self.moxie = 4
+            self.chutzpah = 4
 
     # roll the dice on whether an action succeeds and by how many degrees of success
     def attempt_action(self, strat, sap_spend, in_range):
@@ -390,20 +466,24 @@ def calculate_clout_gain(clout):
 
 
 # Run the battle for a pair of slimeoids
-async def battle_slimeoids(id_s1, id_s2, challengee_name, challenger_name, channel, battle_type):
+async def battle_slimeoids(id_s1, id_s2, challengee_name, challenger_name, channel, battle_type, pvp_battle):
     # fetch slimeoid data
     challengee_slimeoid = EwSlimeoid(id_slimeoid=id_s1)
     challenger_slimeoid = EwSlimeoid(id_slimeoid=id_s2)
 
     client = ewutils.get_client()
 
+    # Nerf level to 10 if it's above 11.
+    challengee_level = min(challengee_slimeoid.level, 10)
+    challenger_level = min(challenger_slimeoid.level, 10)
+
     # calculate starting hp
-    s1hpmax = 50 + (challengee_slimeoid.level * 20)
-    s2hpmax = 50 + (challenger_slimeoid.level * 20)
+    s1hpmax = 50 + (challengee_level * 20)
+    s2hpmax = 50 + (challenger_level * 20)
 
     # calculate starting sap
-    s1sapmax = challengee_slimeoid.level * 2
-    s2sapmax = challenger_slimeoid.level * 2
+    s1sapmax = challengee_level * 2
+    s2sapmax = challenger_level * 2
 
     # initialize combat data for challengee
     s1_combat_data = EwSlimeoidCombatData(
@@ -447,6 +527,9 @@ async def battle_slimeoids(id_s1, id_s2, challengee_name, challenger_name, chann
         owner=challenger_name,
     )
 
+    s1_combat_data.apply_size_nerf(s2_combat_data)
+    s2_combat_data.apply_size_nerf(s1_combat_data)
+
     s1_combat_data.apply_weapon_matchup(s2_combat_data)
     s2_combat_data.apply_weapon_matchup(s1_combat_data)
 
@@ -487,7 +570,7 @@ async def battle_slimeoids(id_s1, id_s2, challengee_name, challenger_name, chann
         turncounter -= 1
 
         response = ""
-        battlecry = random.randrange(1, 4)
+        battlecry = random.randrange(1, 3)
 
         first_turn = (turncounter % 2) == 1
 
@@ -843,50 +926,68 @@ def can_slimeoid_battle(challenger: EwUser = None, challengee = None, challenger
             ally_slimeoid = EwSlimeoid(member=challenger)
 
         # Challenger
+        
+        # Check for slimeoid's type - for flavor text
+        if ally_slimeoid.sltype == ewcfg.sltype_nega:
+            slimeoidtype = "Negaslimeoid"
+        else:
+            slimeoidtype = "Slimeoid"
 
         if ally_slimeoid.life_state != ewcfg.slimeoid_state_active:
             response = "You do not have a Slimeoid ready to battle with!"
 
-        elif challenger_data.life_state == ewcfg.life_state_corpse:
+        # Checks if the player is dead and if they're trying to battle with a slimeoid
+        elif challenger_data.life_state == ewcfg.life_state_corpse and ally_slimeoid.sltype != ewcfg.sltype_nega:
             response = "Your Slimeoid won't battle for you while you're dead."
 
         elif (time_now - ally_slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
             time_until = ewcfg.cd_slimeoiddefeated - (time_now - ally_slimeoid.time_defeated)
-            response = "Your Slimeoid is still recovering from its last defeat! It'll be ready in {} seconds.".format(int(time_until))
+            response = "Your {} is still recovering from its last defeat! It'll be ready in {} seconds.".format(slimeoidtype, int(time_until))
 
         elif ewutils.active_slimeoidbattles.get(ally_slimeoid.id_slimeoid):
             response = "You are already in the middle of a challenge."
         
         elif challengee:
+            # If the opponent isn't a player, set pvp to false. Set data.
             if isinstance(challengee, EwEnemy):
                 challengee_data = challengee
                 is_pvp = False
             else:
                 challengee_data = challengee
                 challengee_player = EwPlayer(id_user=challengee.id_user)
+                is_pvp = True
 
             if challengee_slimeoid:
                 target_slimeoid = challengee_slimeoid
             else:
                 target_slimeoid = EwSlimeoid(member=challengee)
 
+            # Check for slimeoid's type - for flavor text.
+            if target_slimeoid.sltype == ewcfg.sltype_nega:
+                slimeoidtype = "Negaslimeoid"
+            else:
+                slimeoidtype = "Slimeoid"
+
+            # If slimeoid isn't alive, then they can't battle.
             if target_slimeoid.life_state != ewcfg.slimeoid_state_active:
                 response = "{} does not have a Slimeoid ready to battle with!".format(challengee_player.display_name if is_pvp else challengee_data.display_name)
             
             elif challenger_data.poi != challengee_data.poi:
-                response = "Both slimeoid trainers must be in the same place."
-            
-            elif challenger_data.slimes < bet or challenger_data.slimes < 0:
+                response = "Both players must be in the same place."
+
+            # Checks if each player has enough slime if there is a bet
+            elif (challenger_data.slimes < bet or challenger_data.slimes < 0) and bet != 0:
                 response = "You don't have enough slime!"
-            elif challengee_data.slimes < bet or challengee_data.slimes < 0:
+            elif (challengee_data.slimes < bet or challengee_data.slimes < 0) and bet != 0:
                 response = "They don't have enough slime!"
 
-            elif challengee_data.life_state == ewcfg.life_state_corpse:
+            # If a player is a ghost and has a living slimeoid, then they can't battle.
+            elif challengee_data.life_state == ewcfg.life_state_corpse and challengee_slimeoid.sltype != ewcfg.sltype_nega:
                 response = "{}'s Slimeoid won't battle for them while they're dead.".format(challengee_player.display_name).replace("@", "\{at\}")
 
             elif (time_now - target_slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
                 time_until = ewcfg.cd_slimeoiddefeated - (time_now - target_slimeoid.time_defeated)
-                response = "{}'s Slimeoid is still recovering from its last defeat! It'll be ready in {} seconds.".format(challengee_player.display_name, int(time_until))
+                response = "{}'s {} is still recovering from its last defeat! It'll be ready in {} seconds.".format(challengee_player.display_name, slimeoidtype, int(time_until))
 
             elif ewutils.active_slimeoidbattles.get(target_slimeoid.id_slimeoid):
                 response = "They are already in the middle of a challenge."

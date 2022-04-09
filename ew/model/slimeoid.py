@@ -14,12 +14,14 @@ class EwBody:
             id_body = "",
             alias = [],
             str_create = "",
+            str_create_nega = "",
             str_body = "",
             str_observe = ""
     ):
         self.id_body = id_body
         self.alias = alias
         self.str_create = str_create
+        self.str_create_nega = str_create_nega
         self.str_body = str_body
         self.str_observe = str_observe
 
@@ -35,6 +37,7 @@ class EwHead:
             id_head = "",
             alias = [],
             str_create = "",
+            str_create_nega = "",
             str_head = "",
             str_feed = "",
             str_fetch = ""
@@ -42,6 +45,7 @@ class EwHead:
         self.id_head = id_head
         self.alias = alias
         self.str_create = str_create
+        self.str_create_nega = str_create_nega
         self.str_head = str_head
         self.str_feed = str_feed
         self.str_fetch = str_fetch
@@ -64,6 +68,7 @@ class EwMobility:
             str_retreat = "",
             str_retreat_weak = "",
             str_create = "",
+            str_create_nega = "",
             str_mobility = "",
             str_defeat = "",
             str_walk = ""
@@ -75,6 +80,7 @@ class EwMobility:
         self.str_retreat = str_retreat
         self.str_retreat_weak = str_retreat_weak
         self.str_create = str_create
+        self.str_create_nega = str_create_nega
         self.str_mobility = str_mobility
         self.str_defeat = str_defeat
         self.str_walk = str_walk
@@ -95,6 +101,7 @@ class EwOffense:
             str_attack_weak = "",
             str_attack_coup = "",
             str_create = "",
+            str_create_nega = "",
             str_offense = "",
             str_observe = ""
     ):
@@ -104,6 +111,7 @@ class EwOffense:
         self.str_attack_weak = str_attack_weak
         self.str_attack_coup = str_attack_coup
         self.str_create = str_create
+        self.str_create_nega = str_create_nega
         self.str_offense = str_offense
         self.str_observe = str_observe
 
@@ -124,6 +132,7 @@ class EwDefense:
             id_defense = "",
             alias = [],
             str_create = "",
+            str_create_nega = "",
             str_defense = "",
             str_armor = "",
             str_pet = "",
@@ -136,6 +145,7 @@ class EwDefense:
         self.id_defense = id_defense
         self.alias = alias
         self.str_create = str_create
+        self.str_create_nega = str_create_nega
         self.str_defense = str_defense
         self.str_armor = str_armor
         self.str_pet = str_pet
@@ -181,6 +191,7 @@ class EwSpecial:
             str_special_attack_weak = "",
             str_special_attack_coup = "",
             str_create = "",
+            str_create_nega = "",
             str_special = "",
             str_observe = ""
     ):
@@ -190,6 +201,7 @@ class EwSpecial:
         self.str_special_attack_weak = str_special_attack_weak
         self.str_special_attack_coup = str_special_attack_coup
         self.str_create = str_create
+        self.str_create_nega = str_create_nega
         self.str_special = str_special
         self.str_observe = str_observe
 

@@ -581,7 +581,7 @@ poi_list = [
 		id_poi = "dreadford",
 		alias = ['dread', 'ford', 'df'],
 		str_name = "Dreadford",
-		str_desc = "Neatly spaced colonial revival mansions and chapels are broken up by botches of thick, twisting woods. This district is largely rural and suburban, with a small town center with various necessities like Whole Foods and a cemetery. The residents of this district are very, very wealthy and meticulously maintain the gated community they've grown for themselves. Perhaps the most obvious example of this is the country club and its accompanying golf course, which comprises a large chunk of the district.\nDreadford is one of the oldest settlements of the area, being inhabited by humans as far back as 1988. The original founders were fleeing restrict criminals rights laws, and established the town of Dreadford in what was then a barren Arizonian desert. These first settlers had quite the pension of holding kangaroo courts, which often amounted to just reading the list of crimes the accused was charged with before hanging them immediately. Some nooses still hang on trees around the district, begging to be finally used.\n\n This area contains the Country Club and the Dreadford Blimp Tower. To the North is Jaywalker Plain. To the East is Crookline. To the Southwest is Southwest Outskirts Edge.",
+		str_desc = "Neatly spaced colonial revival mansions and chapels are broken up by botches of thick, twisting woods. This district is largely rural and suburban, with a small town center with various necessities like Whole Foods and a cemetery. The residents of this district are very, very wealthy and meticulously maintain the gated community they've grown for themselves. Perhaps the most obvious example of this is the country club and its accompanying golf course, which comprises a large chunk of the district.\nDreadford is one of the oldest settlements of the area, being inhabited by humans as far back as 1988. The original founders were fleeing restrict criminals rights laws, and established the town of Dreadford in what was then a barren Arizonian desert. These first settlers had quite the pension of holding kangaroo courts, which often amounted to just reading the list of crimes the accused was charged with before hanging them immediately. Some nooses still hang on trees around the district, begging to be finally used.\n\n This area contains the Country Club, the Dreadford Blimp Tower, the Hang-Em Saloon, and Hang-Em Square. To the North is Jaywalker Plain. To the East is Crookline. To the Southwest is Southwest Outskirts Edge.",
 		coord = [10, 28],
 		channel = "dreadford",
 		role = "Dreadford",
@@ -615,7 +615,7 @@ poi_list = [
 		id_poi = "thevoid",
 		alias = ['void', 'the-void', 'abyss', 'tv', 'v'],
 		str_name = "the Void",
-		str_desc = "A large open space, pitch black aside from the many old-style street lights illuminating several paths, whose intersection is marked by street sign, standing tall next to a metal bench. At the end of each path is a well lit staircase leading underground. One shorter path from the sign leads to the Waffle House, on the back of which is a ladder leading to its roof. The total silence of this place makes you very aware of the sounds your own body makes as you walk around, and the overbright lamps strain your vision even as total darkness envelops you.\n\nThis area contains the Waffle House, and the Black Pond.",
+		str_desc = "A large open space, pitch black aside from the many old-style street lights illuminating several paths, whose intersection is marked by street sign, standing tall next to a metal bench. At the end of each path is a well lit staircase leading underground. One shorter path from the sign leads to the Waffle House, on the back of which is a ladder leading to its roof. The total silence of this place makes you very aware of the sounds your own body makes as you walk around, and the overbright lamps strain your vision even as total darkness envelops you.\n\nThis area contains the Waffle House and the Black Pond.",
 		channel = "the-void",
 		major_role = "thevoid_major",
 		minor_role = "thevoid_minor",
@@ -1199,7 +1199,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "theminessweeper",
-		alias = ['minesweeper', 'ms', 'jrms'],
+		alias = ['minesweeper', 'ms', 'jrms', 'jrmms'],
 		str_name = "The Mines - Minesweeper",
 		str_desc = "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR. There's a lot of slime to be mined in here, however some sick fucks thought it'd be really funny to turn the floor into a minefield. Be careful not to set off any explosives when you !mine.\n\nExits into The Mines.",
 		channel = "the-mines-minesweeper",
@@ -1215,7 +1215,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "theminesbubble",
-		alias = ['bubblebreaker', 'bubble', 'mb', 'jrmb'],
+		alias = ['bubblebreaker', 'bubble', 'mb', 'jrmb', 'jrmbb'],
 		str_name = "The Mines - Bubble Breaker",
 		str_desc = "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR. Explosions from the neighboring floor have caused this place to become highly dangerous. Try not to get caught under a collapsing mineshaft.\n\nExits into The Mines.",
 		channel = "the-mines-bubble-breaker",
@@ -1264,7 +1264,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "cratersvilleminessweeper",
-		alias = ['minesweeper2', 'cvminesweeper', 'cminesweeper', 'cvmsweeper', 'cvms'],
+		alias = ['minesweeper2', 'cvminesweeper', 'cminesweeper', 'cvmsweeper', 'cvms', 'cvmms'],
 		str_name = "The Cratersville Mines - Minesweeper",
 		str_desc = "A veritable slime-mine of slime, rejuvenated by the revival of ENDLESS WAR. There's a lot of slime to be mined in here, however some sick fucks thought it'd be really funny to turn the floor into a minefield. Be careful not to set off any explosives when you !mine.\n\nExits into Cratersville.",
 		channel = "cratersville-mines-minesweeper",
@@ -1280,7 +1280,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "cratersvilleminesbubble",
-		alias = ['bubblebreaker2', 'cvmbubblebreaker', 'cmbubblebreaker', 'cvbubblebreaker', 'bubble2', 'cvbubble', 'cbubble', 'cvbubble', 'cvmb'],
+		alias = ['bubblebreaker2', 'cvmbubblebreaker', 'cmbubblebreaker', 'cvbubblebreaker', 'bubble2', 'cvbubble', 'cbubble', 'cvbubble', 'cvmb', 'cvmbb'],
 		str_name = "The Cratersville Mines - Bubble Breaker",
 		str_desc = "A veritable slime-mine of slime, rejuvenated by the revival of ENDLESS WAR. Explosions from the neighboring floor have caused this place to become highly dangerous. Try not to get caught under a collapsing mineshaft.\n\nExits into Cratersville.",
 		channel = "cratersville-mines-bubble-breaker",
@@ -1312,7 +1312,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "toxingtonminessweeper",
-		alias = ['minesweeper3', 'ttminesweeper', 'ttmsweeper', 'toxmsweeper', 'toxingtonminesweeper', 'toxingtonmsweeper', 'ttms'],
+		alias = ['minesweeper3', 'ttminesweeper', 'ttmsweeper', 'toxmsweeper', 'toxingtonminesweeper', 'toxingtonmsweeper', 'ttms', 'ttmms'],
 		str_name = "The Toxington Mines - Minesweeper",
 		str_desc = "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR. There's a lot of slime to be mined in here, however some sick fucks thought it'd be really funny to turn the floor into a minefield. Be careful not to set off any explosives when you !mine.\n\nExits into Toxington.",
 		channel = "toxington-mines-minesweeper",
@@ -1328,7 +1328,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "toxingtonminesbubble",
-		alias = ['bubblebreaker3', 'ttminebubblebreaker', 'ttmbubblebreaker', 'toxmbubblebreaker', 'toxingtonbubblebreaker', 'toxingtonmbubblebreaker', 'bubble3', 'ttminebubble', 'ttmbubble', 'toxmbubble', 'toxingtonbubble', 'toxingtonmbubble', 'ttmb', 'ttb'],
+		alias = ['bubblebreaker3', 'ttminebubblebreaker', 'ttmbubblebreaker', 'toxmbubblebreaker', 'toxingtonbubblebreaker', 'toxingtonmbubblebreaker', 'bubble3', 'ttminebubble', 'ttmbubble', 'toxmbubble', 'toxingtonbubble', 'toxingtonmbubble', 'ttmb', 'ttb', 'ttmbb'],
 		str_name = "The Toxington Mines - Bubble Breaker",
 		str_desc = "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR. Explosions from the neighboring floor have caused this place to become highly dangerous. Try not to get caught under a collapsing mineshaft.\n\nExits into Toxington.",
 		channel = "toxington-mines-bubble-breaker",
@@ -1986,7 +1986,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "dreadfordblimptower",
-		alias = ['dreadfordblimptower', 'dreadfordhblimp', 'dreadfordtower', 'dreadblimptower', 'dreadblimp', 'dreadtower', 'dfblimptower', 'dfblimp', 'dftower'],
+		alias = ['dreadfordblimptower', 'dreadfordhblimp', 'dreadfordtower', 'dreadblimptower', 'dreadblimp', 'dreadtower', 'dfblimptower', 'dfblimp', 'dftower', 'dfbt', 'dft'],
 		str_name = "The Dreadford Blimp Tower",
 		str_desc = "This mooring mast is mostly used for amassing millionaire mooks and unmarked helium canisters into the marvelous Neo Milwaukee multi-story zeppelin, m'lady. Basically, you can board a blimp here. All you have to do is walk up an extremely narrow spiral staircase without an adequate handrail for about 40 feet straight up and then you can embark onto the highest airship this side of the River of Slime! It'll be great! Don't mind the spontaneously combusting zeppelins crashing into the earth in the distance. That's normal.\n\nExits into Dreadford.",
 		channel = "dreadford-blimp-tower",
@@ -2002,7 +2002,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "assaultflatsblimptower",
-		alias = ['assaultflatsbeachblimptower', 'assaultflatsbeachblimp', 'assaultflatsbeachtower', 'assaultflatsblimptower', 'assaultflatsblimp', 'assaultflatstower', 'beachblimptower', 'beachblimp', 'beachtower', 'afbblimptower', 'afbblimp', 'afbtower'],
+		alias = ['assaultflatsbeachblimptower', 'assaultflatsbeachblimp', 'assaultflatsbeachtower', 'assaultflatsblimptower', 'assaultflatsblimp', 'assaultflatstower', 'beachblimptower', 'beachblimp', 'beachtower', 'afbblimptower', 'afbblimp', 'afbtower', 'afbbt', 'afbt'],
 		str_name = "The Assault Flats Beach Blimp Tower",
 		str_desc = "This mooring mast is mostly used for amassing millionaire mooks and unmarked helium canisters into the marvelous Neo Milwaukee multi-story zeppelin, m'lady. Basically, you can board a blimp here. All you have to do is walk up an extremely narrow spiral staircase without an adequate handrail for about 40 feet straight up and then you can embark onto the highest airship this side of the River of Slime! It'll be great! Don't mind the spontaneously combusting zeppelins crashing into the earth in the distance. That's normal.\n\nExits into Assault Flats Beach.",
 		channel = "assault-flats-blimp-tower",
@@ -2757,7 +2757,7 @@ poi_list = [
 		id_poi = "wafflehouse",
 		alias = ['wh', 'waffle'],
 		str_name = "the Waffle House",
-		str_desc = "As nondescript as its façade, the Waffle House has a very simplistic interior, going for a slightly modernized mid-century look. The warm lighting of the incandescent lightbulbs combines with the crispy fresh air coming from outside and the old timey music to give the place an extraordinarily comforting ambience. The entrance directly faces a short counter manned by old man Leopold, a pleasant guy in his 70s with a thick European accent who seems to run the entire joint. A few tables are laid by the windows, with a view that makes you wonder if you've gone blind. \n\nExits back into the Void.",
+		str_desc = "As nondescript as its façade, the Waffle House has a very simplistic interior, going for a slightly modernized mid-century look. The warm lighting of the incandescent lightbulbs combines with the crispy fresh air coming from outside and the old timey music to give the place an extraordinarily comforting ambience. The entrance directly faces a short counter manned by old man Leopold, a pleasant guy in his 70s with a thick European accent who seems to run the entire joint. A few tables are laid by the windows, with a view that makes you wonder if you've gone blind.\n\nThere's a Ouija® Board placed on one of the tables near the back. You feel as if shadows surround it. It would be a good idea to stay away from that area.\n\nExits back into the Void.",
 		channel = "wafflehouse",
 		role = "Waffle House",
 		major_role = "thevoid_major",

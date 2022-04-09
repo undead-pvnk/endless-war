@@ -1671,7 +1671,8 @@ smelting_recipe_list = [
         ingredients={
             'partypoppeppers': 1,
         },
-        products=['partypopper']),
+        products=['partypopper']
+    ),
     EwSmeltingRecipe(
         id_recipe="skinsuit",
         str_name="skinsuit",
@@ -1710,7 +1711,19 @@ smelting_recipe_list = [
             'tangeloidraygun': 1,
         },
         products=['alienbattery']
-    )
+    ),
+    EwSmeltingRecipe(
+        id_recipe="purpledrink",
+        str_name="purple drink",
+        alias=[
+            'purpledrank'
+        ],
+        ingredients={
+            'reddrink': 1,
+            'bluedrink': 1,
+        },
+        products=['purpledrink']
+    ),
 ]
 
 # TODO remove after double halloween

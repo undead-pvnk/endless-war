@@ -201,6 +201,7 @@ CREATE TABLE slimeoids (
 	hue varchar(32) NOT NULL DEFAULT '',
 	coating varchar(32) NOT NULL DEFAULT '',
 	poi varchar(64) NOT NULL DEFAULT '',
+	dogtag varchar(1024) NOT NULL DEFAULT '',
 	
 	PRIMARY KEY (id_slimeoid)
 );

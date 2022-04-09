@@ -108,6 +108,30 @@ async def revive(cmd, player_auto = None):
 
             # Give newly spawned juvies a foul odour
             player_data.applyStatus(ewcfg.status_repelled_id)
+            
+            # Turn player's negaslimeoid into a core if they have one
+            if slimeoid.sltype == ewcfg.sltype_nega:
+                
+                # Only create a negaslimeoid core if the negaslimeoid is fully conjured
+                if slimeoid.life_state != ewcfg.slimeoid_state_forming:
+                    # Turn negaslimeoid into a negaslimeoid core
+                    item_props = {
+                        'context': ewcfg.context_negaslimeoidheart,
+                        'subcontext': slimeoid.id_slimeoid,
+                        'item_name': "Core of {}".format(slimeoid.name),
+                        'item_desc': "A smooth, inert rock. If you listen carefully you can hear otherworldly whispering."
+                    }
+                    bknd_item.item_create(
+                    id_user=ewcfg.channel_sewers,
+                    id_server=cmd.guild.id,
+                    item_type=ewcfg.it_item,
+                    item_props=item_props
+                    )
+
+                # Kill the slimeoid and set player's active_slimeoid to -1
+                slimeoid.die()
+                slimeoid.persist()
+                player_data.active_slimeoid = -1
 
             player_data.persist()
             market_data.persist()
@@ -144,7 +168,7 @@ async def revive(cmd, player_auto = None):
         #	deathreport = "You were {} by {}. {}".format(kill_descriptor, cmd.message.author.display_name, ewcfg.emote_slimeskull)
         #	deathreport = "{} ".format(ewcfg.emote_slimeskull) + fe_utils.formatMessage(member, deathreport)
 
-        if slimeoid.life_state == ewcfg.slimeoid_state_active:
+        if slimeoid.life_state == ewcfg.slimeoid_state_active and slimeoid.sltype != ewcfg.sltype_nega:
             reunite = ""
             brain = sl_static.brain_map.get(slimeoid.ai)
             reunite += brain.str_revive.format(

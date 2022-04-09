@@ -9,6 +9,10 @@ cmd_map = {
 
     # Incubation
     ewcfg.cmd_incubateslimeoid:  slimeoid_creation.incubate_slimeoid,
+    ewcfg.cmd_conjure_negaslimeoid: slimeoid_creation.incubate_negaslimeoid,
+    ewcfg.cmd_conjure_negaslimeoid_alt1: slimeoid_creation.incubate_negaslimeoid,
+    ewcfg.cmd_conjure_negaslimeoid_alt2: slimeoid_creation.incubate_negaslimeoid,
+    ewcfg.cmd_conjure_negaslimeoid_alt3: slimeoid_creation.incubate_negaslimeoid,
 
     # Grow body parts
     ewcfg.cmd_growbody:  slimeoid_creation.change_body_part,
@@ -29,9 +33,15 @@ cmd_map = {
 
     # Name slimeoid
     ewcfg.cmd_nameslimeoid:  slimeoid_creation.name_slimeoid,
+    ewcfg.cmd_nameslimeoid_alt1:  slimeoid_creation.name_slimeoid,
 
     # Finish slimeoid creation
     ewcfg.cmd_spawnslimeoid:  slimeoid_creation.spawn_slimeoid,
+    ewcfg.cmd_spawnslimeoid_alt1:  slimeoid_creation.spawn_slimeoid,
+
+    # Destroy slimeoid
+    ewcfg.cmd_destroyslimeoid: slimeoid_creation.destroy_slimeoid,
+    ewcfg.cmd_destroyslimeoid_alt1: slimeoid_creation.destroy_slimeoid,
 
 
 
@@ -39,36 +49,47 @@ cmd_map = {
 
     # Interacting with slimeoids
     ewcfg.cmd_dissolveslimeoid: slimeoidcmds.dissolveslimeoid,
+    ewcfg.cmd_dissolveslimeoid_alt1: slimeoidcmds.dissolveslimeoid,
     ewcfg.cmd_slimeoid: slimeoidcmds.slimeoid,
+    ewcfg.cmd_slimeoid_alt1: slimeoidcmds.slimeoid,
     ewcfg.cmd_playfetch: slimeoidcmds.playfetch,
     ewcfg.cmd_petslimeoid: slimeoidcmds.petslimeoid,
+    ewcfg.cmd_petslimeoid_alt1: slimeoidcmds.petslimeoid,
     ewcfg.cmd_abuseslimeoid: slimeoidcmds.abuseslimeoid,
+    ewcfg.cmd_abuseslimeoid_alt1: slimeoidcmds.abuseslimeoid,
     ewcfg.cmd_walkslimeoid: slimeoidcmds.walkslimeoid,
+    ewcfg.cmd_walkslimeoid_alt1: slimeoidcmds.walkslimeoid,
     ewcfg.cmd_observeslimeoid: slimeoidcmds.observeslimeoid,
+    ewcfg.cmd_observeslimeoid_alt1: slimeoidcmds.observeslimeoid,
     ewcfg.cmd_slimeoidbattle: slimeoidcmds.slimeoidbattle,
+    ewcfg.cmd_slimeoidbattle_alt1: slimeoidcmds.slimeoidbattle,
+    ewcfg.cmd_slimeoidbattle_alt2: slimeoidcmds.slimeoidbattle,
+    ewcfg.cmd_slimeoidbattle_alt3: slimeoidcmds.slimeoidbattle,
     ewcfg.cmd_saturateslimeoid: slimeoidcmds.saturateslimeoid,
     ewcfg.cmd_restoreslimeoid: slimeoidcmds.restoreslimeoid,
+    ewcfg.cmd_restoreslimeoid_alt1: slimeoidcmds.restoreslimeoid,
     ewcfg.cmd_bottleslimeoid: slimeoidcmds.bottleslimeoid,
     ewcfg.cmd_bottleslimeoid_alt1: slimeoidcmds.bottleslimeoid,
     ewcfg.cmd_unbottleslimeoid: slimeoidcmds.unbottleslimeoid,
     ewcfg.cmd_unbottleslimeoid_alt1: slimeoidcmds.unbottleslimeoid,
     ewcfg.cmd_feedslimeoid: slimeoidcmds.feedslimeoid,
+    ewcfg.cmd_feedslimeoid_alt1: slimeoidcmds.feedslimeoid,
     ewcfg.cmd_dress_slimeoid: slimeoidcmds.dress_slimeoid,
     ewcfg.cmd_dress_slimeoid_alt1: slimeoidcmds.dress_slimeoid,
+    ewcfg.cmd_dress_slimeoid_alt2: slimeoidcmds.dress_slimeoid,
+    ewcfg.cmd_dress_slimeoid_alt3: slimeoidcmds.dress_slimeoid,
+    ewcfg.cmd_dress_slimeoid_alt4: slimeoidcmds.dress_slimeoid,
+    ewcfg.cmd_dress_slimeoid_alt5: slimeoidcmds.dress_slimeoid,
     ewcfg.cmd_undress_slimeoid: slimeoidcmds.undress_slimeoid,
     ewcfg.cmd_undress_slimeoid_alt1: slimeoidcmds.undress_slimeoid,
-
-    # Negaslimeoids
-    ewcfg.cmd_negaslimeoid: slimeoidcmds.negaslimeoid,
-    ewcfg.cmd_battlenegaslimeoid: slimeoidcmds.negaslimeoidbattle,
-    ewcfg.cmd_battlenegaslimeoid_alt1: slimeoidcmds.negaslimeoidbattle,
-    ewcfg.cmd_battlenegaslimeoid_alt2: slimeoidcmds.negaslimeoidbattle,
-    ewcfg.cmd_battlenegaslimeoid_alt3: slimeoidcmds.negaslimeoidbattle,
-
-    # Ghosts can spawn a (mostly) randomly generated negaslimeoid
-    ewcfg.cmd_summonnegaslimeoid: slimeoidcmds.summon_negaslimeoid,
-    ewcfg.cmd_summonnegaslimeoid_alt1: slimeoidcmds.summon_negaslimeoid,
-    ewcfg.cmd_summonnegaslimeoid_alt2: slimeoidcmds.summon_negaslimeoid,
+    ewcfg.cmd_undress_slimeoid_alt2: slimeoidcmds.undress_slimeoid,
+    ewcfg.cmd_undress_slimeoid_alt3: slimeoidcmds.undress_slimeoid,
+    ewcfg.cmd_undress_slimeoid_alt4: slimeoidcmds.dress_slimeoid,
+    ewcfg.cmd_undress_slimeoid_alt5: slimeoidcmds.dress_slimeoid,
+    ewcfg.cmd_tagslimeoid: slimeoidcmds.tagslimeoid,
+    ewcfg.cmd_tagslimeoid_alt1: slimeoidcmds.tagslimeoid,
+    ewcfg.cmd_untagslimeoid: slimeoidcmds.untagslimeoid,
+    ewcfg.cmd_untagslimeoid_alt1: slimeoidcmds.untagslimeoid,
 
 }
 

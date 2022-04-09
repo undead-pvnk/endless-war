@@ -26,13 +26,14 @@ class EwSlimeoidBase:
     hue = ""
     coating = ""
     poi = ""
+    dogtag = ""
 
     # slimeoid = EwSlimeoid(member = cmd.message.author, )
     # slimeoid = EwSlimeoid(id_slimeoid = 12)
 
     """ Load the slimeoid data for this user from the database. """
 
-    def __init__(self, member = None, id_slimeoid = None, life_state = None, id_user = None, id_server = None, sltype = "Lab", slimeoid_name = None):
+    def __init__(self, member = None, id_slimeoid = None, life_state = None, id_user = None, id_server = None, sltype = None, slimeoid_name = None):
         query_suffix = ""
         suffix_values = []
         user_data = None
@@ -73,7 +74,7 @@ class EwSlimeoidBase:
                 cursor = conn.cursor()
 
                 # Retrieve object
-                cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM slimeoids{}".format(
+                cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM slimeoids{}".format(
                     ewcfg.col_id_slimeoid,
                     ewcfg.col_id_user,
                     ewcfg.col_id_server,
@@ -96,6 +97,7 @@ class EwSlimeoidBase:
                     ewcfg.col_hue,
                     ewcfg.col_coating,
                     ewcfg.col_poi,
+                    ewcfg.col_dogtag,
                     query_suffix
                 ),
                     suffix_values
@@ -126,6 +128,7 @@ class EwSlimeoidBase:
                     self.hue = result[19]
                     self.coating = result[20]
                     self.poi = result[21]
+                    self.dogtag = result[22]
 
             finally:
                 # Clean up the database handles.
@@ -141,7 +144,7 @@ class EwSlimeoidBase:
             cursor = conn.cursor()
 
             # Save the object.
-            cursor.execute("REPLACE INTO slimeoids({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+            cursor.execute("REPLACE INTO slimeoids({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
                 ewcfg.col_id_slimeoid,
                 ewcfg.col_id_user,
                 ewcfg.col_id_server,
@@ -163,7 +166,8 @@ class EwSlimeoidBase:
                 ewcfg.col_clout,
                 ewcfg.col_hue,
                 ewcfg.col_coating,
-                ewcfg.col_poi
+                ewcfg.col_poi,
+                ewcfg.col_dogtag
             ), (
                 self.id_slimeoid,
                 self.id_user,
@@ -186,7 +190,8 @@ class EwSlimeoidBase:
                 self.clout,
                 self.hue,
                 self.coating,
-                self.poi
+                self.poi,
+                self.dogtag
             ))
 
             conn.commit()

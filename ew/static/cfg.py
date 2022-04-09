@@ -3,7 +3,7 @@
 
 
 
-version = "v4.101 S4A1 Caverns"
+version = "v4.102 S4A1 🍑🔨"
 
 
 dir_msgqueue = 'msgqueue'
@@ -731,13 +731,9 @@ cmd_crystalize_negapoudrin_alt1 = cmd_prefix + 'smeltnegapoudrin'
 cmd_crystalize_negapoudrin_alt2 = cmd_prefix + 'crystallise'
 cmd_crystalize_negapoudrin_alt3 = cmd_prefix + 'crystalize'
 cmd_favor = cmd_prefix + 'favor'
-cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
-cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
-cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
 cmd_summonenemy = cmd_prefix + 'summonenemy'
 cmd_summongvsenemy = cmd_prefix + 'summongvsenemy'
 cmd_deleteallenemies = cmd_prefix + 'deleteallenemies'
-cmd_negaslimeoid = cmd_prefix + 'negaslimeoid'
 cmd_battlenegaslimeoid = cmd_prefix + 'battlenegaslimeoid'
 cmd_battlenegaslimeoid_alt1 = cmd_prefix + 'negaslimeoidbattle'
 cmd_battlenegaslimeoid_alt2 = cmd_prefix + 'battlenega'
@@ -795,6 +791,7 @@ cmd_sidearm = cmd_prefix + 'sidearm'
 cmd_data = cmd_prefix + 'data'
 cmd_mutations = cmd_prefix + 'mutations'
 cmd_mutations_alt_1 = cmd_prefix + 'stds'
+cmd_mutations_alt_2 = cmd_prefix + 'stdz'
 cmd_hunger = cmd_prefix + 'hunger'
 cmd_clock = cmd_prefix + 'clock'
 cmd_time = cmd_prefix + 'time'
@@ -1189,6 +1186,7 @@ cmd_growarmor = cmd_prefix + 'growarmor'
 cmd_growspecial = cmd_prefix + 'growspecial'
 cmd_growbrain = cmd_prefix + 'growbrain'
 cmd_nameslimeoid = cmd_prefix + 'nameslimeoid'
+cmd_nameslimeoid_alt1 = cmd_prefix + 'namenegaslimeoid'
 cmd_raisemoxie = cmd_prefix + 'raisemoxie'
 cmd_lowermoxie = cmd_prefix + 'lowermoxie'
 cmd_raisegrit = cmd_prefix + 'raisegrit'
@@ -1196,27 +1194,59 @@ cmd_lowergrit = cmd_prefix + 'lowergrit'
 cmd_raisechutzpah = cmd_prefix + 'raisechutzpah'
 cmd_lowerchutzpah = cmd_prefix + 'lowerchutzpah'
 cmd_spawnslimeoid = cmd_prefix + 'spawnslimeoid'
+cmd_spawnslimeoid_alt1 = cmd_prefix + 'spawnnegaslimeoid'
 cmd_dissolveslimeoid = cmd_prefix + 'dissolveslimeoid'
+cmd_dissolveslimeoid_alt1 = cmd_prefix + 'dissolvenegaslimeoid'
 cmd_slimeoid = cmd_prefix + 'slimeoid'
+cmd_slimeoid_alt1 = cmd_prefix + 'negaslimeoid'
 cmd_challenge = cmd_prefix + 'challenge'
 cmd_instructions = cmd_prefix + 'instructions'
 cmd_playfetch = cmd_prefix + 'playfetch'
 cmd_petslimeoid = cmd_prefix + 'petslimeoid'
+cmd_petslimeoid_alt1 = cmd_prefix + 'petnegaslimeoid'
 cmd_abuseslimeoid = cmd_prefix + 'abuseslimeoid'
+cmd_abuseslimeoid_alt1 = cmd_prefix + 'abusenegaslimeoid'
 cmd_walkslimeoid = cmd_prefix + 'walkslimeoid'
+cmd_walkslimeoid_alt1 = cmd_prefix + 'walknegaslimeoid'
 cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
+cmd_observeslimeoid_alt1 = cmd_prefix + 'observenegaslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
+cmd_slimeoidbattle_alt1 = cmd_prefix + 'battleslimeoid'
+cmd_slimeoidbattle_alt2 = cmd_prefix + 'negaslimeoidbattle'
+cmd_slimeoidbattle_alt3 = cmd_prefix + 'battlenegaslimeoid'
 cmd_saturateslimeoid = cmd_prefix + 'saturateslimeoid'
 cmd_restoreslimeoid = cmd_prefix + 'restoreslimeoid'
+cmd_restoreslimeoid_alt1 = cmd_prefix + 'restorenegaslimeoid'
 cmd_bottleslimeoid = cmd_prefix + 'bottleslimeoid'
 cmd_bottleslimeoid_alt1 = cmd_prefix + 'bottle'
 cmd_unbottleslimeoid = cmd_prefix + 'unbottleslimeoid'
 cmd_unbottleslimeoid_alt1 = cmd_prefix + 'unbottle'
 cmd_feedslimeoid = cmd_prefix + 'feedslimeoid'
+cmd_feedslimeoid_alt1 = cmd_prefix + 'feednegaslimeoid'
 cmd_dress_slimeoid = cmd_prefix + 'dressslimeoid'
 cmd_dress_slimeoid_alt1 = cmd_prefix + 'decorateslimeoid'
+cmd_dress_slimeoid_alt2 = cmd_prefix + 'adornslimeoid'
+cmd_dress_slimeoid_alt3 = cmd_prefix + 'dressnegaslimeoid'
+cmd_dress_slimeoid_alt4 = cmd_prefix + 'decoratenegaslimeoid'
+cmd_dress_slimeoid_alt5 = cmd_prefix + 'adornnegaslimeoid'
 cmd_undress_slimeoid = cmd_prefix + 'undressslimeoid'
 cmd_undress_slimeoid_alt1 = cmd_prefix + 'undecorateslimeoid'
+cmd_undress_slimeoid_alt2 = cmd_prefix + 'unadornslimeoid'
+cmd_undress_slimeoid_alt3 = cmd_prefix + 'undressnegaslimeoid'
+cmd_undress_slimeoid_alt4 = cmd_prefix + 'undecoratenegaslimeoid'
+cmd_undress_slimeoid_alt5 = cmd_prefix + 'unadornnegaslimeoid'
+cmd_tagslimeoid = cmd_prefix + 'tagslimeoid'
+cmd_tagslimeoid_alt1 = cmd_prefix + 'tagnegaslimeoid'
+cmd_untagslimeoid = cmd_prefix + 'untagslimeoid'
+cmd_untagslimeoid_alt1 = cmd_prefix + 'untagnegaslimeoid'
+
+#negaslimeoid-specific commands
+cmd_conjure_negaslimeoid = cmd_prefix + 'conjurenegaslimeoid'
+cmd_conjure_negaslimeoid_alt1= cmd_prefix + 'summonnegaslimeoid'
+cmd_conjure_negaslimeoid_alt2 = cmd_prefix + 'summonnega'
+cmd_conjure_negaslimeoid_alt3 = cmd_prefix + 'summon'
+cmd_destroyslimeoid = cmd_prefix + 'destroyslimeoid'
+cmd_destroyslimeoid_alt1 = cmd_prefix + 'destroynegaslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
 cmd_clear_quadrant = cmd_prefix + "clearquadrant"
@@ -2126,6 +2156,7 @@ col_time_defeated = 'time_defeated'
 col_clout = 'clout'
 col_hue = 'hue'
 col_coating = 'coating'
+col_dogtag = 'dogtag'
 
 # Database columns for enemies
 col_id_enemy = 'id_enemy'
@@ -2468,6 +2499,7 @@ stat_huntingrifle_kills = 'huntingrifle_kills'
 stat_whistle_kills = 'whistle_kills'
 stat_harpoon_kills = 'harpoon_kills'
 stat_sniper_kills = 'sniper_kills'
+stat_sledgehammer_kills = 'sledgehammer_kills'
 
 
 # Categories of events that change your slime total, for statistics tracking
@@ -2536,6 +2568,7 @@ stats_clear_on_death = [
 ]
 
 context_slimeoidheart = 'slimeoidheart'
+context_negaslimeoidheart = 'negaslimeoidheart'
 context_slimeoidbottle = 'slimeoidbottle'
 context_slimeoidfood = 'slimeoidfood'
 context_wrappingpaper = 'wrappingpaper'
@@ -2847,6 +2880,7 @@ item_id_dye_magenta = "magentadye"
 item_id_dye_cobalt = "cobaltdye"
 item_id_dye_white = "whitedye"
 item_id_dye_rainbow = "rainbowdye"
+item_id_dye_negative = "negativedye"
 item_id_paint_copper = "copperpaint"
 item_id_paint_chrome = "chromepaint"
 item_id_paint_gold = "goldpaint"
@@ -2912,6 +2946,7 @@ weapon_id_awp = 'awp'
 weapon_id_diamondpickaxe = 'dpick'
 weapon_id_monofilamentwhip = 'monowhip'
 weapon_id_fists = 'fists'
+weapon_id_sledgehammer = 'sledgehammer'
 
 
 weapon_id_spraycan = 'spraycan'
@@ -3259,6 +3294,7 @@ cosmetic_id_raincoat = "raincoat"
 
 cosmeticAbility_id_lucky = "lucky"
 cosmeticAbility_id_boost = "boost"  # Not in use. Rollerblades have this ability.
+cosmeticAbility_id_clout = "clout"
 
 # Slimeoid attributes.
 slimeoid_strat_attack = "attack"
@@ -3315,6 +3351,7 @@ hue_id_brown = "brown"
 hue_id_copper = "copper"
 hue_id_chrome = "chrome"
 hue_id_gold = "gold"
+hue_id_negative = "negative"
 
 # Things a slimeoid might throw
 thrownobjects_list = [
@@ -3339,7 +3376,8 @@ thrownobjects_list = [
     "chunk of broken concrete",
     "piece of rusted scrap metal",
     "box overflowing with KFC branded bbq sauce",
-    "Nokia 3310"
+    "Nokia 3310",
+    "mom"
 ]
 
 mutation_id_spontaneouscombustion = "spontaneouscombustion"
@@ -3394,6 +3432,7 @@ mutation_id_longarms = "longarms"
 mutation_id_airlock = "airlock"
 mutation_id_lightminer = "lightminer"
 mutation_id_amnesia = "amnesia"
+mutation_id_stinkeye = "stinkeye"
 
 mutation_milestones = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
 
@@ -3628,9 +3667,9 @@ help_responses = {
     "mymutations": "You read some research notes about your current mutations...",  # will print out a list of mutations with their specific mechanics
     "smelting": "Smelting is a way for you to craft certain items from certain ingredients. To smelt, you use **'!smelt [item name]'**, which will either smelt you the item, or tell which items you need to smelt the item. Popular items gained from smelting are **Cosmetics**, as well as the coveted **Pickaxe** and **Super Fishing Rod**. If you're stuck, you can look up the crafting recipes for any item with **!whatcanimake [itemname]**.",
     "sparring": "**Sparring** can be done between two players using **'!spar [player]'**. Sparring, provided that both players spar with the same weapon type and are not at full hunger, will increase both of your mastery **LEVEL**, which is a hidden value, by one. The publicly displayed value, mastery **RANK** (which is just your mastery level minus 4), is more important. It should be noted that the damage you deal with your weapon is increased even if you haven't reached rank 1 yet. However, once you do reach at least mastery rank 2 (Again, this would be level 6), when you next revive, you will now **permanently** be at level 6 for that weapon type until you annoint or spar again. Essentially, this means you will always start back at rank 2. Once you reach **rank 6**, you can no longer annoint your weapon rank any higher, and must instead kill other players/enemies (that are higher in both slime and level than you) to do so. Reaching rank 6 also stops you from increasing your own rank through sparring, unless you are sparring with someone who has a higher weapon rank than you. You can only spar up to someone else's mastery rank, minus 1 (example: Sparring with a rank 15 master of the katana would, at most, allow you to get to rank 14). Sparring has a one minute cooldown and raises your hunger by about 5%. Once you reach rank 8, you may also **'!marry'** your weapon, resulting in a matrimonial ceremony that increases your rank by two.",
-    "ghosts": "Ghost gameplay revolves around the acquisition of antislime, through haunting and possession. Every use of **'!haunt'** away a small portion of slime from the haunted player, and grants it to the ghost as antislime. The amount of slime taken starts at 1/1000th and varies depending on a number of conditions, and you may also add a customized message by doing '!haunt [@player] [message]'. It can be done face-to-face like with !kill, or done remotely with decreased potency. As a ghost, you can only leave the sewers after being dead for at least a day. Furthermore, if a player has consumed **coleslaw**, they can **'!bust'** ghosts, which sends them back to the sewers. After amassing sufficient **Negative Slime** ghosts can summon **negaslimoids** in the city, with the use of **'!summon [name]'**. Negaslimeoids haunt all players within a district, and also decay capture progress. **The Rowdy Roughhouse** and **Cop Killtown** will send out a response that mentions which district a Negaslimeoid has entered into. Ghosts can also **!inhabit** living players to move alongside them. If a ghost has sufficient antislime, they may also **!possessweapon** or **!possessfishingrod** to grant bonuses to the player they're inhabiting, with a potential reward in antislime if conditions are fulfilled. For more detailed information on ghost mechanics, see https://rfck.miraheze.org/wiki/Ghosts",
+    "ghosts": "Ghost gameplay revolves around the acquisition of antislime, through haunting and possession. Every use of **'!haunt'** away a small portion of slime from the haunted player, and grants it to the ghost as antislime. The amount of slime taken starts at 1/1000th and varies depending on a number of conditions, and you may also add a customized message by doing '!haunt [@player] [message]'. It can be done face-to-face like with !kill, or done remotely with decreased potency. As a ghost, you can only leave the sewers after being dead for at least a day. Furthermore, if a player has consumed **coleslaw**, they can **'!bust'** ghosts, which sends them back to the sewers. After amassing sufficient **Negative Slime** ghosts can conjure **Negaslimoids** at Waffle House. Ghosts can also **!inhabit** living players to move alongside them. If a ghost has sufficient antislime, they may also **!possessweapon** or **!possessfishingrod** to grant bonuses to the player they're inhabiting, with a potential reward in antislime if conditions are fulfilled. For more detailed information on ghost mechanics, see https://rfck.miraheze.org/wiki/Ghosts",
     # Additional gameplay mechanics, part 2
-    "slimeoids": "**SLIMEOIDS** are sentient masses of slime that you can keep as **pets**. To learn how to make one for yourself, visit **The Slimeoid Laboratory** in Brawlden and check the enclosed **'!instructions'**. After you've made one, you can also battle it out with other slimeoids in **The Arena**, located in Vandal Park. Slimeoids can also be used to fight off **negaslimeoids** that have been summoned by ghosts, though be warned, as this is a fight to the death! If your slimeoid dies, it's **HEART** is dropped, which can be sown in the ground like a poudrin, or taken to the labs to revive your slimeoid with **'!restoreslimeoid'**. In regards to your slimeoid's stats, a slimeoid's **'Moxie'** represents its physical attack, **'Chutzpah'** its special attack, and **'Grit'** its defense. Additionally, the color you dye your slimeoid with **'!saturateslimeoid'** also plays into combat. Your slimeoid gets attack bonuses against slimeoids that have its split complementary hue and resist slimeoids with its analgous hues. For more information, see the diagrams linked below (credits to Connor#3355). There are also various commands you can perform on your slimeoid, such as **'!observeslimeoid'**, **'!petslimeoid'**, **'!walkslimeoid'**, and **'!playfetch'**. To humanely and ethically euthanize your slimeoid, use **'!dissolveslimeoid'** at the laboratory. To store and release your slimeoid in a bottle (Warning: This bottle is dropped upon death!!), use **'!bottleslimeoid'** and **'!unbottleslimeoid [slimeoid]'**, respectively.\n<https://cdn.discordapp.com/attachments/492088204053184533/586310921274523648/SLIMEOID-HUE.png>\n<https://cdn.discordapp.com/attachments/177891183173959680/586662087653064706/SLIMEOID-HUE.gif>\n<https://cdn.discordapp.com/attachments/177891183173959680/586662095848996894/SLIMEOID_HUE_NOTE.png>",
+    "slimeoids": "**SLIMEOIDS** are sentient masses of slime that you can keep as **pets**. To learn how to make one for yourself, visit **The Slimeoid Laboratory** in Brawlden and check the enclosed **'!instructions'**. After you've made one, you can also battle it out with other slimeoids in **The Arena**, located in Vandal Park. Slimeoids can also be used to fight **Negaslimeoids** that have been conjured by ghosts. If your slimeoid dies, it's **HEART** is dropped, which can be sown in the ground like a poudrin, or taken to the labs to revive your slimeoid with **'!restoreslimeoid'**. In regards to your slimeoid's stats, a slimeoid's **'Moxie'** represents its physical attack, **'Chutzpah'** its special attack, and **'Grit'** its defense. Additionally, the color you dye your slimeoid with **'!saturateslimeoid'** also plays into combat. Your slimeoid gets attack bonuses against slimeoids that have its split complementary hue and resist slimeoids with its analgous hues. For more information, see the diagrams linked below (credits to Connor#3355). There are also various commands you can perform on your slimeoid, such as **'!observeslimeoid'**, **'!petslimeoid'**, **'!walkslimeoid'**, and **'!playfetch'**. To humanely and ethically euthanize your slimeoid, use **'!dissolveslimeoid'** at the laboratory. To store and release your slimeoid in a bottle (Warning: This bottle is dropped upon death!!), use **'!bottleslimeoid'** and **'!unbottleslimeoid [slimeoid]'**, respectively. To add a description to your slimeoid, use **!tagslimeoid** with a dog tag. To remove this description, **!untagslimeoid**. To battle to the **DEATH**, use **'slimeoidbattle [@] todeath'**.\n<https://cdn.discordapp.com/attachments/492088204053184533/586310921274523648/SLIMEOID-HUE.png>\n<https://cdn.discordapp.com/attachments/177891183173959680/586662087653064706/SLIMEOID-HUE.gif>\n<https://cdn.discordapp.com/attachments/177891183173959680/586662095848996894/SLIMEOID_HUE_NOTE.png>",
     "cosmetics": "**Cosmetics** are items that the player may wear. To equip and un-equip a cosmetic, use **'!adorn [cosmetic]'** and **'!dedorn [cosmetic]'**. If you have four slime poudrins and a cosmetic material, you can use **'!smelt'** to create a new one from scratch. These cosmetic materials can be obtained from using **'!crush'** on vegetables gained by farming. Cosmetics can either be of 'plebian' or 'patrician' quality, indicating their rarity. If you win an art contest held for the community, a Kingpin will make a **Princep** cosmetic for you, which is custom tailored, and will not leave your inventory upon death. Cosmetics can be dyed with **!dyecosmetic [cosmetic name/id] [dye name/id]**. To check which cosmetics you have adorned, you can use !fashion.",
     "realestate": "The **Real Estate Agency** is, well, the agency where you buy real estate. First, check out the property you want with **'!consult [district]'**. The real estate agent will tell you a bit about the area. \nOnce you've made your decision, you can **'!signlease [district]'** to seal the deal. There's a down payment, and you will be charged rent every 2 IRL days. Fair warning, though, if you already have an apartment and you rent a second one, you will be moved out of the first.\n\nFinally, if you own an apartment already, you can **'!aptupgrade'** it, improving its storage capabilities, but you'll be charged a huge down payment and your rent will double. The biggest upgrade stores 40 closet items, 20 food items, and 25 pieces of furniture. And if you're ready to cut and run, use **'!breaklease'** to end your contract. It'll cost another down payment, though.\n\nYou can !addkey to acquire a housekey. Giving this item to some lucky fellow gives them access to your apartment, including all your prized posessions. Getting burglarized? Use !changelocks to eliminate all housekeys you created. Both cost a premium, though.",
     "apartments": "Once you've gotten yourself an apartment, there are a variety of things you can do inside it. To enter your apartment, do **'!retire'** in the district your apartment is located in. There are certain commands related to your apartment that you must do in a direct message to ENDLESS WAR. To change the name and description of your apartment, do **'!aptname [name]'** and **'!aptdesc [description]'**, respectively. To place and remove furniture (purchasable in The Bazaar), do **'!decorate [furniture]'** and **'!undecorate [furniture]'**, respectively. You can store and remove items with **'!stow'** and **'!snag'**, respectively. To store in and remove items from the fridge, do **'!fridge [item]'** and **'!unfridge [item]'**. To store in and remove items from the closet, do **'!closet [item]'** and **'!uncloset [item]'**, respectively. To store and remove your slimeoid, do **'!freeze'** and **'!unfreeze'**, respectively. To store and remove fish, do **'!aquarium [fish]'** and **'!releasefish [fish]'**, respectively. To store and remove items such as weapons and cosmetics, do **'!propstand [item]'** and **'!unstand [item]'**, respectively. To put away zines, do **!shelve [item]** and **!unshelve [item]**. To place crops into flower pots, do **pot [item]** and **unpot [item]** If you have a collection, you can !collect <collection> <item> to store certain items in that collection. To enter someone else's apartment, you can do **'!knock [player]'**, which will prompt them to let you in. This list of commands can also be accessed by using !help in a direct message to ENDLESS WAR.",
@@ -3780,7 +3819,8 @@ mutation_descriptions = {
     mutation_id_ambidextrous: "If you are unarmed or have a tool equipped, and have a weapon in your sidearm slot, you will default to that weapon.",
     mutation_id_coleblooded: "You get the ability to bust ghosts without coleslaw. If a ghost haunts you, they lose negaslime instead of gaining it.",
     mutation_id_landlocked: "When standing in a street either bordering an outskirt or the Slime Sea, use !loop to warp to the opposite side of the map. This also works on the ferry and at Slime's End Cliffs. There is a 60 second travel time when using !loop.",
-    mutation_id_amnesia: "Your display name is replaced with ????? in EW's messages, and you can delete your message commands without ENDLESS WAR reacting. On a kill, the kill feed message is delayed by 60 seconds."
+    mutation_id_amnesia: "Your display name is replaced with ????? in EW's messages, and you can delete your message commands without ENDLESS WAR reacting. On a kill, the kill feed message is delayed by 60 seconds.",
+    mutation_id_stinkeye: "When surveying a district, the amount of slime on the ground is shown, along with 4 items starting with the lowest IDs."
 
 }
 
@@ -3820,14 +3860,14 @@ consult_responses = {
 basic_commands = "!slime: Check your slime.\n!look: Look at your surroundings.\n!survey: Get a shortened version of !look.\n!goto <district>: Move to a new area.\n!halt: Stop moving.\n!data: Check your current status.\n!slimecoin: Check your slimecoin.\n!eat: Eat food.\n!use: Use an item.\n!scavenge <captcha>: Scavenge slime off the ground.\n!map: Pull up the map.\n!scout <district>: Check for enemies in an adjacent district."
 juvenile_commands = "!dance: Dance, monkey.\n!enlist <gang>: Enlist in the Rowdys or the Killers.\n!legallimit: Juvies below 100,000 slime can cap their slime at that amount. They can't be killed below Level 18, so this makes them invulnerable."
 enlisted_commands = "!kill <player>: Kill your enemies. Depending on your weapon, you need to enter a captcha after this.\n!equip <tool/weapon>: Equip a tool or weapon.\n!sidearm: Sidearm a tool or weapon into a secondary slot.\n!switch: Switch weapons between your weapon and sidearm slots.\n!suicide: Nah, I'm not telling you what this does.\n!vouch: If a Juvie isn't affiliated, you can !vouch for them to join your gang."
-corpse_commands = "!boo: Become way too scary.\n!haunt <player>: You can haunt active players to rob them of some slime and get antislime.\n!inhabit <player>: Inhabit another player.\n!letgo: Stop inhabiting someone.\n!possessweapon: Possess the weapon of someone you're inhabiting.\n!possessfishingrod: Possess someone's fishing rod in the same way.\n!unpossessfishingrod: Stop possessing the fishing rod.\n!summonnegaslimeoid <name>:Summon a negaslimeoid to the surface.\n!negaslimeoid <name>: Check on a specific negaslimeoid.\n!crystalizenegapoudrin: Create a negapoudrin with negaslime."
+corpse_commands = "!boo: Become way too scary.\n!haunt <player>: You can haunt active players to rob them of some slime and get antislime.\n!inhabit <player>: Inhabit another player.\n!letgo: Stop inhabiting someone.\n!possessweapon: Possess the weapon of someone you're inhabiting.\n!possessfishingrod: Possess someone's fishing rod in the same way.\n!unpossessfishingrod: Stop possessing the fishing rod.\n!negaslimeoid: Check on your Negaslimeoid, if you have created one.\n!crystalizenegapoudrin: Create a negapoudrin with negaslime."
 player_info_commands = "!data <player>: Check basic player info. Excluding <player> shows your own data.\n!slime <player>:Same as !data, but shows slime count.\n!slimecoin <player>: Same as the above two, but shows SlimeCoin.\n!hunger: Displays hunger.\n!mutations: Check mutations. Add 'level' to the end to display by mutation level.\n!fashion: Displays fashion info.\n!inv: Displays inventory. Add keywords after the command to filter or sort items. Keywords are: type, name, id, stack, search.\n!inv search <contents>: Display all items that contain <contents>.\n!apartment: Check your apartment.\n!mastery: Check weapon mastery."
 external_link_commands = "!map: Pull up the world map.\n!time: Get the latest RFCK time and weather.\n!transportmap: Pull a transportation map of the city.\n!patchnotes: See the latest patchnotes.\n!booru: Get a link to the RFCK Booru.\n!wiki: Get a link to the wiki.\n!leaderboard: Get a link to the online leaderboard.\n!bandcamp: Links to the RFCK Bandcamp.\n!tutorial: Gives a more in-depth view of Endless War Gameplay."
 combat_commands = "!kill <player>: Kill your enemies. Depending on your weapon, you need to enter a captcha after this.\n!equip <tool/weapon>: Equip a tool or weapon.\n!sidearm: Sidearm a tool or weapon into a secondary slot.\n!switch: Switch weapons between your weapon and sidearm slots.\n!aim <player>: Increase accuracy toward a target.\n!taunt <player>: Decrease you opponent's accuracy.\n!dodge <player>: Increase evasion for a short time.\n!reload: Some weapons have limited ammo and need to reload."
 capping_commands = "!spray <captcha>: Spray the district in your gang's paint.\n!progress: Displays capture progress in your current district.\n!tag: Spray your tagged image.\n!changespray <tag>:Change the image link that displays on a !tag."
 item_commands = "!inv: Displays inventory. Add keywords after the command to filter or sort items. Keywords are: type, name, id, stack, search, general, food, cosmetic, furniture, weapon.\n!inv search <contents>: Display all items that contain <contents>.\n!inspect <item>: Inspect an item in your inventory.\n!discard <item>: Discard an item.\n!use <item>: Some items can be used.\n!trade <player>: Open a trade with a player.\n!offer <item>: Add an item to a trade.\n!removeoffer <item>:Remove an item from the trade.\n!completetrade: Finish the trade.\n!canceltrade:Cancel a trade.\n!smelt <item>: Smelt an item form ingredients.\n!whatcanimake <item>:Shows what you can smelt with an item.\n!scrawl <item> <description>: Add a message to an item.\n!strip <item>: Remove a message from an item\n!give @player <item>: Giving away items increases festivity."
 cosmetics_dyes_commands = "!adorn <cosmetic>: Wear a cosmetic\n!dedorn <cosmetic>: Take a cosmetic off.\n!dyecosmetic <cosmetic> <dye>: Dye a cosmetic using dyes in your inventory.\n!dyefurniture <furniture> <dye>: Change the color of furniture with dye.\n!saturateslimeoid <dye>: Dye your slimeoid."
-miscellaneous_commands = "!quarterlyreport: Display the current quarterly goal.\n!scrutinize <object>: Examine specific objects in an area. Usually reserved for dungeons and ARGs.\n!shakeoff: If someone with the One Eye Open mutation is following you, use this to shake them off.\n!extractsoul: Remove your soul. from your body and bottle it.\n!returnsoul: Return your soul to your body, only if you have it in your inventory.\n!squeezesoul <soul>: Squeeze a soul. The soul's owner will vomit 1/4 of their slime on the ground.\n!ads: View ads in a district.\n!knock <player>: Knock on a player's apartment door, if you're in the district.\n!endlesswar: Check the total ammassed slime of all players.\n!negaslime: Check total amassed antislime.\n!negaslimeoidbattle <negaslimeoid name>: Fight your slimeoid against a negaslimeoid."
+miscellaneous_commands = "!quarterlyreport: Display the current quarterly goal.\n!scrutinize <object>: Examine specific objects in an area. Usually reserved for dungeons and ARGs.\n!shakeoff: If someone with the One Eye Open mutation is following you, use this to shake them off.\n!extractsoul: Remove your soul. from your body and bottle it.\n!returnsoul: Return your soul to your body, only if you have it in your inventory.\n!squeezesoul <soul>: Squeeze a soul. The soul's owner will vomit 1/4 of their slime on the ground.\n!ads: View ads in a district.\n!knock <player>: Knock on a player's apartment door, if you're in the district.\n!endlesswar: Check the total ammassed slime of all players.\n!negaslime: Check total amassed antislime."
 flavor_commands = "Command list: !salute\n!unsalute\n!hurl\n!howl\n!moan\n!pot\n!bully <target>\n!lol\n!jam <instrument>"
 slimeoid_commands = "!slimeoid: Check your or another player's slimeoid.\n!saturateslimeoid <dye>: Dye your slimeoid.\n!bottleslimeoid:Put your slimeoid in a bottle, turning them into an item.\n!unbottleslimeoid: Unbottle a slimeoid.\n!feedslimeoid <food>: Feed your slimeoid stat modifying candy.\n!dressslimeoid <cosmetic>: Dress up your slimeoid.\n!undressslimeoid: Take cosmetics off your slimeoid.\n!slimeoidbattle <player>: Challenge another player to a slimeoid battle.\n!playfetch, !petslimeoid, !abuseslimeoid, !walkslimeoid, !observeslimeoid: You can interact with your slimeoid in various ways."
 trading_commands = "!trade <player>: Open a trade with a player.\n!offer <item>: Add an item to a trade.\n!removeoffer <item>:Remove an item from the trade.\n!completetrade: Finish the trade.\n!canceltrade:Cancel a trade."
@@ -3851,7 +3891,7 @@ mutation_unique_commands = {
     "rigormortis": "RIGOR MORTIS\n!preserve <item>: Prevent an item from dropping when you die.",
     "ditchslap": "DITCH SLAP\n!slap <player> <location>: Slap an ally into another district.\n!clench: Clench your butt cheeks to prepare to be slapped. Have your allies use this.",
     "landlocked": "LANDLOCKED\n!loop: Use this on a district bordering an outskirt. It will loop you to the opposite end of the map.",
-    "organicfursuit": "ORGANIC FURSUIT\n!fursuit: Check for the next full moon when your next\"furry episode\" begins.",
+    "organicfursuit": "ORGANIC FURSUIT\n!fursuit: Check for the next full moon when your next \"furry episode\" begins.",
     "enlargedbladder": "ENLARGED BLADDER\n!piss: Need I say more?",
     "quantumlegs": "QUANTUM LEGS\n!tp <location>: Teleport up to two areas away.",
     "trashmouth": "TRASH MOUTH\n!devour item: Eat some non-food items."
@@ -3880,7 +3920,7 @@ district_unique_commands = {
     "realestateagency": "REAL ESTATE\n!consult <district>: Get information and cost for an apartment.\n!signlease <district>: Purchase an apartment in a new location.\n!breaklease: Cancel the lease you currently have.\n!aptupgrade: Upgrade your apartment, from C to S.\n!changelocks: Erase all housekeys you have in circulation.\n!addkey: Add a housekey to your apartment.",
     "clinicofslimoplasty": "CLINIC\n!chemo <mutation>: Clear a mutation from yourself.\n!graft <mutation>: Attach a new mutation to yourself.\n!browse: Browse the medical zines available.\n!orderzine <zine>: Order a list of mutations to graft.",
     "thesewers": "SEWERS\n!revive: Revive.",
-    "slimecorpslimeoidlaboratory": "SLIMEOID LAB\n!embiggen:Make a fish real big.\n!restoreslimeoid <slimeoid>: Restore a Slimeoid from a slimeoid heart.\n!instructions: Go over the many commands used to make a slimeoid.",
+    "slimecorpslimeoidlaboratory": "SLIMEOID LAB\n!embiggen: Make a fish real big.\n!restoreslimeoid <slimeoid>: Restore a Slimeoid from a slimeoid heart.\n!instructions: Go over the many commands used to make a slimeoid.",
     "thecasino": "CASINO\n!slimecraps <amount> <currency>: Gamble at the craps table. Gambling types include slimecoin, slime, and your soul.\n!slimeroulette <amount> <bet> <type>:Gamble at the roulette wheel. Types are same as above, bet options are shown by typing !slimeroulette <amount>.\n!slimeslots <type>: Bet a fixed amount in slots. Accepts Slime and SlimeCoin.\n!slimepachinko <type> Same as above, but in pachinko.\n!slimebaccarat <amount> <currency> <hand>: Bet slime, slimecoin, or souls on baccarat. The hand is either 'player' or 'dealer'.\n!slimeskat <player> <player>: Challenge two players to a game of slimeskat. You bet Slimecoin once the game has started.\n!russianroulette <player>: Challenge your opponent to russian roulette. Add 'soul' to the end of the command to gamble souls.\n!betsoul: Exchange your soul for {} SlimeCoin.\n!buysoul <player>: Buy a soul off the casino for {} SlimeCoin, if one is in stock.".format(
         soulprice, soulprice),
     "thedojo": "DOJO\n!spar <player>: Spar with someone to increase your weapon level.\n!marry: Marry your weapon.\n!divorce: The inevitable, after marrying your weapon.\n!object: Interrupt a marriage as it's going. ",
@@ -3896,10 +3936,11 @@ district_unique_commands = {
     "bazaar": "BAZAAR\n!extract <collection item> <item>: For a fee, remove an item from a collection.\n!unstand <item>: Remove an item from its prop stand.\n!releasefish <aquarium>: Remove fish from their aquarium.",
     "vandalpark": "VANDAL PARK\n!slimeball <team>: Join a game of Slimeball. Teams are purple and pink. Read about details in the Game Guide.",
     "endlesswar": "ENDLESS WAR\n!pray <target>: Pray to someone.",
-    "thesummit" : "THE SUMMIT:\n!jump: A suicidal, expedited version of snowboarding.",
-    "limecorp3f": "LIMECORP 3F:\n!jump: Commit career suicide.",
+    "thesummit" : "THE SUMMIT\n!jump: A suicidal, expedited version of snowboarding.",
+    "limecorp3f": "LIMECORP 3F\n!jump: Commit career suicide.",
     "blimp":"BLIMP:\nGo skydiving. No parachute, but you can pretend.",
-    "themuseum":"THE MUSEUM:\n!donate <relic/fish/frame>: Donate something to the Curator's museum."
+    "themuseum":"THE MUSEUM\n!donate <relic/fish/frame>: Donate something to the Curator's museum.",
+    "wafflehouse": "WAFFLE HOUSE\n!restorenegaslimeoid <negaslimeoid>: Restore a Negaslimeoid from a core.\n!destroyslimeoid: Destroy a Slimeoid or Negaslimeoid in your possession.\n!instructions: Go over the many commands used to make a negaslimeoid."
 }
 
 
@@ -4907,6 +4948,10 @@ captcha_dict = [
     'SLIMEXODIA', 'WEBBEDFEET', 'NOSEFERATU', 'BINGEEATER', 'TRASHMOUTH',
     'DIREAPPLES', 'BLACKLIMES', 'POKETUBERS', 'PULPGOURDS', 'ROWDDISHES',
     'DRAGONCLAW',
+    # 27
+    'STOPSCAVENGINGANDTOUCHGRASS', 'GETSERIOUSPSYCHOLOGICALHELP',
+    'FEELTHETOUCHOFAWOMANINSTEAD', 'THISISNTVERYIMPRESSIVECHUMP',
+    'YOUCOULDBEDOINGSOMUCHBETTER', 'GOGETAJOBINSTEADOFDOINGTHIS',
 ]
 
 riflecap = ['UP', 'DOWN', 'LEFT', 'RIGHT']
@@ -5017,13 +5062,6 @@ defined_races = {
         "racial_cmd": cmd_entomize,
         "soul_behavior":"is floating around in a weird loop."
     },
-    race_other: {
-        "race_prefix": "peculiar ",
-        "race_suffix": "",
-        "acknowledgement_str": 'ENDLESS WAR struggles to categorize you, and files you under "other". Your peculiar form can be used to **{cmd}** those around you.',
-        "racial_cmd": cmd_confuse,
-        "soul_behavior":"rattles seductively through the glass."
-    },
     race_shambler: {
         "race_prefix": "",
         "race_suffix": "",
@@ -5050,7 +5088,14 @@ defined_races = {
         "acknowledgement_str": "ENDLESS WAR acknowledges you as the hellspawn you are. You can now **{cmd}**. ",
         "racial_cmd": cmd_strike_deal,
         "soul_behavior":"has established dominance in here."
-    }
+    },
+    race_other: {  # Keep this one at the end, or else
+        "race_prefix": "peculiar ",
+        "race_suffix": "",
+        "acknowledgement_str": 'ENDLESS WAR struggles to categorize you, and files you under "other". Your peculiar form can be used to **{cmd}** those around you.',
+        "racial_cmd": cmd_confuse,
+        "soul_behavior":"rattles seductively through the glass."
+    },    
 }
 
 # slime twitter stuff

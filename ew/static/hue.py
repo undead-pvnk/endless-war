@@ -27,6 +27,7 @@ hue_list = [
         effectiveness={
             ewcfg.hue_id_orange: ewcfg.hue_analogous,
             ewcfg.hue_id_lime: ewcfg.hue_analogous,
+            ewcfg.hue_id_negative: ewcfg.hue_analogous,
             ewcfg.hue_id_purple: ewcfg.hue_atk_complementary,
             ewcfg.hue_id_cobalt: ewcfg.hue_special_complementary,
             ewcfg.hue_id_blue: ewcfg.hue_full_complementary,
@@ -173,6 +174,9 @@ hue_list = [
         str_saturate="It turns a fantastic shade of... well, everything!!",
         str_name="***Rainbow***",
         str_desc="Its ***Rainbow*** hue dazzles and amazes you. It comprises the whole color spectrum in a crude, Photoshop-tier gradient. It’s so obnoxious… and yet, decadent!",
+        effectiveness={
+            ewcfg.hue_id_negative: ewcfg.hue_full_complementary
+        },        
     ),
     EwHue(
         id_hue=ewcfg.hue_id_pink,
@@ -307,6 +311,20 @@ hue_list = [
         str_name="gold",
         str_desc="It prides itself on its shiny golden coating.",
         is_neutral=True,
+    ),
+    EwHue(
+        id_hue=ewcfg.hue_id_negative,
+        alias=[
+            "negaslimeoid"
+            "negativedye"
+        ],
+        str_saturate="It turns a seemingly negative hue!",
+        str_name="negative",
+        str_desc="It's a photonegative stain on the landscape.",
+        effectiveness={
+            ewcfg.hue_id_rainbow: ewcfg.hue_analogous,
+            ewcfg.hue_id_yellow: ewcfg.hue_full_complementary, # "pissbois die"
+        },
     ),
 ]
 

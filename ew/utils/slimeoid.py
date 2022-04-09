@@ -3,7 +3,6 @@ import random
 import time
 
 from . import core as ewutils
-from .frontend import EwResponseContainer
 from ..backend import core as bknd_core
 from ..backend.user import EwUserBase as EwUser
 from ..backend.market import EwMarket
@@ -22,62 +21,6 @@ class EwSlimeoid(EwSlimeoidBase):
     def die(self):
         self.life_state = ewcfg.slimeoid_state_dead
         self.id_user = ""
-
-    def haunt(self):
-        resp_cont = EwResponseContainer(id_server=self.id_server)
-        if (self.sltype != ewcfg.sltype_nega) or ewutils.active_slimeoidbattles.get(self.id_slimeoid):
-            return resp_cont
-        market_data = EwMarket(id_server=self.id_server)
-        ch_name = poi_static.id_to_poi.get(self.poi).channel
-
-        data = bknd_core.execute_sql_query("SELECT {id_user} FROM users WHERE {poi} = %s AND {id_server} = %s".format(
-            id_user=ewcfg.col_id_user,
-            poi=ewcfg.col_poi,
-            id_server=ewcfg.col_id_server
-        ), (
-            self.poi,
-            self.id_server
-        ))
-
-        for row in data:
-            haunted_data = EwUser(id_user=row[0], id_server=self.id_server)
-            haunted_player = EwPlayer(id_user=row[0])
-
-            if haunted_data.life_state in [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]:
-                haunted_slimes = 2 * int(haunted_data.slimes / ewcfg.slimes_hauntratio)
-
-                haunt_cap = 10 ** (self.level - 1)
-                haunted_slimes = min(haunt_cap, haunted_slimes)  # cap on for how much you can haunt
-
-                haunted_data.slimes -= haunted_slimes #can't do .change_slimes for import reasons. #TODO: Fix that. #haunted_data.change_slimes(n=-haunted_slimes, source=ewcfg.source_haunted)
-                market_data.negaslime -= haunted_slimes
-
-                # Persist changes to the database.
-                haunted_data.persist()
-        response = "{} lets out a blood curdling screech. Everyone in the district loses slime.".format(self.name)
-        resp_cont.add_channel_response(ch_name, response)
-        market_data.persist()
-
-        return resp_cont
-
-    def move(self):
-        resp_cont = EwResponseContainer(id_server=self.id_server)
-        if ewutils.active_slimeoidbattles.get(self.id_slimeoid):
-            return resp_cont
-        try:
-            destinations = poi_static.poi_neighbors.get(self.poi).intersection(set(poi_static.capturable_districts))
-            if len(destinations) > 0:
-                self.poi = random.choice(list(destinations))
-                poi_def = poi_static.id_to_poi.get(self.poi)
-                ch_name = poi_def.channel
-
-                response = "The air grows colder and color seems to drain from the streets and buildings around you. {} has arrived.".format(self.name)
-                resp_cont.add_channel_response(ch_name, response)
-                response = "There are reports of a sinister presence in {}.".format(poi_def.str_name)
-                resp_cont.add_channel_response(ewcfg.channel_rowdyroughhouse, response)
-                resp_cont.add_channel_response(ewcfg.channel_copkilltown, response)
-        finally:
-            return resp_cont
 
     def eat(self, food_item):
         if food_item.item_props.get('context') != ewcfg.context_slimeoidfood:
@@ -266,6 +209,8 @@ def slimeoid_describe(slimeoid):
             response += " This slimeoid has some clout, but has not yet realized its potential."
         elif clout == 0:
             response += " A pitiable baby, this slimeoid has no clout whatsoever."
+    else:
+        response += " Onlookers shriek in terror at the sight of it."
 
     if (int(time.time()) - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
         response += " It is currently incapacitated after being defeated."
@@ -274,33 +219,33 @@ def slimeoid_describe(slimeoid):
 
 
 # do whatever needs to constantly be done to slimeoids
-async def slimeoid_tick_loop(id_server):
-    while not ewutils.TERMINATE:
-        await asyncio.sleep(ewcfg.slimeoid_tick_length)
-        await slimeoid_tick(id_server)
+# async def slimeoid_tick_loop(id_server):
+#     while not ewutils.TERMINATE:
+#         await asyncio.sleep(ewcfg.slimeoid_tick_length)
+#         await slimeoid_tick(id_server)
 
 
-async def slimeoid_tick(id_server):
-    data = bknd_core.execute_sql_query("SELECT {id_slimeoid} FROM slimeoids WHERE {sltype} = %s AND {id_server} = %s".format(
-        id_slimeoid=ewcfg.col_id_slimeoid,
-        sltype=ewcfg.col_type,
-        id_server=ewcfg.col_id_server
-    ), (
-        ewcfg.sltype_nega,
-        id_server
-    ))
+# async def slimeoid_tick(id_server):
+#     data = bknd_core.execute_sql_query("SELECT {id_slimeoid} FROM slimeoids WHERE {sltype} = %s AND {id_server} = %s".format(
+#         id_slimeoid=ewcfg.col_id_slimeoid,
+#         sltype=ewcfg.col_type,
+#         id_server=ewcfg.col_id_server
+#     ), (
+#         ewcfg.sltype_nega,
+#         id_server
+#     ))
 
-    resp_cont = EwResponseContainer(id_server=id_server)
-    for row in data:
-        slimeoid_data = EwSlimeoid(id_slimeoid=row[0])
-        haunt_resp = slimeoid_data.haunt()
-        resp_cont.add_response_container(haunt_resp)
-        if random.random() < 0.1:
-            move_resp = slimeoid_data.move()
-            resp_cont.add_response_container(move_resp)
-        slimeoid_data.persist()
+#     resp_cont = EwResponseContainer(id_server=id_server)
+#     for row in data:
+#         slimeoid_data = EwSlimeoid(id_slimeoid=row[0])
+#         haunt_resp = slimeoid_data.haunt()
+#         resp_cont.add_response_container(haunt_resp)
+#         if random.random() < 0.1:
+#             move_resp = slimeoid_data.move()
+#             resp_cont.add_response_container(move_resp)
+#         slimeoid_data.persist()
 
-    await resp_cont.post()
+#     await resp_cont.post()
 
 
 def find_slimeoid(slimeoid_search = None, id_user = None, id_server = None):
