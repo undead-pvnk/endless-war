@@ -1153,7 +1153,7 @@ async def feedslimeoid(cmd):
                             'ability': 'clout',
                             'durability': 2500000,
                             'size': 2,
-                            'style': ewcfg.style_cool,
+                            'fashion_style': ewcfg.style_cool,
                             'freshness': min(slimeoid.clout // 5, 10), # 1/5 of the slimeoid's clout, capped at 10 freshness.
                             'adorned': 'false',
                                     }
