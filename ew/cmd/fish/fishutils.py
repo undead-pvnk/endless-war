@@ -156,25 +156,26 @@ def gen_fish_size(mastery_bonus = 0, fish_size = None):
             iterator = iterator + 1
             limit = random.randint(1, 10)
 
-            if limit <= 3:
+            if limit <= 3: # 3/10
                 choice = 1
                 break
-            elif limit <= 6:
+            elif limit <= 6: # 3/10
                 choice = 2
                 break
+            # 4/10 chance of repeating
 
     if fish_size is None:
-        if iterator == 0:
-            fish_category = ewcfg.fish_size_average
-        elif iterator == 1 and choice == 1:
+        if iterator == 0:                   # 50%
+            fish_category = ewcfg.fish_size_average 
+        elif iterator == 1 and choice == 1: # 15%
             fish_category = ewcfg.fish_size_big
-        elif iterator == 1 and choice == 2:
+        elif iterator == 1 and choice == 2: # 15%
             fish_category = ewcfg.fish_size_small
-        elif iterator == 2 and choice == 1:
+        elif iterator == 2 and choice == 1: # 6%
             fish_category = ewcfg.fish_size_miniscule
-        elif iterator == 2 and choice == 2:
+        elif iterator == 2 and choice == 2: # 6%
             fish_category = ewcfg.fish_size_huge
-        elif iterator > 2:
+        elif iterator > 2:                  # 8%
             fish_category = ewcfg.fish_size_colossal
     else:
         fish_category = fish_size
