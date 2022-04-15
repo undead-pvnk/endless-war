@@ -1902,7 +1902,7 @@ food_list = [
     ),
     EwFood(
         id_food = "masterbait",
-        alias = ['master', 'masterball'],
+        alias = ['master', 'masterball', 'highvaluebait'],
         recover_hunger = 1,
         price = 10000000,
         str_name = "Master Bait",

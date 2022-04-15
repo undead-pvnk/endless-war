@@ -2873,7 +2873,7 @@ furniture_list = [
         price = 30000,
         vendors = ['bazaar'],
         furniture_place_desc = "You cover the walls with wallpaper. ",
-        furniture_look_desc = "The walls are a nice shade of -*HUE*-",
+        furniture_look_desc = "The walls are a nice shade of -*HUE*-. ",
         furn_set = "specialhue",
     ),
     EwFurniture(
