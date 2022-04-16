@@ -1295,6 +1295,7 @@ cmd_confuse = cmd_prefix + 'confuse'
 cmd_shamble = cmd_prefix + 'shamble'
 cmd_netrun = cmd_prefix + 'netrun'
 cmd_strike_deal = cmd_prefix + 'strikedeal'
+cmd_honk = cmd_prefix + 'honk'
 
 cmd_hogtie = cmd_prefix + 'hogtie'
 
