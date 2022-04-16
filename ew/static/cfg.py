@@ -4974,6 +4974,7 @@ race_forbidden = 'forbidden'
 race_shambler = 'shambler'
 race_cyborg = 'cyborg'
 race_demon = 'demon'
+race_clown = 'clown'
 
 
 # define race info in one place
@@ -5088,6 +5089,13 @@ defined_races = {
         "acknowledgement_str": "ENDLESS WAR acknowledges you as the hellspawn you are. You can now **{cmd}**. ",
         "racial_cmd": cmd_strike_deal,
         "soul_behavior":"has established dominance in here."
+    },
+        race_clown: {
+        "race_prefix": "goofy ",
+        "race_suffix": "",
+        "acknowledgement_str": "ENDLESS WAR somewhat irritatedly acknowledges you as the lowest common denominator of the entertainment industry. You can now **{cmd}**. Congrats, dipshit.",
+        "racial_cmd": cmd_honk,
+        "soul_behavior":"is bothering bystanders with its various goofs and gaffes."
     },
     race_other: {  # Keep this one at the end, or else
         "race_prefix": "peculiar ",
