@@ -672,6 +672,12 @@ trauma_list = [
         str_trauma="Their head is dented in with a huge crater.",
         trauma_class=ewcfg.trauma_class_accuracy,
     ),
+    EwTrauma(  # 18
+        id_trauma=ewcfg.weapon_id_skateboard,
+        str_trauma_self="The sight of skate tricks makes you cower in fear.",
+        str_trauma="The sight of skate tricks makes them cower in fear.",
+        trauma_class=ewcfg.trauma_class_sapregeneration
+    ),
 ]
 
 trauma_map = {}

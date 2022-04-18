@@ -1123,6 +1123,7 @@ cmd_untakedown_alt_1 = cmd_prefix + 'uncopyrightstrike'
 cmd_untakedown_alt_2 = cmd_prefix + 'undeletezine'
 cmd_lol = cmd_prefix + 'lol'
 cmd_mastery = cmd_prefix + 'mastery'
+cmd_trick = cmd_prefix + 'trick'
 
 
 cmd_pacommand = cmd_prefix + 'pacommand'
@@ -1674,7 +1675,7 @@ cd_gvs_searchforbrainz = 300
 # in relation to time of death
 time_to_manifest = 24 * 60 * 60  # a day
 
-# time to get kicked out of subzone. 
+# time to get kicked out of subzone.
 time_kickout = 60 * 60  # 1 hour
 
 # For SWILLDERMUK, this is used to prevent AFK people from being pranked.
@@ -2392,7 +2393,7 @@ str_zone_degraded = "{poi} has been degraded too far to keep operating."
 weaponskill_max_onrevive = 6
 weaponskill_min_onrevive = 0
 
-# Needed for duels, apparently. 
+# Needed for duels, apparently.
 time_pvp_duel = 3 * 60
 
 # User statistics we track
@@ -2500,6 +2501,7 @@ stat_whistle_kills = 'whistle_kills'
 stat_harpoon_kills = 'harpoon_kills'
 stat_sniper_kills = 'sniper_kills'
 stat_sledgehammer_kills = 'sledgehammer_kills'
+stat_skateboard_kills = 'skateboard_kills'
 
 
 # Categories of events that change your slime total, for statistics tracking
@@ -2947,6 +2949,7 @@ weapon_id_diamondpickaxe = 'dpick'
 weapon_id_monofilamentwhip = 'monowhip'
 weapon_id_fists = 'fists'
 weapon_id_sledgehammer = 'sledgehammer'
+weapon_id_skateboard = 'skateboard'
 
 
 weapon_id_spraycan = 'spraycan'
@@ -4722,6 +4725,18 @@ dance_responses = [
     "{} does the WAP! https://www.youtube.com/watch?v=x69gQVuReVk"
 ]
 
+#skateboard responses
+tricks = [
+    "You nail a Heelflip! Radical!",
+    "You land a Laser Flip! Technical!",
+    "You jump off a high spot with a Triple Kickflip! Holy shit!",
+    "You grind down a rail with a 50-50! Good balance!",
+    "You successfully do a Darkslide! Cowabunga!",
+    "You pass by with a 5-0 grind! Wow!",
+    "You roll up the ramp and do a Gymnast Plant! How do they do it!",
+    "You hang on the lip of a ramp with a Noseblunt! How’s the weather up there!"
+]
+
 # links to SlimeCorp propaganda
 propaganda = [
     'https://cdn.discordapp.com/attachments/431238867459375145/617526157239386113/image0.jpg',
@@ -5095,7 +5110,7 @@ defined_races = {
         "acknowledgement_str": 'ENDLESS WAR struggles to categorize you, and files you under "other". Your peculiar form can be used to **{cmd}** those around you.',
         "racial_cmd": cmd_confuse,
         "soul_behavior":"rattles seductively through the glass."
-    },    
+    },
 }
 
 # slime twitter stuff
@@ -5189,4 +5204,3 @@ cmd_debug6 = None
 cmd_debug7 = None
 cmd_debug8 = None
 cmd_debug9 = None
-
