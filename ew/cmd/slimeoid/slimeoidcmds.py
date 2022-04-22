@@ -721,7 +721,6 @@ async def slimeoidbattle(cmd):
             # RIP :,(             
             dead_slimeoid.die()
             dead_slimeoid.persist()
-            loser = EwUser(member=loser)
             loser.active_slimeoid = -1
             loser.persist()
 
