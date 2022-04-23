@@ -1486,7 +1486,7 @@ weapon_list = [
         acquisition=ewcfg.acquisition_smelting,
         captcha_length=4
     ),
-    EwWeapon(  # 39 Unused, untested afaik -K1P 
+    EwWeapon(  # 39 Unused, untested afaik -K1P
         id_weapon=ewcfg.weapon_id_harpoon,
         alias=[
             "harpoon",
@@ -1689,8 +1689,32 @@ weapon_list = [
         str_scalp=" It looks especially flat.",
         fn_effect=get_normal_attack(weapon_type='heavy'),
         price=1000000,
-        vendors=[ewcfg.vendor_basedhardware],        
+        vendors=[ewcfg.vendor_basedhardware],
         stat=ewcfg.stat_sledgehammer_kills,
+    ),
+    EwWeapon(  # 47
+        id_weapon=ewcfg.weapon_id_skateboard,
+        alias=[
+            "sk8r",
+            "sk8b04rd",
+            "board",
+        ],
+        str_crit="**Critical hit!!** {name_player} does a 360 Varial McTwist, careening into {name_target} with style!",
+        str_miss="**MISS!!** {name_player} bails out, falling and eating shit on the pavement. So uncool!",
+        str_equip="You get some speed before jumping onto your skateboard.",
+        str_name="skateboard",
+        str_weapon="a skateboard",
+        str_weaponmaster_self="You are a rank {rank} {title} pro skater.",
+        str_weaponmaster="They are a rank {rank} {title} pro skater.",
+        str_kill="{name_player} hops off their skateboard and smacks {name_target} right in the face with it, breaking off a few teeth. As {name_target} hits the floor, {name_player} takes the opportunity to film themselves kickflipping over their body.",
+        str_killdescriptor="tricked on",
+        str_damage="{name_target} is smacked with a board across their {hitzone}!!",
+        str_duel="{name_player} and {name_target} wheel out an old CRT, grinding out optimal trick lines on Tony Clark’s Underground for the PlaySlimestion 2.",
+        str_description="It’s your trusty skateboard.",
+        str_scalp=" It looks low poly.",
+        fn_effect=get_normal_attack(weapon_type='variable_damage'),
+        acquisition=ewcfg.acquisition_smelting,
+        stat=ewcfg.stat_skateboard_kills,
     ),
 ]
 
