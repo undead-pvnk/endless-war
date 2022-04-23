@@ -43,7 +43,8 @@ cmd_map = {
 
     # Bass weilders can jam out
     ewcfg.cmd_jam: cmdcmds.jam,
-    ewcfg.cmd_trick: cmdcmds.trick,
+    ewcfg.cmd_stunt: cmdcmds.stunt,
+    ewcfg.cmd_stuntalt1: cmdcmds.stunt,
 
     # Show the total of positive slime in the world.
     ewcfg.cmd_endlesswar: cmdcmds.endlesswar,

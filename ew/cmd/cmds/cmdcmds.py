@@ -677,7 +677,7 @@ async def jam(cmd):
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-async def trick(cmd):
+async def stunt(cmd):
     # Find the player's item
     item_wanted = ewutils.flattenTokenListToString(cmd.tokens[1:])
     # If the player listed nothing, assume they want a skateboard
@@ -694,16 +694,16 @@ async def trick(cmd):
         if item.item_props.get("weapon_type") in [ewcfg.weapon_id_skateboard]:
             response = ''
             # Take a random response from Tricks
-            response = random.choice(ewcfg.tricks)
+            response = random.choice(ewcfg.skatetricks)
             # If it's not a skateboard
         else:
             response = "How would you trick with a {}?".format(item_sought.get('name'))
 
     else:
-        response = "You need a skateboard to !trick. C'mon!"
+        response = "You need a skateboard to do tricks. C'mon!"
 
     # Send the response
-    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response)) 
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def endlesswar(cmd):
     total = bknd_core.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.guild.id))
