@@ -1801,6 +1801,8 @@ async def cmd_howl(cmd):
 
     if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
         response += "\n{} howls along with you! {}".format(str(slimeoid.name), ewcfg.howls[random.randrange(len(ewcfg.howls))])
+    elif (slimeoid.sltype == ewcfg.sltype_nega) and (user_data.life_state == ewcfg.life_state_corpse):
+        response += "\n{} howls along with you! {}".format(str(slimeoid.name), ewcfg.howls[random.randrange(len(ewcfg.howls))])
 
     await fe_utils.send_response(response, cmd)
 

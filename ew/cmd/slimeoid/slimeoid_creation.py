@@ -714,7 +714,7 @@ async def destroy_slimeoid(cmd):
             slimeoid_type = "Negaslimeoid"
 
             # Forming negaslimeoids DON'T drop cores
-            if slimeoid_data.life_state == ewcfg.slimeoid_state_forming:
+            if slimeoid_data.life_state != ewcfg.slimeoid_state_forming:
                 # Creates the item props for the negaslimeoid core
                 item_props = {
                 'context': ewcfg.context_negaslimeoidheart,
