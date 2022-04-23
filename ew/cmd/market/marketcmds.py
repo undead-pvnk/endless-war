@@ -13,6 +13,7 @@ from ew.backend.player import EwPlayer
 from ew.backend.fish import EwRecord
 from ew.backend.dungeons import EwGamestate
 from ew.static import cfg as ewcfg
+from ew.static import community_cfg as comm_cfg
 from ew.static import poi as poi_static
 from ew.static.fish import fish_map
 try:
@@ -422,9 +423,9 @@ async def fish_donate(id_item, cmd):
     if current_record.record_amount > length:
         response = "\"SORRY, CHAP, YOUR FISH IS TOO SMALL. THERE'S A DICK JOKE IN THERE SOMEWHERE BUT I'M TWICE YOUR AGE. TOO CREEPY, I SAY.\""
     elif id_fish in user_data.get_bans():
-        response = "\"I'M ON TO YOU, YOU {}! TRY AND CHEAT FISH WITH ME AGAIN, SEE WHAT HAPPENS!\"".format(random.choice(ewcfg.curator_insults))
+        response = "\"I'M ON TO YOU, YOU {}! TRY AND CHEAT FISH WITH ME AGAIN, SEE WHAT HAPPENS!\"".format(random.choice(comm_cfg.curator_insults))
     elif item_obj.item_props.get('embiggened') == 'illegal' and random.choice([0, 1]) == 0:
-        response = "\"YOU THINK I WAS BORN YESTERDAY, YOU FISH-ROIDING {}? THE BLOODY {}'S BEEN EMBIGGENED TO HELL AND BACK! BELLENDS LIKE YOU LOSE THEIR {} PRIVILEGES. QUITE SO.\"".format(random.choice(ewcfg.curator_insults), item_obj.item_props.get('food_name').upper(), item_obj.item_props.get('food_name').upper())
+        response = "\"YOU THINK I WAS BORN YESTERDAY, YOU FISH-ROIDING {}? THE BLOODY {}'S BEEN EMBIGGENED TO HELL AND BACK! BELLENDS LIKE YOU LOSE THEIR {} PRIVILEGES. QUITE SO.\"".format(random.choice(comm_cfg.curator_insults), item_obj.item_props.get('food_name').upper(), item_obj.item_props.get('food_name').upper())
         user_data.ban(faction=id_fish)
     else:
         aquarium = fe_utils.get_channel(server = cmd.guild, channel_name='aquarium')
@@ -524,7 +525,7 @@ async def art_donate(id_item, cmd):
             if item_obj.item_props.get('title') is not None:
                 new_record = EwRecord(id_server=cmd.guild.id, record_type = item_obj.item_props.get('title'))
                 if new_record.id_user != -1:
-                    return "\"YOU THINK YOU CAN RIP OFF SOMEONE ELSE\'S WORK? DON'T BE A {} AND NAME IT SOMETHING ELSE.\"".format(random.choice(ewcfg.curator_insults))
+                    return "\"YOU THINK YOU CAN RIP OFF SOMEONE ELSE\'S WORK? DON'T BE A {} AND NAME IT SOMETHING ELSE.\"".format(random.choice(comm_cfg.curator_insults))
                 elif "::" in item_obj.item_props.get('title'):
                     return "\"THE LAST TIME I SAW THIS MANY COLONS WAS WHEN I PUT UP FLYERS UP NEAR THE GAY BAR IN GREENLIGHT. TAKE OUT THE \"::\" OR IT'S NOT GETTING IN.\""
                 else:
@@ -545,7 +546,7 @@ async def art_donate(id_item, cmd):
                 bknd_item.item_delete(id_item)
 
             else:
-                response = "\"GIVE ME A TITLE FOR THIS, YOU {}! MY EXHIBITS ARE MORE THAN A GLORIFIED KITCHEN FRIDGE!\" ".format(random.choice(ewcfg.curator_insults))
+                response = "\"GIVE ME A TITLE FOR THIS, YOU {}! MY EXHIBITS ARE MORE THAN A GLORIFIED KITCHEN FRIDGE!\" ".format(random.choice(comm_cfg.curator_insults))
         else:
             response = '\"Sorry, we\'re not collecting donations from your kind at this time. Please refrain from stinking up the general vicinity.\"'
     return response

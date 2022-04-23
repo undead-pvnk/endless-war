@@ -7,6 +7,7 @@ from ew.backend.fish import EwOffer
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.static import cfg as ewcfg
+from ew.static import community_cfg as comm_cfg
 from ew.static import fish as static_fish
 from ew.static import food as static_food
 from ew.static import poi as poi_static
@@ -241,7 +242,7 @@ async def cast(cmd):
                     return
 
                 if damp > 10:
-                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, random.choice(ewcfg.void_fishing_text if fisher.pier.pier_type == ewcfg.fish_slime_void else ewcfg.normal_fishing_text)))
+                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, random.choice(comm_cfg.void_fishing_text if fisher.pier.pier_type == ewcfg.fish_slime_void else comm_cfg.normal_fishing_text)))
                     fun -= 2
                     bun += 1
                     if bun >= 5:

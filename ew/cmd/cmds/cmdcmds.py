@@ -18,6 +18,7 @@ from ew.backend.mutation import EwMutation
 from ew.utils.transport import EwTransport
 
 from ew.static import cfg as ewcfg
+from ew.static import community_cfg as comm_cfg
 from ew.static import hue as hue_static
 from ew.static import items as static_items
 from ew.static import mutations as static_mutations
@@ -590,7 +591,7 @@ async def dance(cmd):
     user_data = EwUser(ew_id=cmd.author_id)
 
     if user_data.life_state == ewcfg.life_state_juvenile or user_data.life_state == ewcfg.life_state_shambler:
-        response = random.choice(ewcfg.dance_responses).format(cmd.author_id.display_name)
+        response = random.choice(comm_cfg.dance_responses).format(cmd.author_id.display_name)
         response = "{} {} {}".format(ewcfg.emote_slime3, response, ewcfg.emote_slime3)
         await fe_utils.send_response(response, cmd, format_name=False)
 
@@ -663,7 +664,7 @@ async def jam(cmd):
                         item_key = "whistle"
                 else:
                     item_key = item.item_props.get("id_furniture")
-                response = random.choice(ewcfg.jam_tunes[item_key])
+                response = random.choice(comm_cfg.jam_tunes[item_key])
             else:
                 for x in range(1, cycle):
                     response += random.choice([":musical_note:", ":notes:"])
@@ -694,7 +695,7 @@ async def stunt(cmd):
         if item.item_props.get("weapon_type") in [ewcfg.weapon_id_skateboard]:
             response = ''
             # Take a random response from Tricks
-            response = random.choice(ewcfg.skatetricks)
+            response = random.choice(comm_cfg.skatetricks)
             # If it's not a skateboard
         else:
             response = "How would you trick with a {}?".format(item_sought.get('name'))
@@ -2062,7 +2063,7 @@ async def pray(cmd):
             #	market_data.persist()
 
             # kingpins don't die or get poudrins
-            responses_list = ewcfg.pray_responses_list
+            responses_list = comm_cfg.pray_responses_list
 
             if user_data.slimes > 1000000:
                 responses_list = responses_list + ["ENDLESS WAR is impressed by your vast amounts of slime."]
@@ -2113,7 +2114,7 @@ async def pray(cmd):
                 response = "ENDLESS WAR completely and utterly obliterates you with a bone-hurting beam."
 
             else:
-                responses_list = ewcfg.pray_responses_list
+                responses_list = comm_cfg.pray_responses_list
 
                 if user_data.slimes > 1000000:
                     responses_list = responses_list + ["ENDLESS WAR is impressed by your vast amounts of slime."]

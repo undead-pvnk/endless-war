@@ -10,6 +10,7 @@ from ew.backend.market import EwStock
 from ew.backend.player import EwPlayer
 from ew.cmd.mutation.mutationcmds import devour
 from ew.static import cfg as ewcfg
+from ew.static import community_cfg as comm_cfg
 from ew.static import cosmetics as static_cosmetics
 from ew.static import food as static_food
 from ew.static import items as static_items
@@ -31,6 +32,7 @@ except:
     from ew.utils import rutils_dummy as relic_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
+
 
 """ show all available food items """
 
@@ -432,7 +434,7 @@ async def order(cmd):
                         company_data.persist()
 
                     if item.str_name == "arcade cabinet":
-                        item_props['furniture_desc'] = random.choice(ewcfg.cabinets_list)
+                        item_props['furniture_desc'] = random.choice(comm_cfg.cabinets_list)
                     elif item.item_type == ewcfg.it_furniture:
                         if "custom" in item_props.get('id_furniture'):
                             if cmd.tokens_count < 4 or cmd.tokens[2] == "" or cmd.tokens[3] == "":

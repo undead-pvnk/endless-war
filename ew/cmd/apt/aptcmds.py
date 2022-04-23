@@ -12,6 +12,7 @@ from ew.backend.market import EwMarket
 from ew.backend.player import EwPlayer
 from ew.backend.worldevent import EwWorldEvent
 from ew.static import cfg as ewcfg
+from ew.static import community_cfg as comm_cfg
 from ew.static import cosmetics
 from ew.static import food as static_food
 from ew.static import hue as hue_static
@@ -1264,7 +1265,7 @@ async def browse(cmd):
         return await apt_utils.lobbywarning(cmd)
 
     if bknd_item.find_item(item_search="laptopcomputer", id_user=str(usermodel.id_user) + ewcfg.compartment_id_decorate, id_server=playermodel.id_server):
-        response = random.choice(ewcfg.browse_list)
+        response = random.choice(comm_cfg.browse_list)
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     else:
         await apt_look(cmd=cmd)
@@ -1672,7 +1673,7 @@ async def watch(cmd):
             user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)
             item_sought = bknd_item.find_item(id_user=str(user_id) + ewcfg.compartment_id_decorate, id_server=player_model.id_server, item_search="television")
             if user_model.poi == poi and user_model.time_last_action > (int(time.time()) - ewcfg.time_kickout) and item_sought:
-                await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, random.choice(ewcfg.tv_lines)))
+                await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, random.choice(comm_cfg.tv_lines)))
             else:
                 if user_model.time_last_action <= (int(time.time()) - ewcfg.time_kickout):
                     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You fell asleep watching TV."))
