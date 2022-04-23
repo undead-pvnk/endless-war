@@ -754,7 +754,7 @@ async def toss_off_cliff(cmd):
             if item_sought.get('name') == "brick" and cmd.mentions_count > 0:
                 item = EwItem(id_item=item_sought.get('id_item'))
                 target = EwUser(member=cmd.mentions[0])
-                target_apt = EwApartment(id_user=cmd.message.author.id, id_server=cmd.guild.id)
+                target_apt = EwApartment(id_user=target.id_user, id_server=cmd.guild.id)
                 if target_apt.poi == user_data.poi:
                     item.id_owner = str(cmd.mentions[0].id) + ewcfg.compartment_id_decorate
                     item.persist()
