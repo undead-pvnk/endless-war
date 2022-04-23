@@ -871,7 +871,8 @@ cmd_coinflip = cmd_prefix + 'co1nfl1p'
 cmd_spook = cmd_prefix + 'spook'
 cmd_sacrifice = cmd_prefix + 'sacrifice'
 cmd_makecostume = cmd_prefix + 'makecostume'
-cmd_trick = cmd_prefix + 'trick'
+cmd_stunt = cmd_prefix + 'stunt'
+cmd_stuntalt1 = cmd_prefix + 'skate'
 cmd_treat = cmd_prefix + 'treat'
 cmd_russian = cmd_prefix + 'russianroulette'
 cmd_duel = cmd_prefix + 'duel'
@@ -4726,7 +4727,7 @@ dance_responses = [
 ]
 
 #skateboard responses
-tricks = [
+skatetricks = [
     "You nail a Heelflip! Radical!",
     "You land a Laser Flip! Technical!",
     "You jump off a high spot with a Triple Kickflip! Holy shit!",
