@@ -180,8 +180,8 @@ curator_insults = [
 
 #skateboard responses
 skatetricks = [
-    "You Ollie up and land a sweet Kickflip! Cool!",
-    "You get some height and do a Pop Shove-It! Radical!",
+    "You Ollie up and land a wicked-sweet Kickflip! Cool!",
+    "You get some height and perform a Pop Shove-It! Radical!",
     "You jump off a short gap and nail a Laser Flip! Technical!",
     "You Ollie off of a ramp with a Sal Flip! Incredible!",
     "You get some air before doing a Melon grab! Impeccable!",
@@ -195,7 +195,7 @@ skatetricks = [
     "You hang on the lip of a ramp with a Noseblunt! How’s the weather up there!",
     "You cling onto the lip of a ramp with a Nose Stall! Wowza!",
     "You glide across the floor with a Manual! Watch out, you might run into someone!",
-    "You slide across the pavement with a Nose Manual! So cool!",
+    "You slide across the pavement with a Nose Manual! Better keep that balance!",
     "You hop like an idiot doing a flatland Pogo! Everyone is laughing at you!",
     "You manage to keep your balance doing a flatland Truck Stand! Good going!",
     "You air off of a high ramp before nailing a 360 Variable McTwist! Holy shit!",
