@@ -679,23 +679,40 @@ async def jam(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def stunt(cmd):
+    user_data = EwUser(member=cmd.message.author)
+
     # Find the player's item
     item_wanted = ewutils.flattenTokenListToString(cmd.tokens[1:])
-    # If the player listed nothing, assume they want a skateboard
-    if item_wanted == "":
-        item_wanted = "skateboard"
-    item_sought = bknd_item.find_item(item_search=item_wanted, id_user=cmd.message.author.id, id_server=cmd.guild.id)
 
-    # If the player has an item
-    if item_sought:
-        # Get item's data
+    # If the player listed nothing, assume they want their equipped weapon, sidearmed weapon, or a skateboard (hopefully a skateboard)
+    if item_wanted == "":
+        # Get the user's weapon. Check if it's a skateboard.
+        item = EwItem(id_item=user_data.weapon)
+        if item.item_props.get("weapon_type") not in [ewcfg.weapon_id_skateboard]:
+            # If it's not a skateboard, get their sidearmed weapon.
+            item = EwItem(id_item=user_data.sidearm)
+            if item.item_props.get("weapon_type") not in [ewcfg.weapon_id_skateboard]:
+                # If it's not a skateboard, default to name search for "skateboard"
+                item_wanted = "skateboard"
+
+    # If the player isn't holding or sidearming a skateboard
+    if item == False:
+        item_sought = bknd_item.find_item(item_search=item_wanted, id_user=cmd.message.author.id, id_server=cmd.guild.id)
         item = EwItem(id_item=item_sought.get('id_item'))
 
+    # If the player has an item that was sought
+    if item:
         # If it's a skateboard
         if item.item_props.get("weapon_type") in [ewcfg.weapon_id_skateboard]:
             response = ''
+
+            # Give the user some CRIME for ILLEGAL SKATING
+            user_data.change_crime(n=ewcfg.cr_unlawful_stunting)
+            user_data.persist()
+
             # Take a random response from Tricks
             response = random.choice(comm_cfg.skatetricks)
+
             # If it's not a skateboard
         else:
             response = "How would you trick with a {}?".format(item_sought.get('name'))
