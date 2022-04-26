@@ -18,6 +18,7 @@ from ew.backend.mutation import EwMutation
 from ew.utils.transport import EwTransport
 
 from ew.static import cfg as ewcfg
+from ew.static import community_cfg as comm_cfg
 from ew.static import hue as hue_static
 from ew.static import items as static_items
 from ew.static import mutations as static_mutations
@@ -98,7 +99,7 @@ async def score(cmd: cmd_utils.EwCmd):
         district_search = cmd.tokens[1:]
         district_search = ewutils.flattenTokenListToString(district_search)
         found_district = poi_static.id_to_poi.get(district_search)
-        if found_district: 
+        if found_district:
             district_search = found_district.id_poi # use this to clean up the search, so we always specific get the right name for the db call
             district = EwDistrict(cmd.guild.id, district_search)
             response = "There's currently {:,} {} in {}.".format(district.slimes, slime_alias, district_search)
@@ -179,9 +180,9 @@ async def data(cmd):
 
             if enemy.enemytype in ewcfg.slimeoid_trainers:
                 enemy_slimeoid = EwSlimeoid(id_user=enemy.id_enemy, id_server=cmd.message.guild.id)
-                
+
                 response += "\n\nThey are accompanied by {}, a {}-foot-tall Slimeoid. ".format(enemy_slimeoid.name, str(enemy_slimeoid.level))
-        
+
         else:
             response = "ENDLESS WAR didn't understand that name."
 
@@ -345,7 +346,7 @@ async def data(cmd):
             # If the user is a corpse, but has a negaslimeoid
             elif slimeoid.sltype == ewcfg.sltype_nega:
                 response_block += "You are accompanied by {}, a {}-foot-tall Negaslimeoid. ".format(slimeoid.name, str(slimeoid.level))
-                
+
         server = ewutils.get_client().get_guild(user_data.id_server)
         if user_data.life_state == ewcfg.life_state_corpse:
             inhabitee_id = user_data.get_inhabitee()
@@ -550,8 +551,8 @@ async def thrash(cmd):
             '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_rf + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + '\n' + ewcfg.emote_sweetmunch + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_sweetmunch + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf,
             '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_rf + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + '\n' + ewcfg.emote_strawberrymilk + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_strawberrymilk + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf,
             '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_rf + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + '\n' + ewcfg.emote_thrash + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_thrash + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf
-        ]        
-        response = random.choice(responses)        
+        ]
+        response = random.choice(responses)
         await fe_utils.send_response(response, cmd)
 
 
@@ -590,7 +591,7 @@ async def dance(cmd):
     user_data = EwUser(ew_id=cmd.author_id)
 
     if user_data.life_state == ewcfg.life_state_juvenile or user_data.life_state == ewcfg.life_state_shambler:
-        response = random.choice(ewcfg.dance_responses).format(cmd.author_id.display_name)
+        response = random.choice(comm_cfg.dance_responses).format(cmd.author_id.display_name)
         response = "{} {} {}".format(ewcfg.emote_slime3, response, ewcfg.emote_slime3)
         await fe_utils.send_response(response, cmd, format_name=False)
 
@@ -663,7 +664,7 @@ async def jam(cmd):
                         item_key = "whistle"
                 else:
                     item_key = item.item_props.get("id_furniture")
-                response = random.choice(ewcfg.jam_tunes[item_key])
+                response = random.choice(comm_cfg.jam_tunes[item_key])
             else:
                 for x in range(1, cycle):
                     response += random.choice([":musical_note:", ":notes:"])
@@ -677,6 +678,33 @@ async def jam(cmd):
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+async def stunt(cmd):
+    # Find the player's item
+    item_wanted = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    # If the player listed nothing, assume they want a skateboard
+    if item_wanted == "":
+        item_wanted = "skateboard"
+    item_sought = bknd_item.find_item(item_search=item_wanted, id_user=cmd.message.author.id, id_server=cmd.guild.id)
+
+    # If the player has an item
+    if item_sought:
+        # Get item's data
+        item = EwItem(id_item=item_sought.get('id_item'))
+
+        # If it's a skateboard
+        if item.item_props.get("weapon_type") in [ewcfg.weapon_id_skateboard]:
+            response = ''
+            # Take a random response from Tricks
+            response = random.choice(comm_cfg.skatetricks)
+            # If it's not a skateboard
+        else:
+            response = "How would you trick with a {}?".format(item_sought.get('name'))
+
+    else:
+        response = "You need a skateboard to do tricks. C'mon!"
+
+    # Send the response
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def endlesswar(cmd):
     total = bknd_core.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.guild.id))
@@ -727,7 +755,7 @@ async def toss_off_cliff(cmd):
             if item_sought.get('name') == "brick" and cmd.mentions_count > 0:
                 item = EwItem(id_item=item_sought.get('id_item'))
                 target = EwUser(member=cmd.mentions[0])
-                target_apt = EwApartment(id_user=cmd.message.author.id, id_server=cmd.guild.id)
+                target_apt = EwApartment(id_user=target.id_user, id_server=cmd.guild.id)
                 if target_apt.poi == user_data.poi:
                     item.id_owner = str(cmd.mentions[0].id) + ewcfg.compartment_id_decorate
                     item.persist()
@@ -1273,7 +1301,7 @@ async def fashion(cmd):
                 # If the slimeoid has adorned cosmetics, generate flavor text.
                 if len(slimeoid_adorned_cosmetics) > 0:
                     response += "\n\n{} butts in to the camera view! It has a {} adorned.".format(slimeoid.name, ewutils.formatNiceList(slimeoid_adorned_cosmetics, "and"))
-    
+
                     # If the slimeoid has more than one adorned cosmetic, give it a freshness rating.
                     if len(slimeoid_adorned_cosmetics) >= 2:
                         outfit_map = itm_utils.get_outfit_info(id_user=cmd.message.author.id, id_server=cmd.guild.id, slimeoid = True)
@@ -1394,7 +1422,7 @@ async def fashion(cmd):
                 # Create flavor text if the slimeoid is wearing clothes
                 if len(slimeoid_adorned_cosmetics) > 0:
                     response += "\n\nThey've also recently posted with their {} {} in the background. It has a {} adorned.".format("Slimeoid" if slimeoid.sltype == ewcfg.sl_type_lab else "Negaslimeoid", slimeoid.name, ewutils.formatNiceList(slimeoid_adorned_cosmetics, "and"))
-    
+
                     # Give the slimeoid a freshness rating if it's wearing more than 1 article of clothing.
                     if len(slimeoid_adorned_cosmetics) >= 2:
                         outfit_map = itm_utils.get_outfit_info(id_user=member, id_server=cmd.guild.id, slimeoid = True)
@@ -1801,6 +1829,8 @@ async def cmd_howl(cmd):
 
     if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
         response += "\n{} howls along with you! {}".format(str(slimeoid.name), ewcfg.howls[random.randrange(len(ewcfg.howls))])
+    elif (slimeoid.sltype == ewcfg.sltype_nega) and (user_data.life_state == ewcfg.life_state_corpse):
+        response += "\n{} howls along with you! {}".format(str(slimeoid.name), ewcfg.howls[random.randrange(len(ewcfg.howls))])
 
     await fe_utils.send_response(response, cmd)
 
@@ -2033,7 +2063,7 @@ async def pray(cmd):
             #	market_data.persist()
 
             # kingpins don't die or get poudrins
-            responses_list = ewcfg.pray_responses_list
+            responses_list = comm_cfg.pray_responses_list
 
             if user_data.slimes > 1000000:
                 responses_list = responses_list + ["ENDLESS WAR is impressed by your vast amounts of slime."]
@@ -2084,7 +2114,7 @@ async def pray(cmd):
                 response = "ENDLESS WAR completely and utterly obliterates you with a bone-hurting beam."
 
             else:
-                responses_list = ewcfg.pray_responses_list
+                responses_list = comm_cfg.pray_responses_list
 
                 if user_data.slimes > 1000000:
                     responses_list = responses_list + ["ENDLESS WAR is impressed by your vast amounts of slime."]
@@ -2165,7 +2195,7 @@ async def wrap(cmd):
 
     member = cmd.message.author
     user_data = EwUser(member=cmd.message.author)
-    
+
     if recipient_data.id_user == user_data.id_user:
         response = "C'mon man, you got friends, don't you? Try and give a gift to someone other than yourself."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -2219,7 +2249,7 @@ async def wrap(cmd):
             if item.item_type == ewcfg.it_cosmetic:
                 gift_freshness = int(item.item_props.get("freshness"))
 
-                bonus += gift_freshness * ewcfg.festivity_gift_cosmetic                
+                bonus += gift_freshness * ewcfg.festivity_gift_cosmetic
                 if item.item_props.get("hue"):
                     bonus += ewcfg.festivity_dye_bonus
             # Weapon-specific bonuses
@@ -2232,7 +2262,7 @@ async def wrap(cmd):
                     bonus += ewcfg.festivity_smelt_bonus
 
                 bonus = gift_kills * ewcfg.festivity_gift_weapon
-                
+
                 if item.item_props.get("weapon_name"):
                     bonus += ewcfg.festivity_name_bonus
             # Food-specific bonuses
@@ -2261,7 +2291,7 @@ async def wrap(cmd):
             # Phoebus isn't so sure about anything else
             else:
                 festivity_value -= ewcfg.festivity_generic_penality
-        
+
             # Generic bonus
             if item.item_props.get("item_message"):
                 bonus += ewcfg.festivity_scrawl_bonus
@@ -2493,7 +2523,7 @@ async def almanac(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-""" 
+"""
     DEBUG COMMANDS
 """
 
@@ -2647,7 +2677,7 @@ async def set_debug_option(cmd):
             response = "Command format: {} [option] [true/false]".format(ewcfg.cmd_set_debug_option)
     else:
         response = "ENDLESS WAR pays you no mind."
-        
+
     return await fe_utils.send_response(response, cmd)
 
 
@@ -2992,7 +3022,7 @@ async def verify_cache(cmd):
     # Only allow admins to use this
     if not cmd.message.author.guild_permissions.administrator:
         return await cmd_utils.fake_failed_command(cmd)
-    
+
     # Get items how find_item would
     server_id = cmd.guild.id
     server_items = bknd_item.inventory(id_server=server_id)
@@ -3104,4 +3134,3 @@ async def cockdraw(cmd):
     response = "You {} {}! It's {} inches long!".format(action, object, size)
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-

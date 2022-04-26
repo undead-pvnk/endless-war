@@ -12,6 +12,7 @@ from ew.backend.market import EwMarket
 from ew.backend.player import EwPlayer
 from ew.backend.worldevent import EwWorldEvent
 from ew.static import cfg as ewcfg
+from ew.static import community_cfg as comm_cfg
 from ew.static import cosmetics
 from ew.static import food as static_food
 from ew.static import hue as hue_static
@@ -1264,7 +1265,7 @@ async def browse(cmd):
         return await apt_utils.lobbywarning(cmd)
 
     if bknd_item.find_item(item_search="laptopcomputer", id_user=str(usermodel.id_user) + ewcfg.compartment_id_decorate, id_server=playermodel.id_server):
-        response = random.choice(ewcfg.browse_list)
+        response = random.choice(comm_cfg.browse_list)
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     else:
         await apt_look(cmd=cmd)
@@ -1672,7 +1673,7 @@ async def watch(cmd):
             user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)
             item_sought = bknd_item.find_item(id_user=str(user_id) + ewcfg.compartment_id_decorate, id_server=player_model.id_server, item_search="television")
             if user_model.poi == poi and user_model.time_last_action > (int(time.time()) - ewcfg.time_kickout) and item_sought:
-                await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, random.choice(ewcfg.tv_lines)))
+                await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, random.choice(comm_cfg.tv_lines)))
             else:
                 if user_model.time_last_action <= (int(time.time()) - ewcfg.time_kickout):
                     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You fell asleep watching TV."))
@@ -1715,12 +1716,17 @@ async def freeze(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if ew_slime_model.name != "":
+        # Slimeoid lifestate check for flavor text
+        if ew_slime_model.sltype == ewcfg.sltype_lab:
+            SlimeoidType = "Slimeoid"
+        else:
+            SlimeoidType = "Negaslimeoid"
         ew_slime_model.id_user += "freeze"
         ew_slime_model.life_state = ewcfg.slimeoid_state_stored
         ew_slime_model.persist()
         usermodel.active_slimeoid = -1
         usermodel.persist()
-        response = "You pick up your slimeoid. {} wonders what is going on, but trusts you implicitly. You open the freezer. {} begins to panic. However, you overpower them, shove them in the icebox, and quickly close the door. Whew. You wonder if this is ethical.".format(ew_slime_model.name, ew_slime_model.name)
+        response = "You pick up your {}. {} wonders what is going on, but trusts you implicitly. You open the freezer. {} begins to panic. However, you overpower them, shove them in the icebox, and quickly close the door. Whew. You wonder if this is ethical.".format(SlimeoidType, ew_slime_model.name, ew_slime_model.name)
 
     else:
         response = "You don't have a slimeoid for that."
@@ -1766,13 +1772,24 @@ async def unfreeze(cmd):
     elif ew_slime_model.name == None or len(ew_slime_model.name) == 0:
         response = "You don't have anyone like that in the fridge."
 
+    elif usermodel.life_state != ewcfg.life_state_corpse and ew_slime_model.sltype == ewcfg.sltype_nega:
+        response = "You can't unfreeze a Negaslimeoid as you are."
+
+    elif usermodel.life_state == ewcfg.life_state_corpse and ew_slime_model.sltype == ewcfg.sltype_lab:
+        response = "You can't unfreeze a Slimeoid as you are."
+
     else:
+        # Slimeoid lifestate check for flavor text
+        if ew_slime_model.sltype == ewcfg.sltype_lab:
+            SlimeoidType = "Slimeoid"
+        else:
+            SlimeoidType = "Negaslimeoid"
         ew_slime_model.id_user = cmd.message.author.id
         ew_slime_model.life_state = ewcfg.slimeoid_state_active
         ew_slime_model.persist()
         usermodel.active_slimeoid = ew_slime_model.id_slimeoid
         usermodel.persist()
-        response = "You open the freezer. Your slimeoid stumbles out, desperately gasping for air. {} isn't sure what it did to deserve cryostasis, but it gives you an apologetic yap in order to earn your forgiveness. \n\n {} is now your slimeoid.".format(ew_slime_model.name, ew_slime_model.name, ew_slime_model.name)
+        response = "You open the freezer. Your {} stumbles out, desperately gasping for air. {} isn't sure what it did to deserve cryostasis, but it gives you an apologetic yap in order to earn your forgiveness. \n\n {} is now your {}.".format(SlimeoidType, ew_slime_model.name, ew_slime_model.name, ew_slime_model.name, SlimeoidType)
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 

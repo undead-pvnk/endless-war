@@ -24,6 +24,7 @@ from ew.static import hue as hue_static
 from ew.static import items as static_items
 from ew.static import poi as poi_static
 from ew.static import weapons as static_weapons
+from ew.static import community_cfg as comm_cfg
 try:
     import ew.static.rstatic as static_relic
 except:
@@ -2064,7 +2065,7 @@ async def remove_from_collection(cmd):
         bknd_item.give_item(id_user=user_data.id_user, id_server=int(item.id_server), id_item=item_sought_item.get('id_item'))
         user_data.change_slimes(n=-price, source=ewcfg.source_spending)
         user_data.persist()
-        response = "You somehow find a specialist in the smoky kiosks that can get your precious belongings out of the {} you forced them into. You hand over 100,000 slime, and he walks into the tent behind his stall. \n\nBefore you can figure you what it is he's doing, {}. Eventually, you find your way back to the stall. The specialist hands you the item and collection, fully separated. Maybe someday you'll figure out how to do it...".format(item_sought_col.get('name'), random.choice(ewcfg.bazaar_distractions))
+        response = "You somehow find a specialist in the smoky kiosks that can get your precious belongings out of the {} you forced them into. You hand over 100,000 slime, and he walks into the tent behind his stall. \n\nBefore you can figure you what it is he's doing, {}. Eventually, you find your way back to the stall. The specialist hands you the item and collection, fully separated. Maybe someday you'll figure out how to do it...".format(item_sought_col.get('name'), random.choice(comm_cfg.bazaar_distractions))
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
