@@ -1867,7 +1867,7 @@ async def harvest(cmd):
 
 
 async def salute(cmd):
-    response = 'https://rfck.app/img/nlacakanm_flag.gif'
+    response = 'http://165.227.192.207/img/nlacakanm_flag.gif'
     await fe_utils.send_response(response, cmd)
 
 
@@ -1877,7 +1877,7 @@ async def salute(cmd):
 
 
 async def unsalute(cmd):
-    response = 'https://rfck.app/img/nlacakanm_flag_burning.gif'
+    response = 'http://165.227.192.207/img/nlacakanm_flag_burning.gif'
     await fe_utils.send_response(response, cmd)
 
 
@@ -1887,7 +1887,7 @@ async def unsalute(cmd):
 
 
 async def hurl(cmd):
-    response = 'https://rfck.app/img/tfaaap-hurl.gif'
+    response = 'http://165.227.192.207/img/tfaaap-hurl.gif'
     await fe_utils.send_response(response, cmd)
 
 

@@ -537,7 +537,7 @@ async def roulette(cmd):
                 "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31",
                 "32", "33", "34", "35", "36", "1strow", "2ndrow", "3rdrow", "1st12", "2nd12", "3rd12", "1to18",
                 "19to36", "even", "odd", "pink", "purple", "green"]
-    img_base = "https://rfck.app/img/cas/sr/"
+    img_base = "http://165.227.192.207/img/cas/sr/"
 
     global last_rouletted_times
     last_used = last_rouletted_times.get(cmd.message.author.id)
@@ -710,7 +710,7 @@ async def baccarat(cmd):
     time_now = int(time.time())
     bet = ""
     all_bets = ["player", "dealer", "tie"]
-    img_base = "https://rfck.app/img/cas/sb/"
+    img_base = "http://165.227.192.207/img/cas/sb/"
     response = ""
     rank = ""
     suit = ""
@@ -1333,7 +1333,7 @@ async def baccarat(cmd):
 async def skat(cmd):
     time_now = int(time.time())
     multiplier = 1
-    img_base = "https://rfck.app/img/cas/sb/"
+    img_base = "http://165.227.192.207/img/cas/sb/"
     response = ""
     rank = ""
     suit = ""
