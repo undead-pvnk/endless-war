@@ -401,7 +401,7 @@ async def data(cmd):
         if len(response_block) > 0:
             response += "\n" + response_block
 
-        response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(user_data.id_user)
+        response += "\n\nhttps://rfck.app/stats/player.html?pl={}".format(user_data.id_user)
 
     # other data check
     else:
@@ -413,7 +413,7 @@ async def data(cmd):
             channel_name=cmd.message.channel.name
         )
 
-        response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(member.id)
+        response += "\n\nhttps://rfck.app/stats/player.html?pl={}".format(member.id)
 
     # Send the response to the player.
     await fe_utils.send_response(response, cmd)
@@ -1206,7 +1206,7 @@ async def cancel(cmd):
 
 
 async def map(cmd):
-    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Online world map: https://ew.krakissi.net/map/'))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Online world map: https://rfck.app/map/'))
 
 
 """
@@ -1867,7 +1867,7 @@ async def harvest(cmd):
 
 
 async def salute(cmd):
-    response = 'https://ew.krakissi.net/img/nlacakanm_flag.gif'
+    response = 'https://rfck.app/img/nlacakanm_flag.gif'
     await fe_utils.send_response(response, cmd)
 
 
@@ -1877,7 +1877,7 @@ async def salute(cmd):
 
 
 async def unsalute(cmd):
-    response = 'https://ew.krakissi.net/img/nlacakanm_flag_burning.gif'
+    response = 'https://rfck.app/img/nlacakanm_flag_burning.gif'
     await fe_utils.send_response(response, cmd)
 
 
@@ -1887,7 +1887,7 @@ async def unsalute(cmd):
 
 
 async def hurl(cmd):
-    response = 'https://ew.krakissi.net/img/tfaaap-hurl.gif'
+    response = 'https://rfck.app/img/tfaaap-hurl.gif'
     await fe_utils.send_response(response, cmd)
 
 
@@ -1897,7 +1897,7 @@ async def hurl(cmd):
 
 
 async def patchnotes(cmd):
-    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Look for the latest patchnotes on the news page: https://ew.krakissi.net/news/'))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Look for the latest patchnotes on the news page: https://rfck.app/news/'))
 
 
 """
@@ -1937,12 +1937,12 @@ async def tutorial(cmd):
 
 
 """
-	Link to the leaderboards on ew.krakissi.net.
+	Link to the leaderboards on rfck.app.
 """
 
 
 async def leaderboard(cmd):
-    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Live leaderboards: https://ew.krakissi.net/stats/'))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Live leaderboards: https://rfck.app/stats/'))
 
 
 async def lol(cmd):

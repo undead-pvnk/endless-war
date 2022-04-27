@@ -14672,7 +14672,7 @@ gvs_enemy_emote_map_debug = {
         "neighbors": {
             "downtown": 20
         },
-        "topic": "https://ew.krakissi.net/market/",
+        "topic": "https://rfck.app/market/",
         "wikipage": "https://rfck.miraheze.org/wiki/Downtown_NLACakaNM#Slime_Stock_Exchange"
     },
     "thebazaar": {
@@ -24004,7 +24004,7 @@ debug_objects_2 = {
     "vats": "Goddamn, look at all these lil’ freaks. Even normal Slimeoid incubation kind of grosses you out, but these things are on another level. What even are some of those body parts? You’ve memorized the spreadsheet, and you don’t remember dislocated jaw beak being an option. Maybe there’s going to be a Slimeoid update soon, or something. https://i.imgur.com/f6djMqe.png",
     "specimens": "Yeah, okay. Here are some of those gross-looking Slimeoids that actually got made, you guess. Should you even call them Slimeoids? They look so strange and aggressive, like they’re ready to pounce on the first guy they can sink their gelatinous claws into and rip him limb from limb. You hardly feel any urge to pet and/or howl with them at all! You resist the urge to tap on the glass. https://i.imgur.com/BOR3VCJ.png",
     "negaslimeoid": "Oh shit, there’s a negaslimeoid in here! Luckily, no cold shiver runs down your spine. They must be keeping him in a pressurized cabin or something. You know, you’ve never actually stopped and looked at one of these things up close before. All of your exposure to them has been overwhelmingly short and negative. They really are quite spooky, with that scratchy, abstract blackness that vaguely implies a hole of some variety they’ve got for a face. Wait, how long has it been looking at you? Uhhh… let’s hurry up and scrutinize something else. https://i.imgur.com/akhAua2.png",
-    "folders": "You open up a random folder and a few photos and notes spill out. Hey, wait a second, all this looks very familiar… \n\noops, one fell out! https://i.imgur.com/TQlAya4.png\nhttps://ew.krakissi.net/img/sc/ancient-war.bmp",
+    "folders": "You open up a random folder and a few photos and notes spill out. Hey, wait a second, all this looks very familiar… \n\noops, one fell out! https://i.imgur.com/TQlAya4.png\nhttps://rfck.app/img/sc/ancient-war.bmp",
     "plaque": "Well, then. Looks like this is it. You stand just outside of the office you’ve seen so many times in transmissions. You have no idea what to expect on the other side of this door. You’d be lying if you said you weren’t a little bit scared. https://i.imgur.com/VI0sFjB.png"
 }
 

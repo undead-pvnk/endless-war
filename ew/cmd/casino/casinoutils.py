@@ -74,7 +74,7 @@ async def collect_bet(cmd, resp, value, user_data, currency_used):
 
 
 def printcard(card):
-    img_base = "https://ew.krakissi.net/img/cas/sb/"
+    img_base = "https://rfck.app/img/cas/sb/"
     response = ""
     rank = ""
     suit = ""
