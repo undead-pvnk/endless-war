@@ -1596,6 +1596,7 @@ cr_posession_points = 5
 cr_underage_smoking_points = 1
 cr_dojo_crime_points = 50
 cr_indecent_exposure_points = 1
+cr_unlawful_stunting = 1
 
 
 crime_status = {

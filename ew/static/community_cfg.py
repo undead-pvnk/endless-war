@@ -180,14 +180,31 @@ curator_insults = [
 
 #skateboard responses
 skatetricks = [
-    "You nail a Heelflip! Radical!",
-    "You land a Laser Flip! Technical!",
-    "You jump off a high spot with a Triple Kickflip! Holy shit!",
-    "You grind down a rail with a 50-50! Good balance!",
-    "You successfully do a Darkslide! Cowabunga!",
-    "You pass by with a 5-0 grind! Wow!",
-    "You roll up the ramp and do a Gymnast Plant! How do they do it!",
-    "You hang on the lip of a ramp with a Noseblunt! How’s the weather up there!"
+    "You Ollie up and land a wicked-sweet Kickflip! Cool!",
+    "You get some height and perform a Pop Shove-It! Radical!",
+    "You jump off a short gap and nail a Laser Flip! Technical!",
+    "You Ollie off of a ramp with a Sal Flip! Incredible!",
+    "You get some air before doing a Melon grab! Impeccable!",
+    "You roll off a ramp with a Method grab! Cover shot!",
+    "You soar through the air with a Benihana grab! You're insane!",
+    "You fly through the set with a Japan grab! No way!",
+    "You ride across a street curb with a 50-50 grind! Good balance!",
+    "You hop onto a rail and successfully do a Darkslide grind! Cowabunga!",
+    "You pass through doing a Noseslide grind! Someone's showing off!",
+    "You roll up a ramp and do a Gymnast Plant on it! How do they do it!",
+    "You hang on the lip of a ramp with a Noseblunt! How’s the weather up there!",
+    "You cling onto the lip of a ramp with a Nose Stall! Wowza!",
+    "You glide across the floor with a Manual! Watch out, you might run into someone!",
+    "You slide across the pavement with a Nose Manual! Better keep that balance!",
+    "You hop like an idiot doing a flatland Pogo! Everyone is laughing at you!",
+    "You manage to keep your balance doing a flatland Truck Stand! Good going!",
+    "You air off of a high ramp before nailing a 360 Variable McTwist! Holy shit!",
+    "You get some major air and do successfully manage to pull off The 900! How the hell!",
+    "You graciously soar through the air with a Ghetto Bird! Don't get dizzy now!",
+    "You violently spin through the air by doing a Misty Flip! They're a madman!",
+    "You pass through while doing a Muska Nose Manual! That takes some serious balance!",
+    "You shock the watching crowd by doing a Kickflip Backflip! Goddamn!",
+    "You try to do a trick but fall and eat shit. Ouch!"
 ]
 
 dance_responses = [
