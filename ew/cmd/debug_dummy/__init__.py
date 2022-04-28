@@ -1,5 +1,6 @@
 from ew.static import cfg as ewcfg
 from . import debugcmds
+from .debugcmds import debug24
 from .debugutils import *
 
 cmd_map = {
