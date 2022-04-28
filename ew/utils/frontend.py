@@ -260,11 +260,11 @@ async def post_in_channels(id_server, message, channels = None):
 def get_channel(server = None, channel_name = ""):
     channel = None
 
-    for chan in (server.channels + ewutils.get_client().private_channels):
+    for chan in server.channels:
         if chan.name == channel_name:
             channel = chan
 
-    if channel == None: #and not ewutils.DEBUG:
+    if channel is None and not ewutils.DEBUG:
         ewutils.logMsg('Error: In get_channel(), could not find channel using channel_name "{}"'.format(channel_name))
 
     return channel
