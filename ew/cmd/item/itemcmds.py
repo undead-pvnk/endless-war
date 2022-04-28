@@ -253,7 +253,11 @@ async def inventory_print(cmd):
 
     else:
         # Ensure the inventory response in sent in dms, in case they requested it from in-server
-        target_channel = cmd.message.author
+        target_channel = cmd.message.author.dm_channel
+        # User.dm_channel can just decide to be none if it would like, so create it if it's not there
+        if target_channel is None:
+            target_channel = await cmd.message.author.create_dm()
+
         targeting_dms = True
 
     # Don't interrupt if there is already an inventory printing in that channel
