@@ -277,6 +277,8 @@ async def enlist(cmd):
 
         else:
             response = "Enlisting in the {}.".format(ewcfg.faction_killers)
+            if user_data.race == ewcfg.race_clown:
+                user_data.race = ewcfg.race_humanoid
             user_data.life_state = ewcfg.life_state_enlisted
             user_data.faction = ewcfg.faction_killers
             user_data.time_lastenlist = time_now + ewcfg.cd_enlist
@@ -840,6 +842,8 @@ async def scavenge(cmd):
 
             levelup_response = user_data.change_slimes(n=scavenge_yield, source=ewcfg.source_scavenging)
             district_data.change_slimes(n=-1 * scavenge_yield, source=ewcfg.source_scavenging)
+            if district_data.slimes < 0:
+                district_data.slimes = 0
             district_data.persist()
 
             if levelup_response != "":

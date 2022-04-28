@@ -680,6 +680,9 @@ async def jam(cmd):
 
 async def stunt(cmd):
     user_data = EwUser(member=cmd.message.author)
+    item = None
+    item_wanted = ""
+    item_sought = None
 
     # Find the player's item
     item_wanted = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -694,14 +697,16 @@ async def stunt(cmd):
             if item.item_props.get("weapon_type") not in [ewcfg.weapon_id_skateboard]:
                 # If it's not a skateboard, default to name search for "skateboard"
                 item_wanted = "skateboard"
+                item = None
 
     # If the player isn't holding or sidearming a skateboard
-    if item == False:
+    if item == None:
         item_sought = bknd_item.find_item(item_search=item_wanted, id_user=cmd.message.author.id, id_server=cmd.guild.id)
-        item = EwItem(id_item=item_sought.get('id_item'))
+        if item_sought != None:
+            item = EwItem(id_item=item_sought.get('id_item'))
 
     # If the player has an item that was sought
-    if item:
+    if item != None:
         # If it's a skateboard
         if item.item_props.get("weapon_type") in [ewcfg.weapon_id_skateboard]:
             response = ''
