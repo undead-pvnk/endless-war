@@ -112,9 +112,12 @@ class EwResponseContainer:
 
         for ch in self.channel_responses:
             if channel == None:
-                current_channel = get_channel(server=server, channel_name=ch)
-                if current_channel == None:
+                # get_channel is meant to find channels from their .name, don't pass it something that isn't a string
+                if isinstance(ch, str):
+                    current_channel = get_channel(server=server, channel_name=ch)
+                else:
                     current_channel = ch
+
             else:
                 current_channel = channel
             try:
@@ -257,11 +260,11 @@ async def post_in_channels(id_server, message, channels = None):
 def get_channel(server = None, channel_name = ""):
     channel = None
 
-    for chan in server.channels:
+    for chan in (server.channels + ewutils.get_client().private_channels):
         if chan.name == channel_name:
             channel = chan
 
-    if channel == None and not ewutils.DEBUG:
+    if channel == None: #and not ewutils.DEBUG:
         ewutils.logMsg('Error: In get_channel(), could not find channel using channel_name "{}"'.format(channel_name))
 
     return channel
