@@ -2048,6 +2048,18 @@ food_list = [
         time_expir=43200,
         acquisition = "smelting",
     ),
+    EwFood(
+        id_food="druggumbo",
+        alias=['gumbo', 'drugbucket'],
+        recover_hunger=20,
+        price=30,
+        str_name="drug gumbo",
+        vendors=['Neo Milwaukee State Not-A-Drug-Dealer Drug Dealer'],
+        str_eat="You chug the dumbo jumbo columbo gumbo bucket filled with DRUGS. Delicioso!",
+        inebriation=10,
+        str_desc="A jumbo gumbo bucket just FILLED with drugs. This is definitely not good for you.",
+        time_expir=43200,
+    ),
 ]
 
 # A map of id_food to EwFood objects.

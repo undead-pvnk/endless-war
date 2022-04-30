@@ -216,12 +216,15 @@ async def cast(cmd):
             if fisher.bait == True:
                 # Bait attatched, chance to get a bite increases from 1/10 to 1/7
                 fun -= 30
-            if fisher.pier == ewcfg.poi_id_ferry:
+            if fisher.pier.id_poi == ewcfg.poi_id_ferry:
                 # Fisher is on the ferry, chance to get a bite increases from 1/10 to 1/9
                 fun -= 10
             if ewcfg.mutation_id_lucky in mutations:
                 # If they have the Lucky mutation, chance to bite increases to 1/8
                 fun -= 20
+            if fisher.pier.pier_type == ewcfg.fish_slime_saltwater:
+                # Make fishing faster for the FISHINGEVENT
+                fun -= 10
             if fisher.inhabitant_id:
                 # Having your rod possessed increases your chance to get a bite by 50%
                 fun = int(fun // 2)
@@ -240,10 +243,22 @@ async def cast(cmd):
                     damp = random.randrange(fun)
 
                 # Wait this many seconds until trying for a bite - 30 if high on weed, 5 if debug bait, 60 if regular.
-                if fisher.high:
-                    await asyncio.sleep(30)
-                elif high_value_bait_used:
+                if high_value_bait_used:
                     await asyncio.sleep(5)
+                # elif fisher.high:
+                #     await asyncio.sleep(30)
+                # FISHINGEVENT - reduce fishing time if you're in saltwater area, even more if you're on the ferry.
+                elif fisher.pier.pier_type == ewcfg.fish_slime_saltwater:
+                    if fisher.pier.id_poi == ewcfg.poi_id_ferry:
+                        if fisher.high:
+                            await asyncio.sleep(25)
+                        else:
+                            await asyncio.sleep(45)
+                    else:
+                        if fisher.high:
+                            await asyncio.sleep(27)
+                        else:
+                            await asyncio.sleep(50)
                 else:
                     await asyncio.sleep(60)
 

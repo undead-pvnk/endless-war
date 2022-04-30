@@ -2493,6 +2493,78 @@ async def almanac(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
+# FISHINGEVENT
+async def event_points(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    event_points = user_data.event_points
+
+    # User can't check event points if they're a ghost
+    if user_data.life_state == ewcfg.life_state_corpse:
+        response = "You fool! You're too gussied up with ghost shiznasty to handle exotic residue. That stuff's TOXIC, man!"
+    else:
+        # Get different flavor text for how many event points you have
+        if event_points <= 0:
+            response = "You check your pockets, but you don't have a lick of exotic residue on you! How LAME {}".format(ewcfg.emote_slimeskull)
+        elif event_points <=100:
+            response = "Checking your pockets, you have a small splattering of {} exotic residue.".format(event_points)
+        elif event_points <=1000:
+            response = "Checking your pockets, you have a good gulch of {} exotic residue.".format(event_points)
+        elif event_points <=3000:
+            response = "Checking your pockets, you have a splendiferous splattering of {} exotic residue.".format(event_points)
+        elif event_points <=6000:
+            response = "Checking your pockets, you have a glamorous gulch of {} exotic residue.".format(event_points)
+        elif event_points <=10000:
+            response = "Your pockets are overflowing! You have a streaming tsunami of {} exotic residue!".format(event_points)
+        else:
+            response = "Your pockets are overflowing! You have a screaming tsunami of {} exotic residue!".format(event_points)
+
+    # Send the response omg
+    return await fe_utils.send_response(response, cmd)
+
+
+# FISHINGEVENT
+async def turnin(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    market_data = EwMarket(id_server = user_data.id_server)
+
+    if user_data.poi != ewcfg.poi_id_neomilwaukeestate:
+        response = "As much as the street urchins around you would love to take your used needles, they won't give you any residue for them. Go to Neo Milwaukee State, dumbass."
+    elif user_data.life_state == ewcfg.life_state_kingpin:
+        response = "Lol hi ben :3"
+    else:
+        point_gain = 0
+        items_to_remove = []
+
+        # Search for needals 
+        inv_items = bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
+
+        for item in inv_items:
+            item_data = EwItem(id_item = item.get('id_item'))
+            print(item_data)
+            if item_data.item_props.get("id_item") == ewcfg.item_id_usedneedle:
+                items_to_remove.append(item_data.id_item)
+                point_gain += 6
+
+        # Add points to user and to the market total.
+        if point_gain > 0:
+            user_data.event_points += point_gain
+            market_data.total_event_points += point_gain
+
+            # Take away the used needles
+            for id in items_to_remove:
+                bknd_item.item_delete(id_item=id)
+
+            user_data.persist()
+            market_data.persist()
+
+            # Tell user how many points they got
+            response = "You hand the Auctioneer your used needles and they extract {} exotic residue from the grimy syringes. They pocket the syringes, but are kind enough to give you your rightfully-fished residue.".format(point_gain)
+        else:
+            response = "You try to hand the Auctioneer used needles, but you don't have any! Why are you even trying?"
+
+    return await fe_utils.send_response(response, cmd)
+
+
 """ 
     DEBUG COMMANDS
 """

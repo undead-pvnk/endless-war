@@ -91,6 +91,8 @@ class EwUserBase:
 
     crime = 0
 
+    event_points = 0
+
     move_speed = 1  # not a database column
 
     """ fix data in this object if it's out of acceptable ranges """
@@ -151,7 +153,7 @@ class EwUserBase:
                 # Retrieve object
 
                 cursor.execute(
-                    "SELECT  {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+                    "SELECT  {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
                         ewcfg.col_slimes,
                         ewcfg.col_slimelevel,
                         ewcfg.col_hunger,
@@ -198,7 +200,8 @@ class EwUserBase:
                         ewcfg.col_verified,
                         ewcfg.col_gender,
                         ewcfg.col_hogtied,
-                        ewcfg.col_crime
+                        ewcfg.col_crime,
+                        ewcfg.col_event_points
 
                     ), (
                         id_user,
@@ -253,6 +256,7 @@ class EwUserBase:
                     self.gender = result[42]
                     self.hogtied = result[43]
                     self.crime = result[44]
+                    self.event_points = result[45]
 
 
                 else:
@@ -295,7 +299,7 @@ class EwUserBase:
             # Save the object.
 
             cursor.execute(
-                "REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+                "REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 
                     ewcfg.col_id_user,
                     ewcfg.col_id_server,
@@ -345,7 +349,8 @@ class EwUserBase:
                     ewcfg.col_verified,
                     ewcfg.col_gender,
                     ewcfg.col_hogtied,
-                    ewcfg.col_crime
+                    ewcfg.col_crime,
+                    ewcfg.col_event_points
                 ), (
                     self.id_user,
                     self.id_server,
@@ -393,7 +398,8 @@ class EwUserBase:
                     self.verified,
                     self.gender,
                     self.hogtied,
-                    self.crime
+                    self.crime,
+                    self.event_points
                     
                 ))
 

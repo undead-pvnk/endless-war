@@ -1363,6 +1363,16 @@ item_list = [
         rarity=ewcfg.prank_rarity_heinous,
         gambit=20,
     ),
+    EwPrankItem(
+        id_item=ewcfg.item_id_usedneedle,
+        str_name="Used Needle",
+        str_desc="A used needle, with some mysterious residue still inside! While you're already chock-full of STDs, stabbing other people with this could be some jolly good fun!" + ewcfg.prank_type_text_instantuse,
+        prank_type=ewcfg.prank_type_instantuse,
+        prank_desc="{} sneaks up behind you! You feel a slight prick on your shoulder, and you notice them injecting a mysterious fluid into you with a dirty needle. Tee-hee! How quirky :3. What a good friend!",
+        rarity=None, #FISHINGEVENT - give it an actual rarity after the event's over so it can spawn in prank capsules #ewcfg.prank_rarity_scandalous,
+        gambit=30,
+        side_effect="usedneedle_effect",
+    ),
     EwGeneralItem(
         id_item=ewcfg.item_id_swordofseething,
         str_name="SWORD OF SEETHING",

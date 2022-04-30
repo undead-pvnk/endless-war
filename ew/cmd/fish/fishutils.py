@@ -3,6 +3,7 @@ import time
 
 from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
+from ew.backend.market import EwMarket
 from ew.static import cfg as ewcfg
 from ew.static import fish as static_fish
 from ew.static import status as se_static
@@ -61,8 +62,27 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None, secret_
     # fragments when any of that shit has any use beyond making staves.
     # just ctrl+f the variable below and remove anything to do with it
     voidfishing = fisher.pier.pier_type == ewcfg.fish_slime_void
+    eventfishing = fisher.pier.pier_type == ewcfg.fish_slime_saltwater
+
     if rarity is None:
-        if has_fishingrod:
+        # FISHINGEVENT - loot table odds for the event
+        if eventfishing:
+            if rarity_number >= 0 and rarity_number < 21:       # 20%
+                rarity = "item"
+            
+            elif rarity_number >= 21 and rarity_number < 56:    # 35%
+                rarity = "common"
+
+            elif rarity_number >= 56 and rarity_number < 81:    # 25%
+                rarity = "uncommon"
+
+            elif rarity_number >= 81 and rarity_number < 96:    # 15%
+                rarity = "rare"
+
+            else:                                               # 5%
+                rarity = "promo"
+
+        elif has_fishingrod:
             if rarity_number >= 0 and rarity_number < 21 and not voidfishing:  # 20%
                 rarity = "item"
 
@@ -124,7 +144,11 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None, secret_
     if fisher.pier.pier_type == "freshwater":
         fish_pool = [fish for fish in fish_pool if fish not in static_fish.salt_fish and fish not in static_fish.void_fish]
     elif fisher.pier.pier_type == "saltwater":
-        fish_pool = [fish for fish in fish_pool if fish not in static_fish.fresh_fish and fish not in static_fish.void_fish]
+        # FISHINGEVENT - Event fish pool overwrites saltwater fish pool.
+        if eventfishing:
+            fish_pool = [fish for fish in fish_pool if fish in static_fish.event_fish]
+        else:
+            fish_pool = [fish for fish in fish_pool if fish not in static_fish.fresh_fish and fish not in static_fish.void_fish]
     elif fisher.pier.pier_type == "void":
         fish_pool = [fish for fish in fish_pool if fish in static_fish.void_fish]
 
@@ -247,6 +271,8 @@ async def award_fish(fisher, cmd, user_data):
 
     actual_fisherman = None
     actual_fisherman_data = user_data
+    market_data = EwMarket(id_server=user_data.id_server) # FISHINGEVENT
+
     if fisher.inhabitant_id:
         actual_fisherman = user_data.get_possession()[1]
         actual_fisherman_data = EwUser(id_user=actual_fisherman, id_server=cmd.guild.id)
@@ -254,8 +280,31 @@ async def award_fish(fisher, cmd, user_data):
     if fisher.current_fish in ["item", "seaitem"]:
         slimesea_inventory = bknd_item.inventory(id_server=cmd.guild.id, id_user=ewcfg.poi_id_slimesea)
 
-        if (fisher.pier.pier_type != ewcfg.fish_slime_saltwater or len(slimesea_inventory) == 0 or random.random() < 0.2) and fisher.current_fish == "item":
+        # FISHINGEVENT - reeling up used needles
+        if (fisher.pier.pier_type == ewcfg.fish_slime_saltwater and random.random() <= 0.842069) and fisher.current_fish == "item":
+            # 84.2/100 chance to fish up used needles instead of anything else possible.
+            item = vendors.static_items.item_map.get(ewcfg.item_id_usedneedle)
 
+            unearthed_item_amount = (random.randrange(3) + 4) # Can get between 4 and 6 needles
+            item_props = itm_utils.gen_item_props(item)
+
+            # Ensure item limits are enforced, including food since this isn't the fish section
+            if bknd_item.check_inv_capacity(user_data=actual_fisherman_data, item_type=item.item_type):
+                for creation in range(unearthed_item_amount):
+                    bknd_item.item_create(
+                        item_type=item.item_type,
+                        id_user=actual_fisherman or cmd.message.author.id,
+                        id_server=cmd.guild.id,
+                        item_props=item_props
+                    )
+
+                response = "You reel in {} {}s! Spikey, brosky. ".format(unearthed_item_amount, item.str_name)
+            else:
+                response = "You woulda reeled in some {}s, but that's just too many needles for your creaky legs. You've got too many {}s!".format(item.str_name, item.item_type)
+
+        elif (fisher.pier.pier_type != ewcfg.fish_slime_saltwater or len(slimesea_inventory) == 0 or random.random() < 0.2) and fisher.current_fish == "item":
+
+            # Choose a random item from the possible mining results - currently just poudrins
             item = random.choice(vendors.mine_results)
 
 
@@ -277,6 +326,7 @@ async def award_fish(fisher, cmd, user_data):
             else:
                 response = "You woulda reeled in some {}s, but your back gave out under the weight of the rest of your {}s.".format(item.str_name, item.item_type)
 
+        # If "seaitem" is specified, get a sea item.
         else:
             item = random.choice(slimesea_inventory)
 
@@ -295,31 +345,44 @@ async def award_fish(fisher, cmd, user_data):
 
         has_fishingrod = False
 
+        # Check if the user has a fishing rod equipped
         if user_data.weapon >= 0:
             weapon_item = EwItem(id_item=user_data.weapon)
             weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
             if weapon.id_weapon == "fishingrod":
                 has_fishingrod = True
 
+        # The fish's value, for bartering.
         value = 0
+
+        # FISHINGEVENT - how much exotic residue to award. Starts as a random number between 
+        exotic_residue = 0
 
         # Rewards from the fish's size
         slime_gain = ewcfg.fish_gain * static_fish.size_to_reward[fisher.current_size]
         value += 10 * static_fish.size_to_reward[fisher.current_size]
+        exotic_residue += 5 * static_fish.size_to_reward[fisher.current_size]
 
         # Rewards from the fish's rarity
         value += 10 * static_fish.rarity_to_reward[static_fish.fish_map[fisher.current_fish].rarity]
+        exotic_residue += 10 * static_fish.rarity_to_reward[static_fish.fish_map[fisher.current_fish].rarity]
 
+        # Give the user a bonus if they catch a day fish as a rowdy or a night fish as a killer. 
         if user_data.life_state == 2:
             if fisher.current_fish in static_fish.day_fish and user_data.faction == ewcfg.faction_rowdys:
                 gang_bonus = True
                 slime_gain = slime_gain * 1.5
                 value += 20
+                exotic_residue += 10
 
             if fisher.current_fish in static_fish.night_fish and user_data.faction == ewcfg.faction_killers:
                 gang_bonus = True
                 slime_gain = slime_gain * 1.5
                 value += 20
+                exotic_residue += 10
+
+        if has_fishingrod == True:
+            exotic_residue += 5
 
         # Disabled while I try out the new mastery fishing
         #if has_fishingrod == True:
@@ -329,27 +392,37 @@ async def award_fish(fisher, cmd, user_data):
         # if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
         #	slime_gain *= (1 - 0.5 * user_data.degradation / 100)
 
+        # Fish are more valuable at the void.
         if fisher.pier.pier_type == ewcfg.fish_slime_void:
             slime_gain = slime_gain * 1.5
             value += 30
 
         if fisher.current_fish == "plebefish":
             slime_gain = ewcfg.fish_gain * .5
+            exotic_residue = 10
             value = 10
 
         controlling_faction = poi_utils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 
         if controlling_faction != "" and controlling_faction == user_data.faction:
             slime_gain *= 2
+            exotic_residue += 5
 
         if user_data.poi == ewcfg.poi_id_juviesrow_pier:
+            exotic_residue = 5
             slime_gain = int(slime_gain / 4)
 
         #trauma = se_static.trauma_map.get(user_data.trauma)
         #if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain and False:
             #slime_gain *= (1 - 0.5 * user_data.degradation / 100)
 
+        #FISHINGEVENT - fun extra modifiers for exotic residue
+        exotic_residue += random.randrange(0, 11, 5)
+        exotic_residue = (exotic_residue * random.randrange(90, 111)) / 100
+
+        # Makes sure slime gain can never go below 0.
         slime_gain = max(0, round(slime_gain))
+        exotic_residue = max(0, round(exotic_residue))
 
         bknd_item.item_create(
             id_user=actual_fisherman or cmd.message.author.id,
@@ -379,23 +452,53 @@ async def award_fish(fisher, cmd, user_data):
             inhabitant_data = EwUser(id_user=fisher.inhabitant_id, id_server=user_data.id_server)
             inhabitee_name = server.get_member(actual_fisherman).display_name
 
+            # Take 1/4 of the slime the player would have gained, to inverse and give to the ghost.
             slime_gain = int(0.25 * slime_gain)
+            # FISHINGEVENT - give event points
+            if fisher.pier.pier_type == ewcfg.fish_slime_saltwater:
+                response = "The two of you together manage to reel in a {fish}! {flavor} {ghost} haunts {slime:,} slime away from the fish before placing it on {fleshling}'s hands. {fleshling} still wrings out the fish, and collects {exoticresidue:,} exotic residue from it." \
+                    .format(
+                    fish=static_fish.fish_map[fisher.current_fish].str_name,
+                    flavor=static_fish.fish_map[fisher.current_fish].str_desc,
+                    ghost=inhabitant_name,
+                    fleshling=inhabitee_name,
+                    slime=slime_gain,
+                    exoticresidue=exotic_residue,
+                )
 
-            response = "The two of you together manage to reel in a {fish}! {flavor} {ghost} haunts {slime:,} slime away from the fish before placing it on {fleshling}'s hands." \
-                .format(
-                fish=static_fish.fish_map[fisher.current_fish].str_name,
-                flavor=static_fish.fish_map[fisher.current_fish].str_desc,
-                ghost=inhabitant_name,
-                fleshling=inhabitee_name,
-                slime=slime_gain,
-            )
+                inhabitant_data.change_slimes(n=-slime_gain)
+                user_data.event_points += exotic_residue
+                market_data.total_event_points += exotic_residue
+                market_data.persist()
+                inhabitant_data.persist()
+                fisher.stop()
+            else:
+                response = "The two of you together manage to reel in a {fish}! {flavor} {ghost} haunts {slime:,} slime away from the fish before placing it on {fleshling}'s hands." \
+                    .format(
+                    fish=static_fish.fish_map[fisher.current_fish].str_name,
+                    flavor=static_fish.fish_map[fisher.current_fish].str_desc,
+                    ghost=inhabitant_name,
+                    fleshling=inhabitee_name,
+                    slime=slime_gain,
+                )
 
-            inhabitant_data.change_slimes(n=-slime_gain)
-            inhabitant_data.persist()
-            fisher.stop()
+                inhabitant_data.change_slimes(n=-slime_gain)
+                inhabitant_data.persist()
+                fisher.stop()
         else:
-            response = "You reel in a {fish}! {flavor} You grab hold and wring {slime:,} slime from it. " \
-                .format(fish=static_fish.fish_map[fisher.current_fish].str_name, flavor=static_fish.fish_map[fisher.current_fish].str_desc, slime=slime_gain)
+            # FISHINGEVENT - give Exotic Residue
+            if fisher.pier.pier_type == ewcfg.fish_slime_saltwater:
+                user_data.event_points += exotic_residue
+                market_data.total_event_points += exotic_residue
+                market_data.persist()
+
+                response = "You reel in a {fish}! {flavor} You grab hold and wring {slime:,} slime and {exoticresidue:,} exotic residue from it. " \
+                    .format(fish=static_fish.fish_map[fisher.current_fish].str_name, flavor=static_fish.fish_map[fisher.current_fish].str_desc, slime=slime_gain, exoticresidue=exotic_residue)
+            else:
+                response = "You reel in a {fish}! {flavor} You grab hold and wring {slime:,} from it. " \
+                    .format(fish=static_fish.fish_map[fisher.current_fish].str_name, flavor=static_fish.fish_map[fisher.current_fish].str_desc, slime=slime_gain)
+            
+            # Add to the response if the user gets a gang bonus.
             if gang_bonus == True:
                 if user_data.faction == ewcfg.faction_rowdys:
                     response += "The Rowdy-pride this fish is showing gave you more slime than usual. "

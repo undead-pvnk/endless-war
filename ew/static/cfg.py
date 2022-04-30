@@ -1015,7 +1015,12 @@ cmd_set_gambit = cmd_prefix + 'setgambit'
 cmd_pointandlaugh = cmd_prefix + 'pointandlaugh'
 cmd_prank = cmd_prefix + 'prank'
 cmd_gvs_almanac = cmd_prefix + 'almanac'
-
+cmd_event_points = cmd_prefix + 'eventpoints' # FISHINGEVENT
+cmd_event_points_alt1 = cmd_prefix + 'exoticresidue' # The actual event point names
+cmd_event_points_alt2 = cmd_prefix + 'residue'
+cmd_event_points_alt3 = cmd_prefix + 'exotic'
+cmd_turnin = cmd_prefix + 'turnin'
+cmd_turnin_alt1 = cmd_prefix + 'exchange'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_paspeaker = cmd_prefix + 'paspeaker'
@@ -1265,6 +1270,9 @@ cmd_offer = cmd_prefix + 'offer'
 cmd_remove_offer = cmd_prefix + 'removeoffer'
 cmd_completetrade = cmd_prefix + 'completetrade'
 cmd_canceltrade = cmd_prefix + 'canceltrade'
+
+# Auction
+cmd_bid = cmd_prefix + 'bid'
 
 cmd_bazaar_refresh = cmd_prefix + 'refreshbazaar'
 
@@ -1829,6 +1837,10 @@ emote_strawberrymilk = "<:strawberrymilk:431282128421126144>"
 emote_dab = "<a:dab:805341290220093450>"
 emote_thrash = "<a:thrash:805341344331202620>"
 
+# Miscellaneous
+emote_tfwslime = "<:tfwslime:713609663832391680>"
+emote_ewspin = "<a:ewspin:694097283293118525>"
+
 # mining types
 mining_type_minesweeper = "minesweeper"
 mining_type_pokemine = "pokemine"
@@ -2099,6 +2111,7 @@ col_time_lastpremiumpurchase = 'time_lastpremiumpurchase'
 col_verified = 'verified'
 col_gender = 'gender'
 col_hogtied = 'hogtied'
+col_event_points = 'event_points'
 
 col_attack = 'attack'
 col_speed = 'speed'
@@ -2133,6 +2146,12 @@ col_juviemode = 'juviemode'
 # Double Halloween
 col_horseman_deaths = 'horseman_deaths'
 col_horseman_timeofdeath = 'horseman_timeofdeath'
+
+# Auction & FISHINGEVENT points
+col_total_event_points = "total_event_points"
+col_current_bidder = "current_bidder"
+col_current_bid = "current_bid"
+col_current_auction_relic = "current_auction_relic"
 
 # Database columns for bartering
 col_offer_give = 'offer_give'
@@ -2363,6 +2382,8 @@ leaderboard_gambit_low = "LOWEST GAMBIT"
 leaderboard_sacrificial = "SACRIFICIAL LAMBS"
 leaderboard_lifetimekills = "LIFETIME KILLS"
 leaderboard_lifetimedeaths = "BIGGEST VICTIMS"
+# FISHINGEVENT - most event points currently
+leaderboard_fishers = "RESIDUE RECALCITRANTS"
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -2604,6 +2625,9 @@ vendor_downpourlaboratory = "Downpour Armament Vending Machines"  # Store for sh
 vendor_breakroom = "The Breakroom"  # Security officers can order items here for free.
 vendor_rpcity = "RP City"  # Double halloween costume store
 
+# Temporary Exotic Residue vendor for FISHINGEVENT
+vendor_NMSdealer = "Neo Milwaukee State Not-A-Drug-Dealer Drug Dealer"
+
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
 item_id_monstersoup = 'monstersoup'
@@ -2770,6 +2794,7 @@ item_id_alligatortoy = "alligatortoy"
 item_id_undefinedprankscrap = "undefinedprankscrap"
 item_id_janusmask = "janusmask"
 item_id_swordofseething = "swordofseething"
+item_id_usedneedle = "usedneedle"
 
 prank_type_instantuse = 'instantuse'
 prank_type_response = 'response'
@@ -3074,6 +3099,9 @@ fish_slime_freshwater = "freshwater"
 fish_slime_saltwater = "saltwater"
 fish_slime_void = "void"
 
+# FISHINGEVENT
+fish_slime_event = "event"
+
 fish_size_miniscule = "miniscule"
 fish_size_small = "small"
 fish_size_average = "average"
@@ -3220,6 +3248,26 @@ jam_tunes = {
     "ferroslimeoidotamatone": jams_otamatone,
     "whistle": jams_whistle
 }
+
+actual_stds = [
+    "chlamydia",
+    "herpes",
+    "genital herpes",
+    "HPV",
+    "gonorrhea",
+    "HIV",
+    "AIDS",
+    "syphilis",
+    "trichomoniasis",
+    "bacterial vaginosis",
+    "bacterial vagignosis",
+    "hepatitus A",
+    "hepatitus B",
+    "hepatitus C",
+    "mycoplasma genitalium",
+    "Zika",
+    "anal warts"
+]
 
 howls = [
     '**AWOOOOOOOOOOOOOOOOOOOOOOOO**',
