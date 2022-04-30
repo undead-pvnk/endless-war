@@ -834,7 +834,7 @@ async def scavenge(cmd):
 
             if ewcfg.mutation_id_webbedfeet in mutations:
                 district_slimelevel = len(str(district_data.slimes))
-                scavenge_mod *= max(1, min(district_slimelevel - 3, 4))
+                scavenge_mod *= min(1, min(district_slimelevel - 3, 4))
 
             scavenge_yield = math.floor(scavenge_mod * district_data.slimes)
 
