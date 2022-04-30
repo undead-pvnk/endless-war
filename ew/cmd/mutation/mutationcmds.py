@@ -868,9 +868,10 @@ async def slap(cmd):
                 target_response += " But you hit your head really hard! Your precious little dome explodes into bits and pieces and you die!"
 
             user_data.persist()
+
+            await ewrolemgr.updateRoles(client=ewutils.get_client(), member=cmd.mentions[0], new_poi=target_data.poi)
             target_data.persist()
 
-            await ewrolemgr.updateRoles(client=ewutils.get_client(), member=cmd.mentions[0])
             await user_data.move_inhabitants(id_poi=dest_poi_obj.id_poi)
 
             await prank_utils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, target_data.id_user)
