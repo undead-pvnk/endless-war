@@ -838,6 +838,9 @@ async def scavenge(cmd):
 
             scavenge_yield = math.floor(scavenge_mod * district_data.slimes)
 
+            if district_data.slimes < scavenge_yield:
+                scavenge_yield = district_data.slimes
+
             levelup_response = user_data.change_slimes(n=scavenge_yield, source=ewcfg.source_scavenging)
             district_data.change_slimes(n=-1 * scavenge_yield, source=ewcfg.source_scavenging)
             district_data.persist()

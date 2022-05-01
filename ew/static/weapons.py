@@ -345,6 +345,7 @@ weapon_list = [
         vendors=[ewcfg.vendor_dojo, ewcfg.vendor_breakroom],
         classes=[ewcfg.weapon_class_ammo],
         stat=ewcfg.stat_revolver_kills,
+        str_brandish="You spin {} around on your finger, blowing smoke off the barrel like a Texas gunman."
     ),
     EwWeapon(  # 2
         id_weapon=ewcfg.weapon_id_dualpistols,
@@ -375,6 +376,7 @@ weapon_list = [
         price=10000,
         vendors=[ewcfg.vendor_dojo, ewcfg.vendor_breakroom],
         stat=ewcfg.stat_dual_pistols_kills,
+        str_brandish="You cock {} back, aiming them at  the nearest passersby. *Bang.*"
     ),
     EwWeapon(  # 3
         id_weapon=ewcfg.weapon_id_shotgun,
@@ -407,6 +409,7 @@ weapon_list = [
         vendors=[ewcfg.vendor_dojo, ewcfg.vendor_breakroom],
         classes=[ewcfg.weapon_class_ammo],
         stat=ewcfg.stat_shotgun_kills,
+        str_brandish="**ChkCHK.** You take {} and pump back a couple rounds, listening to the shells clink onto the ground."
     ),
     EwWeapon(  # 4
         id_weapon=ewcfg.weapon_id_rifle,
@@ -438,6 +441,7 @@ weapon_list = [
         vendors=[ewcfg.vendor_dojo, ewcfg.vendor_breakroom],
         classes=[ewcfg.weapon_class_ammo],
         stat=ewcfg.stat_rifle_kills,
+        str_brandish="**BAM BAM!** You take {} and fire some warning rounds into the air."
     ),
     EwWeapon(  # 5
         id_weapon=ewcfg.weapon_id_smg,
@@ -470,6 +474,7 @@ weapon_list = [
         vendors=[ewcfg.vendor_dojo, ewcfg.vendor_breakroom],
         classes=[ewcfg.weapon_class_ammo],
         stat=ewcfg.stat_smg_kills,
+        str_brandish="**RATTATTATTAT!** You take {} and fire a line of bullets along the ground. *You're next.*"
     ),
     EwWeapon(  # 6
         id_weapon=ewcfg.weapon_id_minigun,
@@ -499,7 +504,8 @@ weapon_list = [
         vendors=[ewcfg.vendor_bazaar],
         classes=[ewcfg.weapon_class_captcha],
         stat=ewcfg.stat_minigun_kills,
-        captcha_length=6
+        captcha_length=6,
+        str_brandish="You laugh to yourself as you spin {}'s barrel. They won't know what hit 'em."
     ),
     EwWeapon(  # 7
         id_weapon=ewcfg.weapon_id_bat,
@@ -528,6 +534,7 @@ weapon_list = [
         price=10000,
         vendors=[ewcfg.vendor_dojo, ewcfg.vendor_breakroom],
         stat=ewcfg.stat_bat_kills,
+        str_brandish="You wind up a swing with {}. Time to knock some heads."
     ),
     EwWeapon(  # 8
         id_weapon=ewcfg.weapon_id_brassknuckles,
@@ -555,6 +562,7 @@ weapon_list = [
         price=10000,
         vendors=[ewcfg.vendor_dojo, ewcfg.vendor_breakroom],
         stat=ewcfg.stat_brassknuckles_kills,
+        str_brandish="You take off {} and flip the bird. Get fucked."
     ),
     EwWeapon(  # 9
         id_weapon=ewcfg.weapon_id_katana,

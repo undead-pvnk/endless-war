@@ -380,21 +380,22 @@ async def award_fish(fisher, cmd, user_data):
 
             slime_gain = int(0.25 * slime_gain)
 
-            response = "The two of you together manage to reel in a {fish}! {flavor} {ghost} haunts {slime:,} slime away from the fish before placing it on {fleshling}'s hands." \
+            response = "The two of you together manage to reel in a {fish}! It's {length} inches long! {flavor} {ghost} haunts {slime:,} slime away from the fish before placing it on {fleshling}'s hands." \
                 .format(
                 fish=static_fish.fish_map[fisher.current_fish].str_name,
                 flavor=static_fish.fish_map[fisher.current_fish].str_desc,
                 ghost=inhabitant_name,
                 fleshling=inhabitee_name,
                 slime=slime_gain,
+                length=fisher.length
             )
 
             inhabitant_data.change_slimes(n=-slime_gain)
             inhabitant_data.persist()
             fisher.stop()
         else:
-            response = "You reel in a {fish}! {flavor} You grab hold and wring {slime:,} slime from it. " \
-                .format(fish=static_fish.fish_map[fisher.current_fish].str_name, flavor=static_fish.fish_map[fisher.current_fish].str_desc, slime=slime_gain)
+            response = "You reel in a {fish}! {flavor} It is {length} inches long! You grab hold and wring {slime:,} slime from it. " \
+                .format(fish=static_fish.fish_map[fisher.current_fish].str_name, length = fisher.length, flavor=static_fish.fish_map[fisher.current_fish].str_desc, slime=slime_gain)
             if gang_bonus == True:
                 if user_data.faction == ewcfg.faction_rowdys:
                     response += "The Rowdy-pride this fish is showing gave you more slime than usual. "
