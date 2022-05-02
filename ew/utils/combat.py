@@ -2522,7 +2522,6 @@ class EwUser(EwUserBase):
         if cause not in explosion_block_list:  # Run explosion after location/stat reset, to prevent looping onto self
             if user_hasCombustion:
                 explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!\n".format(server.get_member(self.id_user).display_name)
-                ewutils.logMsg("")
                 resp_cont.add_channel_response(explode_poi_channel, explode_resp)
 
                 explosion = explode(damage=explode_damage, district_data=explode_district)
