@@ -102,7 +102,6 @@ def get_items_resp(user_data, district_data):
 
         single_response = ""
         items_listed = 0
-        item = EwItem
 
         # Get all items in the POI the player is in, sorted by Item ID.
         items_in_poi = bknd_item.inventory(id_user=user_data.poi, id_server=district_data.id_server, item_sorting_method='id',)
