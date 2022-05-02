@@ -486,7 +486,7 @@ async def perform_prank_item_side_effect(side_effect, cmd = None, member = None)
         try:
             await fe_utils.send_message(cmd.client, target_member, direct_message)
         except:
-            await fe_utils.send_message(cmd.client, fe_utils.get_channel(cmd.guild, cmd.message.channel), fe_utils.formatMessage(target_member, direct_message))
+            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(target_member, direct_message))
 
     return response
 

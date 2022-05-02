@@ -340,7 +340,7 @@ async def haunt(cmd):
             response = "Your spookiness is appreciated, but ENDLESS WAR didn\'t understand that name."
 
     # Send the response to the player.
-    resp_cont.add_channel_response(cmd.message.channel.name, response)
+    resp_cont.add_channel_response(cmd.message.channel, response)
     await resp_cont.post()
 
 

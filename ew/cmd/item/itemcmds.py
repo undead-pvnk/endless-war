@@ -848,7 +848,7 @@ async def item_use(cmd):
                 item_action = ""
                 side_effect = ""
 
-                if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False):  # or (user_data.poi not in poi_static.capturable_districts):
+                if cmd.message.guild is None or not ewutils.channel_name_is_poi(cmd.message.channel.name):  # or (user_data.poi not in poi_static.capturable_districts):
                     response = "You need to be on the city streets to unleash that prank item's full potential."
                 else:
                     if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:

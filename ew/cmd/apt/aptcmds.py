@@ -57,7 +57,7 @@ async def retire(cmd = None, isGoto = False, movecurrent = None):
 
     if owner_user:
         return await usekey(cmd, owner_user)
-    if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+    if cmd.message.guild is None or not ewutils.channel_name_is_poi(cmd.message.channel.name):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
     elif ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
         response = "You can't do that right now."
@@ -144,7 +144,7 @@ async def consult(cmd):
 
     response = ""
 
-    if cmd.message.channel.name != ewcfg.channel_realestateagency:
+    if cmd.message.guild is None or cmd.message.channel.name != ewcfg.channel_realestateagency:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You have to !consult at the Real Estate Agency in Old New Yonkers."))
 
     if not target_name:
@@ -442,7 +442,7 @@ async def knock(cmd = None):
 async def trickortreat(cmd = None):
     user_data = EwUser(member=cmd.message.author)
 
-    if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+    if cmd.message.guild is None or not ewutils.channel_name_is_poi(cmd.message.channel.name):
         response = "There will be neither trick nor treat found in these parts."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 

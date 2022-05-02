@@ -29,7 +29,7 @@ async def usekey(cmd, owner_user):
             if item_key_check.item_props.get("houseID") == str(owner_user.id_user):
                 key = item_key_check
 
-    if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+    if cmd.message.guild is None or not ewutils.channel_name_is_poi(cmd.message.channel.name):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must enter an apartment in a zone's channel.".format(cmd.tokens[0])))
     elif key == None:
         response = "You don't have a key for their apartment."

@@ -218,7 +218,7 @@ async def crush(cmd):
             response = "{} which item? (check **!inventory**)".format(command)
 
     # Send the response to the player.
-    resp_cont.add_channel_response(cmd.message.channel.name, fe_utils.formatMessage(cmd.message.author, response))
+    resp_cont.add_channel_response(cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     await resp_cont.post()
 
 
