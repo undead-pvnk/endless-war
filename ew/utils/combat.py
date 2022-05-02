@@ -1836,8 +1836,7 @@ async def enemy_perform_action(id_server):
                         fe_utils.delete_last_message(client, last_messages, ewcfg.enemy_attack_tick_length))
                     resp_cont = None
 
-                elif any([ewcfg.status_evasive_id, ewcfg.status_aiming_id]) not in enemy_statuses and random.randrange(
-                        10) == 0:
+                elif any([ewcfg.status_evasive_id, ewcfg.status_aiming_id]) not in enemy_statuses and random.randrange(10) == 0:
                     resp_cont = random.choice([enemy.dodge, enemy.taunt, enemy.aim])()
                 else:
                     resp_cont = await enemy.kill()
