@@ -2,6 +2,8 @@ import asyncio
 import math
 import random
 import time
+import traceback
+import sys
 
 import discord
 
@@ -125,7 +127,11 @@ async def event_tick(id_server):
                             # in shambaquarium the event happens in the user's DMs
                             if event_data.event_type == ewcfg.event_type_shambaquarium:
                                 client = ewutils.get_client()
-                                channel = client.get_guild(id_server).get_member(int(channel))
+                                disc_user = client.get_guild(id_server).get_member(int(channel))
+                                # acquire a dm channel object.
+                                channel = disc_user.dm_channel
+                                if channel is None:
+                                    channel = await client.create_dm()
 
                             resp_cont.add_channel_response(channel, response)
                         elif poi != None:
@@ -1420,6 +1426,7 @@ async def clock_tick_loop(id_server = None, force_active = False):
                     ewutils.logMsg("Finished clock tick.")
                 await asyncio.sleep(60)
     except Exception as e:
+        traceback.print_exc(file=sys.stdout)
         ewutils.logMsg('An error occurred in the scheduled slime market update task: {}. Fix that.'.format(e))
 
 
