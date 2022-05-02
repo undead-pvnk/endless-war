@@ -55,19 +55,33 @@ class EwResponseContainer:
     members_to_update = []
 
     def __init__(self, client = None, id_server = None):
-        self.client = client
+        self.client = client if client is not None else ewutils.get_client()
         self.id_server = id_server
         self.channel_responses = {}
         self.channel_topics = {}
         self.members_to_update = []
 
     def add_channel_response(self, channel, response):
+        # Try to keep channels as objects where possible. between thread, regular, and dm channels, names are spooky to rely on
+        if isinstance(channel, str):
+            seek = get_channel(server=self.client.get_guild(int(self.id_server)), channel_name=channel)
+            channel = seek if seek is not None else channel
+
+        # Report bad inputs
+        if not hasattr(channel, "send"):
+            ewutils.logMsg("Error: add_channel_response could not parse channel from {}".format(channel))
+
+        # Add response to existing entry for its channel, or create a new entry
         if channel in self.channel_responses:
             self.channel_responses[channel].append(response)
         else:
             self.channel_responses[channel] = [response]
 
     def add_channel_topic(self, channel, topic):
+        if isinstance(channel, str):  # For consistency (Even though this is commented out of post???)
+            seek = get_channel(server=self.client.get_guild(int(self.id_server)), channel_name=channel)
+            channel = seek if seek is not None else channel
+
         self.channel_topics[channel] = topic
 
     def add_member_to_update(self, member):
@@ -111,13 +125,9 @@ class EwResponseContainer:
             await ewrolemgr.updateRoles(client=self.client, member=member)
 
         for ch in self.channel_responses:
-            if channel == None:
-                # get_channel is meant to find channels from their .name, don't pass it something that isn't a string
-                if isinstance(ch, str):
-                    current_channel = get_channel(server=server, channel_name=ch)
-                else:
-                    current_channel = ch
-
+            if channel is None:
+                # add_channel_response should be catching any string entries
+                current_channel = ch
             else:
                 current_channel = channel
             try:
