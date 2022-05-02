@@ -277,7 +277,7 @@ async def attack(cmd):
                     ewstats.increment_stat(user=attacker, metric=ewcfg.stat_shamblers_killed)
 
                 end = time.perf_counter()
-                print("{} seconds to run attack ln 252 stat updates".format(end-start))
+
             else:
                 attacker.change_crime(n=ewcfg.cr_assault_points)
 

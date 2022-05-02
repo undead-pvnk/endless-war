@@ -1444,7 +1444,7 @@ async def store_item(cmd):
             name_string = "{}(x{})".format(name_string, items_had)
 
         bknd_item.give_item_multi(id_list=item_list, destination=recipient + destination)
-        print(item_list)
+
         if (destination == ewcfg.compartment_id_decorate):
             response = item.item_props['furniture_place_desc']
             if items_had > 1:
