@@ -359,7 +359,9 @@ async def reap(cmd):
                     if user_data.life_state == ewcfg.life_state_juvenile:
                         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
-    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    respctn = fe_utils.EwResponseContainer(client=cmd.client, id_server=cmd.message.guild)
+    respctn.add_channel_response(cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    await respctn.post()
 
 
 async def check_farm(cmd):
