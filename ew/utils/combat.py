@@ -2450,25 +2450,26 @@ class EwUser(EwUserBase):
 
                 ewutils.weaponskills_clear(id_server=self.id_server, id_user=self.id_user, weaponskill=ewcfg.weaponskill_max_onrevive)
 
-                try:
-                    drop_list = ','.join(map(str, ids_to_drop))
-                    bknd_core.execute_sql_query(
-                        "UPDATE items SET {id_user} = %s WHERE id_item IN({drop_list})".format(
-                            id_user=ewcfg.col_id_user,
-                        drop_list = drop_list
-                        ),
-                        (
-                            [self.poi]
-                        ))
+                if len(ids_to_drop) > 0:
+                    try:
+                        drop_list = ','.join(map(str, ids_to_drop))
+                        bknd_core.execute_sql_query(
+                            "UPDATE items SET {id_user} = %s WHERE id_item IN({drop_list})".format(
+                                id_user=ewcfg.col_id_user,
+                                drop_list = drop_list
+                            ),
+                            (
+                                [self.poi]
+                            ))
 
-                except Exception as e:
-                    ewutils.logMsg('Failed to drop items on death, {}.'.format(e))
+                    except Exception as e:
+                        ewutils.logMsg('Failed to drop items on death, {}.'.format(e))
 
-                item_cache = bknd_core.get_cache(obj_type="EwItem")
-                for id in ids_to_drop:
-                    cache_item = item_cache.get_entry(unique_vals={"id_item": id})
-                    cache_item.update({'id_owner': self.poi})
-                    item_cache.set_entry(data=cache_item)
+                    item_cache = bknd_core.get_cache(obj_type="EwItem")
+                    for id in ids_to_drop:
+                        cache_item = item_cache.get_entry(unique_vals={"id_item": id})
+                        cache_item.update({'id_owner': self.poi})
+                        item_cache.set_entry(data=cache_item)
 
             try:
 
