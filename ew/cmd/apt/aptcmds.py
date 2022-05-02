@@ -1272,6 +1272,10 @@ async def browse(cmd):
 
 
 async def store_item(cmd):
+    if len(cmd.tokens) < 2:
+        response = "{} what?".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
     cmd_text = cmd.tokens[0].lower() if len(cmd.tokens) >= 1 else ""
 
     # Consider moving this map to ewcfg, though its inconsequential
@@ -1465,6 +1469,10 @@ async def store_item(cmd):
 
 
 async def remove_item(cmd):
+    if len(cmd.tokens) < 2:
+        response = "{} what?".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
     cmd_text = cmd.tokens[0].lower() if len(cmd.tokens) >= 1 else ""
 
     # Consider moving this map to ewcfg, though its inconsequential
