@@ -36,7 +36,7 @@ class EwMarket:
 
     # Auction and FISHINGEVENT 
     total_event_points = 0
-    current_bidder = ""
+    current_bidder = 0
     current_bid = 0
     current_auction_relic = 0
 

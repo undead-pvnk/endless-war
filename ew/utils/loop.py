@@ -2,6 +2,7 @@ import asyncio
 import math
 import random
 import time
+import datetime
 
 import discord
 
@@ -45,6 +46,7 @@ from ..static.food import swilldermuk_food
 from ..static import poi as poi_static
 from ..static import status as se_static
 from ..static import weapons as static_weapons
+from ..static import vendors
 
 
 async def event_tick_loop(id_server):
@@ -909,6 +911,87 @@ async def release_timed_prisoners_and_blockparties(id_server, day):
                 blockparty.bit = 0
                 blockparty.value = ''
                 blockparty.persist()
+
+
+# FISHINGEVENT
+async def auction_tick_loop(id_server):
+    while not ewutils.TERMINATE:
+        interval = 3 # 300
+        await asyncio.sleep(interval)
+        await auction_tick(id_server)
+
+
+async def auction_tick(id_server):
+    current_date = datetime.date.today()
+    market_data = EwMarket(id_server)
+
+    item_date_map = ewcfg.auction_item_date_map
+
+    if current_date in item_date_map:
+        if market_data.current_auction_relic != item_date_map[current_date]:
+            # DATE HAS ROLLED OVER, INITIATE AUCTION RENEWALLLLL
+            await auction_renewal(id_server, market_data, current_date, item_date_map)
+        else:
+            return
+
+
+async def auction_renewal(id_server, market_data, current_date, item_date_map):
+    bidder = 0
+    bidder = market_data.current_bidder
+
+    # Create the starter Auction Updatez message
+    auctionmessage = fe_utils.discord.Embed()
+    auctionmessage.set_thumbnail(url="https://cdn.discordapp.com/attachments/858397413568151582/970316539557462037/unknown.png") #PLACEHOLDER
+    auctionmessage.color = fe_utils.discord.Colour(int("00ff00", 16))
+    auctionmessage.description = "**THE AUCTIONEER**"
+
+    # If nobody has bidded for the current relic, it's probably day 1 of the event. If there is a bid, it's probably day 2-7.
+    if market_data.current_bidder != 0:
+        # Give the Bidder their item
+                            #     props = itm_utils.gen_item_props(relic_map.get()))???
+        props = itm_utils.gen_item_props(vendors.static_items.item_map.get(market_data.current_auction_relic))
+        bknd_item.item_create(
+            item_type=ewcfg.it_item,
+            id_user=bidder,
+            id_server=id_server,
+            item_props=props
+        )
+
+        # Generate props for the new relic, to get the name.
+        newitemprops = itm_utils.gen_item_props(vendors.static_items.item_map.get(item_date_map[current_date]))
+
+        # Create content of the new relic message
+        field_1_title = "NEW RELIC AVAILABLE"
+        field_1_text = "That's right, y'all! Yet another item is comin' outta the backseat. Today's item is... a **{}**. I dunno where it comes from, to be honest. But the person who gives me the most Exotic Residue for it by the end of tonight is getting it shipped to their grimy hands.".format(newitemprops.get('item_name'))
+        auctionmessage.add_field(name=field_1_title, value=field_1_text, inline=False)
+
+        # Create content of the old winner message
+        field_2_title = "OLD RELIC WINNER"
+        field_2_text = "<@{}> won the last auction for the {}. So, uh, it'll be delivered to ya lightning-fast, kid. Have fun, and thanks for the Exotic Residue!".format(market_data.current_bidder, props.get('item_name'))
+        auctionmessage.add_field(name=field_2_title, value=field_2_text, inline=False)
+
+    else:
+        # Get the relic's name
+        props = itm_utils.gen_item_props(vendors.static_items.item_map.get(item_date_map[current_date]))
+        item_name = props.get("item_name")
+
+        # Create content of the initial post to Auction-Updatez
+        field_1_title = "AUCTION OPEN!!!!"
+        field_1_text = "Hey, so my auction's now fully up-and-running! Head on over to Neo Milwaukee State - my car's parked in the parking lot. You'll know it when you see it. I snagged some sick thingamabobs from around, but I don't really have much use for them. So! Just !bid your Exotic Residue, and I'll give them to the highest bidder. Today's item is... a **{}**. So what drugs ya got? Oh, and if you're a cop, you'll be dead on sight. Lol.".format(item_name)
+        auctionmessage.add_field(name=field_1_title, value=field_1_text)
+
+    # Create changes to current auction item, then persist.
+    market_data.current_bid = 0
+    market_data.current_bidder = 0
+    market_data.current_auction_relic = item_date_map[current_date]
+    market_data.persist()
+
+    # Send the Auction Updatez message
+    client = ewutils.get_client()
+    server = client.get_guild(id_server)
+    channel = fe_utils.get_channel(server=server, channel_name=ewcfg.channel_auctionupdatez)
+    await fe_utils.send_message(client, channel, embed=auctionmessage)
+
 
 async def gvs_gamestate_tick_loop(id_server):
     interval = ewcfg.gvs_gamestate_tick_length

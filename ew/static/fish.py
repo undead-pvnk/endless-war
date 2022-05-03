@@ -1068,7 +1068,7 @@ fish_list = [
         rarity = "uncommon",
         catch_time = None,
         catch_weather = None,
-        str_desc = "Frequently bouncing on his boy's dick.",
+        str_desc = "Frequently found bouncing on his boy's dick.",
         slime = "event",
     ),
     # Rare

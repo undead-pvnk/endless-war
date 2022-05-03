@@ -202,7 +202,8 @@ cmd_map = {
     ewcfg.cmd_measurecock: cmdcmds.cockdraw,
     ewcfg.cmd_dual_key_ban:cmdcmds.dual_key_ban,
     ewcfg.cmd_dual_key_release:cmdcmds.dual_key_release,
-    ewcfg.cmd_setslime: cmdcmds.set_slime
+    ewcfg.cmd_setslime: cmdcmds.set_slime,
+    ewcfg.cmd_seteventpoints: cmdcmds.set_event_points # FISHINGEVENT
 }
 if ewcfg.dh_active:
     cmd_map[ewcfg.cmd_spook] = cmdcmds.spook

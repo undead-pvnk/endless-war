@@ -83,7 +83,7 @@ async def post_leaderboards(client = None, server = None):
         topfavor = make_statdata_board(server=server.id, category='sacrificerate', title =ewcfg.leaderboard_sacrificial)
         resp_cont.add_channel_response(leaderboard_channel, topfavor)
 
-    total_residue = "{} ▓▓▓▓▓ CITYWIDE SPICE FLOW ▓▓▓▓▓ {}\n{} `{:_>15} | NLACakaNM`".format(ewcfg.emote_nlacakanm, ewcfg.emote_nlacakanm, ewcfg.emote_ewspin, market.total_event_points)
+    total_residue = "{} ▓▓▓▓▓ CITYWIDE SPICE FLOW ▓▓▓▓▓ {}\n{} `{:_>15} | NLACakaNM`".format(ewcfg.emote_slimeshot, ewcfg.emote_slimeshot, ewcfg.emote_nlacakanm, market.total_event_points)
     resp_cont.add_channel_response(leaderboard_channel, total_residue)
 
     topfishers = make_userdata_board(server=server.id, category=ewcfg.col_event_points, title=ewcfg.leaderboard_fishers)

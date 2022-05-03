@@ -101,6 +101,9 @@ channels_deviantsplaart = {}
 
 channels_artexhibits = {}
 
+# Map of server ID to auction updates channel
+channels_auctionupdatez = {}
+
 # Map of all command words in the game to their implementing function.
 
 #cmd_map = cmds.cmd_map
@@ -306,6 +309,10 @@ async def on_ready():
                 elif (channel.name == ewcfg.channel_deviantsplaart):
                     channels_deviantsplaart[server.id] = channel
                     ewutils.logMsg("• found channel for deviantSPLAART: {}".format(channel.name))
+                
+                elif (channel.name == ewcfg.channel_auctionupdatez):
+                    channels_auctionupdatez[server.id] = channel
+                    ewutils.logMsg("• found channel for auction updatez: {}".format(channel.name))
 
         ewdebug.initialize_gamestate(id_server=server.id)
 
@@ -365,7 +372,9 @@ async def on_ready():
         if not debug:
             await transport_utils.init_transports(id_server=server.id)
             asyncio.ensure_future(bknd_weather.weather_tick_loop(id_server=server.id))
-        
+
+        asyncio.ensure_future(loop_utils.auction_tick_loop(id_server=server.id)) # FISHINGEVENT
+
         asyncio.ensure_future(bknd_farm.farm_tick_loop(id_server=server.id))
         
         asyncio.ensure_future(sports_utils.slimeball_tick_loop(id_server=server.id))

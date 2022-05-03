@@ -1,5 +1,6 @@
 # Global configuration options.
 
+import datetime #FISHINGEVENT - remove after
 
 
 
@@ -652,6 +653,8 @@ channel_slimetwitter = "slime-twitter"
 channel_artexhibits = "art-exhibits"
 channel_deviantsplaart = "deviant-splaart"
 
+channel_auctionupdatez = "auction-updatez"
+
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown, channel_breakroom]
 hideout_by_faction = {
     faction_rowdys: channel_rowdyroughhouse,
@@ -914,6 +917,7 @@ cmd_createall = cmd_prefix + 'createall'
 cmd_manualsoulbind = cmd_prefix + 'soulbind'
 cmd_editprops = cmd_prefix + 'editprops'
 cmd_setslime = cmd_prefix + 'setslime'
+cmd_seteventpoints = cmd_prefix + 'setresidue'
 cmd_setfestivity = cmd_prefix + 'setfestivity'
 cmd_checkstats = cmd_prefix + 'checkstats'
 cmd_makebp = cmd_prefix + 'makebp'
@@ -1273,6 +1277,7 @@ cmd_canceltrade = cmd_prefix + 'canceltrade'
 
 # Auction
 cmd_bid = cmd_prefix + 'bid'
+cmd_auction = cmd_prefix + 'auction'
 
 cmd_bazaar_refresh = cmd_prefix + 'refreshbazaar'
 
@@ -2989,6 +2994,29 @@ weapon_id_slimeringcan = 'slimeringcan'
 weapon_id_fingernails = 'fingernails'
 weapon_id_roomba = 'roomba'
 
+
+# FISHINGEVENT auctioneer. All placeholder
+auction_items = []
+
+fisher_day_one = datetime.date(2022, 5, 1)
+fisher_day_two = datetime.date(2022, 5, 2)
+fisher_day_three = datetime.date(2022, 5, 3)
+fisher_day_four = datetime.date(2022, 5, 4)
+fisher_day_five = datetime.date(2022, 5, 5)
+fisher_day_six = datetime.date(2022, 5, 6)
+fisher_day_seven = datetime.date(2022, 5, 7)
+
+auction_item_date_map = {
+	fisher_day_one : item_id_monsterbones,
+	fisher_day_two : item_id_bloodstone,
+	fisher_day_three : item_id_aushuckstalks,
+	fisher_day_four : item_id_banggun,
+	fisher_day_five : item_id_benwrappingpaper,
+	fisher_day_six : item_id_dye_black,
+	fisher_day_seven : item_id_beautiful_material
+}
+
+
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
                              "as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
                              "destructive capabilities that is beyond any human’s true understanding. And for its power, " \
@@ -3266,7 +3294,9 @@ actual_stds = [
     "hepatitus C",
     "mycoplasma genitalium",
     "Zika",
-    "anal warts"
+    "anal warts",
+    "penis virus",
+    "pokérus"
 ]
 
 howls = [

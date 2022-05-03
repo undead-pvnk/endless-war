@@ -80,7 +80,7 @@ CREATE TABLE markets (
 	horseman_timeofdeath int NOT NULL DEFAULT '0',
 	winner varchar(32) NOT NULL DEFAULT '',
 	total_event_points bigint NOT NULL DEFAULT '0',
-	current_bidder varchar(64) NOT NULL DEFAULT '',
+	current_bidder bigint NOT NULL DEFAULT '0',
 	current_bid bigint NOT NULL DEFAULT '0',
 	current_auction_relic varchar(64) NOT NULL DEFAULT ''
 	PRIMARY KEY (id_server)
