@@ -144,7 +144,7 @@ async def adorn(cmd):
                 if i.item_props.get("adorned") == 'true':
                     already_adorned = True
                 elif i.item_props.get("context") == 'costume' and not ewcfg.dh_active:
-                    if not ewcfg.dh_active and not ewutils.check_fursuit_active(market_data) :
+                    if not ewcfg.dh_active and ewutils.check_moon_phase(market_data) != ewcfg.moon_full:
                         response = "You can't adorn your costume right now."
                 else:
                     item_sought = i

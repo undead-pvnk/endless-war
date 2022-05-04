@@ -1510,7 +1510,7 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 
     # Organic fursuit
     if ewcfg.mutation_id_organicfursuit in user_mutations and (
-            ewutils.check_fursuit_active(market_data)
+            ewutils.check_moon_phase(market_data) == ewcfg.moon_full
     ):
         damage_mod *= 2
 
@@ -1546,7 +1546,7 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 def damage_mod_defend(shootee_data, shootee_mutations, market_data, shootee_weapon):
     damage_mod = 1
     if ewcfg.mutation_id_organicfursuit in shootee_mutations and (
-            ewutils.check_fursuit_active(market_data)
+            ewutils.check_moon_phase(market_data) == ewcfg.moon_full
     ):
         damage_mod *= 0.1
 

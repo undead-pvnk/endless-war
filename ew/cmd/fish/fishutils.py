@@ -1,4 +1,5 @@
 import random
+from tabnanny import check
 import time
 
 from ew.backend import item as bknd_item
@@ -13,6 +14,7 @@ from ew.static import weather as weather_static
 from ew.utils import item as itm_utils
 from ew.utils import poi as poi_utils
 from ew.utils.combat import EwUser
+from ew.utils.core import check_moon_phase
 
 
 class EwFisher:
@@ -135,6 +137,8 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None, secret_
         fish_pool = [fish for fish in fish_pool if fish not in static_fish.night_fish]
     elif market_data.clock < 8 or market_data.clock > 17:
         fish_pool = [fish for fish in fish_pool if fish not in static_fish.day_fish]
+        if check_moon_phase(market_data) != ewcfg.moon_special:
+            fish_pool = [fish for fish in fish_pool if fish not in static_fish.specialmoon_fish]
     else:
         for fish in fish_pool:
             if static_fish.fish_map[fish].catch_time != None:

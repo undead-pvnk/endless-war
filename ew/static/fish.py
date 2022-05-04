@@ -1127,6 +1127,15 @@ fish_list = [
         str_desc = "Formerly a mertwink, it gained its big buff bara dom daddy hot hot hot hot steamy physique from... ***STEROIDS!!!***",
         slime = "event",
     ),
+    EwFish(
+        id_fish = "greenmoonwrasse",
+        str_name = "Green Moon Wrasse",
+        rarity = "rare",
+        catch_time = "specialmoon",
+        catch_weather = None,
+        str_desc = "Its scales are only visible in cool green moonlight.",
+        slime = None,
+    ),
 ]
 
 # A map of id_fish to EwFish objects.
@@ -1144,7 +1153,7 @@ foggy_fish = []
 snow_fish = []
 night_fish = []
 day_fish = []
-
+specialmoon_fish = []
 salt_fish = []
 fresh_fish = []
 void_fish = []
@@ -1196,6 +1205,9 @@ for fish in fish_list:
         night_fish.append(fish.id_fish)
     elif fish.catch_time == "day":
         day_fish.append(fish.id_fish)
+    elif fish.catch_time == "specialmoon":
+        night_fish.append(fish.id_fish)
+        specialmoon_fish.append(fish.id_fish)
     if fish.slime == "freshwater":
         fresh_fish.append(fish.id_fish)
     elif fish.slime == "saltwater":

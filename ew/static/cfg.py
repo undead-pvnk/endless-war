@@ -1629,6 +1629,15 @@ crime_status = {
 # how often to apply weather effects
 weather_tick_length = 10
 
+# moon phase string names
+moon_new = "new" #                      
+moon_waxing_start = "waxinghorns" #       :
+moon_waxing_end = "waxingmaw" #          (:
+moon_full = "crescent" #                ((:
+moon_waning_start = "waningmandibles" # ((
+moon_waning_end = "waningsliver" #      (
+moon_special = "green" #               glows
+
 # how often to delete expired world events
 event_tick_length = 5
 

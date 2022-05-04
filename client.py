@@ -923,7 +923,7 @@ async def debugHandling(message, cmd, cmd_obj):
 
         response = "Time has progressed 1 day forward manually."
 
-        if ewutils.check_fursuit_active(market_data):
+        if ewutils.check_moon_phase(market_data) == ewcfg.moon_full:
             response += "\nIt's a full moon!"
 
         await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
@@ -938,7 +938,7 @@ async def debugHandling(message, cmd, cmd_obj):
             market_data.day += 1
             response += "\nMidnight has come. 1 day progressed forward."
 
-        if ewutils.check_fursuit_active(market_data):
+        if ewutils.check_moon_phase(market_data) == ewcfg.moon_full:
             response += "\nIt's a full moon!"
 
         market_data.persist()

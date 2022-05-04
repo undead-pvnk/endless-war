@@ -1433,7 +1433,7 @@ async def clock_tick_loop(id_server = None, force_active = False):
                     ewutils.logMsg("Handling weather cycle...")
                     await weather_utils.weather_cycle(id_server)
 
-                    if not ewutils.check_fursuit_active(market_data) and not ewcfg.dh_active: # I don't see why costumes should be dedorned automatically so, like, just removing this. It's dumb.
+                    if ewutils.check_moon_phase(market_data) != ewcfg.moon_full and not ewcfg.dh_active: # I don't see why costumes should be dedorned automatically so, like, just removing this. It's dumb.
                          await cosmetic_utils.dedorn_all_costumes()
 
                     ewutils.logMsg('Setting off alarms...')

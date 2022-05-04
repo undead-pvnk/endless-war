@@ -598,15 +598,23 @@ async def fursuit(cmd):
     mutations = user_data.get_mutations()
     market_data = EwMarket(id_server=cmd.guild.id)
 
+    # gets days until full moon
     if ewcfg.mutation_id_organicfursuit in mutations:
-        days_until = -market_data.day % 31
+        days_until = -market_data.day % 29
+        if days_until > 15:
+            days_until -= 14
+        elif days_until < 13:
+            days_until += 15
+        else:
+            days_until = 0
 
         if days_until == 0:
             response = "Hair is beginning to grow on the surface of your skin rapidly. Your canine instincts will take over soon!"
         else:
             response = "With a basic hairy palm reading, you determine that you'll be particularly powerful in {} day{}.".format(days_until, "s" if days_until != 1 else "")
 
-        if ewutils.check_fursuit_active(market_data):
+        # If there's an active full moon, tell the user that they have the associated buffs.
+        if ewutils.check_moon_phase(market_data) == ewcfg.moon_full:
             response = "The full moon shines above! Now's your chance to strike!"
 
     else:

@@ -706,13 +706,37 @@ def generate_captcha(length = 4, user_data = None):
         return generate_captcha_random(length=length_final)
 
 
+def check_moon_phase(market_data):
+    # Get the current day, accounting for the morning wrapping around
+    day = market_data.day % 29
+    if market_data.clock < 6:
+        day -= 1
+        if day == -1:
+            day = 28
 
-def check_fursuit_active(market_data):
-    if (market_data.day % 31 == 0 and market_data.clock >= 20
-            or market_data.day % 31 == 1 and market_data.clock < 6):
-        return True
-    else:
-        return False
+    # Get current moon phase.
+    if day == 0: # 1 night of the new moon
+        moon_phase = ewcfg.moon_new
+    elif day <=6: # 6 of waxing first half
+        moon_phase = ewcfg.moon_waxing_start
+    elif day <=12: # 6 of waxing second half
+        moon_phase = ewcfg.moon_waxing_end
+    elif day <=14: # 2 of full moon
+        moon_phase = ewcfg.moon_full
+    elif day <=20: # 6 of waning first half
+        moon_phase = ewcfg.moon_waning_start
+    elif day <=26: # 6 of waning second half
+        moon_phase = ewcfg.moon_waning_end
+    elif day <=27: # 1 of new moon
+        moon_phase = ewcfg.moon_new
+    else:          # inbetween the 2 nights of the new moon, have a Green Moon night.
+        moon_phase = ewcfg.moon_special
+
+    # Add "day" to the end of the string if it's daytime. Will stop any checks that don't specify for day, but can include if specified.
+    if market_data.clock >= 6 and market_data.clock < 20:
+        moon_phase += "day"
+
+    return moon_phase
 
 
 

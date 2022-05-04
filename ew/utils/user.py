@@ -31,7 +31,7 @@ def get_move_speed(user_data):
     # if (trauma != None) and (trauma.trauma_class == ewcfg.trauma_class_movespeed):
     #	move_speed *= max(0, (1 - 0.5 * user_data.degradation / 100))
 
-    if ewcfg.mutation_id_organicfursuit in mutations and ewutils.check_fursuit_active(market_data):
+    if ewcfg.mutation_id_organicfursuit in mutations and ewutils.check_moon_phase(market_data) == ewcfg.moon_full:
         move_speed *= 2
     if (
             ewcfg.mutation_id_lightasafeather in mutations or ewcfg.mutation_id_airlock) in mutations and market_data.weather == "windy":
