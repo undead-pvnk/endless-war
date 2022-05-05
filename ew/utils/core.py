@@ -738,7 +738,12 @@ def check_moon_phase(market_data):
 
     return moon_phase
 
-
+def check_ramadan(market_data):
+    day = market_data.day % 348
+    if day > 87 and day <= 116:
+        return True
+    else:
+        return False
 
 
 

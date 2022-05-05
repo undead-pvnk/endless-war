@@ -2596,6 +2596,7 @@ class EwUser(EwUserBase):
         item_props = food_item.item_props
         mutations = self.get_mutations()
         statuses = self.getStatusEffects()
+        market_data = EwMarket(id_server=self.id_server)
 
         # Find out if the item is perishable
         if item_props.get('perishable') != None:
@@ -2658,6 +2659,12 @@ class EwUser(EwUserBase):
                 if item_props.get('poisoned') == 'yes' and self.life_state != ewcfg.life_state_corpse:
                     self.die(cause=ewcfg.cause_poison)
                     response = "Oh, that food was poisoned. Nice one, idiot. Now you're dead."
+                if ewutils.check_ramadan(market_data):
+                    if market_data.clock >= 6 and market_data.clock < 20:
+                        self.die(cause=ewcfg.cause_poison)
+                        response = "You have smited ENDLESS WAR by not adhering to its holy fast. You were bone hurt beamed. And now, you're dead."
+                    else:
+                        response += "\n\nللَّهُمَّ اِنِّى لَكَ صُمْتُ وَبِكَ امنْتُ وَعَليْكَ تَوَكّلتُ وَ عَلى رِزْقِكَ اَفْطَرْتُ"
 
             except:
                 # An exception will occur if there's no id_food prop in the database. We don't care.

@@ -83,6 +83,10 @@ async def post_leaderboards(client = None, server = None):
         topfavor = make_statdata_board(server=server.id, category='sacrificerate', title =ewcfg.leaderboard_sacrificial)
         resp_cont.add_channel_response(leaderboard_channel, topfavor)
 
+    if ewutils.check_ramadan(market_data=market):
+        topslimesmined = make_statdata_board(server=server.id, category=ewcfg.stat_slimesmined, title=ewcfg.leaderboard_slimesmined)
+        resp_cont.add_channel_response(leaderboard_channel, topslimesmined)
+
     total_residue = "{} ▓▓▓▓▓ CITYWIDE SPICE FLOW ▓▓▓▓▓ {}\n{} `{:_>15} | NLACakaNM`".format(ewcfg.emote_slimeshot, ewcfg.emote_slimeshot, ewcfg.emote_nlacakanm, market.total_event_points)
     resp_cont.add_channel_response(leaderboard_channel, total_residue)
 
@@ -701,6 +705,10 @@ def board_header(title):
 
     elif title == ewcfg.leaderboard_kingpindonated:
         emote = "👑"
+        bar += " "
+
+    elif title == ewcfg.leaderboard_slimesmined:
+        emote = "🕌"
         bar += " "
 
     elif title == ewcfg.leaderboard_fishers: # FISHINGEVENT

@@ -2396,6 +2396,8 @@ leaderboard_gambit_low = "LOWEST GAMBIT"
 leaderboard_sacrificial = "SACRIFICIAL LAMBS"
 leaderboard_lifetimekills = "LIFETIME KILLS"
 leaderboard_lifetimedeaths = "BIGGEST VICTIMS"
+# RAMADAN
+leaderboard_slimesmined = "FASTIEST FASTERS"
 # FISHINGEVENT - most event points currently
 leaderboard_fishers = "RESIDUE RECALCITRANTS"
 
