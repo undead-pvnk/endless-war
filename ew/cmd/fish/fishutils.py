@@ -146,7 +146,7 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None, secret_
 
     # Pier type exclusive fish
     if fisher.pier.pier_type == "freshwater":
-        fish_pool = [fish for fish in fish_pool if fish not in static_fish.salt_fish and fish not in static_fish.void_fish]
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.salt_fish and fish not in static_fish.void_fish and fish not in static_fish.event_fish]
     elif fisher.pier.pier_type == "saltwater":
         # FISHINGEVENT - Event fish pool overwrites saltwater fish pool.
         if eventfishing:

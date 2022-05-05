@@ -925,12 +925,14 @@ def weather_txt(market_data):
     displaytime = str(time_current)
     ampm = ''
 
+    # Get the text for the display time in 12-hour time
     if time_current <= 12:
         ampm = 'AM'
     if time_current > 12:
         displaytime = str(time_current - 12)
         ampm = 'PM'
 
+    # If it's noon or midnight, display that special text.
     if time_current == 0:
         displaytime = 'midnight'
         ampm = ''
@@ -938,6 +940,7 @@ def weather_txt(market_data):
         displaytime = 'high noon'
         ampm = ''
 
+    # Get flavor text for the weather and corresponding time of day.
     flair = ''
     weather_data = weather_static.weather_map.get(market_data.weather)
     if weather_data != None:
@@ -948,7 +951,22 @@ def weather_txt(market_data):
         if time_current >= 18 and time_current <= 19:
             flair = weather_data.str_sunset
         if time_current >= 20 or time_current <= 5:
-            flair = weather_data.str_night
+            moonphase = check_moon_phase(market_data)
+            # If it's nighttime, get the moon phase that corresponds with the weather.
+            if moonphase == ewcfg.moon_new:
+                flair = weather_data.str_night_new
+            elif moonphase == ewcfg.moon_waxing_start:
+                flair = weather_data.str_night_waxing_start
+            elif moonphase == ewcfg.moon_waxing_end:
+                flair = weather_data.str_night_waxing_end
+            elif moonphase == ewcfg.moon_full:
+                flair = weather_data.str_night_full
+            elif moonphase == ewcfg.moon_waning_start:
+                flair = weather_data.str_night_waning_start
+            elif moonphase == ewcfg.moon_waning_end:
+                flair = weather_data.str_night_waning_end
+            else:
+                flair = weather_data.str_night_special
 
     response += "It is currently {}{} in NLACakaNM.{}".format(displaytime, ampm, (' ' + flair))
     return response
