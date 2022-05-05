@@ -283,14 +283,11 @@ async def haunt(cmd):
                 if weather_static.weather_map.get(market_data.weather) == ewcfg.weather_foggy:
                     haunt_power_multiplier *= 1.1
                 if ewutils.check_moon_phase == ewcfg.moon_new:
-                    haunt_power_multiplier *= 1.5
-                if ewutils.check_moon_phase == ewcfg.moon_special:
                     haunt_power_multiplier *= 2
+                if ewutils.check_moon_phase == ewcfg.moon_special:
+                    haunt_power_multiplier *= 2.5
                 if not haunted_data.has_soul:
                     haunt_power_multiplier *= 1.2
-                # uncomment this after moon mechanics update
-                # if (market_data.day % 31 == 15 and market_data.clock >= 20) or (market_data.day % 31 == 16 and market_data.clock <= 6):
-                # 	haunt_power_multiplier *= 2
 
                 # divide haunt power by 2 if not in same area
                 if user_data.poi != haunted_data.poi:
