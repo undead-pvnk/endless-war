@@ -1667,12 +1667,18 @@ async def watch(cmd):
     else:
         user_model.persist()
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You begin watching TV."))
+        ewutils.active_televisions[user_id] = ewutils.tv_counter
+        current_counter = ewutils.tv_counter
+        ewutils.tv_counter += 1
+
         for x in range(0, 62):
             await asyncio.sleep(300)
             # await asyncio.sleep(1)
             user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)
             item_sought = bknd_item.find_item(id_user=str(user_id) + ewcfg.compartment_id_decorate, id_server=player_model.id_server, item_search="television")
-            if user_model.poi == poi and user_model.time_last_action > (int(time.time()) - ewcfg.time_kickout) and item_sought:
+            if current_counter != ewutils.active_televisions[user_id]:
+                return
+            elif user_model.poi == poi and user_model.time_last_action > (int(time.time()) - ewcfg.time_kickout) and item_sought:
                 await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, random.choice(comm_cfg.tv_lines)))
             else:
                 if user_model.time_last_action <= (int(time.time()) - ewcfg.time_kickout):

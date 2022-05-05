@@ -47,6 +47,9 @@ path_ssod = {}
 
 active_slimeoidbattles = {}
 
+active_televisions = {}
+
+tv_counter  = 0
 
 class EwVector2D:
     vector = [0, 0]
