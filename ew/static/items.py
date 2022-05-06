@@ -3606,6 +3606,72 @@ furniture_list = [
         furniture_look_desc = "A trophy covered with vines and lichen is posed as the centerpiece of the room.",
     ),
     EwFurniture(
+        id_furniture = "nmspennant",
+        str_name = "NMS pennant",
+        str_desc = "A cheap felt pennant for Neo Milwaukee State, presumably given free to every NMS freshman preparing for their upcoming year. Loads of these end up in the garbage, but this one ended up with you.",
+        rarity = "Promotional",
+        price = 60,
+        vendors = ['Bailey the NMS Drug-Guy'],
+        furniture_place_desc = "You hang the Neo Milwaukee State pennant on your wall. It lowers the vibe of your room slightly.",
+        furniture_look_desc = "There's a pennant on your wall with NMS emblazoned on it.",
+        furn_set = "NMS",
+    ),
+    EwFurniture(
+        id_furniture = "nmschair",
+        str_name = "NMS chair",
+        str_desc = "A cheap wooden two-position chair. It's surprisingly good for the price.",
+        rarity = "Promotional",
+        price = 150,
+        vendors = ['Bailey the NMS Drug-Guy'],
+        furniture_place_desc = "You place the NMS chair near a desk. Make sure you don't sit in it too fast!",
+        furniture_look_desc = "There's a Neo Milwaukee State two-position chair set up near a desk.",
+        furn_set = "NMS",
+    ),
+    EwFurniture(
+        id_furniture = "nmsbedsheets",
+        str_name = "NMS bedsheets",
+        str_desc = "Some thin bedsheets with Neo Milwaukee State printed on them. They're horrible.",
+        rarity = "Promotional",
+        price = 100,
+        vendors = ['Bailey the NMS Drug-Guy'],
+        furniture_place_desc = "You place the Neo Milwaukee State bedsheets on the floor.",
+        furniture_look_desc = "There's some Neo Milwaukee State bedsheets on the floor.",
+        furn_set = "NMS",
+    ),
+    EwFurniture(
+        id_furniture = "nmshotplate",
+        str_name = "NMS hotplate (illegal)",
+        str_desc = "A hotplate. Nothing about it makes it Neo Milwaukee State related, other than that it's fucking ILLEGAL in their dorms. If you use it, you're a **criminal!**",
+        rarity = "Promotional",
+        price = 300,
+        vendors = ['Bailey the NMS Drug-Guy'],
+        furniture_place_desc = "You put the hotplate deep in your closet. Can't have anybody finding out about this.",
+        furniture_look_desc = "There's a hotplate in the back of the closet.",
+        furn_set = "NMS",
+    ),
+    EwFurniture(
+        id_furniture = "nmsdesk",
+        str_name = "NMS desk",
+        str_desc = "A Neo Milwaukee State desk. From the nameplate embedded on it, you can tell this was stolen from the library. Nice job, Robin Hood!",
+        rarity = "Promotional",
+        price = 210,
+        vendors = ['Bailey the NMS Drug-Guy'],
+        furniture_place_desc = "Putting the Neo Milwaukee State desk against the wall, you seriously begin wondering why you'd ever want a desk from a college library in your apartment.",
+        furniture_look_desc = "There's a Neo Milwaukee State desk against the wall.",
+        furn_set = "NMS",
+    ),
+    EwFurniture(
+        id_furniture = "nmsdiploma",
+        str_name = "NMS diploma",
+        str_desc = "A Neo Milwaukee State diploma. Lord knows where this came from, it's sure as hell not yours.",
+        rarity = "Promotional",
+        price = 800,
+        vendors = ['Bailey the NMS Drug-Guy'],
+        furniture_place_desc = "You delicately place the rightfully-earned Neo Milwaukee State diploma on your wall.",
+        furniture_look_desc = "There's a Neo Milwaukee State diploma hung on the wall.",
+        furn_set = "NMS",
+    ),
+    EwFurniture(
         id_furniture="scalpcollection",
         str_name="scalp collection",
         str_desc="{scalp_inspect}",
@@ -3676,6 +3742,7 @@ furniture_slimecorp = []
 furniture_seventies = []
 furniture_shitty = []
 furniture_instrument = []
+furniture_NMS = []
 furniture_specialhue = []
 furniture_collection = []
 
@@ -3704,6 +3771,8 @@ for furniture in furniture_list:
         furniture_shitty.append(furniture.id_furniture)
     elif furniture.furn_set == "instrument":
         furniture_instrument.append(furniture.id_furniture)
+    elif furniture.furn_set == "NMS":
+        furniture_NMS.append(furniture.id_furniture)
     elif furniture.furn_set == "specialhue":
         furniture_specialhue.append(furniture.id_furniture)
     elif furniture.furn_set == "collection":

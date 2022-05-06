@@ -24,6 +24,7 @@ from ew.static import mutations as static_mutations
 from ew.static import poi as poi_static
 from ew.static import status as se_static
 from ew.static import vendors
+from ew.static import cosmetics as static_cosmetics
 
 from ew.backend.player import EwPlayer
 
@@ -203,11 +204,15 @@ async def data(cmd):
         )
         adorned_cosmetics = []
 
+        # A list of all adorned cosmetics' ids
+        cosmetic_id_list = []
+
         for cosmetic in cosmetics:
             cos = EwItem(id_item=cosmetic.get('id_item'))
             if cos.item_props['adorned'] == 'true':
                 hue = hue_static.hue_map.get(cos.item_props.get('hue'))
                 adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
+                cosmetic_id_list.append(cos.item_props['id_cosmetic'])
 
         poi = poi_static.id_to_poi.get(user_data.poi)
         if poi != None:
@@ -303,9 +308,13 @@ async def data(cmd):
             outfit_map = itm_utils.get_outfit_info(id_user=cmd.message.author.id, id_server=cmd.guild.id)
             user_data.persist()
 
-            if outfit_map is not None:
+            # If user is wearing all pieces of the NMS mascot costume, add text 
+            if all(elem in cosmetic_id_list for elem in static_cosmetics.cosmetic_nmsmascot):
+                response_block += "You're dressed like a fucking airplane with tits, dude. "
+            # Otherwise, generate response text for freshness and style.
+            elif outfit_map is not None:
                 response_block += itm_utils.get_style_freshness_rating(user_data=user_data, dominant_style=outfit_map['dominant_style']) + " "
-
+            
         if user_data.hunger > 0:
             response_block += "You are {}% hungry. ".format(
                 round(user_data.hunger * 100.0 / user_data.get_hunger_max(), 1)
@@ -1244,8 +1253,12 @@ async def fashion(cmd):
 
                 outfit_map = itm_utils.get_outfit_info(id_user=cmd.message.author.id, id_server=cmd.guild.id)
                 user_data.persist()
-
-                if outfit_map is not None:
+                
+                # If user is wearing all pieces of the NMS mascot costume, add text 
+                if all(elem in adorned_ids for elem in static_cosmetics.cosmetic_nmsmascot):
+                    response += "You're dressed like a fucking airplane with tits, dude."
+                
+                elif outfit_map is not None:
                     response += itm_utils.get_style_freshness_rating(user_data=user_data, dominant_style=outfit_map['dominant_style'])
 
             response += " Your total freshness rating is {}.\n\n".format(user_data.freshness)
@@ -1333,7 +1346,10 @@ async def fashion(cmd):
             if len(adorned_cosmetics) >= 2:
                 response += "\n\n"
 
-                if user_data.freshness < ewcfg.freshnesslevel_1:
+                # If user is wearing all pieces of the NMS mascot costume, add text 
+                if all(elem in adorned_ids for elem in static_cosmetics.cosmetic_nmsmascot):
+                    response += "They're dressed like a fucking airplane with tits, dude."
+                elif user_data.freshness < ewcfg.freshnesslevel_1:
                     response += "Their outfit is starting to look pretty fresh, but They’ve got a long way to go if they wanna be NLACakaNM’s next top model."
                 elif user_data.freshness < ewcfg.freshnesslevel_2:
                     response += "Their outfit is low-key on point, not gonna lie. They’re goin’ places, kid."

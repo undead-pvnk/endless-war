@@ -1,4 +1,5 @@
 import asyncio
+import time
 
 from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
@@ -167,6 +168,7 @@ async def adorn(cmd):
             # If you have enough space, adorn
             else:
                 item_sought.item_props['adorned'] = 'true'
+                ability = item_sought.item_props['ability']
 
                 # Take the hat from your slimeoid if necessary
                 if item_sought.item_props.get('slimeoid') == 'true':
@@ -175,6 +177,15 @@ async def adorn(cmd):
                 else:
                     onadorn_response = item_sought.item_props['str_onadorn']
                     response = onadorn_response.format(item_sought.item_props['cosmetic_name'])
+
+                # Cosmetics with these abilities will turn you into a furry
+                if ability in ['nmsmascot', 'furry', 'moonlighter']:
+                    user_data.race = ewcfg.race_furry
+                    time_now = int(time.time())
+                    user_data.time_racialability = time_now + ewcfg.cd_change_race
+                    # Only certain will get extra flavor text
+                    if ability in ['moonlighter', 'furry']:
+                        response += " ...You feel yourself becoming... furpilled?"
 
                 item_sought.persist()
                 user_data.persist()

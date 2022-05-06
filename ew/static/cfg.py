@@ -2642,7 +2642,7 @@ vendor_breakroom = "The Breakroom"  # Security officers can order items here for
 vendor_rpcity = "RP City"  # Double halloween costume store
 
 # Temporary Exotic Residue vendor for FISHINGEVENT
-vendor_NMSdealer = "Neo Milwaukee State Not-A-Drug-Dealer Drug Dealer"
+vendor_NMSdealer = "Bailey the NMS Drug-Guy"
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
@@ -3381,9 +3381,11 @@ soul_durability = 100000000  # 100 mega
 
 cosmetic_id_raincoat = "raincoat"
 
-cosmeticAbility_id_lucky = "lucky"
+cosmeticAbility_id_lucky = "lucky" 
 cosmeticAbility_id_boost = "boost"  # Not in use. Rollerblades have this ability.
-cosmeticAbility_id_clout = "clout"
+cosmeticAbility_id_clout = "clout" 
+cosmeticAbility_id_nmsmascot = "nmsmascot" # Used to track whether you're wearing any mascot pieces.
+cosmeticAbility_id_furry = "furry"
 
 # Slimeoid attributes.
 slimeoid_strat_attack = "attack"

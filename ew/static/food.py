@@ -2051,10 +2051,10 @@ food_list = [
     EwFood(
         id_food="druggumbo",
         alias=['gumbo', 'drugbucket'],
-        recover_hunger=20,
+        recover_hunger=1000,
         price=30,
         str_name="drug gumbo",
-        vendors=['Neo Milwaukee State Not-A-Drug-Dealer Drug Dealer'],
+        vendors=['Bailey the NMS Drug-Guy'],
         str_eat="You chug the dumbo jumbo columbo gumbo bucket filled with DRUGS. Delicioso!",
         inebriation=10,
         str_desc="A jumbo gumbo bucket just FILLED with drugs. This is definitely not good for you.",

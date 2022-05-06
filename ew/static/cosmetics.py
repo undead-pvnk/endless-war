@@ -812,6 +812,7 @@ cosmetic_items_list = [
         rarity = "Patrician",
         durability = 2500000,
         style = "beautiful",
+        ability = "furry",
         freshness = 2,
         price = 100000000,
         vendors = ['bazaar', 'Secret Bodega'],
@@ -1342,6 +1343,77 @@ cosmetic_items_list = [
         freshness = 10, # Actually variable, depending on slimeoid's freshness when created ingame. Max of 10.
     ),
     EwCosmeticItem(
+        id_cosmetic = "nmsmascothead",
+        str_name = "NMS Mascot Head",
+        str_desc = "A mascot head, fashioned to look like the front of an airplane. It's got a little twirly bit at the top.",
+        str_onadorn = "You put on the mascot head. **Ptch-ooooooo!!!!**",
+        str_unadorn = "You take off the mascot head. **BHHOOOOMMMM!!!!**",
+        rarity = "Promotional",
+        ability = "nmsmascot",
+        durability = 2500000,
+        style = "smart",
+        freshness = 3,
+        price = 300,
+        vendors = ['Bailey the NMS Drug-Guy'],
+        is_hat = True,
+    ),
+    EwCosmeticItem(
+        id_cosmetic = "nmsmascottorso",
+        str_name = "NMS Mascot Torso",
+        str_desc = "A mascot torso, fashioned to look like the fuselage of an airplane. There's a boob window showing a pair of airplane breasts, though.",
+        str_onadorn = "You put on the mascot torso. **Fwhheeeeeee!!!!**",
+        str_unadorn = "You take off the mascot torso. **BHHOOOOMMMM!!!!**",
+        rarity = "Promotional",
+        ability = "nmsmascot",
+        durability = 2500000,
+        style = "cute",
+        freshness = 3,
+        price = 500,
+        vendors = ['Bailey the NMS Drug-Guy'],
+    ),
+    EwCosmeticItem(
+        id_cosmetic = "nmsmascotlegs",
+        str_name = "NMS Mascot Legs",
+        str_desc = "A pair of mascot legs, fashioned to look like the tail of an airplane. The resemblance is uncanny.",
+        str_onadorn = "You put on the mascot legs. **Fhhhfhhhfhhhfhhhfhhh!!!!**",
+        str_unadorn = "You take off the mascot legs. **BHHOOOOMMMM!!!!**",
+        rarity = "Promotional",
+        ability = "nmsmascot",
+        durability = 2500000,
+        style = "tough",
+        freshness = 3,
+        price = 400,
+        vendors = ['Bailey the NMS Drug-Guy'],
+    ),
+    EwCosmeticItem(
+        id_cosmetic = "nmsmascotwings",
+        str_name = "NMS Mascot Wings",
+        str_desc = "A pair of mascot wings, fashioned to look an airplane's. They're incredibly heavy, sure to give you back problems.",
+        str_onadorn = "You put on the mascot wings. **Whhhhhhhhhhhhiiiiiiirrrrrrrrrrrrr!!!**",
+        str_unadorn = "You take off the mascot wings. **BHHOOOOMMMM!!!!**",
+        rarity = "Promotional",
+        ability = "nmsmascot",
+        durability = 2500000,
+        style = "cool",
+        freshness = 3,
+        price = 700,
+        vendors = ['Bailey the NMS Drug-Guy'],
+    ),
+    EwCosmeticItem(
+        id_cosmetic = "nmsmascotwheels",
+        str_name = "NMS Mascot Wheels",
+        str_desc = "A pair of mascot wheels, designed to clip on to your shoes. They make walking a complete *plane*.",
+        str_onadorn = "You put on the mascot wheels. **Rrhrhrhrhrhrhrhrhrh!!!!**",
+        str_unadorn = "You take off the mascot wheels. **BHHOOOOMMMM!!!!**",
+        rarity = "Promotional",
+        ability = "nmsmascot",
+        durability = 2500000,
+        style = "beautiful",
+        freshness = 3,
+        price = 450,
+        vendors = ['Bailey the NMS Drug-Guy'],
+    ),
+    EwCosmeticItem(
         id_cosmetic = "programmersocks",
         str_name = "Programmer Socks",
         str_desc = "Long stripey socks that programmers wear when they inevitably come out as trans. Oddly rare around here...",
@@ -1360,7 +1432,12 @@ cosmetic_map = {}
 # A list of cosmetic names.
 cosmetic_names = []
 
+# A list of grouped cosmetics
+cosmetic_nmsmascot = []
+
 # Populate cosmetic map.
 for cosmetic in cosmetic_items_list:
     cosmetic_map[cosmetic.id_cosmetic] = cosmetic
     cosmetic_names.append(cosmetic.id_cosmetic)
+    if cosmetic.ability == "nmsmascot":
+        cosmetic_nmsmascot.append(cosmetic.id_cosmetic)
