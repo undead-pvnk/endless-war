@@ -71,6 +71,8 @@ cmd_map = {
 
     # Dueling
     cfg.cmd_duel: wepcmds.duel,
+    cfg.cmd_brandish:wepcmds.brandish
+
 
 }
 

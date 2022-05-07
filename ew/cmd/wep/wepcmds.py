@@ -753,6 +753,22 @@ async def suicide(cmd):
     await resp_cont.post()
 
 
+async def brandish(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.weapon > 0:
+        weapon = EwItem(id_item=user_data.weapon)
+        weapon_obj = static_weapons.weapon_map.get(weapon.item_props.get("weapon_type"))
+        if len(weapon.item_props.get('weapon_name')) <= 0:
+            weapon_name = "{}{}".format('their ', weapon_obj.str_name)
+        else:
+            weapon_name = weapon.item_props.get('weapon_name')
+
+        response = weapon_obj.str_brandish.format(weapon=weapon_name, name = cmd.message.author.display_name, tag = user_data.spray)
+    else:
+        response = "{} flips the bird!".format(cmd.message.author.display_name)
+    return await fe_utils.send_message(cmd.client, cmd.message.channel,fe_utils.formatMessage(cmd.message.author, response))
+
+
 """ Player spars with a friendly player to gain slime. """
 
 

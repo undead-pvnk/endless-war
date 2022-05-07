@@ -1968,6 +1968,7 @@ async def lol(cmd):
 
 
 
+
 async def pray(cmd):
     user_data = EwUser(member=cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
