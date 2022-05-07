@@ -4,8 +4,6 @@ from . import mutationcmds
 cmd_map = {
 
     # Setting mutations
-    ewcfg.cmd_reroll_mutation: mutationcmds.reroll_last_mutation,
-    ewcfg.cmd_clear_mutations: mutationcmds.clear_mutations,
     ewcfg.cmd_chemo: mutationcmds.chemo,
     ewcfg.cmd_graft: mutationcmds.graft,
 

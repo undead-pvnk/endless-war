@@ -258,7 +258,6 @@ async def attack(cmd):
                     target.trauma = ewcfg.trauma_id_betrayal
                 else:
                     target.trauma = attacker_weapon.id_weapon
-                #target.degradation = 0 if ctn.vax else target.degradation
 
                 target.id_killer = attacker.id_user
 
@@ -721,7 +720,6 @@ async def suicide(cmd):
 
             sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=user_data.id_server)
             sewer_data.change_slimes(n=slimes_drained)
-            # print(sewer_data.degradation)
             sewer_data.persist()
 
             district_data = EwDistrict(district=user_data.poi, id_server=cmd.guild.id)
@@ -1023,12 +1021,6 @@ async def marry(cmd):
         response = "Ah, to recapture the magic of the first nights together… Sadly, those days are far behind you now. You’ve already had your special day, now it’s time to have the same boring days forever. Aren’t you glad you got married??"
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     else:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         marriage_line = 0
         time_now = int(time.time())
@@ -1134,13 +1126,7 @@ async def divorce(cmd):
     elif user_data.life_state == ewcfg.life_state_juvenile:
         response = "The Dojo Master offers annulment services to paying customers only. Enlist in a gang and he'll consider removing you from your hellish facade of a relationship."
     else:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
         weapon_name = weapon_item.item_props.get("weapon_name") if len(weapon_item.item_props.get("weapon_name")) > 0 else weapon.str_weapon
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         response = "Are you sure you want to divorce {}? The Dojo Master will take back weapon after the proceedings and it will be gone. **Forever**. Oh yeah, and the divorce courts around here are pretty harsh so expect to kiss at least half of your slimecoin goodbye.\n**!accept to continue, or !refuse to back out**".format(weapon.str_weapon)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -1206,16 +1192,6 @@ async def taunt(cmd):
     if target_data == None:
         response = "ENDLESS WAR didn't understand that name."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    else:
-        try:
-            if (target_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_enlisted]) or (target_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler):
-                response = "Hey ASSHOLE! They're on your side!!"
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-            elif (target_data.enemyclass == ewcfg.enemy_class_shambler and target_data.gvs_coord not in ewcfg.gvs_coords_end):
-                response = "It's no use, they're too far away!"
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        except:
-            pass
 
     if target_data.poi != user_data.poi:
         response = "You can't {} someone, who's not even here.".format(cmd.tokens[0])
@@ -1264,16 +1240,6 @@ async def aim(cmd):
     if target_data == None:
         response = "ENDLESS WAR didn't understand that name."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    else:
-        try:
-            if (target_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_enlisted]) or (target_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler):
-                response = "Hey ASSHOLE! They're on your side!!"
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-            elif (target_data.enemyclass == ewcfg.enemy_class_shambler and target_data.gvs_coord not in ewcfg.gvs_coords_end):
-                response = "It's no use, they're too far away!"
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        except:
-            pass
 
     if target_data.poi != user_data.poi:
         response = "You can't {} at someone, who's not even here.".format(cmd.tokens[0])
@@ -1318,16 +1284,6 @@ async def dodge(cmd):
     if target_data == None:
         response = "ENDLESS WAR didn't understand that name."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    else:
-        try:
-            if (target_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_enlisted]) or (target_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler):
-                response = "Hey ASSHOLE! They're on your side!!"
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-            elif (target_data.enemyclass == ewcfg.enemy_class_shambler and target_data.gvs_coord not in ewcfg.gvs_coords_end):
-                response = "It's no use, they're too far away!"
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        except:
-            pass
 
     if target_data.poi != user_data.poi:
         response = "You can't {} someone, who's not even here.".format(cmd.tokens[0])

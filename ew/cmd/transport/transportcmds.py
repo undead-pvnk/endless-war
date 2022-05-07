@@ -24,11 +24,6 @@ async def embark(cmd):
 
     user_data = EwUser(member=cmd.message.author)
     poi = poi_static.id_to_poi.get(user_data.poi)
-    district_data = EwDistrict(district=poi.id_poi, id_server=cmd.guild.id)
-
-    if district_data.is_degraded():
-        response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     response = ""
 
@@ -77,7 +72,7 @@ async def embark(cmd):
             # check if one of the vehicles at the stop matches up with the line, the user wants to board
             if transport_data.current_line == transport_line.id_line:
                 ticket = None
-                # TODO remove after double halloween
+
                 if ewcfg.dh_active:
                     user_data = EwUser(member = cmd.message.author)
                     if user_data.poi in [ewcfg.poi_id_dt_subway_station, ewcfg.poi_id_rr_subway_station, ewcfg.poi_id_jr_subway_station]:

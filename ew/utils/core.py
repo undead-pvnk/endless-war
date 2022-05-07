@@ -542,7 +542,6 @@ def sap_max_bylevel(slimelevel):
 
 
 def hunger_max_bylevel(slimelevel, has_bottomless_appetite = 0):
-    # note that when you change this formula, you'll also have to adjust its sql equivalent in pushupServerHunger
     mult = 1
     if has_bottomless_appetite == 1:
         mult = 2

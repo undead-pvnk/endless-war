@@ -987,7 +987,6 @@ poi_list = [
 		pvp = False,
 		is_subzone = True,
 		mother_districts = ['downtown'],
-		max_degradation = 10000000,
 		neighbors = {'downtown': 20},
 		wikipage = "https://rfck.miraheze.org/wiki/Downtown_NLACakaNM#ENDLESS_WAR",
 	),

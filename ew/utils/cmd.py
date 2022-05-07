@@ -136,18 +136,6 @@ def gen_data_text(
             response = "{} is a {}level {} {}shambler.".format(display_name, race_prefix, user_data.slimelevel, race_suffix)
         else:
             response = "{} is a {}level {} {}slime{}.".format(display_name, race_prefix, user_data.slimelevel, race_suffix, user_data.gender)
-            """if user_data.degradation < 20:
-                pass
-            elif user_data.degradation < 40:
-                response += " Their bodily integrity is starting to slip."
-            elif user_data.degradation < 60:
-                response += " Their face seems to be melting and they periodically have to put it back in place."
-            elif user_data.degradation < 80:
-                response += " They are walking a bit funny, because their legs are getting mushy."
-            elif user_data.degradation < 100:
-                response += " Their limbs keep falling off. It's really annoying."
-            else:
-                response += " They almost look like a shambler already."""
 
         coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)
 

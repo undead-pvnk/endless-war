@@ -200,10 +200,7 @@ def get_enemies_look_resp(user_data, district_data):
             found_enemy_data = EwEnemy(id_enemy=enemies_in_district[i])
 
             if found_enemy_data.identifier != '':
-                if not ewcfg.gvs_active:
                     identifier_text = " {}".format(":regional_indicator_{}:".format(found_enemy_data.identifier.lower()))
-                else:
-                    identifier_text = " {}, ({})".format(":regional_indicator_{}:".format(found_enemy_data.identifier.lower()), found_enemy_data.gvs_coord)
             else:
                 identifier_text = ""
 
@@ -218,10 +215,7 @@ def get_enemies_look_resp(user_data, district_data):
         final_enemy_data = EwEnemy(id_enemy=enemies_in_district[num_enemies - 1])
 
         if final_enemy_data.identifier != '':
-            if not ewcfg.gvs_active:
-                identifier_text = " {}".format(":regional_indicator_{}:".format(final_enemy_data.identifier.lower()))
-            else:
-                identifier_text = " {}, ({})".format(":regional_indicator_{}:".format(final_enemy_data.identifier.lower()), final_enemy_data.gvs_coord)
+            identifier_text = " {}".format(":regional_indicator_{}:".format(final_enemy_data.identifier.lower()))
         else:
             identifier_text = ""
 

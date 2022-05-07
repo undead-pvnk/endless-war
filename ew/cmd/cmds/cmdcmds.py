@@ -224,29 +224,12 @@ async def data(cmd):
             race_prefix = ""
             race_suffix = ""
 
-
-
         if user_data.life_state == ewcfg.life_state_corpse:
             response += "You are a {}level {} {}dead{}.".format(race_prefix, user_data.slimelevel, race_suffix, user_data.gender)
         elif user_data.life_state == ewcfg.life_state_shambler:
             response += "You are a {}level {} {}shambler.".format(race_prefix, user_data.slimelevel, race_suffix)
         else:
             response += "You are a {}level {} {}slime{}.".format(race_prefix, user_data.slimelevel, race_suffix, user_data.gender)
-
-            """if user_data.degradation < 20:
-
-                pass
-            elif user_data.degradation < 40:
-                response += " Your bodily integrity is starting to slip."
-            elif user_data.degradation < 60:
-                response += " Your face seems to be melting and you periodically have to put it back in place."
-            elif user_data.degradation < 80:
-                response += " You are walking a bit funny, because your legs are getting mushy."
-            elif user_data.degradation < 100:
-                response += " Your limbs keep falling off. It's really annoying."
-            else:
-                response += " You almost look like a shambler already."""
-
 
         if user_data.has_soul == 0:
             response += " You have no soul."
@@ -1077,12 +1060,7 @@ async def purify(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if user_data.poi == ewcfg.poi_id_sodafountain:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         if user_data.life_state == ewcfg.life_state_corpse:
             response = "You're too ghastly for something like that. Besides, you couldn't even touch the water if you wanted to, it would just phase right through your ghostly form."
         else:
@@ -1468,12 +1446,6 @@ async def recycle(cmd):
         response = "You can only {} your trash at the Recycling Plant in Smogsburg.".format(cmd.tokens[0])
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-    poi = poi_static.id_to_poi.get(user_data.poi)
-    district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-    if district_data.is_degraded():
-        response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
     item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
@@ -1976,13 +1948,6 @@ async def pray(cmd):
 
     if cmd.message.channel.name != ewcfg.channel_endlesswar:
         response = "You must be in the presence of your lord if you wish to pray to him."
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-    poi = poi_static.id_to_poi.get(user_data.poi)
-    district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-    if district_data.is_degraded():
-        response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if len(cmd.mention_ids) == 0:

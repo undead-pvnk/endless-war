@@ -1,18 +1,12 @@
 import random
 import time
 
-from . import core as ewutils
-from . import frontend as fe_utils
 from . import slimeoid as slimeoid_utils
 from .district import EwDistrict
 from .frontend import EwResponseContainer
-from ..backend import core as bknd_core
-from ..backend import hunting as bknd_hunt
 from ..backend.hunting import EwEnemyBase as EwEnemy
-from ..backend.hunting import EwOperationData
 from ..backend.market import EwMarket
 from ..static import cfg as ewcfg
-from ..static import items as static_items
 from ..static import poi as poi_static
 
 
@@ -29,11 +23,9 @@ def spawn_enemy(
         pre_chosen_initialslimes = None,
         pre_chosen_poi = None,
         pre_chosen_identifier = None,
-        # pre_chosen_hardened_sap = None,
         pre_chosen_weather = None,
         pre_chosen_faction = None,
         pre_chosen_owner = None,
-        pre_chosen_coord = None,
         pre_chosen_rarity = None,
         pre_chosen_props = None,
         manual_spawn = False,
@@ -153,7 +145,6 @@ def spawn_enemy(
         enemy.weathertype = ewcfg.enemy_weathertype_normal if pre_chosen_weather is None else pre_chosen_weather
         enemy.faction = '' if pre_chosen_faction is None else pre_chosen_faction
         enemy.owner = -1 if pre_chosen_owner is None else pre_chosen_owner
-        enemy.gvs_coord = '' if pre_chosen_coord is None else pre_chosen_coord
         enemy.rare_status = enemy.rare_status if pre_chosen_rarity is None else pre_chosen_rarity
 
         if pre_chosen_weather != ewcfg.enemy_weathertype_normal:

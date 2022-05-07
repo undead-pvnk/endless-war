@@ -245,22 +245,6 @@ async def on_ready():
 
     ewutils.logMsg("finished landmark precomputation")
 
-
-    # Look for a Twitch client_id on disk.
-    # FIXME debug - temporarily disable Twitch integration
-    if False:
-        twitch_client_id = ewutils.getTwitchClientId()
-
-    # If no twitch client ID is available, twitch integration will be disabled.
-    # FIXME debug - temporarily disable Twitch integration.
-    if True:
-        twitch_client_id = None
-        ewutils.logMsg('Twitch integration disabled.')
-    elif twitch_client_id == None or len(twitch_client_id) == 0:
-        ewutils.logMsg('No twitch_client_id file found. Twitch integration disabled.')
-    else:
-        ewutils.logMsg("Enabled Twitch integration.")
-
     # Channels in the connected discord servers to announce to.
     channels_announcement = []
 
@@ -320,19 +304,15 @@ async def on_ready():
             # call the constructor to create an entry if it doesnt exist yet
             dist = EwDistrict(id_server=server.id, district=poi)
             # change the ownership to the faction that's already in control to initialize topic names
-            try:
                 # initialize gang bases
-                if poi == ewcfg.poi_id_rowdyroughhouse:
-                    dist.controlling_faction = ewcfg.faction_rowdys
-                elif poi == ewcfg.poi_id_copkilltown:
-                    dist.controlling_faction = ewcfg.faction_killers
+            if poi == ewcfg.poi_id_rowdyroughhouse:
+                dist.controlling_faction = ewcfg.faction_rowdys
+            elif poi == ewcfg.poi_id_copkilltown:
+                dist.controlling_faction = ewcfg.faction_killers
 
-                resp_cont = dist.change_ownership(new_owner=dist.controlling_faction, actor="init", client=client)
-                dist.persist()
-                await resp_cont.post()
-
-            except:
-                ewutils.logMsg('Could not change ownership for {} to "{}".'.format(poi, dist.controlling_faction))
+            resp_cont = dist.change_ownership(new_owner=dist.controlling_faction, actor="init", client=client)
+            dist.persist()
+            await resp_cont.post()
 
         # kill people who left the server while the bot was offline
         # ewutils.kill_quitters(server.id) #FIXME function get_member doesn't find users reliably
@@ -356,11 +336,9 @@ async def on_ready():
             asyncio.ensure_future(loop_utils.spawn_prank_items_tick_loop(id_server = server.id))
             asyncio.ensure_future(loop_utils.generate_credence_tick_loop(id_server = server.id))
 
-        if ewcfg.gvs_active:
-            asyncio.ensure_future(loop_utils.gvs_gamestate_tick_loop(id_server=server.id))
-        else:
-            # Enemies do not spawn randomly during Gankers Vs. Shamblers
-            asyncio.ensure_future(loop_utils.spawn_enemies_tick_loop(id_server=server.id))
+
+        # Enemies do spawn randomly
+        asyncio.ensure_future(loop_utils.spawn_enemies_tick_loop(id_server=server.id))
 
         if not debug:
             await transport_utils.init_transports(id_server=server.id)

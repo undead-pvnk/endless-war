@@ -255,10 +255,7 @@ CREATE TABLE districts (
 	capture_points bigint NOT NULL DEFAULT '0',
 	slimes bigint NOT NULL DEFAULT '0',
 	time_unlock int NOT NULL DEFAULT '0',
-	degradation bigint NOT NULL DEFAULT '0',
 	cap_side varchar(32) NOT NULL DEFAULT '',
-	horde_cooldown int NOT NULL DEFAULT '0',
-	gaiaslime int NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (id_server, district)
 );

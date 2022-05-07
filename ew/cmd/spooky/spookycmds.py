@@ -89,22 +89,12 @@ async def revive(cmd, player_auto = None):
             # Set time of last revive. This used to provied spawn protection, but currently isn't used.
             player_data.time_lastrevive = time_now
 
-            if False: #player_data.degradation >= 100:
-                player_data.life_state = ewcfg.life_state_shambler
-                player_data.change_slimes(n=0.5 * ewcfg.slimes_shambler)
-                player_data.trauma = ""
-                poi_death = poi_static.id_to_poi.get(player_data.poi_death)
-                if move_utils.inaccessible(poi=poi_death, user_data=player_data):
-                    player_data.poi = ewcfg.poi_id_endlesswar
-                else:
-                    player_data.poi = poi_death.id_poi
-            else:
-                # Set life state. This is what determines whether the player is actually alive.
-                player_data.life_state = ewcfg.life_state_juvenile
-                # Give player some initial slimes.
-                player_data.change_slimes(n=ewcfg.slimes_onrevive)
-                # Get the player out of the sewers.
-                player_data.poi = ewcfg.poi_id_endlesswar
+            # Set life state. This is what determines whether the player is actually alive.
+            player_data.life_state = ewcfg.life_state_juvenile
+            # Give player some initial slimes.
+            player_data.change_slimes(n=ewcfg.slimes_onrevive)
+            # Get the player out of the sewers.
+            player_data.poi = ewcfg.poi_id_endlesswar
 
             # Give newly spawned juvies a foul odour
             player_data.applyStatus(ewcfg.status_repelled_id)

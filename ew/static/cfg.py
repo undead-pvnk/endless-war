@@ -24,8 +24,6 @@ permissions_tries = 1
 # Time saved moving through friendly territory (or lost in hostile territory).
 territory_time_gain = 10
 
-# A variable which is used to determine how certain functions of enemies are to perform
-gvs_active = False
 #Double Halloween Features
 dh_active = False
 #Existing Stages for Double Halloween. As the years go by we may add on to this
@@ -59,9 +57,6 @@ public_gamestates = {
 
 
 forbidden_channels = ["suggestion-box"]
-
-# The max amount of degradation a district can have before it is shambled completely
-district_max_degradation = 10000
 
 # Market delta
 max_iw_swing = 30
@@ -732,7 +727,6 @@ cmd_crystalize_negapoudrin_alt2 = cmd_prefix + 'crystallise'
 cmd_crystalize_negapoudrin_alt3 = cmd_prefix + 'crystalize'
 cmd_favor = cmd_prefix + 'favor'
 cmd_summonenemy = cmd_prefix + 'summonenemy'
-cmd_summongvsenemy = cmd_prefix + 'summongvsenemy'
 cmd_deleteallenemies = cmd_prefix + 'deleteallenemies'
 cmd_battlenegaslimeoid = cmd_prefix + 'battlenegaslimeoid'
 cmd_battlenegaslimeoid_alt1 = cmd_prefix + 'negaslimeoidbattle'
@@ -1165,7 +1159,6 @@ cmd_collectopics = cmd_prefix + 'collecttopics'
 cmd_synctopics = cmd_prefix + 'synctopics'
 cmd_shutdownbot = cmd_prefix + 'shutdownbot'
 cmd_checkbot = cmd_prefix + 'checkbot'
-cmd_degradedistricts = cmd_prefix + 'degradedistricts'
 cmd_set_debug_option = cmd_prefix + 'debugoption'
 
 
@@ -1566,9 +1559,6 @@ enemy_spawn_tick_length = 60 * 3 # Three minutes
 # how often it takes for hostile enemies to attack
 enemy_attack_tick_length = 5
 
-# how often to check game states in Gankers Vs. Shamblers
-gvs_gamestate_tick_length = 5
-
 # how often to burn
 burn_tick_length = 4
 
@@ -1643,9 +1633,6 @@ farm_action_fertilize = 2
 farm_action_weed = 3
 farm_action_pesticide = 4
 
-# gvs
-brainz_per_grab = 25
-
 # fishing
 fish_gain = 10000  # multiplied by fish size class
 fish_offer_timeout = 1440  # in minutes; 24 hours
@@ -1672,7 +1659,6 @@ cd_new_player = 3 * 24 * 60 * 60  # 72 Hours, 3 days
 cd_autocannibalize = 60 * 60  # can only eat yourself once per hour
 cd_drop_bone = 5 * 60
 cd_change_race = 24 * 60 * 60  # can only change your race once per day
-cd_gvs_searchforbrainz = 300
 
 # in relation to time of death
 time_to_manifest = 24 * 60 * 60  # a day
@@ -2093,7 +2079,6 @@ col_hardened_sap = 'hardened_sap'
 col_manuscript = "manuscript"
 col_spray = "spray"
 col_salary_credits = 'salary_credits'
-col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
 col_sidearm = 'sidearm'
 col_race = 'race'
@@ -2125,12 +2110,6 @@ col_gambit = 'gambit'
 col_credence = 'credence'
 col_credence_used = 'credence_used'
 
-# GANKERS VS SHAMBLERS
-col_gvs_currency = 'gvs_currency'
-col_gvs_time_lastshambaquarium = 'gvs_time_lastshambaquarium'
-col_horde_cooldown = 'horde_cooldown'
-col_gaiaslime = 'gaiaslime'
-col_shambler_stock = 'shambler_stock'
 col_juviemode = 'juviemode'
 
 # Double Halloween
@@ -2357,9 +2336,6 @@ leaderboard_relics = "KNOWN RELICS"
 leaderboard_kingpindonated = "KINGPIN SLIME EARNED"
 # SLIMERNALIA
 leaderboard_slimernalia = "MOST FESTIVE"
-# INTERMISSION2
-leaderboard_degradation = "MOST DEGRADED"
-leaderboard_shamblers_killed = "MOST SHAMBLER KILLS"
 # SWILLDERKMUK
 leaderboard_gambit_high = "HIGHEST GAMBIT"
 leaderboard_gambit_low = "LOWEST GAMBIT"
@@ -2386,10 +2362,6 @@ control_topics = {
 
 # district control actors
 actor_decay = "decay"
-
-# degradation strings
-channel_topic_degraded = "(Closed indefinitely)"
-str_zone_degraded = "{poi} has been degraded too far to keep operating."
 
 # The highest and lowest level your weaponskill may be on revive. All skills over this level reset to these.
 weaponskill_max_onrevive = 6
@@ -2577,8 +2549,6 @@ context_slimeoidbottle = 'slimeoidbottle'
 context_slimeoidfood = 'slimeoidfood'
 context_wrappingpaper = 'wrappingpaper'
 context_prankitem = 'prankitem'
-context_seedpacket = 'seedpacket'
-context_tombstone = 'tombstone'
 
 # Item vendor names.
 vendor_bar = 'bar'  # rate of non-mtn dew drinks are 100 slime to 9 hunger
@@ -2681,44 +2651,6 @@ item_id_foodbase = "foodbase"
 item_id_civilianscalp = "civilianscalp"
 item_id_modelovaccine = "modelovirusvaccine"
 item_id_key = "key"
-item_id_gaiaseedpack_poketubers = "poketubersseedpacket"
-item_id_gaiaseedpack_pulpgourds = "pulpgourdsseedpacket"
-item_id_gaiaseedpack_sourpotatoes = "sourpotatoesseedpacket"
-item_id_gaiaseedpack_bloodcabbages = "bloodcabbagesseedpacket"
-item_id_gaiaseedpack_joybeans = "joybeansseedpacket"
-item_id_gaiaseedpack_purplekilliflower = "purplekilliflowerseedpacket"
-item_id_gaiaseedpack_razornuts = "razornutsseedpacket"
-item_id_gaiaseedpack_pawpaw = "pawpawseedpacket"
-item_id_gaiaseedpack_sludgeberries = "sludgeberriesseedpacket"
-item_id_gaiaseedpack_suganmanuts = "suganmanutsseedpacket"
-item_id_gaiaseedpack_pinkrowddishes = "pinkrowddishesseedpacket"
-item_id_gaiaseedpack_dankwheat = "dankwheatseedpacket"
-item_id_gaiaseedpack_brightshade = "brightshadeseedpacket"
-item_id_gaiaseedpack_blacklimes = "blacklimesseedpacket"
-item_id_gaiaseedpack_phosphorpoppies = "phosphorpoppiesseedpacket"
-item_id_gaiaseedpack_direapples = "direapplesseedpacket"
-item_id_gaiaseedpack_rustealeaves = "rustealeavesseedpacket"
-item_id_gaiaseedpack_metallicaps = "metallicapsseedpacket"
-item_id_gaiaseedpack_steelbeans = "steelbeansseedpacket"
-item_id_gaiaseedpack_aushucks = "aushucksseedpacket"
-item_id_tombstone_defaultshambler = "defaultshamblertombstone"
-item_id_tombstone_bucketshambler = "bucketshamblertombstone"
-item_id_tombstone_juveolanternshambler = "juveolanternshamblertombstone"
-item_id_tombstone_flagshambler = "flagshamblertombstone"
-item_id_tombstone_shambonidriver = "shambonidrivertombstone"
-item_id_tombstone_mammoshambler = "mammoshamblertombstone"
-item_id_tombstone_gigashambler = "gigashamblertombstone"
-item_id_tombstone_microshambler = "microshamblertombstone"
-item_id_tombstone_shamblersaurusrex = "shamblesaurusrextombstone"
-item_id_tombstone_shamblerdactyl = "shamblerdactyltombstone"
-item_id_tombstone_dinoshambler = "dinoshamblertombstone"
-item_id_tombstone_ufoshambler = "ufoshamblertombstone"
-item_id_tombstone_brawldenboomer = "brawldenboomertombstone"
-item_id_tombstone_juvieshambler = "juvieshamblertombstone"
-item_id_tombstone_shambleballplayer = "shambleballplayertombstone"
-item_id_tombstone_shamblerwarlord = "shamblerwarlordtombstone"
-item_id_tombstone_shamblerraider = "shamblerraidertombstone"
-item_id_gaiaslimeoid_pot = "gaiaslimeoidpot"
 
 # SLIMERNALIA
 item_id_sigillaria = "sigillaria"
@@ -3006,26 +2938,6 @@ durability_items = [
     item_id_paint_copper,
     item_id_paint_chrome,
     item_id_paint_gold,
-    item_id_gaiaseedpack_poketubers,
-    item_id_gaiaseedpack_pulpgourds,
-    item_id_gaiaseedpack_sourpotatoes,
-    item_id_gaiaseedpack_bloodcabbages,
-    item_id_gaiaseedpack_joybeans,
-    item_id_gaiaseedpack_purplekilliflower,
-    item_id_gaiaseedpack_razornuts,
-    item_id_gaiaseedpack_pawpaw,
-    item_id_gaiaseedpack_sludgeberries,
-    item_id_gaiaseedpack_suganmanuts,
-    item_id_gaiaseedpack_pinkrowddishes,
-    item_id_gaiaseedpack_dankwheat,
-    item_id_gaiaseedpack_brightshade,
-    item_id_gaiaseedpack_blacklimes,
-    item_id_gaiaseedpack_phosphorpoppies,
-    item_id_gaiaseedpack_direapples,
-    item_id_gaiaseedpack_rustealeaves,
-    item_id_gaiaseedpack_metallicaps,
-    item_id_gaiaseedpack_steelbeans,
-    item_id_gaiaseedpack_aushucks
 ]
 
 all_item_ids = []

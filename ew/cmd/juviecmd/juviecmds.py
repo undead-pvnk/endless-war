@@ -393,11 +393,6 @@ async def mine(cmd):
     # Mine only in the mines.
     if cmd.message.channel.name in ewcfg.mining_channels:
         poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         if user_data.hunger >= user_data.get_hunger_max():
             return await mismine(cmd, user_data, "exhaustion")
@@ -682,12 +677,6 @@ async def flag(cmd):
 
     # Mine only in the mines.
     if cmd.message.channel.name in ewcfg.mining_channels:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         if user_data.hunger >= user_data.get_hunger_max():
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You've exhausted yourself from mining. You'll need some refreshment before getting back to work."))

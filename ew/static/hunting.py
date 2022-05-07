@@ -163,10 +163,6 @@ def atf_smallclaws(ctn = None):
         ctn.crit = True
 
 
-def atf_gvs_basic(ctn = None):
-    pass
-
-
 # All enemy attacking types in the game.
 enemy_attack_type_list = [
     EwAttackType(  # 1

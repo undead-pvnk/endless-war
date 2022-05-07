@@ -62,11 +62,6 @@ async def dissolveslimeoid(cmd):
         else:
             slimeoidtype = "Slimeoid"
 
-        # shamblers lol
-        # if district_data.is_degraded():
-            # response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            # return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
         if slimeoid.life_state != ewcfg.slimeoid_state_forming:
             # If the user isn't a ghost
             if user_data.life_state != ewcfg.life_state_corpse:

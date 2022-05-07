@@ -892,7 +892,6 @@ async def item_use(cmd):
                     user_data.clear_status(id_status=ewcfg.status_modelovaccine_id)
                     response = user_data.applyStatus(ewcfg.status_modelovaccine_id)
 
-                user_data.degradation = 0
                 user_data.persist()
                 await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
@@ -1384,13 +1383,6 @@ async def releaseprop(cmd):
         response = "You need to see a specialist at The Bazaar to do that."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-    poi = poi_static.id_to_poi.get(user_data.poi)
-    district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-    if district_data.is_degraded():
-        response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
     item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
     if item_sought:
@@ -1476,13 +1468,6 @@ async def releasefish(cmd):
 
     if usermodel.poi != ewcfg.poi_id_bazaar:
         response = "You need to see a specialist at The Bazaar to do that."
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-    poi = poi_static.id_to_poi.get(usermodel.poi)
-    district_data = EwDistrict(district=poi.id_poi, id_server=usermodel.id_server)
-
-    if district_data.is_degraded():
-        response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])

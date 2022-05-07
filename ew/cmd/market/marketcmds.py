@@ -48,13 +48,6 @@ async def invest(cmd):
         response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "invest")
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-    poi = poi_static.id_to_poi.get(user_data.poi)
-    district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
-
-    if district_data.is_degraded():
-        response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     if market_data.clock < 6 or market_data.clock >= 20:
         response = ewcfg.str_exchange_closed
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -163,13 +156,6 @@ async def withdraw(cmd):
         response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "withdraw")
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-    poi = poi_static.id_to_poi.get(user_data.poi)
-    district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
-
-    if district_data.is_degraded():
-        response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     if user_data.life_state == ewcfg.life_state_corpse:
         # Disallow withdraws from ghosts.
         response = "Your slimebroker can't confirm your identity while you're dead."
@@ -253,13 +239,6 @@ async def redeem(cmd):
         response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "redeem")
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-    poi = poi_static.id_to_poi.get(user_data.poi)
-    district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
-
-    if district_data.is_degraded():
-        response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     if user_data.life_state == ewcfg.life_state_corpse:
         # Disallow withdraws from ghosts.
         response = "Your slimebroker can't confirm your identity while you're dead."
@@ -311,12 +290,6 @@ async def donate(cmd):
     elif user_data.poi == ewcfg.poi_id_slimecorphq:
         poi = poi_static.id_to_poi.get(user_data.poi)
 
-        district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
         value = None
         if cmd.tokens_count > 1:
             value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
@@ -361,12 +334,6 @@ async def donate(cmd):
             response = ewcfg.str_exchange_specify.format(currency = "slime", action = "donate")
 
     elif user_data.poi == ewcfg.poi_id_slimeoidlab:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         poudrins = bknd_item.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
 
@@ -625,13 +592,6 @@ async def xfer(cmd):
         response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "transfer")
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-    poi = poi_static.id_to_poi.get(user_data.poi)
-    district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
-
-    if district_data.is_degraded():
-        response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     if cmd.mentions_count != 1:
         # Must have exactly one target to send to.
         response = "Mention the player you want to send SlimeCoin to."
@@ -733,12 +693,6 @@ async def rate(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     else:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         stock = ""
 
@@ -800,12 +754,6 @@ async def stocks(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     else:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         response = "Here are the currently available stocks: {}".format(ewutils.formatNiceList(ewcfg.stocks))
 

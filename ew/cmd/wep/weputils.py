@@ -638,26 +638,6 @@ async def attackEnemy(cmd):
     if enemy_data.enemytype == ewcfg.enemy_type_sandbag:
         sandbag_mode = True
 
-    if (enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_enlisted]) or (enemy_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler):
-        response = "Hey ASSHOLE! They're on your side!!"
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    elif (enemy_data.enemyclass == ewcfg.enemy_class_shambler and enemy_data.gvs_coord not in ewcfg.gvs_coords_end):
-        response = "It's best not to interfere with whatever those Juveniles are up to. If it gets close, that's your time to strike."
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    # elif (enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and ewutils.gvs_check_gaia_protected(enemy_data)):
-    # 	response = "It's no use, there's another gaiaslimeoid in front that's protecting them!"
-    # 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    elif user_data.life_state == ewcfg.life_state_shambler and enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid:
-        response = "It's not worth going near those... *things*. You'd get torn to shreds, it's better to send out lackeys to do your job for you."
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-    # if (time_now - user_data.time_lasthaunt) < ewcfg.cd_shambler_attack:
-    # 	response = "Your shitty zombie jaw is too tired to chew on that {}. Try again in {} seconds.".format(enemy_data.display_name, int(ewcfg.cd_shambler_attack-(time_now-user_data.time_lasthaunt)))
-    # 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    # else:
-    # 	user_data.time_lasthaunt = time_now
-    # 	user_data.persist()
-
     user_mutations = user_data.get_mutations()
 
     district_data = EwDistrict(district=user_data.poi, id_server=cmd.guild.id)
@@ -668,8 +648,6 @@ async def attackEnemy(cmd):
     hit_chance_mod = 0
     crit_mod = 0
     dmg_mod = 0
-    # sap_damage = 0
-    # sap_ignored = 0
 
     # Weaponized flavor text.
     hitzone = cmbt_utils.get_hitzone()
@@ -1226,8 +1204,6 @@ def canCap(cmd, capture_type, roomba_loop = 0):
     elif user_data.poi == ewcfg.poi_id_juviesrow:
         response = "Nah, the Rowdys and Killers have both agreed this is neutral ground. You don’t want to start a diplomatic crisis, " \
                    "just stick to spraying down sick graffiti and splattering your rival gang across the pavement in the other districts."
-    # elif district_data.is_degraded():
-    # response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
     elif not user_data.poi in poi_static.capturable_districts:
         response = "This zone cannot be captured."
     elif sidearm != None and sidearm.cooldown + (float(sidearm_item.item_props.get("time_lastattack")) if sidearm_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
@@ -1246,10 +1222,6 @@ def canCap(cmd, capture_type, roomba_loop = 0):
         response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
     elif sidearm_viable == 0:
         response = "With what, your piss? Get some paint from Based Hardware and stop fucking around."
-    # elif not 3 <= market_data.clock <= 10 and user_data.faction != ewcfg.faction_slimecorp:
-    #	response = "You can't !spray while all these people are around. The cops are no problem but the street sweepers will fucking kill you."
-    # elif not 3 <= market_data.clock <= 10 and user_data.faction == ewcfg.faction_slimecorp:
-    #	response = 'Your SlimeCorp headset chatters in your ear...\n"SlimeCorp protocol only allows sanitization during hours where federal sanitizers are not at work. Please cease and desist."'
 
     return response
 

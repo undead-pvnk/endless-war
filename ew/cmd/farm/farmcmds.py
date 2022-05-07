@@ -45,12 +45,7 @@ async def sow(cmd):
         response = "The cracked, filthy concrete streets around you would be a pretty terrible place for a farm. Try again on more arable land."
 
     else:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         if user_data.poi == ewcfg.poi_id_jr_farms:
             farm_id = ewcfg.poi_id_jr_farms
         elif user_data.poi == ewcfg.poi_id_og_farms:
@@ -187,12 +182,7 @@ async def reap(cmd):
     elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
         response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
     else:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         if user_data.poi == ewcfg.poi_id_jr_farms:
             farm_id = ewcfg.poi_id_jr_farms
         elif user_data.poi == ewcfg.poi_id_og_farms:
@@ -237,10 +227,6 @@ async def reap(cmd):
 
                     if user_data.poi == ewcfg.poi_id_jr_farms:
                         slime_gain = int(slime_gain / 4)
-
-                    # trauma = se_static.trauma_map.get(user_data.trauma)
-                    # if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
-                    #	slime_gain *= (1 - 0.5 * user_data.degradation / 100)
 
                     slime_gain = max(0, round(slime_gain))
 
@@ -378,12 +364,6 @@ async def check_farm(cmd):
     elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
         response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
     else:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         if user_data.poi == ewcfg.poi_id_jr_farms:
             farm_id = ewcfg.poi_id_jr_farms
         elif user_data.poi == ewcfg.poi_id_og_farms:
@@ -456,12 +436,6 @@ async def cultivate(cmd):
     elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
         response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
     else:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         if user_data.poi == ewcfg.poi_id_jr_farms:
             farm_id = ewcfg.poi_id_jr_farms
         elif user_data.poi == ewcfg.poi_id_og_farms:
@@ -486,7 +460,7 @@ async def cultivate(cmd):
             farm.persist()
         else:
             response = farm_action.str_execute
-            # gvs - farm actions award more slime
+            # farm actions award more slime
             farm.slimes_onreap += ewcfg.farm_slimes_peraction * 2
             farm.action_required = ewcfg.farm_action_none
             farm.persist()
@@ -514,12 +488,6 @@ async def mill(cmd):
     # 	response = "It costs {} to !mill, and you only have {}.".format(ewcfg.slimes_permill, user_data.slimes)
 
     elif item_sought:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         items = []
         vegetable = EwItem(id_item=item_sought.get('id_item'))
 
