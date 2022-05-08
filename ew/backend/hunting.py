@@ -82,9 +82,6 @@ class EwEnemyBase:
     # Tracks which user is associated with the enemy
     owner = -1
 
-    # Coordinate used for enemies in Gankers Vs. Shamblers
-    gvs_coord = ""
-
     # Various properties different enemies might have
     enemy_props = ""
 
@@ -113,7 +110,7 @@ class EwEnemyBase:
 
                 # Retrieve object
                 cursor.execute(
-                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
+                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
                         ewcfg.col_id_enemy,
                         ewcfg.col_id_server,
                         ewcfg.col_enemy_slimes,
@@ -133,12 +130,10 @@ class EwEnemyBase:
                         ewcfg.col_enemy_id_target,
                         ewcfg.col_enemy_raidtimer,
                         ewcfg.col_enemy_rare_status,
-                        # ewcfg.col_enemy_hardened_sap,
                         ewcfg.col_enemy_weathertype,
                         ewcfg.col_faction,
                         ewcfg.col_enemy_class,
                         ewcfg.col_enemy_owner,
-                        ewcfg.col_enemy_gvs_coord,
                         query_suffix
                     ))
                 result = cursor.fetchone()
@@ -164,12 +159,10 @@ class EwEnemyBase:
                     self.id_target = result[16]
                     self.raidtimer = result[17]
                     self.rare_status = result[18]
-                    # self.hardened_sap = result[19]
                     self.weathertype = result[19]
                     self.faction = result[20]
                     self.enemyclass = result[21]
                     self.owner = result[22]
-                    self.gvs_coord = result[23]
 
                     # Retrieve additional properties
                     cursor.execute("SELECT {}, {} FROM enemies_prop WHERE id_enemy = %s".format(
@@ -201,7 +194,7 @@ class EwEnemyBase:
 
             # Save the object.
             cursor.execute(
-                "REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+                "REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
                     ewcfg.col_id_enemy,
                     ewcfg.col_id_server,
                     ewcfg.col_enemy_slimes,
@@ -226,7 +219,6 @@ class EwEnemyBase:
                     ewcfg.col_faction,
                     ewcfg.col_enemy_class,
                     ewcfg.col_enemy_owner,
-                    ewcfg.col_enemy_gvs_coord
                 ), (
                     self.id_enemy,
                     self.id_server,
@@ -252,7 +244,6 @@ class EwEnemyBase:
                     self.faction,
                     self.enemyclass,
                     self.owner,
-                    self.gvs_coord,
                 ))
 
             # If the enemy doesn't have an ID assigned yet, have the cursor give us the proper ID.

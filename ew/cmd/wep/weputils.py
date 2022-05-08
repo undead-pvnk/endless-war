@@ -174,11 +174,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
                 target_data = EwUser(id_user=bystander, id_server=user_data.id_server, data_level=1)
                 target_player = EwPlayer(id_user=bystander, id_server=user_data.id_server)
 
-                target_iskillers = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_killers
-                target_isrowdys = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_rowdys
-                target_isslimecorp = target_data.life_state == ewcfg.life_state_enlisted and target_data.life_state == ewcfg.faction_slimecorp
                 target_isjuvenile = target_data.life_state == ewcfg.life_state_juvenile
-                target_isshambler = target_data.life_state == ewcfg.life_state_shambler
 
                 role_boss = (ewcfg.role_copkiller if user_data.faction == ewcfg.faction_killers else ewcfg.role_rowdyfucker)
                 boss_slimes = 0
@@ -217,7 +213,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
                 sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=user_data.id_server)
 
                 # move around slime as a result of the shot
-                if target_isshambler or target_isjuvenile or user_data.faction == target_data.faction or user_data.life_state == ewcfg.life_state_juvenile:
+                if target_isjuvenile or user_data.faction == target_data.faction or user_data.life_state == ewcfg.life_state_juvenile:
                     slimes_drained = int(3 * slimes_damage_target / 4)  # 3/4
                     slimes_toboss = 0
                 else:
@@ -482,11 +478,6 @@ def canAttack(cmd):
         else:
             response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
 
-    #elif user_data.weapon == -1 and user_data.life_state != ewcfg.life_state_shambler and ewcfg.mutation_id_lethalfingernails not in mutations and ewcfg.mutation_id_ambidextrous not in mutations:
-    #    response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
-    #elif ewcfg.mutation_id_ambidextrous in mutations and user_data.weapon == -1 and user_data.sidearm == -1 and user_data.life_state != ewcfg.life_state_shambler and ewcfg.mutation_id_lethalfingernails not in mutations:
-    #    response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
-
     elif cmd.mentions_count <= 0:
         # user is going after enemies rather than players
 
@@ -501,14 +492,13 @@ def canAttack(cmd):
         user_isslimecorp = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_slimecorp
 
         user_isexecutive = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
-        user_isshambler = user_data.life_state == ewcfg.life_state_shambler
 
         if (time_now - user_data.time_lastkill) < ewcfg.cd_kill:
             # disallow kill if the player has killed recently
             response = "Take a moment to appreciate your last slaughter."
 
         # what the fuck is this
-        elif user_data.life_state not in [ewcfg.life_state_enlisted, ewcfg.life_state_shambler, ewcfg.life_state_lucky, ewcfg.life_state_executive] and not ewcfg.slimernalia_active:
+        elif user_data.life_state not in [ewcfg.life_state_enlisted, ewcfg.life_state_lucky, ewcfg.life_state_executive] and not ewcfg.slimernalia_active:
 
             # Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
             if user_data.life_state == ewcfg.life_state_juvenile:
@@ -533,7 +523,6 @@ def canAttack(cmd):
         user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
         user_isslimecorp = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_slimecorp
         user_isexecutive = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
-        user_isshambler = user_data.life_state == ewcfg.life_state_shambler
 
         possession_data = user_data.get_possession()
 
@@ -559,14 +548,7 @@ def canAttack(cmd):
         elif rutils.eg_check2(time_now, shootee_data):
             response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
-        elif user_isshambler == True and len(district_data.get_enemies_in_district(classes=[ewcfg.enemy_class_gaiaslimeoid])) > 0:
-            response = "You can't attack them, they're protected by Gaiaslimeoids!"
-
-        # elif shootee_data.life_state == ewcfg.life_state_shambler and (user_iskillers == True or user_isrowdys == True or user_isexecutive == True or user_isslimecorp == True) and len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_shambler])) > 0:
-        # 	response = "You can't attack them, they're protected by a horde of enemy Shamblers!"
-
-
-        elif user_iskillers == False and user_isrowdys == False and user_isexecutive == False and user_isshambler == False and user_isslimecorp == False and not ewcfg.slimernalia_active:
+        elif user_iskillers == False and user_isrowdys == False and user_isexecutive == False and user_isslimecorp == False and not ewcfg.slimernalia_active:
             # Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
             if user_data.life_state == ewcfg.life_state_juvenile:
                 response = "Juveniles lack the moral fiber necessary for violence."
@@ -589,7 +571,7 @@ def canAttack(cmd):
             # Target is possessing user's weapon
             response = "{}'s contract forbids you from harming them. You should've read the fine print.".format(member.display_name)
 
-        elif rutils.eg_check3(time_now, shootee_data, user_data):  # or (shootee_data.life_state == ewcfg.life_state_juvenile and shootee_data.slimelevel <= ewcfg.max_safe_level):
+        elif rutils.eg_check3(time_now, shootee_data, user_data):
             # Target is neither flagged for PvP, nor a shambler, nor a ghost inhabiting the player, nor a juvie above a certain threshold slime. Player is not a shambler.
             response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
@@ -597,7 +579,7 @@ def canAttack(cmd):
             # User is targeting themselves
             response = "Try {}.".format(ewcfg.cmd_suicide)
 
-        elif shootee_data.life_state not in [ewcfg.life_state_shambler, ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
+        elif shootee_data.life_state not in [ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
             if shootee_data.life_state == ewcfg.life_state_corpse and (ewcfg.status_ghostbust_id in user_data.getStatusEffects() or ewcfg.mutation_id_coleblooded in mutations):
                 response = ewcfg.ghost_busting_string
             else:
@@ -787,7 +769,7 @@ async def attackEnemy(cmd):
             weapon_item.item_props['ammo'] = int(weapon_item.item_props.get("ammo")) - 1
 
         if not sandbag_mode:
-            life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_shambler]
+            life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
             bystander_faction = ""
             if user_data.faction == "rowdys":
                 bystander_faction = "killers"
@@ -799,16 +781,11 @@ async def attackEnemy(cmd):
 
             # Burn players in district
             if ewcfg.weapon_class_burning in weapon.classes:
-                if enemy_data.enemyclass in [ewcfg.enemy_class_gaiaslimeoid, ewcfg.enemy_class_shambler]:
-                    miss = True
-
                 if not miss:
                     resp = apply_status_bystanders(user_data=user_data, status=ewcfg.status_burning_id, value=bystander_damage, life_states=life_states, factions=factions, district_data=district_data)
                     resp_cont.add_response_container(resp)
 
             if ewcfg.weapon_class_exploding in weapon.classes:
-                if enemy_data.enemyclass in [ewcfg.enemy_class_gaiaslimeoid, ewcfg.enemy_class_shambler]:
-                    miss = True
 
                 user_data.persist()
                 enemy_data.persist()
@@ -829,9 +806,6 @@ async def attackEnemy(cmd):
     # if crit:
     #	sap_damage += 1
 
-    # if user_data.life_state == ewcfg.life_state_shambler:
-    #	sap_damage += 1
-
     # Remove !revive invulnerability.
     user_data.time_lastrevive = 0
 
@@ -850,18 +824,6 @@ async def attackEnemy(cmd):
     # Bicarbonate enemies take more damage
     if enemy_data.weathertype == ewcfg.enemy_weathertype_rainresist:
         slimes_damage *= 1.5
-
-    # # Shamblers deal less damage to gaiaslimeoids
-    # if enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state == ewcfg.life_state_shambler:
-    # 	slimes_damage *= 0.25
-
-    # if not sandbag_mode:
-    # apply hardened sap armor
-    # sap_armor = get_sap_armor(shootee_data = enemy_data, sap_ignored = sap_ignored)
-    # slimes_damage *= sap_armor
-    # slimes_damage = int(max(slimes_damage, 0))
-
-    # sap_damage = min(sap_damage, enemy_data.hardened_sap)
 
     # Damage stats
     ewstats.track_maximum(user=user_data, metric=ewcfg.stat_max_hitdealt, value=slimes_damage)
@@ -1021,7 +983,6 @@ async def attackEnemy(cmd):
         user_data.persist()
         resp_cont.add_channel_response(cmd.message.channel.name, response)
 
-        # TODO remove after double halloween
         if enemy_data.enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman and ewcfg.dh_active:
             horseman_deaths = market_data.horseman_deaths
 

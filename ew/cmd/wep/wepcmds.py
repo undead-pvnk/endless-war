@@ -68,7 +68,8 @@ async def attack(cmd):
         district_data = EwDistrict(district=attacker.poi, id_server=cmd.guild.id)
 
         # Setup flavortext variables
-        response, mass_status, wep_explode, napalm, hit_msg, rel_warn, new_cap, slimeoid_resp, bounty_resp, contract_resp, shambler_resp, lvl_resp = "", None, None, "", "", "", "", "", "", "", "", ""
+        # this is disgusting, who wrote this?
+        response, mass_status, wep_explode, napalm, hit_msg, rel_warn, new_cap, slimeoid_resp, bounty_resp, contract_resp, lvl_resp = "", None, None, "", "", "", "", "", "", "", "", ""
         target_killed = False
         bounty = 0
 
@@ -148,7 +149,7 @@ async def attack(cmd):
             if ctn.mass_apply_status == ewcfg.status_burning_id:
                 mass_status = apply_status_bystanders(
                     user_data=attacker, status=ewcfg.status_burning_id,
-                    value=ctn.bystander_damage, life_states=[ewcfg.life_state_shambler, ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_executive],
+                    value=ctn.bystander_damage, life_states=[ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_executive],
                     factions=["", target.faction], district_data=district_data
                 )
 
@@ -174,8 +175,8 @@ async def attack(cmd):
                 bounty = int(target.bounty / ewcfg.slimecoin_exchangerate)
                 attacker.change_slimecoin(n=bounty, coinsource=ewcfg.coinsource_bounty)
             else:
-                if target.life_state in [ewcfg.life_state_juvenile, ewcfg.life_state_shambler]:
-                    # attacking juvies and shamblers sends half to bleed and half to splatter
+                if target.life_state in [ewcfg.life_state_juvenile]:
+                    # attacking juvies send half to bleed and half to splatter
                     to_bleed = ctn.slimes_damage/2
                     to_district = ctn.slimes_damage/2
                 elif target.life_state == ewcfg.life_state_enlisted and target.faction == attacker.faction:
@@ -200,7 +201,7 @@ async def attack(cmd):
                 to_kingpin *= 2
 
             # Actually distribute slime now
-            if attacker.faction not in [ewcfg.faction_slimecorp, target.faction] and attacker.life_state not in [ewcfg.life_state_juvenile, ewcfg.life_state_shambler]:
+            if attacker.faction not in [ewcfg.faction_slimecorp, target.faction] and attacker.life_state not in [ewcfg.life_state_juvenile]:
                 # Kingpin only gets slime if not a teamkill or shill, or juvie, or shambler attacking
                 kingpin = fe_utils.find_kingpin(id_server=cmd.guild.id, kingpin_role=ewcfg.role_rowdyfucker if attacker.faction == ewcfg.faction_rowdys else ewcfg.role_copkiller)
                 if kingpin:
@@ -272,8 +273,6 @@ async def attack(cmd):
                     ewstats.increment_stat(user=attacker, metric=ewcfg.stat_lifetime_ganks)
                 elif attacker.slimelevel < target.slimelevel:
                     ewstats.increment_stat(user=attacker, metric=ewcfg.stat_lifetime_takedowns)
-                if target.life_state == ewcfg.life_state_shambler:
-                    ewstats.increment_stat(user=attacker, metric=ewcfg.stat_shamblers_killed)
 
                 end = time.perf_counter()
                 print("{} seconds to run attack ln 252 stat updates".format(end-start))
@@ -339,10 +338,6 @@ async def attack(cmd):
                 ghost_name = cmd.guild.get_member(possession[0]).display_name
                 contract_resp = "\n\n {} winces in pain as their slime is corrupted into negaslime. {}'s contract has been fulfilled.".format(attacker_member.display_name, ghost_name)
 
-            if ctn.vax and target.life_state == ewcfg.life_state_shambler:
-                shambler_resp = "\nYour purified slime seeps into and emulsifies in their mangled corpse, healing their degraded body. When they revive, they’ll be a normal slimeboi like the rest of us. A pure, homogenous race of ENDLESS WAR fearing juveniles. It brings a tear to your eye."
-
-
             if random.randint(0, 99) == 0 and target.gender != 'gorl':
                 foreskin = True
             else:
@@ -352,7 +347,7 @@ async def attack(cmd):
 
             # Lets throw a little scalp and/or foreskin creation in here
             # Lets throw a little scalp creation in here
-            if ewcfg.slimernalia_active and target.life_state != ewcfg.life_state_shambler:
+            if ewcfg.slimernalia_active:
                 bknd_item.item_create(
                     item_type=ewcfg.it_furniture,
                     id_user=attacker_member.id,
@@ -366,7 +361,7 @@ async def attack(cmd):
                         'furniture_look_desc': "There's a sigillaria of {}.".format(target_member.display_name),
                     }
                 )
-            elif foreskin and target.life_state != ewcfg.life_state_shambler:
+            elif foreskin:
                 bknd_item.item_create(
                     item_type=ewcfg.it_cosmetic,
                     id_user=attacker_member.id,
@@ -391,7 +386,7 @@ async def attack(cmd):
                         'adorned': 'false'
                     }
                 )
-            elif target.life_state != ewcfg.life_state_shambler:
+            else:
                 bknd_item.item_create(
                     item_type=ewcfg.it_cosmetic,
                     id_user=attacker_member.id,

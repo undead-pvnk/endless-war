@@ -859,13 +859,6 @@ async def debugHandling(message, cmd, cmd_obj):
         user_data.persist()
         await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
 
-    elif cmd == (ewcfg.cmd_prefix + 'getshambler'):
-        response = "You get shambler. Jesus fucking Christ, why not, sure."
-        user_data = EwUser(member=message.author)
-        user_data.life_state = ewcfg.life_state_shambler
-        user_data.persist()
-        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
-
     # Toggles rain on and off
     elif cmd == (ewcfg.cmd_prefix + 'toggledownfall'):
         market_data = EwMarket(id_server=message.guild.id)

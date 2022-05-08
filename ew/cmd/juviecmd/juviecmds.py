@@ -227,9 +227,6 @@ async def crush(cmd):
 
 async def enlist(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     user_slimes = user_data.slimes
     time_now = int(time.time())
@@ -330,9 +327,6 @@ async def enlist(cmd):
 
 async def renounce(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if user_data.life_state == ewcfg.life_state_corpse:
         response = "You're dead, bitch."
@@ -364,9 +358,6 @@ async def renounce(cmd):
 async def mine(cmd):
     market_data = EwMarket(id_server=cmd.message.author.guild.id)
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     mutations = user_data.get_mutations()
     cosmetic_abilites = itm_utils.get_cosmetic_abilities(id_user=cmd.message.author.id, id_server=cmd.guild.id)
@@ -651,9 +642,6 @@ async def flag(cmd):
     market_data = EwMarket(id_server=cmd.message.author.guild.id)
     user_data = EwUser(member=cmd.message.author)
     mutations = user_data.get_mutations()
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     mutations = user_data.get_mutations()
     time_now = int(time.time())
@@ -787,10 +775,7 @@ async def scavenge(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "Slow down, you filthy hyena."))
 
     if user_data.poi == ewcfg.poi_id_slimesea:
-        if user_data.life_state == ewcfg.life_state_shambler:
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "Are you trying to grab random trash instead of !searchingforbrainz? Pretty cringe bro..."))
-        else:
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You consider diving down to the bottom of the sea to grab some sick loot, but quickly change your mind when you {}.".format(random.choice(ewcfg.sea_scavenge_responses))))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You consider diving down to the bottom of the sea to grab some sick loot, but quickly change your mind when you {}.".format(random.choice(ewcfg.sea_scavenge_responses))))
 
     # Scavenge only in location channels
     if ewutils.channel_name_is_poi(cmd.message.channel.name) == True:

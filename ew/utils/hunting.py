@@ -152,7 +152,6 @@ def spawn_enemy(
                 enemy.display_name = "Bicarbonate {}".format(enemy.display_name)
                 enemy.slimes *= 2
 
-        # TODO delete after double halloween
         market_data = EwMarket(id_server=id_server)
         if (
                 enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman or enemytype == ewcfg.enemy_type_doublehorse) and market_data.horseman_deaths >= 1:
