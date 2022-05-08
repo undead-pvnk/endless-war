@@ -209,7 +209,6 @@ class EwEnemy(EwEnemyBase):
             target_isexecutive = target_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
             target_isjuvie = target_data.life_state == ewcfg.life_state_juvenile
             target_isnotdead = target_data.life_state != ewcfg.life_state_corpse
-            target_isshambler = target_data.life_state == ewcfg.life_state_shambler
 
             if target_data.life_state == ewcfg.life_state_kingpin:
                 # Disallow killing generals.
@@ -226,12 +225,12 @@ class EwEnemy(EwEnemyBase):
 
             # enemies dont fuck with ghosts, ghosts dont fuck with enemies.
             elif (
-                    target_iskillers or target_isrowdys or target_isjuvie or target_isexecutive or target_isshambler or target_isslimecorp) and (
+                    target_iskillers or target_isrowdys or target_isjuvie or target_isexecutive or target_isslimecorp) and (
                     target_isnotdead):
                 was_killed = False
                 was_hurt = False
 
-                if target_data.life_state in [ewcfg.life_state_shambler, ewcfg.life_state_enlisted,
+                if target_data.life_state in [ewcfg.life_state_enlisted,
                                               ewcfg.life_state_juvenile, ewcfg.life_state_lucky,
                                               ewcfg.life_state_executive]:
 
@@ -869,8 +868,7 @@ def explode(damage = 0, district_data = None, market_data = None):
     response = ""
     channel = poi_static.id_to_poi.get(poi).channel
 
-    life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive,
-                   ewcfg.life_state_shambler]
+    life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
     users = district_data.get_players_in_district(life_states=life_states, pvp_only=True)
 
     enemies = district_data.get_enemies_in_district()
@@ -1606,80 +1604,11 @@ def get_target_by_ai(enemy_data, cannibalize = False):
             if len(users) > 0:
                 target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server, data_level=1)
 
-        elif enemy_data.ai == ewcfg.enemy_ai_gaiaslimeoid:
-
-            users = bknd_core.execute_sql_query(
-                "SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({life_state} = {life_state_shambler}) ORDER BY {slimes} DESC".format(
-                    id_user=ewcfg.col_id_user,
-                    life_state=ewcfg.col_life_state,
-                    slimes=ewcfg.col_slimes,
-                    poi=ewcfg.col_poi,
-                    id_server=ewcfg.col_id_server,
-                    time_lastenter=ewcfg.col_time_lastenter,
-                    targettimer=targettimer,
-                    life_state_shambler=ewcfg.life_state_shambler,
-                    time_now=time_now,
-                ), (
-                    enemy_data.poi,
-                    enemy_data.id_server
-                ))
-            if len(users) > 0:
-                target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server, data_level=1)
-
-        elif enemy_data.ai == ewcfg.enemy_ai_shambler:
-
-            users = bknd_core.execute_sql_query(
-                "SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT ({life_state} = {life_state_shambler} OR {life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin}) ORDER BY {slimes} DESC".format(
-                    id_user=ewcfg.col_id_user,
-                    life_state=ewcfg.col_life_state,
-                    slimes=ewcfg.col_slimes,
-                    poi=ewcfg.col_poi,
-                    id_server=ewcfg.col_id_server,
-                    time_lastenter=ewcfg.col_time_lastenter,
-                    targettimer=targettimer,
-                    life_state_shambler=ewcfg.life_state_shambler,
-                    life_state_corpse=ewcfg.life_state_corpse,
-                    life_state_kingpin=ewcfg.life_state_kingpin,
-                ), (
-                    enemy_data.poi,
-                    enemy_data.id_server
-                ))
-            if len(users) > 0:
-                target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server, data_level=1)
-
         # If an enemy is a raidboss, don't let it attack until some time has passed when entering a new district.
         if enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.time_lastenter > raidbossaggrotimer:
             target_data = None
 
     elif cannibalize:
-        if enemy_data.ai == ewcfg.enemy_ai_gaiaslimeoid:
-
-            range = 1 if enemy_data.enemy_props.get('range') == None else int(enemy_data.enemy_props.get('range'))
-            direction = 'right' if enemy_data.enemy_props.get('direction') == None else enemy_data.enemy_props.get(
-                'direction')
-            piercing = 'false' if enemy_data.enemy_props.get('piercing') == None else enemy_data.enemy_props.get(
-                'piercing')
-            splash = 'false' if enemy_data.enemy_props.get('splash') == None else enemy_data.enemy_props.get('splash')
-            pierceamount = '0' if enemy_data.enemy_props.get('pierceamount') == None else enemy_data.enemy_props.get(
-                'pierceamount')
-            singletilepierce = 'false' if enemy_data.enemy_props.get(
-                'singletilepierce') == None else enemy_data.enemy_props.get('singletilepierce')
-
-            enemies = bknd_hunt.ga_check_coord_for_shambler(enemy_data, range, direction, piercing, splash, pierceamount,
-                                                            singletilepierce)
-            if len(enemies) > 1:
-                group_attack = True
-
-            target_data = enemies
-
-        elif enemy_data.ai == ewcfg.enemy_ai_shambler:
-            range = 1 if enemy_data.enemy_props.get('range') == None else int(enemy_data.enemy_props.get('range'))
-            direction = 'left' if enemy_data.enemy_props.get('direction') == None else enemy_data.enemy_props.get(
-                'direction')
-
-            enemies = bknd_hunt.sh_check_coord_for_gaia(enemy_data, range, direction)
-            if len(enemies) > 0:
-                target_data = EwEnemyBase(id_enemy=enemies[0], id_server=enemy_data.id_server)
 
         # If an enemy is a raidboss, don't let it attack until some time has passed when entering a new district.
         if enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.time_lastenter > raidbossaggrotimer:
@@ -1769,7 +1698,7 @@ class EwUser(EwUserBase):
                 response += "You have been empowered by slime and are now a level {} slime{}.".format(new_level, self.gender)
             for level in range(self.slimelevel + 1, new_level + 1):
                 current_mutations = self.get_mutations()
-                if (level >= self.get_mutation_level() + self.get_mutation_next_level()) and (self.life_state not in [ewcfg.life_state_corpse, ewcfg.life_state_shambler]) and (self.get_mutation_level() < 50):
+                if (level >= self.get_mutation_level() + self.get_mutation_next_level()) and (self.life_state not in [ewcfg.life_state_corpse]) and (self.get_mutation_level() < 50):
 
                     new_mutation = self.get_mutation_next()
 

@@ -299,10 +299,6 @@ async def upgrade(cmd):
     usermodel = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
     apt_model = EwApartment(id_server=cmd.guild.id, id_user=cmd.message.author.id)
 
-    if usermodel.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     if apt_model.rent == 0:
         response = "You don't have an apartment."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -700,10 +696,6 @@ async def cancel(cmd):
     usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
     aptmodel = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-    if usermodel.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     if usermodel.poi != ewcfg.poi_id_realestate:
         response = "You can only null your lease at the Real Estate Agency."
     elif aptmodel.rent == 0:
@@ -834,11 +826,6 @@ async def add_key(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     user_data = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     apartment_data = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
     if user_data.poi != ewcfg.poi_id_realestate:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You need to request a housekey at the Real Estate Agency."))
@@ -911,9 +898,6 @@ async def manual_changelocks(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     user_data = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
     apartment = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     apartment_data = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
     if user_data.poi != ewcfg.poi_id_realestate:

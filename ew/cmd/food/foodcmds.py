@@ -39,9 +39,6 @@ from ew.utils.district import EwDistrict
 
 async def menu(cmd):
     user_data = EwUser(member=cmd.message.author, data_level=2)
-    if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_nuclear_beach_edge:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     market_data = EwMarket(id_server=cmd.guild.id)
     # poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
@@ -188,9 +185,6 @@ async def order(cmd):
 
     user_data = EwUser(member=cmd.message.author)
     mutations = user_data.get_mutations()
-    if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_nuclear_beach_edge:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     market_data = EwMarket(id_server=cmd.guild.id)
     currency_used = 'slime'

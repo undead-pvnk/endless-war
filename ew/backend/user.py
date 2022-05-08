@@ -70,7 +70,6 @@ class EwUserBase:
     time_racialability = 0
     time_lastpremiumpurchase = 0
 
-    # GANKERS VS SHAMBLERS
     juviemode = 0
 
     apt_zone = "empty"
@@ -96,9 +95,6 @@ class EwUserBase:
     def limit_fix(self):
         if self.hunger > self.get_hunger_max():
             self.hunger = self.get_hunger_max()
-
-        if self.life_state == ewcfg.life_state_shambler:
-            self.hunger = 0
 
         if self.inebriation < 0:
             self.inebriation = 0

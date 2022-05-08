@@ -364,9 +364,6 @@ async def on_ready():
     time_now = int(time.time())
     time_last_pvp = time_now
 
-    time_last_twitch = time_now
-    time_twitch_downed = 0
-
     # Every three hours we log a message saying the periodic task hook is still active. On startup, we want this to happen within about 60 seconds, and then on the normal 3 hour interval.
     time_last_logged = time_now - ewcfg.update_hookstillactive + 60
 
@@ -381,54 +378,6 @@ async def on_ready():
             time_last_logged = time_now
 
             ewutils.logMsg("Periodic hook still active.")
-
-        # Check to see if a stream is live via the Twitch API.
-        # FIXME disabled
-        if False:
-            # if twitch_client_id != None and (time_now - time_last_twitch) >= ewcfg.update_twitch:
-            time_last_twitch = time_now
-
-            try:
-                # Twitch API call to see if there are any active streams.
-                json_string = ""
-                p = subprocess.Popen(
-                    "curl -H 'Client-ID: {}' -X GET 'https://api.twitch.tv/helix/streams?user_login = rowdyfrickerscopkillers' 2>/dev/null".format(twitch_client_id),
-                    shell=True,
-                    stdout=subprocess.PIPE
-                )
-
-                for line in p.stdout.readlines():
-                    json_string += line.decode('utf-8')
-
-                json_parsed = json.loads(json_string)
-
-                # When a stream is up, data is an array of stream information objects.
-                data = json_parsed.get('data')
-                if data != None:
-                    data_count = len(data)
-                    stream_was_live = stream_live
-                    stream_live = True if data_count > 0 else False
-
-                    if stream_was_live == True and stream_live == False:
-                        time_twitch_downed = time_now
-
-                    if stream_was_live == False and stream_live == True and (time_now - time_twitch_downed) > 600:
-                        ewutils.logMsg("The stream is now live.")
-
-                        # The stream has transitioned from offline to online. Make an announcement!
-                        for channel in channels_announcement:
-                            await fe_utils.send_message(
-                                client,
-                                channel,
-                                "ATTENTION CITIZENS. THE **ROWDY FUCKER** AND THE **COP KILLER** ARE **STREAMING**. BEWARE OF INCREASED KILLER AND ROWDY ACTIVITY.\n\n@everyone\n{}".format(
-                                    "https://www.twitch.tv/rowdyfrickerscopkillers"
-                                )
-                            )
-            except:
-                ewutils.logMsg('Twitch handler hit an exception (continuing): {}'.format(json_string))
-                traceback.print_exc(file=sys.stdout)
-
-
 
         # Parse files dumped into the msgqueue directory and send messages as needed.
         try:

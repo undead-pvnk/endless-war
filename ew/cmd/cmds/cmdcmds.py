@@ -226,8 +226,6 @@ async def data(cmd):
 
         if user_data.life_state == ewcfg.life_state_corpse:
             response += "You are a {}level {} {}dead{}.".format(race_prefix, user_data.slimelevel, race_suffix, user_data.gender)
-        elif user_data.life_state == ewcfg.life_state_shambler:
-            response += "You are a {}level {} {}shambler.".format(race_prefix, user_data.slimelevel, race_suffix)
         else:
             response += "You are a {}level {} {}slime{}.".format(race_prefix, user_data.slimelevel, race_suffix, user_data.gender)
 
@@ -573,7 +571,7 @@ async def spook(cmd):
 async def dance(cmd):
     user_data = EwUser(ew_id=cmd.author_id)
 
-    if user_data.life_state == ewcfg.life_state_juvenile or user_data.life_state == ewcfg.life_state_shambler:
+    if user_data.life_state == ewcfg.life_state_juvenile:
         response = random.choice(comm_cfg.dance_responses).format(cmd.author_id.display_name)
         response = "{} {} {}".format(ewcfg.emote_slime3, response, ewcfg.emote_slime3)
         await fe_utils.send_response(response, cmd, format_name=False)
@@ -772,10 +770,6 @@ async def toss_off_cliff(cmd):
                     if target.life_state == ewcfg.life_state_corpse:
                         response = "You reel back and chuck the brick at a ghost. As much as we both would like to teach the dirty staydead a lesson, the brick passes right through."
                         item.id_owner = target.poi
-                        item.persist()
-                    elif target.life_state == ewcfg.life_state_shambler:
-                        response = "The brick is buried into the shambler's soft, malleable head, but the decayed fellow doesn't seem to notice. It looks like it phased into its inventory."
-                        item.id_owner = target.id_user
                         item.persist()
                     elif target.life_state == ewcfg.life_state_kingpin:
                         response = "The brick is hurtling toward the kingpin's head, but they've long since gotten used to bricks to the head. It bounces off like nothing."
@@ -1055,9 +1049,6 @@ async def push(cmd):
 
 async def purify(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if user_data.poi == ewcfg.poi_id_sodafountain:
 
@@ -1436,9 +1427,6 @@ async def fashion(cmd):
 
 async def recycle(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     response = ""
 
@@ -1829,7 +1817,7 @@ async def cmd_moan(cmd):
     slimeoid = EwSlimeoid(member=cmd.message.author)
     response = ewcfg.moans[random.randrange(len(ewcfg.moans))]
 
-    if user_data.life_state != ewcfg.life_state_shambler and user_data.race != ewcfg.race_shambler:
+    if user_data.race != ewcfg.race_shambler:
         response = "You're not really feeling it... Maybe if you lacked cognitive function, you'd be more inclined to moan, about brains, perhaps."
         return await fe_utils.send_response(response, cmd)
 
@@ -1942,9 +1930,6 @@ async def lol(cmd):
 
 async def pray(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if cmd.message.channel.name != ewcfg.channel_endlesswar:
         response = "You must be in the presence of your lord if you wish to pray to him."
@@ -2349,9 +2334,6 @@ async def slimecoin(cmd):
 
 async def shares(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     stock = ""
     response = ""

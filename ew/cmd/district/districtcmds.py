@@ -133,7 +133,7 @@ async def ufo_observe(cmd):
                 response = 'You point the observation reticle over at {}.'.format(poi_sought.str_name)
                 district_data = EwDistrict(id_server=cmd.guild.id, district='ufoufo')
                 poi_static.id_to_poi['ufoufo'].permissions = new_permissions
-                players_in_district = district_data.get_players_in_district(min_slimes=0, life_states=[ewcfg.life_state_enlisted, ewcfg.life_state_corpse, ewcfg.life_state_juvenile, ewcfg.life_state_shambler], ignore_offline=True)
+                players_in_district = district_data.get_players_in_district(min_slimes=0, life_states=[ewcfg.life_state_enlisted, ewcfg.life_state_corpse, ewcfg.life_state_juvenile], ignore_offline=True)
                 server = ewcfg.server_list[cmd.guild.id]
                 for playerid in players_in_district:
                     member_object = server.get_member(playerid)

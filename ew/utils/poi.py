@@ -61,9 +61,6 @@ def inaccessible(user_data = None, poi = None):
     if user_data.life_state == ewcfg.life_state_observer:
         return False
 
-    if user_data.life_state == ewcfg.life_state_shambler and poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown, ewcfg.poi_id_juviesrow]:
-        return True
-
     elevatorstop = EwGamestate(id_server=user_data.id_server, id_state='elevator')
     for lock in ewcfg.lock_states:
         if poi in ewcfg.lock_states.get(lock) and user_data.poi in ewcfg.lock_states.get(lock):

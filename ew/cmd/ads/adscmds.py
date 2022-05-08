@@ -14,9 +14,6 @@ from ew.utils.district import EwDistrict
 async def advertise(cmd):
     time_now = int(time.time())
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if user_data.poi != ewcfg.poi_id_slimecorphq:
         response = "To buy ad space, you'll need to go SlimeCorp HQ."

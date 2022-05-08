@@ -145,12 +145,6 @@ status_effect_list = [
         crit_mod=0.03,
     ),
     EwStatusEffectDef(
-        id_status=ewcfg.status_modelovaccine_id,
-        time_expire=86400,
-        str_acquire="You shoot the vaccine but… nothing happens. On the surface, anyway. The vaccine has successfully dissolved throughout your bloodstream, and you will now “cure” all those who come into contact with your pure, righteous slime. Meaning, it’s time to conduct some straight up genocide.",
-        str_describe_self="The modelovirus vaccine running through your veins allows you to cure shamblers!"
-    ),
-    EwStatusEffectDef(
         id_status=ewcfg.status_slapped_id,
         time_expire=300,
         str_acquire="You're tuckered out. Better not get slapped for awhile.",

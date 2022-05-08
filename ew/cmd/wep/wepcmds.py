@@ -467,8 +467,7 @@ async def attack(cmd):
             wep_explode = weapon_explosion(user_data=EwUser(member=attacker_member), shootee_data=EwUser(member=target_member),
                                            district_data=EwDistrict(id_server=cmd.guild.id, district=attacker.poi),
                                            market_data=EwMarket(id_server=cmd.guild.id),
-                                           life_states=[ewcfg.life_state_shambler, ewcfg.life_state_enlisted,
-                                                        ewcfg.life_state_juvenile, ewcfg.life_state_executive],
+                                           life_states=[ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_executive],
                                            factions=["", target.faction],
                                            slimes_damage=ctn.bystander_damage, time_now=start_time, target_enemy=False)
 
@@ -477,7 +476,7 @@ async def attack(cmd):
         if wep_explode is not None: resp_ctn.add_response_container(wep_explode)
         if napalm != "": resp_ctn.add_channel_response(cmd.message.channel.name, napalm)
         if die_resp is not None: resp_ctn.add_response_container(die_resp)
-        response = hit_msg + rel_warn + new_cap + slimeoid_resp + bounty_resp + contract_resp + shambler_resp
+        response = hit_msg + rel_warn + new_cap + slimeoid_resp + bounty_resp + contract_resp
         resp_ctn.add_channel_response(cmd.message.channel.name, response)
         if lvl_resp != "": resp_ctn.add_channel_response(cmd.message.channel.name, "\n" + lvl_resp)
 
@@ -547,9 +546,7 @@ async def attack(cmd):
 
 async def reload(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
     response = ""
     reload_mismatch = True
 
@@ -602,10 +599,6 @@ async def reload(cmd):
 async def equip(cmd):
     user_data = EwUser(member=cmd.message.author)
 
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     time_now = int(time.time())
 
     if user_data.time_lastenlist > time_now:
@@ -640,9 +633,6 @@ async def equip(cmd):
 
 async def sidearm(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to equip a {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     time_now = int(time.time())
 
@@ -685,9 +675,6 @@ async def suicide(cmd):
         # Get the user data.
         user_data = EwUser(member=cmd.message.author)
         mutations = user_data.get_mutations()
-        if user_data.life_state == ewcfg.life_state_shambler:
-            response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
         user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
@@ -767,9 +754,6 @@ async def spar(cmd):
         else:
             # Get killing player's info.
             user_data = EwUser(member=cmd.message.author)
-            if user_data.life_state == ewcfg.life_state_shambler:
-                response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
             weapon_item = EwItem(id_item=user_data.weapon)
 
@@ -921,9 +905,6 @@ async def annoint(cmd):
         response = "That name is too long. ({:,}/32)".format(len(annoint_name))
     else:
         user_data = EwUser(member=cmd.message.author)
-        if user_data.life_state == ewcfg.life_state_shambler:
-            response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         poudrin = bknd_item.find_item(item_search="slimepoudrin", id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter=ewcfg.it_item)
 
@@ -981,10 +962,6 @@ async def marry(cmd):
             if world_event.event_props.get("user_id") == user_data.id_user:
                 already_getting_married = True
                 break
-
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     weapon_item = EwItem(id_item=user_data.weapon)
     weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
@@ -1102,9 +1079,6 @@ async def object(cmd):
 
 async def divorce(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     weapon_item = EwItem(id_item=user_data.weapon)
     weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
@@ -1163,9 +1137,6 @@ async def divorce(cmd):
 
 async def taunt(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     response = ""
 
@@ -1211,9 +1182,6 @@ async def taunt(cmd):
 
 async def aim(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     response = ""
 
@@ -1255,9 +1223,6 @@ async def aim(cmd):
 
 async def dodge(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     response = ""
 
@@ -1612,13 +1577,6 @@ async def duel(cmd):
 
     challenger = EwUser(member=author)
     challengee = EwUser(member=member)
-
-    if challenger.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    elif challengee.life_state == ewcfg.life_state_shambler:
-        response = "They lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     challenger_poi = poi_static.id_to_poi.get(challenger.poi)
     challengee_poi = poi_static.id_to_poi.get(challengee.poi)

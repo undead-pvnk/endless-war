@@ -1,8 +1,5 @@
 # Global configuration options.
 
-
-
-
 version = "v4.102 S4A1 🍑🔨"
 
 
@@ -14,7 +11,6 @@ discord_message_length_limit = 2000
 
 # Update intervals
 update_hookstillactive = 60 * 60 * 1
-update_twitch = 60
 update_pvp = 60
 update_market = 900  # 15 min
 
@@ -53,9 +49,6 @@ public_gamestates = {
     'juviesrowhole':[1, '0']
 }
 
-
-
-
 forbidden_channels = ["suggestion-box"]
 
 # Market delta
@@ -74,7 +67,6 @@ combatant_type_enemy = "enemy"
 life_state_corpse = 0
 life_state_juvenile = 1
 life_state_enlisted = 2
-life_state_shambler = 3
 life_state_executive = 6
 life_state_lucky = 7
 life_state_grandfoe = 8
@@ -94,8 +86,6 @@ playerstats_list = [
     stat_defense,
     stat_speed,
 ]
-
-
 
 slimeoid_tick_length = 5 * 60 # 5 minutes
 
@@ -396,7 +386,6 @@ role_copkillers_active = "killerotp"
 role_corpse = "corpse"
 role_corpse_pvp = "corpsewanted"
 role_corpse_active = "corpseotp"
-role_shambler = "shamblers"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
 role_slimecorp = "slimecorp"
@@ -446,7 +435,6 @@ faction_roles = [
     role_kingpin,
     role_grandfoe,
     role_tutorial,
-    role_shambler,
 ]
 
 role_to_pvp_role = {
@@ -485,8 +473,6 @@ faction_slimecorp = "slimecorp"
 gangbase_slimecorp = "The Breakroom"
 faction_banned = "banned"
 factions = [faction_killers, faction_rowdys, faction_slimecorp]
-psuedo_faction_gankers = 'gankers'  # not attatched to a user's data
-psuedo_faction_shamblers = 'shamblers'  # same as above
 
 # Channel names
 channel_mines = "the-mines"
@@ -497,7 +483,6 @@ channel_combatzone = "combat-zone"
 channel_endlesswar = "endless-war"
 channel_sewers = "the-sewers"
 channel_dojo = "the-dojo"
-channel_twitch_announcement = "rfck-chat"
 channel_casino = "the-casino"
 channel_casino_p ="slime-casino-lite"
 channel_stockexchange = "slime-stock-exchange"
@@ -1365,7 +1350,6 @@ client_debug_commands =[
  '!setrole',
  '!getrowdy',
  '!getkiller',
- '!getshambler',
  '!toggledownfall',
  '!dayforward',
  '!hourforward',
@@ -1397,7 +1381,6 @@ slimes_to_possess_fishing_rod = -10000
 slimes_to_crystalize_negapoudrin = -1000000
 slimes_cliffdrop = 200000
 slimes_item_drop = 10000
-slimes_shambler = 10
 
 # hunger
 min_stamina = 100
@@ -1638,8 +1621,6 @@ fish_offer_timeout = 1440  # in minutes; 24 hours
 cd_kill = 5
 cd_spar = 60
 cd_haunt = 600
-cd_shambler_shamble = 20
-cd_shambler_attack = 20
 cd_squeeze = 1200
 cd_invest = 5 * 60
 cd_boombust = 22

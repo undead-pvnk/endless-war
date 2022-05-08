@@ -51,9 +51,6 @@ last_russianrouletted_times = {}
 async def betsoul(cmd):
     user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
     user_inv = bknd_item.inventory(id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if cmd.mentions_count == 1:
         mention_target = cmd.mentions[0]
@@ -89,9 +86,6 @@ async def betsoul(cmd):
 
 async def buysoul(cmd):
     user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     casino_inv = bknd_item.inventory(id_user="casinosouls", id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
 
@@ -157,9 +151,6 @@ async def pachinko(cmd):
     else:
         last_pachinkoed_times[cmd.message.author.id] = time_now
         user_data = EwUser(member=cmd.message.author)
-        if user_data.life_state == ewcfg.life_state_shambler:
-            response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         value = 1
         if currency_used == ewcfg.currency_slimecoin:
@@ -366,9 +357,6 @@ async def slots(cmd):
         last_slotsed_times[cmd.message.author.id] = time_now
 
         user_data = EwUser(member=cmd.message.author)
-        if user_data.life_state == ewcfg.life_state_shambler:
-            response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         value = 1
         if currency_used == ewcfg.currency_slimecoin:
@@ -541,9 +529,6 @@ async def roulette(cmd):
 
         if value != None:
             user_data = EwUser(member=cmd.message.author)
-            if user_data.life_state == ewcfg.life_state_shambler:
-                response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
             if len(bet) == 0:
@@ -715,9 +700,6 @@ async def baccarat(cmd):
 
         if value != None:
             user_data = EwUser(member=cmd.message.author)
-            if user_data.life_state == ewcfg.life_state_shambler:
-                response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
             if len(bet) == 0:
@@ -1349,10 +1331,6 @@ async def skat(cmd):
     challengee2 = EwUser(member=member2)
     maxgame = multiplier * max(2 * 15 * 12, 2 * 8 * 24)
 
-    if challenger.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     gellphone_active_challengee1 = False
     if challengee.has_gellphone():
         gellphone_active_challengee1 = True
@@ -1921,10 +1899,6 @@ async def russian_roulette(cmd):
 
     challenger = EwUser(member=author)
     challengee = EwUser(member=member)
-
-    if challenger.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     # Players have been challenged
     if ewutils.active_target_map.get(challenger.id_user) != None and ewutils.active_target_map.get(challenger.id_user) != "":

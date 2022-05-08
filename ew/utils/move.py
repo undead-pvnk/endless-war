@@ -420,9 +420,6 @@ def inaccessible(user_data = None, poi = None):
     if user_data.life_state == ewcfg.life_state_observer:
         return False
 
-    if user_data.life_state == ewcfg.life_state_shambler and poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown, ewcfg.poi_id_juviesrow]:
-        return True
-
     source_poi = poi_static.id_to_poi.get(user_data.poi)
 
     # locks that inhibit a POI
@@ -578,7 +575,7 @@ async def send_gangbase_messages(server_id, clock):
 
     if highnoon != 0:
         district = EwDistrict(district='hangemsquare', id_server=server_id)
-        if len(district.get_players_in_district(min_slimes=0, life_states=[ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_shambler, ewcfg.life_state_corpse], ignore_offline=True)) > 0:
+        if len(district.get_players_in_district(min_slimes=0, life_states=[ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_corpse], ignore_offline=True)) > 0:
             if highnoon == 1:
                 response = "It's almost high noon..."
             else:

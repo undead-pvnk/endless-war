@@ -29,9 +29,6 @@ from .slimeoidutils import get_slimeoid_count
 # Destroy a slimeoid
 async def dissolveslimeoid(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     slimeoid = EwSlimeoid(member=cmd.message.author)
     # roles_map_user = ewutils.getRoleMap(message.author.roles)
@@ -817,10 +814,6 @@ async def saturateslimeoid(cmd):
 
 async def restoreslimeoid(cmd):
     user_data = EwUser(member=cmd.message.author)
-    # Shamblers lol
-    # if user_data.life_state == ewcfg.life_state_shambler:
-    #     response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-    #     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     slimeoid = EwSlimeoid(member=cmd.message.author)
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])

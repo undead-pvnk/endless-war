@@ -34,9 +34,6 @@ async def chemo(cmd):
     if cmd.message.channel.name != ewcfg.channel_clinicofslimoplasty:
         response = "Chemotherapy doesn't just grow on trees. You'll need to go to the clinic in Crookline to get some."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    elif user_data.life_state == ewcfg.life_state_shambler:
-        response = '"Oh goodness me, it seems like another one of these decaying subhumans has wandered into my office. Go on, shoo!"\n\nTough luck, seems shamblers aren\'t welcome here.'.format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     elif user_data.life_state == ewcfg.life_state_corpse:
         response = '"You get out of here. We don\'t serve your kind." \n\n Auntie Dusttrap threatingly flails a jar of cole slaw at you. Looks like you need a body to operate on one.'
@@ -146,9 +143,6 @@ async def graft(cmd):
 
     if cmd.message.channel.name != ewcfg.channel_clinicofslimoplasty:
         response = "Chemotherapy doesn't just grow on trees. You'll need to go to the clinic in Crookline to get some."
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    elif user_data.life_state == ewcfg.life_state_shambler:
-        response = '"Oh goodness me, it seems like another one of these decaying subhumans has wandered into my office. Go on, shoo!"\n\nTough luck, seems shamblers aren\'t welcome here.'.format(cmd.tokens[0])
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     elif user_data.life_state == ewcfg.life_state_corpse:
@@ -631,8 +625,6 @@ async def skullbash(cmd):
     if item_sought:
         if user_data.life_state == ewcfg.life_state_corpse:
             response = "Your head is too incorporeal to do that."
-        elif user_data.life_state == ewcfg.life_state_shambler:
-            response = "Your head is too soft and malleable to do that."
         else:
             ewutils.active_restrictions[user_data.id_user] = 2
             response = "You suck in your gut and mentally prepare to lose a few brain cells. 3...2...1...WHACK! Ugh. You're gonna need a minute."

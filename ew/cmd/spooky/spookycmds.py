@@ -200,7 +200,6 @@ async def haunt(cmd):
             market_data = EwMarket(id_server=cmd.guild.id)
             target_mutations = haunted_data.get_mutations()
             target_poi = poi_static.id_to_poi.get(haunted_data.poi)
-            target_is_shambler = haunted_data.life_state == ewcfg.life_state_shambler
             target_is_inhabitted = haunted_data.id_user == user_data.get_inhabitee()
 
             if user_data.life_state != ewcfg.life_state_corpse:
@@ -223,7 +222,7 @@ async def haunt(cmd):
             elif haunted_data.life_state == ewcfg.life_state_grandfoe:
                 # Grand foes can't be haunted.
                 response = "{} is invulnerable to ghosts.".format(member.display_name)
-            elif haunted_data.life_state == ewcfg.life_state_enlisted or haunted_data.life_state == ewcfg.life_state_juvenile or haunted_data.life_state == ewcfg.life_state_shambler:
+            elif haunted_data.life_state == ewcfg.life_state_enlisted or haunted_data.life_state == ewcfg.life_state_juvenile:
                 haunt_power_multiplier = 1
 
                 # power to the ancients
