@@ -55,10 +55,10 @@ from .. import item as ewitem
 from ..apt import aptcmds as apt_cmds
 from ..faction import factioncmds as faction_cmds
 from ..wep import wepcmds as wep_cmds
-try:
+"""try:
     from ..debug import debug24
 except:
-    from ..debug_dummy import debug24
+    from ..debug_dummy import debug24"""
 
 """ show player's slime score """
 
@@ -1123,19 +1123,6 @@ async def remove_item(cmd):
 async def check_flag(cmd):
     response = "https://img.booru.org/rfck//images/2/5c00b9d105d2435546ff6d3d9f545b05650d6631.png"
     return await fe_utils.send_message(cmd.client, cmd.message.channel, response)
-    """
-    user_data = EwUser(member=cmd.message.author)
-    poi = poi_static.id_to_poi.get(user_data.poi)
-
-    if user_data.time_expirpvp < int(time.time()):
-        response = "You don't have a flag."
-    else:
-        response = "You have {:,} seconds left on your flag.".format(abs(user_data.time_expirpvp - int(time.time())))
-
-    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-
-    """
 
 
 """ Accept a russian roulette challenge """
