@@ -55,10 +55,10 @@ from .. import item as ewitem
 from ..apt import aptcmds as apt_cmds
 from ..faction import factioncmds as faction_cmds
 from ..wep import wepcmds as wep_cmds
-"""try:
+try:
     from ..debug import debug24
 except:
-    from ..debug_dummy import debug24"""
+    from ..debug_dummy import debug24
 
 """ show player's slime score """
 
