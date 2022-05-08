@@ -787,7 +787,7 @@ def cull_slime_sea(
                         to_delete.append(seaitem.get('id_item'))
                     elif seaitem.get('item_type') == ewcfg.it_item:
                         item_obj = EwItem(seaitem.get('id_item'))
-                        if item_obj.item_props.get('context') in ['prankitem', ewcfg.context_seedpacket, ewcfg.context_tombstone, ewcfg.context_wrappingpaper, 'batterypack', 'player_bone', 'prankcapsule', 'dye', 'poudrin'] or item_obj.item_props.get('id_item') in ewcfg.slimesea_disposables:
+                        if item_obj.item_props.get('context') in ['prankitem', ewcfg.context_wrappingpaper, 'batterypack', 'player_bone', 'prankcapsule', 'dye', 'poudrin'] or item_obj.item_props.get('id_item') in ewcfg.slimesea_disposables:
                             to_delete.append(seaitem.get('id_item'))
                         else:
                             sea_size += 1
