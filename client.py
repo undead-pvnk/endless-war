@@ -269,11 +269,7 @@ async def on_ready():
         ewutils.logMsg("connected to server: {}".format(server.name))
         for channel in server.channels:
             if (channel.type == discord.ChannelType.text):
-                if (channel.name == ewcfg.channel_twitch_announcement):
-                    channels_announcement.append(channel)
-                    ewutils.logMsg("• found channel for announcements: {}".format(channel.name))
-
-                elif (channel.name == ewcfg.channel_stockexchange):
+                if (channel.name == ewcfg.channel_stockexchange):
                     channels_stockmarket[server.id] = channel
                     ewutils.logMsg("• found channel for stock exchange: {}".format(channel.name))
 
