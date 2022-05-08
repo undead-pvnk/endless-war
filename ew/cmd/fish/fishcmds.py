@@ -333,9 +333,6 @@ async def reel(cmd):
         response = "You cast your fishing rod unto a sidewalk. That is to say, you've accomplished nothing. Go to a pier if you want to fish."
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    # gangsters don't need their roles updated
-    if user_data.life_state == ewcfg.life_state_juvenile:
-        await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
 
 async def appraise(cmd):

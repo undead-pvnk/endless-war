@@ -335,10 +335,6 @@ async def reap(cmd):
                     farm.time_lastsow = 0  # 0 means no seeds are currently planted
                     farm.persist()
 
-                    # gangsters don't need their roles updated
-                    if user_data.life_state == ewcfg.life_state_juvenile:
-                        await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 

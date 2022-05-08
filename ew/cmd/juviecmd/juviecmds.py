@@ -623,10 +623,6 @@ async def mine(cmd):
             if printgrid:
                 await print_grid(cmd)
 
-            # gangsters don't need their roles updated
-            if user_data.life_state == ewcfg.life_state_juvenile:
-                await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-
     else:
         return await mismine(cmd, user_data, "channel")
     # response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
@@ -886,10 +882,6 @@ async def scavenge(cmd):
             user_data.time_lastscavenge = time_now
 
             user_data.persist()
-
-            # gangsters don't need their roles updated
-            if user_data.life_state == ewcfg.life_state_juvenile:
-                await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
             if not response == "":
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
