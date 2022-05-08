@@ -13,10 +13,14 @@ async def tweet(cmd):
     if user_data.has_gellphone():
 
         if cmd.tokens_count < 2:
-            response = "Tweet what?"
-            return await fe_utils.send_response(response, cmd)
+            if len(cmd.message.attachments) == 0:
+                response = "Tweet what?"
+                return await fe_utils.send_response(response, cmd)
+            else:
+                tweet_content = "\u200d"
+        else:
+            tweet_content = ' '.join("`{}`".format(token) if token.startswith("#") else token for token in cmd.tokens[1:])
 
-        tweet_content = ' '.join("`{}`".format(token) if token.startswith("#") else token for token in cmd.tokens[1:])
         # embed limits
         if len(tweet_content) > 280:
             response = "Alright there bud, slow down a bit. No one's gonna read all that ({}/280).".format(len(tweet_content))
