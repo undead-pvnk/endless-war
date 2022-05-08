@@ -241,8 +241,6 @@ async def on_ready():
             landmark_mode=True
         )
 
-    cosmetic_utils.update_hues()
-
     ewutils.logMsg("finished landmark precomputation")
 
     # Channels in the connected discord servers to announce to.

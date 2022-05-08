@@ -231,7 +231,6 @@ CREATE TABLE enemies (
 	faction varchar(32) NOT NULL DEFAULT '',
 	enemyclass varchar(32) NOT NULL DEFAULT '',
 	owner bigint NOT NULL DEFAULT '0',
-	gvs_coord varchar(16) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_enemy)
 ) ENGINE = INNODB;
@@ -474,20 +473,6 @@ CREATE TABLE inhabitations (
 
 	PRIMARY KEY (id_ghost, id_fleshling, id_server)
 );
-
-CREATE TABLE hues (
-	id_hue varchar(32) NOT NULL,
-	is_neutral int NOT NULL DEFAULT '0',
-	hue_analogous_1 varchar(32) NOT NULL DEFAULT '',
-	hue_analogous_2 varchar(32) NOT NULL DEFAULT '',
-	hue_splitcomp_1 varchar(32) NOT NULL DEFAULT '',
-	hue_splitcomp_2 varchar(32) NOT NULL DEFAULT '',
-	hue_fullcomp_1 varchar(32) NOT NULL DEFAULT '',
-	hue_fullcomp_2 varchar(32) NOT NULL DEFAULT '',
-
-	PRIMARY KEY(id_hue)
-);
-
 
 CREATE TABLE gamestates (
     id_server bigint NOT NULL,

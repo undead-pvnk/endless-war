@@ -2284,16 +2284,6 @@ col_id_ghost = "id_ghost"
 col_id_fleshling = "id_fleshling"
 col_empowered = "empowered"
 
-# Database columns for hues
-col_id_hue = "id_hue"
-col_is_neutral = "is_neutral"
-col_hue_analogous_1 = "hue_analogous_1"
-col_hue_analogous_2 = "hue_analogous_2"
-col_hue_splitcomp_1 = "hue_splitcomp_1"
-col_hue_splitcomp_2 = "hue_splitcomp_2"
-col_hue_fullcomp_1 = "hue_fullcomp_1"
-col_hue_fullcomp_2 = "hue_fullcomp_2"
-
 # Gamestate columns
 col_bit = "state_bit"
 col_id_state = "id_state"
