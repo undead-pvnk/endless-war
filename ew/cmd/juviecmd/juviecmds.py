@@ -151,7 +151,7 @@ async def crush(cmd):
 
             # Kill player if they have less than 1 million slime
             if user_data.slimes < 1000000:
-                die_resp = user_data.die(cause=ewcfg.cause_suicide)
+                die_resp = user_data.die(cause=ewcfg.cause_crushing)
                 resp_cont.add_response_container(die_resp)
 
                 response = "You {} your hard-earned slime crystal with your bare teeth.\nAs the nerve endings in your teeth explode, you realize you bit into a negapoudrin! You writhe on the ground as slime gushes from all of your orifices. You fucking die. {}".format(command, ewcfg.emote_slimeskull)
@@ -177,7 +177,7 @@ async def crush(cmd):
 
             # Kill player if they have less than 1 million slime
             if user_data.slimes < 1000000:
-                die_resp = user_data.die(cause=ewcfg.cause_suicide)
+                die_resp = user_data.die(cause=ewcfg.cause_crushing)
                 resp_cont.add_response_container(die_resp)
                 
                 response = "You {} the Negaslimeoid core with your bare teeth.\nAs the nerve endings in your teeth explode, you recoil in pain! You writhe on the ground as slime gushes from all of your orifices. You fucking die. {}".format(command, ewcfg.emote_slimeskull)

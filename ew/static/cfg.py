@@ -2595,6 +2595,7 @@ cause_cliff = 13
 cause_backfire = 14
 cause_praying = 15
 cause_poison = 16
+cause_crushing = 17
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
