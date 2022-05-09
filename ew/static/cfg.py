@@ -922,6 +922,7 @@ cmd_setfestivity = cmd_prefix + 'setfestivity'
 cmd_checkstats = cmd_prefix + 'checkstats'
 cmd_makebp = cmd_prefix + 'makebp'
 cmd_exalt = cmd_prefix + 'exalt'
+cmd_awardart = cmd_prefix + 'awardart'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
 cmd_discard_alt1 = cmd_prefix + 'drop'
@@ -1416,6 +1417,7 @@ slimes_to_crystalize_negapoudrin = -1000000
 slimes_cliffdrop = 200000
 slimes_item_drop = 10000
 slimes_shambler = 10
+slimes_addart = 250000
 
 # hunger
 min_stamina = 100

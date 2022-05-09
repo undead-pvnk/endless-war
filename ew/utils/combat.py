@@ -2653,7 +2653,7 @@ class EwUser(EwUserBase):
                     # Bust player if they're a ghost
                     if self.life_state == ewcfg.life_state_corpse:
                         self.die(cause=ewcfg.cause_busted)
-                if item_props['id_food'] == ewcfg.item_id_seaweedjoint:
+                if item_props['id_food'] in [ewcfg.item_id_seaweedjoint, 'weedurchin']:
                     self.applyStatus(id_status=ewcfg.status_high_id)
                     self.change_crime(n=ewcfg.cr_posession_points)
                 if item_props.get('poisoned') == 'yes' and self.life_state != ewcfg.life_state_corpse:
