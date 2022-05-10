@@ -120,13 +120,13 @@ async def dissolveslimeoid(cmd):
 
 # Show a player's slimeoid data.
 async def slimeoid(cmd):
-    user_data = EwUser(member=cmd.message.author)
     member = None
     selfcheck = True
     response = ""
 
     if cmd.mentions_count == 0:
         selfcheck = True
+        user_data = EwUser(member=cmd.message.author)
         slimeoid = EwSlimeoid(member=cmd.message.author)
     else:
         selfcheck = False
@@ -191,7 +191,7 @@ async def slimeoid(cmd):
     
             # If it has more than 2, give it a freshness rating
             if len(adorned_cosmetics) >= 2:
-                outfit_map = item_utils.get_outfit_info(id_user=cmd.message.author.id, id_server=cmd.guild.id, slimeoid = True)
+                outfit_map = item_utils.get_outfit_info(id_user=user_data.id_user, id_server=cmd.guild.id, slimeoid = True)
 
                 if outfit_map is not None:
                     response += " Its total freshness rating is a {} {}.".format(outfit_map['dominant_style'], outfit_map['total_freshness'])

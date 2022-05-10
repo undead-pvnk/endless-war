@@ -680,6 +680,9 @@ async def jam(cmd):
 
 async def stunt(cmd):
     user_data = EwUser(member=cmd.message.author)
+    item = None
+    item_wanted = ""
+    item_sought = None
 
     # Find the player's item
     item_wanted = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -694,14 +697,16 @@ async def stunt(cmd):
             if item.item_props.get("weapon_type") not in [ewcfg.weapon_id_skateboard]:
                 # If it's not a skateboard, default to name search for "skateboard"
                 item_wanted = "skateboard"
+                item = None
 
     # If the player isn't holding or sidearming a skateboard
-    if item == False:
+    if item == None:
         item_sought = bknd_item.find_item(item_search=item_wanted, id_user=cmd.message.author.id, id_server=cmd.guild.id)
-        item = EwItem(id_item=item_sought.get('id_item'))
+        if item_sought != None:
+            item = EwItem(id_item=item_sought.get('id_item'))
 
     # If the player has an item that was sought
-    if item:
+    if item != None:
         # If it's a skateboard
         if item.item_props.get("weapon_type") in [ewcfg.weapon_id_skateboard]:
             response = ''
@@ -1407,12 +1412,12 @@ async def fashion(cmd):
                         else:
                             stat_response = "decreases their "
 
-                        stat_response += "{stat} by {amount}".format(stat=stat, amount=int(stats_breakdown[stat]))
+                        stat_response += "{stat} by {amount} ".format(stat=stat, amount=int(stats_breakdown[stat]))
 
                         stat_responses.append(stat_response)
 
             if len(stat_responses) == 0:
-                response += "doesn't affect their stats at all."
+                response += "doesn't affect their stats at all. "
             else:
                 response += ewutils.formatNiceList(names=stat_responses, conjunction="and") + ". \n\n"
 
@@ -1421,7 +1426,7 @@ async def fashion(cmd):
             if space_remaining == 0:
                 response += "They don't have cosmetic space left."
             else:
-                response += "They have about {amount} adornable space.\n".format(amount=space_remaining)
+                response += "They have about {amount} adornable space.".format(amount=space_remaining)
 
             # 1/3 chance of slimeoid also being included in the fashion check. No extra flavor text is generated if the slimeoid isn't wearing clothes.
             if random.randint(0, 2) == 0 and user_data.active_slimeoid != -1:
@@ -1438,11 +1443,11 @@ async def fashion(cmd):
 
                 # Create flavor text if the slimeoid is wearing clothes
                 if len(slimeoid_adorned_cosmetics) > 0:
-                    response += "\n\nThey've also recently posted with their {} {} in the background. It has a {} adorned.".format("Slimeoid" if slimeoid.sltype == ewcfg.sl_type_lab else "Negaslimeoid", slimeoid.name, ewutils.formatNiceList(slimeoid_adorned_cosmetics, "and"))
+                    response += "\n\nThey've also recently posted with their {} {} in the background. It has a {} adorned.".format("Slimeoid" if slimeoid.sltype == ewcfg.sltype_lab else "Negaslimeoid", slimeoid.name, ewutils.formatNiceList(slimeoid_adorned_cosmetics, "and"))
 
                     # Give the slimeoid a freshness rating if it's wearing more than 1 article of clothing.
                     if len(slimeoid_adorned_cosmetics) >= 2:
-                        outfit_map = itm_utils.get_outfit_info(id_user=member, id_server=cmd.guild.id, slimeoid = True)
+                        outfit_map = itm_utils.get_outfit_info(id_user=user_data.id_user, id_server=cmd.guild.id, slimeoid = True)
 
                         if outfit_map is not None:
                             response += " Its total freshness rating is a {} {}.".format(outfit_map['dominant_style'], outfit_map['total_freshness'])
