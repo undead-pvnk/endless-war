@@ -151,8 +151,6 @@ def init_grid(poi, id_server):
 
     if mining_type == ewcfg.mining_type_minesweeper:
         return init_grid_minesweeper(poi, id_server)
-    elif mining_type == ewcfg.mining_type_pokemine:
-        return init_grid_pokemine(poi, id_server)
     elif mining_type == ewcfg.mining_type_bubblebreaker:
         return init_grid_bubblebreaker(poi, id_server)
     else:
@@ -182,10 +180,6 @@ def init_grid_minesweeper(poi, id_server):
     if poi in mines_map:
         grid_cont = EwMineGrid(grid=grid, grid_type=ewcfg.mine_grid_type_minesweeper)
         mines_map.get(poi)[id_server] = grid_cont
-
-
-def init_grid_pokemine(poi, id_server):
-    return init_grid_none(poi, id_server)  # TODO
 
 
 def init_grid_bubblebreaker(poi, id_server):
@@ -234,8 +228,6 @@ async def print_grid(cmd):
 
         if grid_cont.grid_type == ewcfg.mine_grid_type_minesweeper:
             return await print_grid_minesweeper(cmd)
-        elif grid_cont.grid_type == ewcfg.mine_grid_type_pokemine:
-            return await print_grid_pokemine(cmd)
         elif grid_cont.grid_type == ewcfg.mine_grid_type_bubblebreaker:
             return await print_grid_bubblebreaker(cmd)
 
@@ -307,10 +299,6 @@ async def print_grid_minesweeper(cmd):
             grid_cont.wall_message = msg_handles[0]
         else:
             await fe_utils.edit_message(cmd.client, grid_cont.wall_message, grid_edit)
-
-
-async def print_grid_pokemine(cmd):
-    return  # TODO
 
 
 async def print_grid_bubblebreaker(cmd):
@@ -529,8 +517,6 @@ def get_unmined_cell_count(grid_cont):
 def get_mining_yield_by_grid_type(cmd, grid_cont):
     if grid_cont.grid_type == ewcfg.mine_grid_type_minesweeper:
         return get_mining_yield_minesweeper(cmd, grid_cont)
-    elif grid_cont.grid_type == ewcfg.mine_grid_type_pokemine:
-        return get_mining_yield_pokemine(cmd, grid_cont)
     elif grid_cont.grid_type == ewcfg.mine_grid_type_bubblebreaker:
         return get_mining_yield_bubblebreaker(cmd, grid_cont)
     else:
@@ -626,10 +612,6 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 
     else:
         return mining_yield
-
-
-def get_mining_yield_pokemine(cmd, grid_cont):
-    return "TODO"
 
 
 def get_mining_yield_bubblebreaker(cmd, grid_cont):

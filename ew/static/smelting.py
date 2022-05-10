@@ -1743,7 +1743,7 @@ smelting_recipe_list = [
 
 ]
 
-# TODO remove after double halloween
+
 if ewcfg.dh_active:
     smelting_recipe_list.append(EwSmeltingRecipe(
             id_recipe = "ticket",

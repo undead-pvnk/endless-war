@@ -218,36 +218,6 @@ def slimeoid_describe(slimeoid):
     return response
 
 
-# do whatever needs to constantly be done to slimeoids
-# async def slimeoid_tick_loop(id_server):
-#     while not ewutils.TERMINATE:
-#         await asyncio.sleep(ewcfg.slimeoid_tick_length)
-#         await slimeoid_tick(id_server)
-
-
-# async def slimeoid_tick(id_server):
-#     data = bknd_core.execute_sql_query("SELECT {id_slimeoid} FROM slimeoids WHERE {sltype} = %s AND {id_server} = %s".format(
-#         id_slimeoid=ewcfg.col_id_slimeoid,
-#         sltype=ewcfg.col_type,
-#         id_server=ewcfg.col_id_server
-#     ), (
-#         ewcfg.sltype_nega,
-#         id_server
-#     ))
-
-#     resp_cont = EwResponseContainer(id_server=id_server)
-#     for row in data:
-#         slimeoid_data = EwSlimeoid(id_slimeoid=row[0])
-#         haunt_resp = slimeoid_data.haunt()
-#         resp_cont.add_response_container(haunt_resp)
-#         if random.random() < 0.1:
-#             move_resp = slimeoid_data.move()
-#             resp_cont.add_response_container(move_resp)
-#         slimeoid_data.persist()
-
-#     await resp_cont.post()
-
-
 def find_slimeoid(slimeoid_search = None, id_user = None, id_server = None):
     slimeoid_sought = None
 

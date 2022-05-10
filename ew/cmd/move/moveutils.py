@@ -170,7 +170,7 @@ def get_enemies_look_resp(user_data, district_data):
     # identifiers are converted into lowercase, then into emoticons for visual clarity.
     # server emoticons are also used for clarity
 
-    enemies_in_district = district_data.get_enemies_in_district(classes=[ewcfg.enemy_class_normal, ewcfg.enemy_class_shambler])
+    enemies_in_district = district_data.get_enemies_in_district()
 
     num_enemies = len(enemies_in_district)
 
@@ -187,8 +187,7 @@ def get_enemies_look_resp(user_data, district_data):
         else:
             identifier_text = ""
 
-        if found_enemy_data.ai == ewcfg.enemy_ai_coward or found_enemy_data.ai == ewcfg.enemy_ai_sandbag or (found_enemy_data.ai == ewcfg.enemy_ai_defender and found_enemy_data.id_target != user_data.id_user) or (found_enemy_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler) or (
-                found_enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state != ewcfg.life_state_shambler):
+        if found_enemy_data.ai == ewcfg.enemy_ai_coward or found_enemy_data.ai == ewcfg.enemy_ai_sandbag or (found_enemy_data.ai == ewcfg.enemy_ai_defender and found_enemy_data.id_target != user_data.id_user):
             threat_emote = ewcfg.emote_slimeheart
         else:
             threat_emote = ewcfg.emote_slimeskull
@@ -200,10 +199,7 @@ def get_enemies_look_resp(user_data, district_data):
             found_enemy_data = EwEnemy(id_enemy=enemies_in_district[i])
 
             if found_enemy_data.identifier != '':
-                if not ewcfg.gvs_active:
                     identifier_text = " {}".format(":regional_indicator_{}:".format(found_enemy_data.identifier.lower()))
-                else:
-                    identifier_text = " {}, ({})".format(":regional_indicator_{}:".format(found_enemy_data.identifier.lower()), found_enemy_data.gvs_coord)
             else:
                 identifier_text = ""
 
@@ -218,10 +214,7 @@ def get_enemies_look_resp(user_data, district_data):
         final_enemy_data = EwEnemy(id_enemy=enemies_in_district[num_enemies - 1])
 
         if final_enemy_data.identifier != '':
-            if not ewcfg.gvs_active:
-                identifier_text = " {}".format(":regional_indicator_{}:".format(final_enemy_data.identifier.lower()))
-            else:
-                identifier_text = " {}, ({})".format(":regional_indicator_{}:".format(final_enemy_data.identifier.lower()), final_enemy_data.gvs_coord)
+            identifier_text = " {}".format(":regional_indicator_{}:".format(final_enemy_data.identifier.lower()))
         else:
             identifier_text = ""
 

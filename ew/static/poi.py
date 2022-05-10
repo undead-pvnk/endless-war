@@ -987,7 +987,6 @@ poi_list = [
 		pvp = False,
 		is_subzone = True,
 		mother_districts = ['downtown'],
-		max_degradation = 10000000,
 		neighbors = {'downtown': 20},
 		wikipage = "https://rfck.miraheze.org/wiki/Downtown_NLACakaNM#ENDLESS_WAR",
 	),
@@ -3975,12 +3974,7 @@ world_events = [
 		event_type=ewcfg.event_type_voidhole,
 		str_event_start="You hit a sudden gap in the stone, with a scary looking drop. You see what looks like a trampoline on a building's roof at the bottom. Do you **{}** in?".format(ewcfg.cmd_jump),
 		str_event_end="The wall collapses.",
-	),
-	EwEventDef(
-		event_type=ewcfg.event_type_shambaquarium,
-		str_event_start="Holy. Fucking. SHIT. You spot some brainz. Grab 'em all with **{}** {} before they get washed away by the current!",
-		str_event_end="The brainz drift away into the endless expanse of the Slime Sea. Cringe.",
-	),
+	)
 ]
 
 event_type_to_def = {}

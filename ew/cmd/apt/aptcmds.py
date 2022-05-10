@@ -299,10 +299,6 @@ async def upgrade(cmd):
     usermodel = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
     apt_model = EwApartment(id_server=cmd.guild.id, id_user=cmd.message.author.id)
 
-    if usermodel.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     if apt_model.rent == 0:
         response = "You don't have an apartment."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -700,10 +696,6 @@ async def cancel(cmd):
     usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
     aptmodel = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-    if usermodel.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     if usermodel.poi != ewcfg.poi_id_realestate:
         response = "You can only null your lease at the Real Estate Agency."
     elif aptmodel.rent == 0:
@@ -711,12 +703,6 @@ async def cancel(cmd):
     elif aptmodel.rent * 4 > usermodel.slimecoin:
         response = "You can't afford the lease separation. Time to take your eviction like a champ."
     else:
-        poi = poi_static.id_to_poi.get(usermodel.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=usermodel.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         poi = poi_static.id_to_poi.get(aptmodel.poi)
         response = "The separation will cost {:,} SlimeCoin. Do you !accept the termination, or !refuse it?".format(aptmodel.rent * 4)
@@ -840,11 +826,6 @@ async def add_key(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     user_data = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     apartment_data = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
     if user_data.poi != ewcfg.poi_id_realestate:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You need to request a housekey at the Real Estate Agency."))
@@ -860,11 +841,6 @@ async def add_key(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You need to pay base rent in order to receive a new housekey. It sadly appears as though you can't even afford a new friend."))
     else:
         poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         response = "Adding a key will change your rent to {:,} SlimeCoin. It will cost {:,} Slimcoin, as a down payment. Do you !accept or !refuse?".format(int(apartment_data.rent * 1.5), apartment_data.rent)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -922,9 +898,6 @@ async def manual_changelocks(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     user_data = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
     apartment = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     apartment_data = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
     if user_data.poi != ewcfg.poi_id_realestate:
@@ -937,11 +910,6 @@ async def manual_changelocks(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You need to pay half of base rent in order to change the locks around. Whatever scourge you set loose on your property, you'll just have to live with them."))
     else:
         poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         response = "Changing the locks will revert your rent back to before you added keys. It will cost {:,} Slimecoin, though. Do you !accept or !refuse?".format(apartment_data.rent / 2)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

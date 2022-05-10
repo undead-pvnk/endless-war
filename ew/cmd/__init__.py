@@ -105,9 +105,6 @@ cmd_map = {
     # Changes those channel topics according to what's in their EwPoi definition
     ewcfg.cmd_synctopics: fe_utils.sync_topics,
 
-    # Sets degradation values for GvS
-    ewcfg.cmd_degradedistricts: poi_utils.degrade_districts,
-
 }
 dm_cmd_map = {}
 apt_dm_cmd_map = {}

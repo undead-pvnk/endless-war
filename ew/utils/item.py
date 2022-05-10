@@ -356,16 +356,6 @@ def gen_item_props(item):
             item_props["trap_user_id"] = item.trap_user_id
             # Some prank items have nifty side effects
             item_props["side_effect"] = item.side_effect
-        if item.context == ewcfg.context_seedpacket:
-            item_props["cooldown"] = item.cooldown
-            item_props["cost"] = item.cost
-            item_props["time_nextuse"] = item.time_nextuse
-            item_props["enemytype"] = item.enemytype
-        if item.context == ewcfg.context_tombstone:
-            item_props["brainpower"] = item.brainpower
-            item_props["cost"] = item.cost
-            item_props["stock"] = item.stock
-            item_props["enemytype"] = item.enemytype
 
         try:
             item_props["durability"] = item.durability
@@ -797,7 +787,7 @@ def cull_slime_sea(
                         to_delete.append(seaitem.get('id_item'))
                     elif seaitem.get('item_type') == ewcfg.it_item:
                         item_obj = EwItem(seaitem.get('id_item'))
-                        if item_obj.item_props.get('context') in ['prankitem', ewcfg.context_seedpacket, ewcfg.context_tombstone, ewcfg.context_wrappingpaper, 'batterypack', 'player_bone', 'prankcapsule', 'dye', 'poudrin'] or item_obj.item_props.get('id_item') in ewcfg.slimesea_disposables:
+                        if item_obj.item_props.get('context') in ['prankitem', ewcfg.context_wrappingpaper, 'batterypack', 'player_bone', 'prankcapsule', 'dye', 'poudrin'] or item_obj.item_props.get('id_item') in ewcfg.slimesea_disposables:
                             to_delete.append(seaitem.get('id_item'))
                         else:
                             sea_size += 1

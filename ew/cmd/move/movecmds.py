@@ -556,9 +556,6 @@ async def look(cmd):
 
     district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
     market_data = EwMarket(id_server=user_data.id_server)
-    degrade_resp = ""
-    if district_data.degradation >= poi.max_degradation:
-        degrade_resp = "\n\n" + ewcfg.str_zone_degraded.format(poi=poi.str_name) + "\n\n"
     void_resp = get_void_connections_resp(poi.id_poi, user_data.id_server)
 
     if poi.is_apartment:
@@ -573,13 +570,12 @@ async def look(cmd):
     if poi.is_subzone or poi.id_poi == ewcfg.poi_id_thevoid:  # Triggers if you input the command in the void or a sub-zone.
         wikichar = '\n\n<{}>'.format(poi.wikipage) if poi.wikipage != '' else ''
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author,
-                                                                                                   "You stand {} {}.\n\n{}{}{}{}".format(
+                                                                                                   "You stand {} {}.\n\n{}{}{}".format(
                                                                                                        poi.str_in,
                                                                                                        poi.str_name,
                                                                                                        str_desc,
                                                                                                        wikichar,
                                                                                                        void_resp,
-                                                                                                       degrade_resp,
 
                                                                                                    )
                                                                                                    ))
@@ -631,13 +627,12 @@ async def look(cmd):
         wikichar = '\n\n<{}>'.format(poi.wikipage) if poi.wikipage != '' else ''
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(
             cmd.message.author,
-            "You stand {} {}.\n\n{}{}{}{}...".format(
+            "You stand {} {}.\n\n{}{}{}...".format(
                 poi.str_in,
                 poi.str_name,
                 str_desc,
                 wikichar,
-                void_resp,
-                degrade_resp,
+                void_resp
             )
         ))
 

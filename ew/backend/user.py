@@ -48,7 +48,6 @@ class EwUserBase:
     manuscript = -1
     spray = "https://img.booru.org/rfck//images/3/a69d72cf29cb750882de93b4640a175a88cdfd70.png"
     salary_credits = 0
-    degradation = 0
     gender = "boi"
 
     # SWILLDERMUK
@@ -71,9 +70,7 @@ class EwUserBase:
     time_racialability = 0
     time_lastpremiumpurchase = 0
 
-    # GANKERS VS SHAMBLERS
     juviemode = 0
-    gvs_time_lastshambaquarium = 0
 
     apt_zone = "empty"
     visiting = "empty"
@@ -99,9 +96,6 @@ class EwUserBase:
         if self.hunger > self.get_hunger_max():
             self.hunger = self.get_hunger_max()
 
-        if self.life_state == ewcfg.life_state_shambler:
-            self.hunger = 0
-
         if self.inebriation < 0:
             self.inebriation = 0
 
@@ -116,12 +110,6 @@ class EwUserBase:
 
         if self.slimelevel <= 0:
             self.slimelevel = 1
-
-        # self.sap = max(0, min(self.sap, ewutils.sap_max_bylevel(self.slimelevel) - self.hardened_sap))
-
-        # self.hardened_sap = max(0, min(self.hardened_sap, ewutils.sap_max_bylevel(self.slimelevel) - self.sap))
-
-        #self.degradation = max(0, self.degradation)
 
     """ Create a new EwUser and optionally retrieve it from the database. """
 
@@ -184,8 +172,6 @@ class EwUserBase:
                         ewcfg.col_visiting,
                         ewcfg.col_active_slimeoid,
                         ewcfg.col_has_soul,
-                        # ewcfg.col_sap,
-                        # ewcfg.col_hardened_sap,
                         ewcfg.col_manuscript,
                         ewcfg.col_spray,
                         ewcfg.col_time_lastdeath,
