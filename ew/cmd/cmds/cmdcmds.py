@@ -2453,10 +2453,12 @@ async def almanac(cmd):
         enemy_counter = 0
         enemy_total = 0
         # list off help topics to player at college
-        response = "(Use !almanac [enemy] to learn about a shambler/gaiaslimeoid. Example: '!almanac defaultshambler')\n\nWhat would you like to learn about? Topics include: \n"
+        response = "(Use !almanac [enemy] to learn about a shambler/gaiaslimeoid. Example: '!almanac defaultshambler')\nWhat would you like to learn about? Topics include: \n\n"
 
         # display the list of topics in order
-        enemies = ewcfg.gvs_enemies
+        enemies = ewcfg.gvs_almanac
+
+        response += "------------------------------GAIASLIMEOIDS-------------------------------\n"
 
         # enemies = ewcfg.cmd_gvs_almanac.keys()
         for enemy in enemies:
@@ -2467,8 +2469,13 @@ async def almanac(cmd):
                 response += ", "
 
             if enemy_counter == 5:
-                enemy_counter = 0
                 response += "\n"
+            elif 5 < enemy_counter < 21 and (enemy_counter + 3) % 4 == 0:
+                response += "\n"
+            elif enemy_counter == 21:
+                response +="\n--------------------------------SHAMBLERS----------------------------------\n"
+            elif enemy_counter > 21 and (enemy_counter + 3) % 4 == 0:
+                response +="\n"
 
     else:
         enemytype = ewutils.flattenTokenListToString(cmd.tokens[1:])
