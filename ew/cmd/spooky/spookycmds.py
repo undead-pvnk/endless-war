@@ -89,22 +89,12 @@ async def revive(cmd, player_auto = None):
             # Set time of last revive. This used to provied spawn protection, but currently isn't used.
             player_data.time_lastrevive = time_now
 
-            if False: #player_data.degradation >= 100:
-                player_data.life_state = ewcfg.life_state_shambler
-                player_data.change_slimes(n=0.5 * ewcfg.slimes_shambler)
-                player_data.trauma = ""
-                poi_death = poi_static.id_to_poi.get(player_data.poi_death)
-                if move_utils.inaccessible(poi=poi_death, user_data=player_data):
-                    player_data.poi = ewcfg.poi_id_endlesswar
-                else:
-                    player_data.poi = poi_death.id_poi
-            else:
-                # Set life state. This is what determines whether the player is actually alive.
-                player_data.life_state = ewcfg.life_state_juvenile
-                # Give player some initial slimes.
-                player_data.change_slimes(n=ewcfg.slimes_onrevive)
-                # Get the player out of the sewers.
-                player_data.poi = ewcfg.poi_id_endlesswar
+            # Set life state. This is what determines whether the player is actually alive.
+            player_data.life_state = ewcfg.life_state_juvenile
+            # Give player some initial slimes.
+            player_data.change_slimes(n=ewcfg.slimes_onrevive)
+            # Get the player out of the sewers.
+            player_data.poi = ewcfg.poi_id_endlesswar
 
             # Give newly spawned juvies a foul odour
             player_data.applyStatus(ewcfg.status_repelled_id)
@@ -210,7 +200,6 @@ async def haunt(cmd):
             market_data = EwMarket(id_server=cmd.guild.id)
             target_mutations = haunted_data.get_mutations()
             target_poi = poi_static.id_to_poi.get(haunted_data.poi)
-            target_is_shambler = haunted_data.life_state == ewcfg.life_state_shambler
             target_is_inhabitted = haunted_data.id_user == user_data.get_inhabitee()
 
             if user_data.life_state != ewcfg.life_state_corpse:
@@ -233,7 +222,7 @@ async def haunt(cmd):
             elif haunted_data.life_state == ewcfg.life_state_grandfoe:
                 # Grand foes can't be haunted.
                 response = "{} is invulnerable to ghosts.".format(member.display_name)
-            elif haunted_data.life_state == ewcfg.life_state_enlisted or haunted_data.life_state == ewcfg.life_state_juvenile or haunted_data.life_state == ewcfg.life_state_shambler:
+            elif haunted_data.life_state == ewcfg.life_state_enlisted or haunted_data.life_state == ewcfg.life_state_juvenile:
                 haunt_power_multiplier = 1
 
                 # power to the ancients

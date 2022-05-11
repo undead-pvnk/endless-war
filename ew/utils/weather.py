@@ -113,15 +113,8 @@ async def weather_tick(id_server = None):
 
                 if not protected:
 
-                    if user_data.life_state == ewcfg.life_state_shambler:
-                        slime_gain = (ewcfg.slimes_shambler - user_data.slimes) / 10
-                        slime_gain = max(0, int(slime_gain))
-                        user_data.change_slimes(n=slime_gain, source=ewcfg.source_weather)
-
-                    else:
-                        if random.random() < 0.01:
-                            pass
-                            #user_data.degradation += 1
+                    if random.random() < 0.01:
+                        pass
 
                     user_data.persist()
 

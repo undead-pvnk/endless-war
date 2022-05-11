@@ -36,9 +36,6 @@ async def cast(cmd):
     has_reeled = False
     user_data = EwUser(member=cmd.message.author)
     mutations = user_data.get_mutations()
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
@@ -68,9 +65,6 @@ async def cast(cmd):
         if rod_possession:
             fisher.inhabitant_id = rod_possession[0]
 
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         elif user_data.hunger >= user_data.get_hunger_max():
             response = "You're too hungry to fish right now."
         elif (not fisher.inhabitant_id) and (poi.id_poi == ewcfg.poi_id_blackpond):
@@ -279,9 +273,6 @@ async def cast(cmd):
 
 async def reel(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
@@ -316,12 +307,6 @@ async def reel(cmd):
             response = "You can't fish while you're dead."
 
     elif user_data.poi in poi_static.piers:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         # Players who haven't cast a line cannot reel.
         if fisher.fishing == False:
             response = "You haven't cast your hook yet. Try !cast."
@@ -348,16 +333,10 @@ async def reel(cmd):
         response = "You cast your fishing rod unto a sidewalk. That is to say, you've accomplished nothing. Go to a pier if you want to fish."
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    # gangsters don't need their roles updated
-    if user_data.life_state == ewcfg.life_state_juvenile:
-        await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
 
 async def appraise(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
@@ -378,12 +357,6 @@ async def appraise(cmd):
             response = 'What random passerby is going to give two shits about your fish? You’ll have to consult a fellow fisherman… perhaps you’ll find some on a pier?'
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     elif item_sought:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         name = item_sought.get('name')
         fish = EwItem(id_item=item_sought.get('id_item'))
         item_props = fish.item_props
@@ -475,9 +448,6 @@ async def appraise(cmd):
 async def barter(cmd):
     user_data = EwUser(member=cmd.message.author)
     mutations = user_data.get_mutations()
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
@@ -502,12 +472,7 @@ async def barter(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     elif item_sought:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         name = item_sought.get('name')
         fish = EwItem(id_item=item_sought.get('id_item'))
         id_fish = fish.id_item
@@ -727,9 +692,6 @@ async def barter(cmd):
 
 async def embiggen(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     market_data = EwMarket(id_server=user_data.id_server)
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -739,12 +701,6 @@ async def embiggen(cmd):
         response = "How are you going to embiggen your fish on the side of the street? You’ve got to see a professional for this, man. Head to the SlimeCorp Laboratory, they’ve got dozens of modern day magic potions ‘n shit over there."
 
     elif item_sought:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         name = item_sought.get('name')
         fish = EwItem(id_item=item_sought.get('id_item'))
         acquisition = fish.item_props.get('acquisition')
@@ -838,10 +794,6 @@ async def embiggen(cmd):
 async def barter_all(cmd):
     user_data = EwUser(member=cmd.message.author)
     mutations = user_data.get_mutations()
-    # if shambler, break
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     # if non-zone channel, break
     if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
@@ -904,12 +856,6 @@ async def barter_all(cmd):
 
     # if player had some fish to offer
     if offer_slime > 0 or len(offer_items) > 0:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         response = "You approach a man of particularly swashbuckling appearance, adorned in an old sea captain's uniform and bicorne cap, and surrounded by empty glass steins. You ask him if he is Captain Albert Alexander and he replies that he hasn’t heard that name in a long time. You drop all of your fish at his feet."
 

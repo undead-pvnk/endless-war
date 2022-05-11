@@ -29,5 +29,6 @@ cmd_map = {
 
     ewcfg.cmd_netrun: racecmds.netrun,
     ewcfg.cmd_strike_deal: racecmds.strike_deal,
+    ewcfg.cmd_honk: racecmds.honk,
 
 }

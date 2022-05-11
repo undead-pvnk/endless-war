@@ -95,16 +95,6 @@ async def activate_trap_items(district, id_server, id_user):
     await fe_utils.send_message(client, district_channel, fe_utils.formatMessage(member, response))
 
 
-# if not trap_was_dud:
-# 	client = ewutils.get_client()
-# 	server = client.get_server(id_server)
-#
-# 	prank_feed_channel = get_channel(server, 'prank-feed')
-#
-# 	response += "\n`-------------------------`"
-# 	await send_message(client, prank_feed_channel, formatMessage(member, response))
-
-
 # Use an instant use item
 async def prank_item_effect_instantuse(cmd, item):
     item_action = ""

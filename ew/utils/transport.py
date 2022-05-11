@@ -22,12 +22,6 @@ class EwTransport(EwTransportBase):
         # Loop till bot stops
         while not ewutils.TERMINATE:
 
-            district_data = EwDistrict(district=self.poi, id_server=self.id_server)
-
-            # Don't move trains if they're degraded
-            if district_data.is_degraded():
-                return
-
             # Grab EwTransportLine object for current line
             transport_line = poi_static.id_to_transport_line.get(self.current_line)
             client = ewutils.get_client()

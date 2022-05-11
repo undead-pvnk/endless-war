@@ -82,9 +82,6 @@ class EwEnemyBase:
     # Tracks which user is associated with the enemy
     owner = -1
 
-    # Coordinate used for enemies in Gankers Vs. Shamblers
-    gvs_coord = ""
-
     # Various properties different enemies might have
     enemy_props = ""
 
@@ -113,7 +110,7 @@ class EwEnemyBase:
 
                 # Retrieve object
                 cursor.execute(
-                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
+                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
                         ewcfg.col_id_enemy,
                         ewcfg.col_id_server,
                         ewcfg.col_enemy_slimes,
@@ -133,12 +130,10 @@ class EwEnemyBase:
                         ewcfg.col_enemy_id_target,
                         ewcfg.col_enemy_raidtimer,
                         ewcfg.col_enemy_rare_status,
-                        # ewcfg.col_enemy_hardened_sap,
                         ewcfg.col_enemy_weathertype,
                         ewcfg.col_faction,
                         ewcfg.col_enemy_class,
                         ewcfg.col_enemy_owner,
-                        ewcfg.col_enemy_gvs_coord,
                         query_suffix
                     ))
                 result = cursor.fetchone()
@@ -164,12 +159,10 @@ class EwEnemyBase:
                     self.id_target = result[16]
                     self.raidtimer = result[17]
                     self.rare_status = result[18]
-                    # self.hardened_sap = result[19]
                     self.weathertype = result[19]
                     self.faction = result[20]
                     self.enemyclass = result[21]
                     self.owner = result[22]
-                    self.gvs_coord = result[23]
 
                     # Retrieve additional properties
                     cursor.execute("SELECT {}, {} FROM enemies_prop WHERE id_enemy = %s".format(
@@ -201,7 +194,7 @@ class EwEnemyBase:
 
             # Save the object.
             cursor.execute(
-                "REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+                "REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
                     ewcfg.col_id_enemy,
                     ewcfg.col_id_server,
                     ewcfg.col_enemy_slimes,
@@ -226,7 +219,6 @@ class EwEnemyBase:
                     ewcfg.col_faction,
                     ewcfg.col_enemy_class,
                     ewcfg.col_enemy_owner,
-                    ewcfg.col_enemy_gvs_coord
                 ), (
                     self.id_enemy,
                     self.id_server,
@@ -252,7 +244,6 @@ class EwEnemyBase:
                     self.faction,
                     self.enemyclass,
                     self.owner,
-                    self.gvs_coord,
                 ))
 
             # If the enemy doesn't have an ID assigned yet, have the cursor give us the proper ID.
@@ -284,146 +275,6 @@ class EwEnemyBase:
                     ))
 
             conn.commit()
-        finally:
-            # Clean up the database handles.
-            cursor.close()
-            bknd_core.databaseClose(conn_info)
-
-
-class EwOperationData:
-    # The ID of the user who chose a seedpacket/tombstone for that operation
-    id_user = 0
-
-    # The district that the operation takes place in
-    district = ""
-
-    # The enemytype associated with that seedpacket/tombstone.
-    # A single Garden Ganker can not choose two of the same enemytype. No duplicate tombstones are allowed at all.
-    enemytype = ""
-
-    # The 'faction' of whoever chose that enemytype. This is either set to 'gankers' or 'shamblers'.
-    faction = ""
-
-    # The ID of the item used in the operation
-    id_item = 0
-
-    # The amount of shamblers stored in a tombstone.
-    shambler_stock = 0
-
-    def __init__(
-            self,
-            id_user = -1,
-            district = "",
-            enemytype = "",
-            faction = "",
-            id_item = -1,
-            shambler_stock = 0,
-    ):
-        self.id_user = id_user
-        self.district = district
-        self.enemytype = enemytype
-        self.faction = faction
-        self.id_item = id_item
-        self.shambler_stock = shambler_stock
-
-        if (id_user != ""):
-
-            try:
-                conn_info = bknd_core.databaseConnect()
-                conn = conn_info.get('conn')
-                cursor = conn.cursor()
-
-                # Retrieve object
-                cursor.execute("SELECT {}, {}, {} FROM gvs_ops_choices WHERE {} = %s AND {} = %s AND {} = %s".format(
-                    ewcfg.col_faction,
-                    ewcfg.col_id_item,
-                    ewcfg.col_shambler_stock,
-
-                    ewcfg.col_id_user,
-                    ewcfg.col_district,
-                    ewcfg.col_enemy_type
-                ), (
-                    self.id_user,
-                    self.district,
-                    self.enemytype,
-                ))
-                result = cursor.fetchone()
-
-                if result != None:
-                    # Record found: apply the data to this object.
-                    self.faction = result[0]
-                    self.id_item = result[1]
-                    self.shambler_stock = result[2]
-                else:
-                    # Create a new database entry if the object is missing.
-                    cursor.execute("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
-                        ewcfg.col_id_user,
-                        ewcfg.col_district,
-                        ewcfg.col_enemy_type,
-                        ewcfg.col_faction,
-                        ewcfg.col_id_item,
-                        ewcfg.col_shambler_stock,
-                    ), (
-                        self.id_user,
-                        self.district,
-                        self.enemytype,
-                        self.faction,
-                        self.id_item,
-                        self.shambler_stock,
-                    ))
-
-                    conn.commit()
-
-            finally:
-                # Clean up the database handles.
-                cursor.close()
-                bknd_core.databaseClose(conn_info)
-
-    def persist(self):
-        try:
-            conn_info = bknd_core.databaseConnect()
-            conn = conn_info.get('conn')
-            cursor = conn.cursor()
-
-            # Save the object.
-            cursor.execute("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
-                ewcfg.col_id_user,
-                ewcfg.col_district,
-                ewcfg.col_enemy_type,
-                ewcfg.col_faction,
-                ewcfg.col_id_item,
-                ewcfg.col_shambler_stock
-            ), (
-                self.id_user,
-                self.district,
-                self.enemytype,
-                self.faction,
-                self.id_item,
-                self.shambler_stock
-            ))
-
-            conn.commit()
-        finally:
-            # Clean up the database handles.
-            cursor.close()
-            bknd_core.databaseClose(conn_info)
-
-    def delete(self):
-        try:
-            conn_info = bknd_core.databaseConnect()
-            conn = conn_info.get('conn')
-            cursor = conn.cursor()
-
-            cursor.execute("DELETE FROM gvs_ops_choices WHERE {id_user} = %s AND {enemytype} = %s AND {district} = %s".format(
-                id_user=ewcfg.col_id_user,
-                enemytype=ewcfg.col_enemy_type,
-                district=ewcfg.col_district,
-            ), (
-                self.id_user,
-                self.enemytype,
-                self.district
-            ))
-
         finally:
             # Clean up the database handles.
             cursor.close()

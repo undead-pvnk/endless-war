@@ -655,14 +655,6 @@ def board_header(title):
         emote = ewcfg.emote_slimeheart
         bar += " "
 
-    elif title == ewcfg.leaderboard_degradation:
-        emote = ewcfg.emote_slimeskull
-        bar += " "
-
-    elif title == ewcfg.leaderboard_shamblers_killed:
-        emote = ewcfg.emote_slimeshot
-        bar += " "
-
     elif title == ewcfg.leaderboard_gambit_high:
         emote = ewcfg.emote_janus1
         emote2 = ewcfg.emote_janus2

@@ -47,6 +47,9 @@ path_ssod = {}
 
 active_slimeoidbattles = {}
 
+active_televisions = {}
+
+tv_counter  = 0
 
 class EwVector2D:
     vector = [0, 0]
@@ -134,13 +137,6 @@ def getValueFromFileContents(fname):
 
 def getToken():
     return getValueFromFileContents("token")
-
-
-""" get the Twitch client ID from the config file on disk """
-
-
-def getTwitchClientId():
-    return getValueFromFileContents("twitch_client_id")
 
 
 """ print a list of strings with nice comma-and grammar """
@@ -476,9 +472,6 @@ def get_faction(user_data = None, life_state = 0, faction = ""):
     elif life_state == ewcfg.life_state_lucky:
         faction_role = ewcfg.role_executive
 
-    elif life_state == ewcfg.life_state_shambler:
-        faction_role = ewcfg.role_shambler
-
     return faction_role
 
 
@@ -500,8 +493,6 @@ def get_faction_symbol(faction = "", faction_raw = ""):
             result = ewcfg.emote_ck
         elif faction == ewcfg.role_rowdyfuckers:
             result = ewcfg.emote_rf
-        elif faction == ewcfg.role_shambler:
-            result = ewcfg.emote_slimeskull
         elif faction == ewcfg.role_slimecorp:
             result = ewcfg.emote_slimecorp
         else:
@@ -542,7 +533,6 @@ def sap_max_bylevel(slimelevel):
 
 
 def hunger_max_bylevel(slimelevel, has_bottomless_appetite = 0):
-    # note that when you change this formula, you'll also have to adjust its sql equivalent in pushupServerHunger
     mult = 1
     if has_bottomless_appetite == 1:
         mult = 2

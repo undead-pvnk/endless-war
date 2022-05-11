@@ -68,7 +68,8 @@ async def attack(cmd):
         district_data = EwDistrict(district=attacker.poi, id_server=cmd.guild.id)
 
         # Setup flavortext variables
-        response, mass_status, wep_explode, napalm, hit_msg, rel_warn, new_cap, slimeoid_resp, bounty_resp, contract_resp, shambler_resp, lvl_resp = "", None, None, "", "", "", "", "", "", "", "", ""
+        # this is disgusting, who wrote this?
+        response, mass_status, wep_explode, napalm, hit_msg, rel_warn, new_cap, slimeoid_resp, bounty_resp, contract_resp, lvl_resp = "", None, None, "", "", "", "", "", "", "", "", ""
         target_killed = False
         bounty = 0
 
@@ -148,7 +149,7 @@ async def attack(cmd):
             if ctn.mass_apply_status == ewcfg.status_burning_id:
                 mass_status = apply_status_bystanders(
                     user_data=attacker, status=ewcfg.status_burning_id,
-                    value=ctn.bystander_damage, life_states=[ewcfg.life_state_shambler, ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_executive],
+                    value=ctn.bystander_damage, life_states=[ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_executive],
                     factions=["", target.faction], district_data=district_data
                 )
 
@@ -174,8 +175,8 @@ async def attack(cmd):
                 bounty = int(target.bounty / ewcfg.slimecoin_exchangerate)
                 attacker.change_slimecoin(n=bounty, coinsource=ewcfg.coinsource_bounty)
             else:
-                if target.life_state in [ewcfg.life_state_juvenile, ewcfg.life_state_shambler]:
-                    # attacking juvies and shamblers sends half to bleed and half to splatter
+                if target.life_state in [ewcfg.life_state_juvenile]:
+                    # attacking juvies send half to bleed and half to splatter
                     to_bleed = ctn.slimes_damage/2
                     to_district = ctn.slimes_damage/2
                 elif target.life_state == ewcfg.life_state_enlisted and target.faction == attacker.faction:
@@ -200,7 +201,7 @@ async def attack(cmd):
                 to_kingpin *= 2
 
             # Actually distribute slime now
-            if attacker.faction not in [ewcfg.faction_slimecorp, target.faction] and attacker.life_state not in [ewcfg.life_state_juvenile, ewcfg.life_state_shambler]:
+            if attacker.faction not in [ewcfg.faction_slimecorp, target.faction] and attacker.life_state not in [ewcfg.life_state_juvenile]:
                 # Kingpin only gets slime if not a teamkill or shill, or juvie, or shambler attacking
                 kingpin = fe_utils.find_kingpin(id_server=cmd.guild.id, kingpin_role=ewcfg.role_rowdyfucker if attacker.faction == ewcfg.faction_rowdys else ewcfg.role_copkiller)
                 if kingpin:
@@ -258,7 +259,6 @@ async def attack(cmd):
                     target.trauma = ewcfg.trauma_id_betrayal
                 else:
                     target.trauma = attacker_weapon.id_weapon
-                #target.degradation = 0 if ctn.vax else target.degradation
 
                 target.id_killer = attacker.id_user
 
@@ -273,8 +273,6 @@ async def attack(cmd):
                     ewstats.increment_stat(user=attacker, metric=ewcfg.stat_lifetime_ganks)
                 elif attacker.slimelevel < target.slimelevel:
                     ewstats.increment_stat(user=attacker, metric=ewcfg.stat_lifetime_takedowns)
-                if target.life_state == ewcfg.life_state_shambler:
-                    ewstats.increment_stat(user=attacker, metric=ewcfg.stat_shamblers_killed)
 
                 end = time.perf_counter()
                 print("{} seconds to run attack ln 252 stat updates".format(end-start))
@@ -340,10 +338,6 @@ async def attack(cmd):
                 ghost_name = cmd.guild.get_member(possession[0]).display_name
                 contract_resp = "\n\n {} winces in pain as their slime is corrupted into negaslime. {}'s contract has been fulfilled.".format(attacker_member.display_name, ghost_name)
 
-            if ctn.vax and target.life_state == ewcfg.life_state_shambler:
-                shambler_resp = "\nYour purified slime seeps into and emulsifies in their mangled corpse, healing their degraded body. When they revive, they’ll be a normal slimeboi like the rest of us. A pure, homogenous race of ENDLESS WAR fearing juveniles. It brings a tear to your eye."
-
-
             if random.randint(0, 99) == 0 and target.gender != 'gorl':
                 foreskin = True
             else:
@@ -353,7 +347,7 @@ async def attack(cmd):
 
             # Lets throw a little scalp and/or foreskin creation in here
             # Lets throw a little scalp creation in here
-            if ewcfg.slimernalia_active and target.life_state != ewcfg.life_state_shambler:
+            if ewcfg.slimernalia_active:
                 bknd_item.item_create(
                     item_type=ewcfg.it_furniture,
                     id_user=attacker_member.id,
@@ -367,7 +361,7 @@ async def attack(cmd):
                         'furniture_look_desc': "There's a sigillaria of {}.".format(target_member.display_name),
                     }
                 )
-            elif foreskin and target.life_state != ewcfg.life_state_shambler:
+            elif foreskin:
                 bknd_item.item_create(
                     item_type=ewcfg.it_cosmetic,
                     id_user=attacker_member.id,
@@ -392,7 +386,7 @@ async def attack(cmd):
                         'adorned': 'false'
                     }
                 )
-            elif target.life_state != ewcfg.life_state_shambler:
+            else:
                 bknd_item.item_create(
                     item_type=ewcfg.it_cosmetic,
                     id_user=attacker_member.id,
@@ -473,8 +467,7 @@ async def attack(cmd):
             wep_explode = weapon_explosion(user_data=EwUser(member=attacker_member), shootee_data=EwUser(member=target_member),
                                            district_data=EwDistrict(id_server=cmd.guild.id, district=attacker.poi),
                                            market_data=EwMarket(id_server=cmd.guild.id),
-                                           life_states=[ewcfg.life_state_shambler, ewcfg.life_state_enlisted,
-                                                        ewcfg.life_state_juvenile, ewcfg.life_state_executive],
+                                           life_states=[ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_executive],
                                            factions=["", target.faction],
                                            slimes_damage=ctn.bystander_damage, time_now=start_time, target_enemy=False)
 
@@ -483,7 +476,7 @@ async def attack(cmd):
         if wep_explode is not None: resp_ctn.add_response_container(wep_explode)
         if napalm != "": resp_ctn.add_channel_response(cmd.message.channel.name, napalm)
         if die_resp is not None: resp_ctn.add_response_container(die_resp)
-        response = hit_msg + rel_warn + new_cap + slimeoid_resp + bounty_resp + contract_resp + shambler_resp
+        response = hit_msg + rel_warn + new_cap + slimeoid_resp + bounty_resp + contract_resp
         resp_ctn.add_channel_response(cmd.message.channel.name, response)
         if lvl_resp != "": resp_ctn.add_channel_response(cmd.message.channel.name, "\n" + lvl_resp)
 
@@ -553,9 +546,7 @@ async def attack(cmd):
 
 async def reload(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
     response = ""
     reload_mismatch = True
 
@@ -608,10 +599,6 @@ async def reload(cmd):
 async def equip(cmd):
     user_data = EwUser(member=cmd.message.author)
 
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     time_now = int(time.time())
 
     if user_data.time_lastenlist > time_now:
@@ -646,9 +633,6 @@ async def equip(cmd):
 
 async def sidearm(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to equip a {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     time_now = int(time.time())
 
@@ -691,9 +675,6 @@ async def suicide(cmd):
         # Get the user data.
         user_data = EwUser(member=cmd.message.author)
         mutations = user_data.get_mutations()
-        if user_data.life_state == ewcfg.life_state_shambler:
-            response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
         user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
@@ -721,7 +702,6 @@ async def suicide(cmd):
 
             sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=user_data.id_server)
             sewer_data.change_slimes(n=slimes_drained)
-            # print(sewer_data.degradation)
             sewer_data.persist()
 
             district_data = EwDistrict(district=user_data.poi, id_server=cmd.guild.id)
@@ -753,6 +733,22 @@ async def suicide(cmd):
     await resp_cont.post()
 
 
+async def brandish(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.weapon > 0:
+        weapon = EwItem(id_item=user_data.weapon)
+        weapon_obj = static_weapons.weapon_map.get(weapon.item_props.get("weapon_type"))
+        if len(weapon.item_props.get('weapon_name')) <= 0:
+            weapon_name = "{}{}".format('their ', weapon_obj.str_name)
+        else:
+            weapon_name = weapon.item_props.get('weapon_name')
+
+        response = weapon_obj.str_brandish.format(weapon=weapon_name, name = cmd.message.author.display_name, tag = user_data.spray)
+    else:
+        response = "{} flips the bird!".format(cmd.message.author.display_name)
+    return await fe_utils.send_message(cmd.client, cmd.message.channel,fe_utils.formatMessage(cmd.message.author, response))
+
+
 """ Player spars with a friendly player to gain slime. """
 
 
@@ -774,9 +770,6 @@ async def spar(cmd):
         else:
             # Get killing player's info.
             user_data = EwUser(member=cmd.message.author)
-            if user_data.life_state == ewcfg.life_state_shambler:
-                response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
             weapon_item = EwItem(id_item=user_data.weapon)
 
@@ -928,9 +921,6 @@ async def annoint(cmd):
         response = "That name is too long. ({:,}/32)".format(len(annoint_name))
     else:
         user_data = EwUser(member=cmd.message.author)
-        if user_data.life_state == ewcfg.life_state_shambler:
-            response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         poudrin = bknd_item.find_item(item_search="slimepoudrin", id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter=ewcfg.it_item)
 
@@ -989,10 +979,6 @@ async def marry(cmd):
                 already_getting_married = True
                 break
 
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     weapon_item = EwItem(id_item=user_data.weapon)
     weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
     display_name = cmd.message.author.display_name
@@ -1023,12 +1009,6 @@ async def marry(cmd):
         response = "Ah, to recapture the magic of the first nights together… Sadly, those days are far behind you now. You’ve already had your special day, now it’s time to have the same boring days forever. Aren’t you glad you got married??"
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     else:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         marriage_line = 0
         time_now = int(time.time())
@@ -1115,9 +1095,6 @@ async def object(cmd):
 
 async def divorce(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     weapon_item = EwItem(id_item=user_data.weapon)
     weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
@@ -1134,13 +1111,7 @@ async def divorce(cmd):
     elif user_data.life_state == ewcfg.life_state_juvenile:
         response = "The Dojo Master offers annulment services to paying customers only. Enlist in a gang and he'll consider removing you from your hellish facade of a relationship."
     else:
-        poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
         weapon_name = weapon_item.item_props.get("weapon_name") if len(weapon_item.item_props.get("weapon_name")) > 0 else weapon.str_weapon
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         response = "Are you sure you want to divorce {}? The Dojo Master will take back weapon after the proceedings and it will be gone. **Forever**. Oh yeah, and the divorce courts around here are pretty harsh so expect to kiss at least half of your slimecoin goodbye.\n**!accept to continue, or !refuse to back out**".format(weapon.str_weapon)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -1182,9 +1153,6 @@ async def divorce(cmd):
 
 async def taunt(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     response = ""
 
@@ -1206,16 +1174,6 @@ async def taunt(cmd):
     if target_data == None:
         response = "ENDLESS WAR didn't understand that name."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    else:
-        try:
-            if (target_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_enlisted]) or (target_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler):
-                response = "Hey ASSHOLE! They're on your side!!"
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-            elif (target_data.enemyclass == ewcfg.enemy_class_shambler and target_data.gvs_coord not in ewcfg.gvs_coords_end):
-                response = "It's no use, they're too far away!"
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        except:
-            pass
 
     if target_data.poi != user_data.poi:
         response = "You can't {} someone, who's not even here.".format(cmd.tokens[0])
@@ -1240,9 +1198,6 @@ async def taunt(cmd):
 
 async def aim(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     response = ""
 
@@ -1264,16 +1219,6 @@ async def aim(cmd):
     if target_data == None:
         response = "ENDLESS WAR didn't understand that name."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    else:
-        try:
-            if (target_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_enlisted]) or (target_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler):
-                response = "Hey ASSHOLE! They're on your side!!"
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-            elif (target_data.enemyclass == ewcfg.enemy_class_shambler and target_data.gvs_coord not in ewcfg.gvs_coords_end):
-                response = "It's no use, they're too far away!"
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        except:
-            pass
 
     if target_data.poi != user_data.poi:
         response = "You can't {} at someone, who's not even here.".format(cmd.tokens[0])
@@ -1294,9 +1239,6 @@ async def aim(cmd):
 
 async def dodge(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     response = ""
 
@@ -1318,16 +1260,6 @@ async def dodge(cmd):
     if target_data == None:
         response = "ENDLESS WAR didn't understand that name."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    else:
-        try:
-            if (target_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_enlisted]) or (target_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler):
-                response = "Hey ASSHOLE! They're on your side!!"
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-            elif (target_data.enemyclass == ewcfg.enemy_class_shambler and target_data.gvs_coord not in ewcfg.gvs_coords_end):
-                response = "It's no use, they're too far away!"
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        except:
-            pass
 
     if target_data.poi != user_data.poi:
         response = "You can't {} someone, who's not even here.".format(cmd.tokens[0])
@@ -1661,13 +1593,6 @@ async def duel(cmd):
 
     challenger = EwUser(member=author)
     challengee = EwUser(member=member)
-
-    if challenger.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    elif challengee.life_state == ewcfg.life_state_shambler:
-        response = "They lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     challenger_poi = poi_static.id_to_poi.get(challenger.poi)
     challengee_poi = poi_static.id_to_poi.get(challengee.poi)
