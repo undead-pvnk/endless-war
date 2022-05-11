@@ -315,7 +315,8 @@ async def updateRoles(
         member = None,
         server_default = None,
         refresh_perms = True,
-        remove_or_apply_flag = None
+        remove_or_apply_flag = None,
+        new_poi = None
 ):
     time_now = int(time.time())
 
@@ -333,6 +334,8 @@ async def updateRoles(
     roles_map_user = ewutils.getRoleIdMap(member.roles)
 
     user_poi = poi_static.id_to_poi.get(user_data.poi)
+    if new_poi is not None:
+        user_poi = poi_static.id_to_poi.get(new_poi)
 
     if user_data.life_state != ewcfg.life_state_kingpin and ewcfg.role_kingpin in roles_map_user:
         # Fix the life_state of kingpins, if somehow it wasn't set.
@@ -364,7 +367,6 @@ async def updateRoles(
         ewcfg.role_grandfoe,
         ewcfg.role_executive,
         ewcfg.role_tutorial,
-        ewcfg.role_shambler,
     ]
 
     # Manage faction roles.
@@ -405,7 +407,7 @@ async def updateRoles(
     # 	faction_roles_remove.remove(active_role)
 
     tutorial_role = None
-    if user_data.poi in poi_static.tutorial_pois:
+    if user_poi.id_poi in poi_static.tutorial_pois:
         tutorial_role = ewcfg.role_tutorial
         faction_roles_remove.remove(tutorial_role)
 
@@ -557,7 +559,7 @@ async def updateRoles(
         ewutils.logMsg('error: failed to replace roles for {}:{}'.format(member.display_name, str(e)))
 
     if refresh_perms:
-        await refresh_user_perms(client=client, id_server=id_server, used_member=member)
+        await refresh_user_perms(client=client, id_server=id_server, used_member=member, new_poi = new_poi)
 
 
 # try:
@@ -566,13 +568,16 @@ async def updateRoles(
 #	ewutils.logMsg('error: failed to replace roles for {}'.format(member.display_name))
 
 # Removes and updates user permissions. It's got a fair amount of debuggers, sorry about the mess!
-async def refresh_user_perms(client, id_server, used_member = None, startup = False):
+async def refresh_user_perms(client, id_server, used_member = None, startup = False, new_poi = None):
     server = client.get_guild(id_server)
 
     has_overrides = False
 
     user_data = EwUser(member=used_member)
-    user_poi_obj = poi_static.id_to_poi.get(user_data.poi)
+    if new_poi is not None:
+        user_poi_obj = poi_static.id_to_poi.get(new_poi)
+    else:
+        user_poi_obj = poi_static.id_to_poi.get(user_data.poi)
 
     if not startup:
         for poi in poi_static.poi_list:
@@ -584,7 +589,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
                 if channel == None:
                     continue
 
-            if used_member in channel.overwrites and user_data.poi != poi.id_poi:
+            if used_member in channel.overwrites and user_poi_obj.id_poi != poi.id_poi:
                 # Incorrect overwrite found for user
 
                 try:
@@ -598,12 +603,12 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
                     ewutils.logMsg("Failed to remove permissions for {} in channel {}.".format(used_member.display_name, channel.name))
 
             # User doesn't have permissions for his current poi's gameplay channel
-            elif used_member not in channel.overwrites and user_data.poi == poi.id_poi:
+            elif used_member not in channel.overwrites and user_poi_obj.id_poi == poi.id_poi:
 
-                correct_poi = poi_static.id_to_poi.get(user_data.poi)
+                correct_poi = poi_static.id_to_poi.get(user_poi_obj.id_poi)
 
                 if correct_poi == None:
-                    print('User {} has invalid POI of {}'.format(user_data.id_user, user_data.poi))
+                    print('User {} has invalid POI of {}'.format(user_data.id_user, user_poi_obj.id_poi))
                     correct_poi = poi_static.id_to_poi.get(ewcfg.poi_id_downtown)
 
                 try:
@@ -630,15 +635,19 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
         if not has_overrides:
             # Member has no overwrites -- fix this:
             user_data = EwUser(member=used_member)
+            if new_poi is not None:
+                user_poi_obj = poi_static.id_to_poi.get(new_poi)
+            else:
+                user_poi_obj = poi_static.id_to_poi.get(user_poi_obj.id_poi)
 
             # User might not have their poi set to downtown when they join the server.
-            if user_data.poi == None:
+            if user_poi_obj.id_poi == None:
                 correct_poi = poi_static.id_to_poi.get(ewcfg.poi_id_downtown)
             else:
-                correct_poi = poi_static.id_to_poi.get(user_data.poi)
+                correct_poi = poi_static.id_to_poi.get(user_poi_obj.id_poi)
 
             if correct_poi == None:
-                print('User {} has invalid POI of {}'.format(user_data.id_user, user_data.poi))
+                print('User {} has invalid POI of {}'.format(user_data.id_user, user_poi_obj.id_poi))
                 correct_poi = poi_static.id_to_poi.get(ewcfg.poi_id_downtown)
 
             try:

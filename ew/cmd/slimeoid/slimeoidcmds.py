@@ -29,9 +29,6 @@ from .slimeoidutils import get_slimeoid_count
 # Destroy a slimeoid
 async def dissolveslimeoid(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     slimeoid = EwSlimeoid(member=cmd.message.author)
     # roles_map_user = ewutils.getRoleMap(message.author.roles)
@@ -61,11 +58,6 @@ async def dissolveslimeoid(cmd):
             slimeoidtype = "Negaslimeoid"
         else:
             slimeoidtype = "Slimeoid"
-
-        # shamblers lol
-        # if district_data.is_degraded():
-            # response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            # return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         if slimeoid.life_state != ewcfg.slimeoid_state_forming:
             # If the user isn't a ghost
@@ -120,13 +112,13 @@ async def dissolveslimeoid(cmd):
 
 # Show a player's slimeoid data.
 async def slimeoid(cmd):
-    user_data = EwUser(member=cmd.message.author)
     member = None
     selfcheck = True
     response = ""
 
     if cmd.mentions_count == 0:
         selfcheck = True
+        user_data = EwUser(member=cmd.message.author)
         slimeoid = EwSlimeoid(member=cmd.message.author)
     else:
         selfcheck = False
@@ -191,7 +183,7 @@ async def slimeoid(cmd):
     
             # If it has more than 2, give it a freshness rating
             if len(adorned_cosmetics) >= 2:
-                outfit_map = item_utils.get_outfit_info(id_user=cmd.message.author.id, id_server=cmd.guild.id, slimeoid = True)
+                outfit_map = item_utils.get_outfit_info(id_user=user_data.id_user, id_server=cmd.guild.id, slimeoid = True)
 
                 if outfit_map is not None:
                     response += " Its total freshness rating is a {} {}.".format(outfit_map['dominant_style'], outfit_map['total_freshness'])
@@ -721,7 +713,6 @@ async def slimeoidbattle(cmd):
             # RIP :,(             
             dead_slimeoid.die()
             dead_slimeoid.persist()
-            loser = EwUser(member=loser)
             loser.active_slimeoid = -1
             loser.persist()
 
@@ -823,10 +814,6 @@ async def saturateslimeoid(cmd):
 
 async def restoreslimeoid(cmd):
     user_data = EwUser(member=cmd.message.author)
-    # Shamblers lol
-    # if user_data.life_state == ewcfg.life_state_shambler:
-    #     response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-    #     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     slimeoid = EwSlimeoid(member=cmd.message.author)
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -1153,7 +1140,7 @@ async def feedslimeoid(cmd):
                             'ability': 'clout',
                             'durability': 2500000,
                             'size': 2,
-                            'style': ewcfg.style_cool,
+                            'fashion_style': ewcfg.style_cool,
                             'freshness': min(slimeoid.clout // 5, 10), # 1/5 of the slimeoid's clout, capped at 10 freshness.
                             'adorned': 'false',
                                     }

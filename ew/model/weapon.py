@@ -68,6 +68,9 @@ class EwWeapon:
     # Displayed in a scalp's description.
     str_scalp = ""
 
+    #Text when brandishing a weapon
+    str_brandish = ""
+
     # Clip size
     clip_size = 0
 
@@ -123,6 +126,7 @@ class EwWeapon:
             str_reload = "",
             str_reload_warning = "",
             str_scalp = "",
+            str_brandish = "",
             clip_size = 0,
             price = 0,
             cooldown = 0,
@@ -158,6 +162,7 @@ class EwWeapon:
         self.str_reload = str_reload
         self.str_reload_warning = str_reload_warning
         self.str_scalp = str_scalp
+        self.str_brandish = str_brandish
         self.clip_size = clip_size
         self.price = price
         self.cooldown = cooldown

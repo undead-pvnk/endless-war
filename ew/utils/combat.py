@@ -209,7 +209,6 @@ class EwEnemy(EwEnemyBase):
             target_isexecutive = target_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
             target_isjuvie = target_data.life_state == ewcfg.life_state_juvenile
             target_isnotdead = target_data.life_state != ewcfg.life_state_corpse
-            target_isshambler = target_data.life_state == ewcfg.life_state_shambler
 
             if target_data.life_state == ewcfg.life_state_kingpin:
                 # Disallow killing generals.
@@ -226,12 +225,12 @@ class EwEnemy(EwEnemyBase):
 
             # enemies dont fuck with ghosts, ghosts dont fuck with enemies.
             elif (
-                    target_iskillers or target_isrowdys or target_isjuvie or target_isexecutive or target_isshambler or target_isslimecorp) and (
+                    target_iskillers or target_isrowdys or target_isjuvie or target_isexecutive or target_isslimecorp) and (
                     target_isnotdead):
                 was_killed = False
                 was_hurt = False
 
-                if target_data.life_state in [ewcfg.life_state_shambler, ewcfg.life_state_enlisted,
+                if target_data.life_state in [ewcfg.life_state_enlisted,
                                               ewcfg.life_state_juvenile, ewcfg.life_state_lucky,
                                               ewcfg.life_state_executive]:
 
@@ -541,401 +540,6 @@ class EwEnemy(EwEnemyBase):
         # resp_cont.format_channel_response(ewcfg.channel_killfeed, enemy_data)
         # resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
         # await ewutils.send_message(client, killfeed_channel, ewutils.formatMessage(enemy_data.display_name, killfeed_resp))
-
-        # Send the response to the player.
-        resp_cont.format_channel_response(ch_name, enemy_data)
-        if should_post_resp_cont:
-            await resp_cont.post()
-
-    # Function that enemies used to attack each other in Gankers Vs. Shamblers.
-    async def cannibalize(self):
-        client = ewutils.get_client()
-
-        last_messages = []
-        should_post_resp_cont = True
-
-        enemy_data = self
-
-        time_now = int(time.time())
-        resp_cont = EwResponseContainer(id_server=enemy_data.id_server)
-        district_data = EwDistrict(district=enemy_data.poi, id_server=enemy_data.id_server)
-        market_data = EwMarket(id_server=enemy_data.id_server)
-        ch_name = poi_static.id_to_poi.get(enemy_data.poi).channel
-
-        used_attacktype = hunt_static.attack_type_map.get(enemy_data.attacktype)
-
-        # Get target's info based on its AI.
-        target_enemy, group_attack = get_target_by_ai(enemy_data, cannibalize=True)
-
-        if enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid:
-            if enemy_data.enemy_props.get('primed') != None:
-                if enemy_data.enemy_props.get('primed') != 'true':
-                    return
-
-            # target_enemy is a dict, enemy IDs are mapped to their coords
-            if len(target_enemy) == 1 and not group_attack:
-                # print('gaia found target')
-                used_id = None
-
-                for key in target_enemy.keys():
-                    used_id = key
-
-                target_enemy = EwEnemy(id_enemy=used_id, id_server=enemy_data.id_server)
-
-            # print('gaia changed target_enemy into enemy from dict')
-            elif len(target_enemy) == 0:
-                target_enemy = None
-
-        elif enemy_data.enemyclass == ewcfg.enemy_class_shambler:
-            if target_enemy == None:
-                return await hunt_utils.sh_move(enemy_data)
-            elif enemy_data.enemytype == ewcfg.enemy_type_dinoshambler:
-                if target_enemy.enemytype == ewcfg.enemy_type_gaia_suganmanuts and enemy_data.enemy_props.get(
-                        'jumping') == 'true':
-                    enemy_data.enemy_props['jumping'] = 'false'
-                else:
-                    return await hunt_utils.sh_move(enemy_data)
-
-        if bknd_hunt.check_raidboss_countdown(enemy_data) and enemy_data.life_state == ewcfg.enemy_lifestate_unactivated:
-            # Raid boss has activated!
-            response = "*The ground quakes beneath your feet as slime begins to pool into one hulking, solidified mass...*" \
-                       "\n{} **{} has arrived! It's level {} and has {} slime!** {}\n".format(
-                ewcfg.emote_megaslime,
-                enemy_data.display_name,
-                enemy_data.level,
-                enemy_data.slimes,
-                ewcfg.emote_megaslime
-            )
-            resp_cont.add_channel_response(ch_name, response)
-
-            enemy_data.life_state = ewcfg.enemy_lifestate_alive
-            enemy_data.time_lastenter = time_now
-            enemy_data.persist()
-
-            target_enemy = None
-
-        elif bknd_hunt.check_raidboss_countdown(enemy_data) and enemy_data.life_state == ewcfg.enemy_lifestate_alive:
-            # Raid boss attacks.
-            pass
-
-        # If a raid boss is currently counting down, delete the previous countdown message to reduce visual clutter.
-        elif bknd_hunt.check_raidboss_countdown(enemy_data) == False:
-
-            target_enemy = None
-
-            timer = (enemy_data.raidtimer - (int(time.time())) + ewcfg.time_raidcountdown)
-
-            if timer < ewcfg.enemy_attack_tick_length and timer != 0:
-                timer = ewcfg.enemy_attack_tick_length
-
-            countdown_response = "A sinister presence is lurking. Time remaining: {} seconds...".format(timer)
-            resp_cont.add_channel_response(ch_name, countdown_response)
-
-            # TODO: Edit the countdown message instead of deleting and reposting
-            last_messages = await resp_cont.post()
-            asyncio.ensure_future(fe_utils.delete_last_message(client, last_messages, ewcfg.enemy_attack_tick_length))
-
-            # Don't post resp_cont a second time while the countdown is going on.
-            should_post_resp_cont = False
-
-        if target_enemy != None and not group_attack:
-
-            miss = False
-
-            # Weaponized flavor text.
-            # hitzone = ewwep.get_hitzone()
-            # randombodypart = hitzone.name
-            # if random.random() < 0.5:
-            # 	randombodypart = random.choice(hitzone.aliases)
-            randombodypart = 'brainz' if enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid else 'stem'
-
-            slimes_damage = 0
-            set_damage = int(enemy_data.enemy_props.get('setdamage'))
-            if set_damage != None:
-                slimes_damage = set_damage
-
-            # Enemies don't select for these types of lifestates in their AI, this serves as a backup just in case.
-            if target_enemy.life_state != ewcfg.enemy_lifestate_unactivated and target_enemy.life_state != ewcfg.enemy_lifestate_dead:
-                was_killed = False
-                below_full = False
-                below_half = False
-                was_hurt = True
-
-                # Attacking-type-specific adjustments
-                if used_attacktype.fn_effect != None:
-                    # Apply effects for non-reference values
-                    miss = False  # Make sure to account for phosphorpoppies statuses
-
-                if miss:
-                    slimes_damage = 0
-
-                enemy_data.persist()
-                target_enemy = EwEnemy(id_enemy=target_enemy.id_enemy, id_server=target_enemy.id_server)
-
-                if slimes_damage >= target_enemy.slimes:  # - target_enemy.bleed_storage:
-                    was_killed = True
-                    slimes_damage = max(target_enemy.slimes, 0)  # - target_enemy.bleed_storage
-                else:
-                    # In Gankers Vs. Shamblers, responses are only sent out after the initial hit and when the target reaches below 50% HP
-                    # This serves to ensure less responses cluttering up the channel and to preserve performance.
-                    if target_enemy.slimes < target_enemy.initialslimes and not target_enemy.enemy_props.get(
-                            'below_full') == 'true':
-                        target_enemy.enemy_props['below_full'] = 'true'
-                        below_full = True
-                    elif target_enemy.slimes < int(target_enemy.initialslimes / 2) and not target_enemy.enemy_props.get(
-                            'below_half') == 'true':
-                        target_enemy.enemy_props['below_half'] = 'true'
-                        below_half = True
-
-                sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=enemy_data.id_server)
-
-                # slimes_drained = int(3 * slimes_damage / 4)  # 3/4
-                slimes_drained = int(7 * slimes_damage / 8)  # 7/8
-
-                damage = slimes_damage
-
-                # slimes_tobleed = int((slimes_damage - slimes_drained) / 2)
-
-                slimes_directdamage = slimes_damage  # - slimes_tobleed
-                slimes_splatter = slimes_damage - slimes_drained  # - slimes_tobleed
-
-                market_data.splattered_slimes += slimes_damage
-                market_data.persist()
-                district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
-                # target_enemy.bleed_storage += slimes_tobleed
-                target_enemy.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
-                sewer_data.change_slimes(n=slimes_drained)
-
-                if target_enemy.enemytype == ewcfg.enemy_type_gaia_razornuts:
-                    bite_response = "{} [{}] ({}) bit on a razornut and got hurt! They lost 20000 slime!".format(
-                        enemy_data.display_name, enemy_data.identifier, enemy_data.gvs_coord)
-                    enemy_data.change_slimes(n=-20000)
-                    if enemy_data.slimes <= 0:
-                        bite_response += " The attack killed {} [{}] ({}) in the process.".format(
-                            enemy_data.display_name, enemy_data.identifier, enemy_data.gvs_coord)
-
-                        bknd_hunt.delete_enemy(enemy_data)
-                        resp_cont.add_channel_response(ch_name, bite_response)
-
-                        return await resp_cont.post()
-                    else:
-                        resp_cont.add_channel_response(ch_name, bite_response)
-                elif enemy_data.enemytype == ewcfg.enemy_type_shambleballplayer:
-                    current_target_coord = target_enemy.gvs_coord
-                    row = current_target_coord[0]
-                    column = int(current_target_coord[1])
-
-                    if column < 9:
-                        new_coord = "{}{}".format(row, column + 1)
-
-                        gaias_in_coord = hunt_utils.gvs_get_gaias_from_coord(enemy_data.poi, new_coord)
-
-                        if len(gaias_in_coord) > 0:
-                            pass
-                        else:
-                            punt_response = "{} [{}] ({}) punts a {} into {}!".format(enemy_data.display_name,
-                                                                                      enemy_data.identifier,
-                                                                                      enemy_data.gvs_coord,
-                                                                                      target_enemy.display_name,
-                                                                                      new_coord)
-                            resp_cont.add_channel_response(ch_name, punt_response)
-
-                            target_enemy.gvs_coord = new_coord
-                            target_enemy.persist()
-
-                if was_killed:
-                    # Enemy was killed.
-                    bknd_hunt.delete_enemy(target_enemy)
-
-                    # release bleed storage
-                    slimes_todistrict = target_enemy.slimes
-
-                    district_data.change_slimes(n=slimes_todistrict, source=ewcfg.source_killing)
-
-                    response = used_attacktype.str_damage.format(
-                        name_enemy=enemy_data.display_name,
-                        name_target=target_enemy.display_name,
-                        hitzone=randombodypart,
-                    )
-
-                    response += "\n\n{}".format(used_attacktype.str_kill.format(
-                        name_enemy=enemy_data.display_name,
-                        name_target=target_enemy.display_name,
-                        emote_skull=ewcfg.emote_slimeskull
-                    ))
-
-                    enemy_data.persist()
-                    district_data.persist()
-
-                    resp_cont.add_channel_response(ch_name, response)
-
-                    # don't recreate enemy data if enemy was killed in explosion
-                    if bknd_hunt.check_death(enemy_data) == False:
-                        enemy_data = EwEnemy(id_enemy=self.id_enemy)
-
-                else:
-                    # A non-lethal blow!
-                    if miss:
-                        response = "{}".format(used_attacktype.str_miss.format(
-                            name_enemy=enemy_data.display_name,
-                            name_target=target_enemy.display_name
-                        ))
-                    else:
-                        response = used_attacktype.str_damage.format(
-                            name_enemy=enemy_data.display_name,
-                            name_target=target_enemy.display_name,
-                            hitzone=randombodypart,
-                        )
-                        response += " {target_name} loses {damage:,} slime!".format(
-                            target_name=target_enemy.display_name,
-                            damage=damage,
-                        )
-
-                    # if below_full == False and below_half == False:
-                    # 	should_post_resp_cont = False
-                    # 	response = ""
-
-                    target_enemy.persist()
-                    resp_cont.add_channel_response(ch_name, response)
-
-                # Persist enemy data.
-                if enemy_data.life_state == ewcfg.enemy_lifestate_alive or enemy_data.life_state == ewcfg.enemy_lifestate_unactivated:
-                    enemy_data.persist()
-
-                district_data.persist()
-
-            if enemy_data.attacktype == ewcfg.enemy_attacktype_gvs_g_explosion:
-                bknd_hunt.delete_enemy(enemy_data)
-
-        elif target_enemy != None and group_attack:
-            # print('group attack...')
-
-            for key in target_enemy.keys():
-
-                used_id = key
-                target_enemy = EwEnemy(id_enemy=used_id, id_server=enemy_data.id_server)
-
-                miss = False
-
-                # Weaponized flavor text.
-                randombodypart = 'brainz' if enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid else 'stem'
-
-                slimes_damage = 0
-                set_damage = int(enemy_data.enemy_props.get('setdamage'))
-                if set_damage != None:
-                    slimes_damage = set_damage
-
-                # Enemies don't select for these types of lifestates in their AI, this serves as a backup just in case.
-                if target_enemy.life_state != ewcfg.enemy_lifestate_unactivated and target_enemy.life_state != ewcfg.enemy_lifestate_dead:
-                    was_killed = False
-                    below_full = False
-                    below_half = False
-                    was_hurt = True
-
-                    enemy_data.persist()
-                    target_enemy = EwEnemy(id_enemy=target_enemy.id_enemy, id_server=target_enemy.id_server)
-
-                    if slimes_damage >= target_enemy.slimes:
-                        was_killed = True
-                        slimes_damage = max(target_enemy.slimes, 0)
-                    else:
-                        # In Gankers Vs. Shamblers, responses are only sent out after the initial hit and when the target reaches below 50% HP
-                        # This serves to ensure less responses cluttering up the channel and to preserve performance.
-                        if target_enemy.slimes < target_enemy.initialslimes and not target_enemy.enemy_props.get(
-                                'below_full') == 'true':
-                            target_enemy.enemy_props['below_full'] = 'true'
-                            below_full = True
-                        elif target_enemy.slimes < int(
-                                target_enemy.initialslimes / 2) and not target_enemy.enemy_props.get(
-                            'below_half') == 'true':
-                            target_enemy.enemy_props['below_half'] = 'true'
-                            below_half = True
-
-                    sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=enemy_data.id_server)
-
-                    # slimes_drained = int(3 * slimes_damage / 4)  # 3/4
-                    slimes_drained = int(7 * slimes_damage / 8)  # 7/8
-
-                    damage = slimes_damage
-
-                    # slimes_tobleed = int((slimes_damage - slimes_drained) / 2)
-
-                    slimes_directdamage = slimes_damage  # - slimes_tobleed
-                    slimes_splatter = slimes_damage - slimes_drained  # - slimes_tobleed
-
-                    market_data.splattered_slimes += slimes_damage
-                    market_data.persist()
-                    district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
-                    # target_enemy.bleed_storage += slimes_tobleed
-                    target_enemy.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
-                    sewer_data.change_slimes(n=slimes_drained)
-
-                    if was_killed:
-                        # Enemy was killed.
-                        bknd_hunt.delete_enemy(target_enemy)
-
-                        # release bleed storage
-                        slimes_todistrict = target_enemy.slimes
-
-                        district_data.change_slimes(n=slimes_todistrict, source=ewcfg.source_killing)
-
-                        # target_data.change_slimes(n=-slimes_dropped / 10, source=ewcfg.source_ghostification)
-
-                        response = used_attacktype.str_damage.format(
-                            name_enemy=enemy_data.display_name,
-                            name_target=target_enemy.display_name,
-                            hitzone=randombodypart,
-                        )
-
-                        response += "\n\n{}".format(used_attacktype.str_kill.format(
-                            name_enemy=enemy_data.display_name,
-                            name_target=target_enemy.display_name,
-                            emote_skull=ewcfg.emote_slimeskull
-                        ))
-
-                        enemy_data.persist()
-                        district_data.persist()
-
-                        resp_cont.add_channel_response(ch_name, response)
-
-                        # don't recreate enemy data if enemy was killed in explosion
-                        if bknd_hunt.check_death(enemy_data) == False:
-                            enemy_data = EwEnemy(id_enemy=self.id_enemy)
-
-                    else:
-                        # A non-lethal blow!
-
-                        if miss:
-                            response = "{}".format(used_attacktype.str_miss.format(
-                                name_enemy=enemy_data.display_name,
-                                name_target=target_enemy.display_name
-                            ))
-                        else:
-                            response = used_attacktype.str_damage.format(
-                                name_enemy=enemy_data.display_name,
-                                name_target=target_enemy.display_name,
-                                hitzone=randombodypart,
-                            )
-                            response += " {target_name} loses {damage:,} slime!".format(
-                                target_name=target_enemy.display_name,
-                                damage=damage,
-                            )
-
-                        # if below_full == False and below_half == False:
-                        # 	should_post_resp_cont = False
-                        # 	response = ""
-
-                        target_enemy.persist()
-                        resp_cont.add_channel_response(ch_name, response)
-
-                    # Persist enemy data.
-                    if enemy_data.life_state == ewcfg.enemy_lifestate_alive or enemy_data.life_state == ewcfg.enemy_lifestate_unactivated:
-                        enemy_data.persist()
-
-                district_data.persist()
-
-            if enemy_data.attacktype == ewcfg.enemy_attacktype_gvs_g_explosion:
-                bknd_hunt.delete_enemy(enemy_data)
 
         # Send the response to the player.
         resp_cont.format_channel_response(ch_name, enemy_data)
@@ -1264,8 +868,7 @@ def explode(damage = 0, district_data = None, market_data = None):
     response = ""
     channel = poi_static.id_to_poi.get(poi).channel
 
-    life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive,
-                   ewcfg.life_state_shambler]
+    life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
     users = district_data.get_players_in_district(life_states=life_states, pvp_only=True)
 
     enemies = district_data.get_enemies_in_district()
@@ -1477,13 +1080,6 @@ def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = Non
 
     if ewcfg.status_n4 in user_statuses:
         mods['untouchable'] = True
-
-    # apply trauma mods
-    # if user_data.combatant_type == 'player':
-    #	trauma = se_static.trauma_map.get(user_data.trauma)
-
-    #	if trauma != None and trauma.trauma_class == ewcfg.trauma_class_accuracy:
-    #		mods['miss'] -= 0.2 * user_data.degradation / 100
 
     return mods
 
@@ -1851,144 +1447,6 @@ async def enemy_perform_action(id_server):
 # time_end = time.time()
 # ewutils.logMsg("time spent on performing enemy actions: {}".format(time_end - time_start))
 
-async def enemy_perform_action_gvs(id_server):
-    client = ewcfg.get_client()
-
-    time_now = int(time.time())
-
-    # condition_gaia_sees_shambler_player = "enemies.poi IN (SELECT users.poi FROM users WHERE (users.life_state = '{}'))".format(ewcfg.life_state_shambler)
-    # condition_gaia_sees_shampler_enemy = "enemies.poi IN (SELECT enemies.poi FROM enemies WHERE (enemies.enemyclass = '{}'))".format(ewcfg.enemy_class_shambler)
-    # condition_shambler_sees_alive_player = "enemies.poi IN (SELECT users.poi FROM users WHERE (users.life_state IN {}))".format(tuple([ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]))
-    # condition_shambler_sees_gaia_enemy = "enemies.poi IN (SELECT enemies.poi FROM enemies WHERE (enemies.enemyclass = '{}'))".format(ewcfg.enemy_class_gaiaslimeoid)
-
-    # print(despawn_timenow)
-    # "SELECT {id_enemy} FROM enemies WHERE (enemies.enemytype IN %s) AND (({condition_1}) OR ({condition_2}) OR ({condition_3}) OR ({condition_4}) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.expiration_date < %s) OR (enemies.id_target != '')) AND enemies.id_server = {id_server}"
-
-    enemydata = bknd_core.execute_sql_query(
-        "SELECT {id_enemy} FROM enemies WHERE ((enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.expiration_date < %s) OR (enemies.id_target != -1)) AND enemies.id_server = {id_server}".format(
-            id_enemy=ewcfg.col_id_enemy,
-            id_server=id_server,
-        ), (
-            ewcfg.gvs_enemies,
-            ewcfg.enemy_lifestate_dead,
-            time_now
-        ))
-    # enemydata = bknd_core.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
-    #	id_enemy = ewcfg.col_id_enemy
-    # ),(
-    #	id_server,
-    # ))
-
-    # Remove duplicates from SQL query
-    # enemydata = set(enemydata)
-
-    for row in enemydata:
-
-        enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
-
-        if enemy == None:
-            continue
-
-        if poi_static.id_to_poi.get(enemy.poi) != None:
-            ch_name = poi_static.id_to_poi.get(enemy.poi).channel
-        else:
-            continue
-
-        server = client.get_guild(id_server)
-        channel = fe_utils.get_channel(server, ch_name)
-
-        # This function returns a false value if that enemy can't act on that turn.
-        if not hunt_utils.check_enemy_can_act(enemy):
-            continue
-
-        # Go through turn counters unrelated to the prevention of acting on that turn.
-        turn_timer_response = hunt_utils.handle_turn_timers(enemy)
-        if turn_timer_response != None and turn_timer_response != "":
-            await fe_utils.send_message(client, channel, turn_timer_response)
-
-        enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
-
-        # Unarmed Gaiaslimeoids have no role in combat.
-        if enemy.attacktype == ewcfg.enemy_attacktype_unarmed:
-            continue
-
-        resp_cont = EwResponseContainer(id_server=id_server)
-
-        # If an enemy is marked for death or has been alive too long, delete it
-        if enemy.life_state == ewcfg.enemy_lifestate_dead or (enemy.expiration_date < time_now):
-            bknd_hunt.delete_enemy(enemy)
-        else:
-            # The GvS raidboss has pre-determined pathfinding
-            if enemy.enemytype in ewcfg.raid_bosses and enemy.life_state == ewcfg.enemy_lifestate_alive and check_raidboss_movecooldown(
-                    enemy):
-                resp_cont = enemy.move()
-                if resp_cont != None:
-                    await resp_cont.post(delete_after=120)
-
-            # If an enemy is alive, make it perform the kill (or cannibalize) function.
-
-            # Check if the enemy can do anything right now
-            if enemy.life_state == ewcfg.enemy_lifestate_unactivated and bknd_hunt.check_raidboss_countdown(enemy):
-                # Raid boss has activated!
-                response = "*The dreaded creature of Dr. Downpour claws its way into {}.*" \
-                           "\n{} **{} has arrived! It's level {} and has {} slime. Good luck.** {}\n".format(
-                    enemy.poi,
-                    ewcfg.emote_megaslime,
-                    enemy.display_name,
-                    enemy.level,
-                    enemy.slimes,
-                    ewcfg.emote_megaslime
-                )
-                resp_cont.add_channel_response(ch_name, response)
-
-                enemy.life_state = ewcfg.enemy_lifestate_alive
-                enemy.time_lastenter = int(time.time())
-                enemy.persist()
-
-            # If a raid boss is currently counting down, delete the previous countdown message to reduce visual clutter.
-            elif bknd_hunt.check_raidboss_countdown(enemy) == False:
-                timer = (enemy.raidtimer - (int(time.time())) + ewcfg.time_raidcountdown)
-
-                if timer < ewcfg.enemy_attack_tick_length and timer != 0:
-                    timer = ewcfg.enemy_attack_tick_length
-
-                countdown_response = "A sinister presence is lurking. Time remaining: {} seconds...".format(timer)
-                resp_cont.add_channel_response(ch_name, countdown_response)
-
-                # TODO: Edit the countdown message instead of deleting and reposting
-                last_messages = await resp_cont.post()
-                asyncio.ensure_future(
-                    fe_utils.delete_last_message(client, last_messages, ewcfg.enemy_attack_tick_length))
-                resp_cont = None
-            else:
-                district_data = EwDistrict(district=enemy.poi, id_server=enemy.id_server)
-
-                # Look for enemies of the opposing 'class'. If none are found, look for players instead.
-                if enemy.enemytype in ewcfg.gvs_enemies_gaiaslimeoids:
-                    if len(district_data.get_enemies_in_district(classes=[ewcfg.enemy_class_shambler])) > 0:
-                        await enemy.cannibalize()
-                # elif len(district_data.get_players_in_district(life_states = [ewcfg.life_state_shambler])) > 0:
-                # 	await enemy.kill()
-                elif enemy.enemytype in ewcfg.gvs_enemies_shamblers:
-                    life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
-
-                    if enemy.gvs_coord in ewcfg.gvs_coords_end:
-                        if len(district_data.get_players_in_district(
-                                life_states=life_states)) > 0 and enemy.gvs_coord in ewcfg.gvs_coords_end:
-                            await enemy.kill()
-                        else:
-                            continue
-                    else:
-                        if len(district_data.get_enemies_in_district(classes=[ewcfg.enemy_class_gaiaslimeoid])) > 0:
-                            await enemy.cannibalize()
-                        else:
-                            await hunt_utils.sh_move(enemy)
-                else:
-                    continue
-
-            if resp_cont != None:
-                await resp_cont.post()
-
 
 # Finds an enemy based on its regular/shorthand name, or its ID.
 def find_enemy(enemy_search = None, user_data = None):
@@ -2022,7 +1480,6 @@ def find_enemy(enemy_search = None, user_data = None):
         tokens_set_upper = set(enemy_search_tokens_upper)
 
         identifiers_found = tokens_set_upper.intersection(set(ewcfg.identifier_letters))
-        # coordinates_found = tokens_set_upper.intersection(set(ewcfg.gvs_valid_coords_gaia))
 
         if len(identifiers_found) > 0:
 
@@ -2046,26 +1503,6 @@ def find_enemy(enemy_search = None, user_data = None):
                 enemy_found = enemy
                 break
 
-        # elif len(coordinates_found) > 0:
-        # 	# user passed in a GvS coordinate for a district specific enemy
-        #
-        # 	searched_coord= coordinates_found.pop()
-        #
-        # 	enemydata = bknd_core.execute_sql_query(
-        # 		"SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {coord} = %s AND {life_state} = 1".format(
-        # 			id_enemy=ewcfg.col_id_enemy,
-        # 			poi=ewcfg.col_enemy_poi,
-        # 			coord=ewcfg.col_enemy_gvs_coord,
-        # 			life_state=ewcfg.col_enemy_life_state
-        # 		), (
-        # 			user_data.poi,
-        # 			searched_coord,
-        # 		))
-        #
-        # 	for row in enemydata:
-        # 		enemy = EwEnemy(id_enemy=row[0], id_server=user_data.id_server)
-        # 		enemy_found = enemy
-        # 		break
         else:
             # last token was a string, identify enemy by name
 
@@ -2167,80 +1604,11 @@ def get_target_by_ai(enemy_data, cannibalize = False):
             if len(users) > 0:
                 target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server, data_level=1)
 
-        elif enemy_data.ai == ewcfg.enemy_ai_gaiaslimeoid:
-
-            users = bknd_core.execute_sql_query(
-                "SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({life_state} = {life_state_shambler}) ORDER BY {slimes} DESC".format(
-                    id_user=ewcfg.col_id_user,
-                    life_state=ewcfg.col_life_state,
-                    slimes=ewcfg.col_slimes,
-                    poi=ewcfg.col_poi,
-                    id_server=ewcfg.col_id_server,
-                    time_lastenter=ewcfg.col_time_lastenter,
-                    targettimer=targettimer,
-                    life_state_shambler=ewcfg.life_state_shambler,
-                    time_now=time_now,
-                ), (
-                    enemy_data.poi,
-                    enemy_data.id_server
-                ))
-            if len(users) > 0:
-                target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server, data_level=1)
-
-        elif enemy_data.ai == ewcfg.enemy_ai_shambler:
-
-            users = bknd_core.execute_sql_query(
-                "SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT ({life_state} = {life_state_shambler} OR {life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin}) ORDER BY {slimes} DESC".format(
-                    id_user=ewcfg.col_id_user,
-                    life_state=ewcfg.col_life_state,
-                    slimes=ewcfg.col_slimes,
-                    poi=ewcfg.col_poi,
-                    id_server=ewcfg.col_id_server,
-                    time_lastenter=ewcfg.col_time_lastenter,
-                    targettimer=targettimer,
-                    life_state_shambler=ewcfg.life_state_shambler,
-                    life_state_corpse=ewcfg.life_state_corpse,
-                    life_state_kingpin=ewcfg.life_state_kingpin,
-                ), (
-                    enemy_data.poi,
-                    enemy_data.id_server
-                ))
-            if len(users) > 0:
-                target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server, data_level=1)
-
         # If an enemy is a raidboss, don't let it attack until some time has passed when entering a new district.
         if enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.time_lastenter > raidbossaggrotimer:
             target_data = None
 
     elif cannibalize:
-        if enemy_data.ai == ewcfg.enemy_ai_gaiaslimeoid:
-
-            range = 1 if enemy_data.enemy_props.get('range') == None else int(enemy_data.enemy_props.get('range'))
-            direction = 'right' if enemy_data.enemy_props.get('direction') == None else enemy_data.enemy_props.get(
-                'direction')
-            piercing = 'false' if enemy_data.enemy_props.get('piercing') == None else enemy_data.enemy_props.get(
-                'piercing')
-            splash = 'false' if enemy_data.enemy_props.get('splash') == None else enemy_data.enemy_props.get('splash')
-            pierceamount = '0' if enemy_data.enemy_props.get('pierceamount') == None else enemy_data.enemy_props.get(
-                'pierceamount')
-            singletilepierce = 'false' if enemy_data.enemy_props.get(
-                'singletilepierce') == None else enemy_data.enemy_props.get('singletilepierce')
-
-            enemies = bknd_hunt.ga_check_coord_for_shambler(enemy_data, range, direction, piercing, splash, pierceamount,
-                                                            singletilepierce)
-            if len(enemies) > 1:
-                group_attack = True
-
-            target_data = enemies
-
-        elif enemy_data.ai == ewcfg.enemy_ai_shambler:
-            range = 1 if enemy_data.enemy_props.get('range') == None else int(enemy_data.enemy_props.get('range'))
-            direction = 'left' if enemy_data.enemy_props.get('direction') == None else enemy_data.enemy_props.get(
-                'direction')
-
-            enemies = bknd_hunt.sh_check_coord_for_gaia(enemy_data, range, direction)
-            if len(enemies) > 0:
-                target_data = EwEnemyBase(id_enemy=enemies[0], id_server=enemy_data.id_server)
 
         # If an enemy is a raidboss, don't let it attack until some time has passed when entering a new district.
         if enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.time_lastenter > raidbossaggrotimer:
@@ -2330,7 +1698,7 @@ class EwUser(EwUserBase):
                 response += "You have been empowered by slime and are now a level {} slime{}.".format(new_level, self.gender)
             for level in range(self.slimelevel + 1, new_level + 1):
                 current_mutations = self.get_mutations()
-                if (level >= self.get_mutation_level() + self.get_mutation_next_level()) and (self.life_state not in [ewcfg.life_state_corpse, ewcfg.life_state_shambler]) and (self.get_mutation_level() < 50):
+                if (level >= self.get_mutation_level() + self.get_mutation_next_level()) and (self.life_state not in [ewcfg.life_state_corpse]) and (self.get_mutation_level() < 50):
 
                     new_mutation = self.get_mutation_next()
 
@@ -2415,11 +1783,6 @@ class EwUser(EwUserBase):
             self.bounty = 0
             self.time_lastdeath = time_now
 
-            # if self.life_state == ewcfg.life_state_shambler:
-            # 	self.degradation += 1
-            # else:
-            # 	self.degradation += 5
-
             ewstats.increment_stat(user=self, metric=ewcfg.stat_lifetime_deaths)
             ewstats.change_stat(user=self, metric=ewcfg.stat_lifetime_slimeloss, n=self.slimes)
 
@@ -2430,9 +1793,6 @@ class EwUser(EwUserBase):
                     item_fraction = 4
                     food_fraction = 4
                     cosmetic_fraction = 4
-
-                    # Remove them from Garden Ops where applicable
-                    #bknd_core.execute_sql_query("DELETE FROM gvs_ops_choices WHERE id_user = {}".format(self.id_user))
 
                 else:  # If you were a Gangster.
                     item_fraction = 2

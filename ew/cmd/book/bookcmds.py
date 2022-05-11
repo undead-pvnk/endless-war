@@ -18,10 +18,6 @@ async def begin_manuscript(cmd):
     user_data = EwUser(member=cmd.message.author)
     title = cmd.message.content[(len(cmd.tokens[0])):].strip()
 
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     cost = 20000
 
     poi = poi_static.id_to_poi.get(user_data.poi)
@@ -63,10 +59,6 @@ async def begin_manuscript(cmd):
 async def set_pen_name(cmd):
     user_data = EwUser(member=cmd.message.author)
 
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     poi = poi_static.id_to_poi.get(user_data.poi)
 
     if not poi.write_manuscript:
@@ -94,9 +86,6 @@ async def set_pen_name(cmd):
 
 async def set_title(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     title = cmd.message.content[(len(cmd.tokens[0])):].strip()
 
@@ -130,9 +119,6 @@ async def set_title(cmd):
 
 async def set_genre(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     genre = cmd.message.content[(len(cmd.tokens[0])):].strip()
 
@@ -170,9 +156,6 @@ async def set_genre(cmd):
 
 async def edit_page(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     response = ""
 
@@ -250,9 +233,6 @@ async def edit_page(cmd):
 
 async def view_page(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     poi = poi_static.id_to_poi.get(user_data.poi)
 
@@ -292,9 +272,6 @@ async def view_page(cmd):
 
 async def check_manuscript(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     poi = poi_static.id_to_poi.get(user_data.poi)
 
@@ -329,9 +306,6 @@ async def check_manuscript(cmd):
 
 async def publish_manuscript(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     market_data = EwMarket(id_server=user_data.id_server)
 
@@ -418,9 +392,6 @@ async def read_book(cmd):
     dm = cmd.message.guild is None
 
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if not dm:
         response = "ENDLESS WAR politely asks that you !read in his DMs."
@@ -505,9 +476,6 @@ async def next_page(cmd):
     dm = cmd.message.guild is None
 
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if not dm:
         response = "ENDLESS WAR politely asks that you !read in his DMs."
@@ -550,9 +518,6 @@ async def previous_page(cmd):
     dm = cmd.message.guild is None
 
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if not dm:
         response = "ENDLESS WAR politely asks that you !read in his DMs."
@@ -798,9 +763,6 @@ async def browse_zines(cmd):
 
 async def order_zine(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     poi = poi_static.id_to_poi.get(user_data.poi)
 
@@ -1004,9 +966,6 @@ async def rate_zine(cmd):
 
 async def set_length(cmd):
     user_data = EwUser(member=cmd.message.author)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     poi = poi_static.id_to_poi.get(user_data.poi)
 

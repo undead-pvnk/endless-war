@@ -119,7 +119,7 @@ def farm_tick(id_server):
 
         time_nextphase = ewcfg.time_nextphase
 
-        # gvs - juvie's last farming phase lasts 10 minutes
+        #juvie's last farming phase lasts 10 minutes
         if farm_data.sow_life_state in [ewcfg.life_state_juvenile, ewcfg.farm_life_state_juviethumb] and farm_data.phase == (ewcfg.farm_phase_reap_juvie - 1):
             time_nextphase = ewcfg.time_lastphase_juvie
 
@@ -130,7 +130,7 @@ def farm_tick(id_server):
             farm_data.phase += 1
             farm_data.time_lastphase = time_now
 
-            # gvs - juvies only have 5 farming phases
+            # juvies only have 5 farming phases
             if farm_data.sow_life_state in [ewcfg.life_state_juvenile, ewcfg.farm_life_state_juviethumb] and farm_data.phase == ewcfg.farm_phase_reap_juvie:
                 farm_data.phase = ewcfg.farm_phase_reap
 

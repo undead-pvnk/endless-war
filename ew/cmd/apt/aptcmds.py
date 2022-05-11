@@ -12,6 +12,7 @@ from ew.backend.market import EwMarket
 from ew.backend.player import EwPlayer
 from ew.backend.worldevent import EwWorldEvent
 from ew.static import cfg as ewcfg
+from ew.static import community_cfg as comm_cfg
 from ew.static import cosmetics
 from ew.static import food as static_food
 from ew.static import hue as hue_static
@@ -297,10 +298,6 @@ async def apartment(cmd):
 async def upgrade(cmd):
     usermodel = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
     apt_model = EwApartment(id_server=cmd.guild.id, id_user=cmd.message.author.id)
-
-    if usermodel.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if apt_model.rent == 0:
         response = "You don't have an apartment."
@@ -699,10 +696,6 @@ async def cancel(cmd):
     usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
     aptmodel = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-    if usermodel.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     if usermodel.poi != ewcfg.poi_id_realestate:
         response = "You can only null your lease at the Real Estate Agency."
     elif aptmodel.rent == 0:
@@ -710,12 +703,6 @@ async def cancel(cmd):
     elif aptmodel.rent * 4 > usermodel.slimecoin:
         response = "You can't afford the lease separation. Time to take your eviction like a champ."
     else:
-        poi = poi_static.id_to_poi.get(usermodel.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=usermodel.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         poi = poi_static.id_to_poi.get(aptmodel.poi)
         response = "The separation will cost {:,} SlimeCoin. Do you !accept the termination, or !refuse it?".format(aptmodel.rent * 4)
@@ -839,11 +826,6 @@ async def add_key(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     user_data = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     apartment_data = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
     if user_data.poi != ewcfg.poi_id_realestate:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You need to request a housekey at the Real Estate Agency."))
@@ -859,11 +841,6 @@ async def add_key(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You need to pay base rent in order to receive a new housekey. It sadly appears as though you can't even afford a new friend."))
     else:
         poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         response = "Adding a key will change your rent to {:,} SlimeCoin. It will cost {:,} Slimcoin, as a down payment. Do you !accept or !refuse?".format(int(apartment_data.rent * 1.5), apartment_data.rent)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -921,9 +898,6 @@ async def manual_changelocks(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     user_data = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
     apartment = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     apartment_data = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
     if user_data.poi != ewcfg.poi_id_realestate:
@@ -936,11 +910,6 @@ async def manual_changelocks(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You need to pay half of base rent in order to change the locks around. Whatever scourge you set loose on your property, you'll just have to live with them."))
     else:
         poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-        if district_data.is_degraded():
-            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         response = "Changing the locks will revert your rent back to before you added keys. It will cost {:,} Slimecoin, though. Do you !accept or !refuse?".format(apartment_data.rent / 2)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -1266,7 +1235,7 @@ async def browse(cmd):
         return await apt_utils.lobbywarning(cmd)
 
     if bknd_item.find_item(item_search="laptopcomputer", id_user=str(usermodel.id_user) + ewcfg.compartment_id_decorate, id_server=playermodel.id_server):
-        response = random.choice(ewcfg.browse_list)
+        response = random.choice(comm_cfg.browse_list)
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     else:
         await apt_look(cmd=cmd)
@@ -1668,13 +1637,19 @@ async def watch(cmd):
     else:
         user_model.persist()
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You begin watching TV."))
+        ewutils.active_televisions[user_id] = ewutils.tv_counter
+        current_counter = ewutils.tv_counter
+        ewutils.tv_counter += 1
+
         for x in range(0, 62):
             await asyncio.sleep(300)
             # await asyncio.sleep(1)
             user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)
             item_sought = bknd_item.find_item(id_user=str(user_id) + ewcfg.compartment_id_decorate, id_server=player_model.id_server, item_search="television")
-            if user_model.poi == poi and user_model.time_last_action > (int(time.time()) - ewcfg.time_kickout) and item_sought:
-                await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, random.choice(ewcfg.tv_lines)))
+            if current_counter != ewutils.active_televisions[user_id]:
+                return
+            elif user_model.poi == poi and user_model.time_last_action > (int(time.time()) - ewcfg.time_kickout) and item_sought:
+                await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, random.choice(comm_cfg.tv_lines)))
             else:
                 if user_model.time_last_action <= (int(time.time()) - ewcfg.time_kickout):
                     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You fell asleep watching TV."))
@@ -1717,12 +1692,17 @@ async def freeze(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if ew_slime_model.name != "":
+        # Slimeoid lifestate check for flavor text
+        if ew_slime_model.sltype == ewcfg.sltype_lab:
+            SlimeoidType = "Slimeoid"
+        else:
+            SlimeoidType = "Negaslimeoid"
         ew_slime_model.id_user += "freeze"
         ew_slime_model.life_state = ewcfg.slimeoid_state_stored
         ew_slime_model.persist()
         usermodel.active_slimeoid = -1
         usermodel.persist()
-        response = "You pick up your slimeoid. {} wonders what is going on, but trusts you implicitly. You open the freezer. {} begins to panic. However, you overpower them, shove them in the icebox, and quickly close the door. Whew. You wonder if this is ethical.".format(ew_slime_model.name, ew_slime_model.name)
+        response = "You pick up your {}. {} wonders what is going on, but trusts you implicitly. You open the freezer. {} begins to panic. However, you overpower them, shove them in the icebox, and quickly close the door. Whew. You wonder if this is ethical.".format(SlimeoidType, ew_slime_model.name, ew_slime_model.name)
 
     else:
         response = "You don't have a slimeoid for that."
@@ -1768,13 +1748,24 @@ async def unfreeze(cmd):
     elif ew_slime_model.name == None or len(ew_slime_model.name) == 0:
         response = "You don't have anyone like that in the fridge."
 
+    elif usermodel.life_state != ewcfg.life_state_corpse and ew_slime_model.sltype == ewcfg.sltype_nega:
+        response = "You can't unfreeze a Negaslimeoid as you are."
+
+    elif usermodel.life_state == ewcfg.life_state_corpse and ew_slime_model.sltype == ewcfg.sltype_lab:
+        response = "You can't unfreeze a Slimeoid as you are."
+
     else:
+        # Slimeoid lifestate check for flavor text
+        if ew_slime_model.sltype == ewcfg.sltype_lab:
+            SlimeoidType = "Slimeoid"
+        else:
+            SlimeoidType = "Negaslimeoid"
         ew_slime_model.id_user = cmd.message.author.id
         ew_slime_model.life_state = ewcfg.slimeoid_state_active
         ew_slime_model.persist()
         usermodel.active_slimeoid = ew_slime_model.id_slimeoid
         usermodel.persist()
-        response = "You open the freezer. Your slimeoid stumbles out, desperately gasping for air. {} isn't sure what it did to deserve cryostasis, but it gives you an apologetic yap in order to earn your forgiveness. \n\n {} is now your slimeoid.".format(ew_slime_model.name, ew_slime_model.name, ew_slime_model.name)
+        response = "You open the freezer. Your {} stumbles out, desperately gasping for air. {} isn't sure what it did to deserve cryostasis, but it gives you an apologetic yap in order to earn your forgiveness. \n\n {} is now your {}.".format(SlimeoidType, ew_slime_model.name, ew_slime_model.name, ew_slime_model.name, SlimeoidType)
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 

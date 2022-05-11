@@ -406,11 +406,6 @@ async def bleedSlimes(id_server = None):
                     slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
                     slimes_dropped = user_data.totaldamage + user_data.slimes
 
-                    # trauma = se_static.trauma_map.get(user_data.trauma)
-                    # bleed_mod = 1
-                    # if trauma != None and trauma.trauma_class == ewcfg.trauma_class_bleeding:
-                    #	bleed_mod += 0.5 * user_data.degradation / 100
-
                     # round up or down, randomly weighted
                     remainder = slimes_to_bleed - int(slimes_to_bleed)
                     if random.random() < remainder:
@@ -496,36 +491,6 @@ async def enemyBleedSlimes(id_server = None):
                         bknd_hunt.delete_enemy(enemy_data)
 
             await resp_cont.post()
-            conn.commit()
-        finally:
-            # Clean up the database handles.
-            cursor.close()
-            bknd_core.databaseClose(conn_info)
-
-
-""" Increase hunger for every player in the server. """
-
-
-def pushupServerHunger(id_server = None):
-    if id_server != None:
-        try:
-            conn_info = bknd_core.databaseConnect()
-            conn = conn_info.get('conn')
-            cursor = conn.cursor()
-
-            # Save data
-            cursor.execute("UPDATE users SET {hunger} = {hunger} + {tick} WHERE life_state > 0 AND id_server = %s AND hunger < {limit}".format(
-                hunger=ewcfg.col_hunger,
-                tick=ewcfg.hunger_pertick,
-                # this function returns the bigger of two values; there is no simple way to do this in sql and we can't calculate it within this python script
-                limit="0.5 * (({val1} + {val2}) + ABS({val1} - {val2}))".format(
-                    val1=ewcfg.min_stamina,
-                    val2="POWER(" + ewcfg.col_slimelevel + ", 2)"
-                )
-            ), (
-                id_server,
-            ))
-
             conn.commit()
         finally:
             # Clean up the database handles.
@@ -884,11 +849,7 @@ async def enemy_action_tick_loop(id_server):
     while not ewutils.TERMINATE:
         await asyncio.sleep(interval)
         # resp_cont = EwResponseContainer(id_server=id_server)
-        if ewcfg.gvs_active:
-            await cmbt_utils.enemy_perform_action_gvs(id_server)
-
-        else:
-            await cmbt_utils.enemy_perform_action(id_server)
+        await cmbt_utils.enemy_perform_action(id_server)
 
 
 async def release_timed_prisoners_and_blockparties(id_server, day):
@@ -991,14 +952,6 @@ async def auction_renewal(id_server, market_data, current_date, item_date_map):
     server = client.get_guild(id_server)
     channel = fe_utils.get_channel(server=server, channel_name=ewcfg.channel_auctionupdatez)
     await fe_utils.send_message(client, channel, embed=auctionmessage)
-
-
-async def gvs_gamestate_tick_loop(id_server):
-    interval = ewcfg.gvs_gamestate_tick_length
-    # Causes various events to occur during a Garden or Graveyard ops in Gankers Vs. Shamblers
-    while not ewutils.TERMINATE:
-        await asyncio.sleep(interval)
-        await hunt_utils.gvs_update_gamestate(id_server)
 
 
 async def spawn_prank_items_tick_loop(id_server):
@@ -1443,9 +1396,6 @@ async def clock_tick_loop(id_server = None, force_active = False):
                     ewutils.logMsg("Decaying slimes...")
                     await decaySlimes(id_server)
 
-                    # Increase hunger for all players below the max.
-                    # ewutils.pushupServerHunger(id_server = server.id)
-
                     # Decrease inebriation for all players above min (0).
                     ewutils.logMsg("Handling inebriation...")
                     await pushdownServerInebriation(id_server)
@@ -1504,7 +1454,3 @@ async def clock_tick_loop(id_server = None, force_active = False):
                 await asyncio.sleep(60)
     except Exception as e:
         ewutils.logMsg('An error occurred in the scheduled slime market update task: {}. Fix that.'.format(e))
-
-
-
-

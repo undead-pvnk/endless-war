@@ -125,9 +125,6 @@ class EwPoi:
     # if you can write zines here
     write_manuscript = False
 
-    # maximum degradation - zone ceases functioning when this value is reached
-    max_degradation = 0
-
     # dict EwPoi -> int, that defines travel times into adjacent pois
     neighbors = None
 
@@ -186,7 +183,6 @@ class EwPoi:
             is_tutorial = False,
             has_ads = False,
             write_manuscript = False,
-            max_degradation = 10000,
             neighbors = None,
             topic = "",
             wikipage = "",
@@ -234,7 +230,6 @@ class EwPoi:
         self.is_tutorial = is_tutorial
         self.has_ads = has_ads
         self.write_manuscript = write_manuscript
-        self.max_degradation = max_degradation
         self.topic = topic
         self.wikipage = wikipage
         self.isSplit = isSplit

@@ -145,12 +145,6 @@ status_effect_list = [
         crit_mod=0.03,
     ),
     EwStatusEffectDef(
-        id_status=ewcfg.status_modelovaccine_id,
-        time_expire=86400,
-        str_acquire="You shoot the vaccine but… nothing happens. On the surface, anyway. The vaccine has successfully dissolved throughout your bloodstream, and you will now “cure” all those who come into contact with your pure, righteous slime. Meaning, it’s time to conduct some straight up genocide.",
-        str_describe_self="The modelovirus vaccine running through your veins allows you to cure shamblers!"
-    ),
-    EwStatusEffectDef(
         id_status=ewcfg.status_slapped_id,
         time_expire=300,
         str_acquire="You're tuckered out. Better not get slapped for awhile.",
@@ -671,6 +665,12 @@ trauma_list = [
         str_trauma_self="Your head is dented in with a huge crater.",
         str_trauma="Their head is dented in with a huge crater.",
         trauma_class=ewcfg.trauma_class_accuracy,
+    ),
+    EwTrauma(  # 18
+        id_trauma=ewcfg.weapon_id_skateboard,
+        str_trauma_self="The sight of skate tricks makes you cower in fear.",
+        str_trauma="The sight of skate tricks makes them cower in fear.",
+        trauma_class=ewcfg.trauma_class_sapregeneration
     ),
 ]
 

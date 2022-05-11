@@ -395,7 +395,7 @@ smelting_recipe_list = [
             "whip"
         ],
         ingredients={
-            ewcfg.item_id_monofilamentfragment: 25, 
+            ewcfg.item_id_monofilamentfragment: 25,
             ewcfg.item_id_ironingot: 1,
         },
         products=[ewcfg.weapon_id_monofilamentwhip]
@@ -1724,9 +1724,26 @@ smelting_recipe_list = [
         },
         products=['purpledrink']
     ),
+    EwSmeltingRecipe(
+        id_recipe="skateboard",
+        str_name="skateboard",
+        alias=[
+            'sk8b04rd',
+            'sk8r',
+            'board',
+        ],
+        ingredients={
+            ewcfg.weapon_id_bat: 2,
+            ewcfg.item_id_ironingot: 1,
+            ewcfg.item_id_leather: 1,
+            'rollerblades': 1,
+        },
+        products=[ewcfg.weapon_id_skateboard]
+    ),
+
 ]
 
-# TODO remove after double halloween
+
 if ewcfg.dh_active:
     smelting_recipe_list.append(EwSmeltingRecipe(
             id_recipe = "ticket",

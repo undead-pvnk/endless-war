@@ -56,7 +56,7 @@ poi_list = [
 		role = "Cop Killtown",
 		major_role = "copkilltown_major",
 		minor_role = "copkilltown_minor",
-		permissions = {'cop-killtown': ['read', 'send', 'connect']},
+		permissions = {'cop-killtown': ['read', 'send', 'connect'], 'killer-transmissions': ['read']},
 		pvp = False,
 		factions = ['killers'],
 		property_class = "a",
@@ -113,7 +113,7 @@ poi_list = [
 		role = "Rowdy Roughhouse",
 		major_role = "rowdyroughhouse_major",
 		minor_role = "rowdyroughhouse_minor",
-		permissions = {'rowdy-roughhouse': ['read', 'send', 'connect']},
+		permissions = {'rowdy-roughhouse': ['read', 'send', 'connect'], 'rowdy-transmissions': ['read']},
 		pvp = False,
 		factions = ['rowdys'],
 		property_class = "c",
@@ -987,7 +987,6 @@ poi_list = [
 		pvp = False,
 		is_subzone = True,
 		mother_districts = ['downtown'],
-		max_degradation = 10000000,
 		neighbors = {'downtown': 20},
 		wikipage = "https://rfck.miraheze.org/wiki/Downtown_NLACakaNM#ENDLESS_WAR",
 	),
@@ -1022,7 +1021,7 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = ['downtown'],
 		neighbors = {'downtown': 20},
-		topic = "https://ew.krakissi.net/market/",
+		topic = "https://rfck.app/market/",
 		wikipage = "https://rfck.miraheze.org/wiki/Downtown_NLACakaNM#Slime_Stock_Exchange",
 	),
 	EwPoi(
@@ -3975,12 +3974,7 @@ world_events = [
 		event_type=ewcfg.event_type_voidhole,
 		str_event_start="You hit a sudden gap in the stone, with a scary looking drop. You see what looks like a trampoline on a building's roof at the bottom. Do you **{}** in?".format(ewcfg.cmd_jump),
 		str_event_end="The wall collapses.",
-	),
-	EwEventDef(
-		event_type=ewcfg.event_type_shambaquarium,
-		str_event_start="Holy. Fucking. SHIT. You spot some brainz. Grab 'em all with **{}** {} before they get washed away by the current!",
-		str_event_end="The brainz drift away into the endless expanse of the Slime Sea. Cringe.",
-	),
+	)
 ]
 
 event_type_to_def = {}

@@ -267,8 +267,7 @@ async def update_stocks(id_server = None):
         for stock in ewcfg.stocks:
             s = EwStock(id_server, stock)
             # we don't update stocks when they were just added
-            # or when shamblers have degraded it
-            if s.timestamp != 0 and not exchange_data.is_degraded():
+            if s.timestamp != 0:
                 s.timestamp = int(time.time())
                 market_response = await stock_market_tick(s, id_server)
                 resp_cont.add_channel_response(ewcfg.channel_stockexchange, market_response)

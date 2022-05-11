@@ -244,25 +244,7 @@ async def on_ready():
             landmark_mode=True
         )
 
-    cosmetic_utils.update_hues()
-
     ewutils.logMsg("finished landmark precomputation")
-
-
-    # Look for a Twitch client_id on disk.
-    # FIXME debug - temporarily disable Twitch integration
-    if False:
-        twitch_client_id = ewutils.getTwitchClientId()
-
-    # If no twitch client ID is available, twitch integration will be disabled.
-    # FIXME debug - temporarily disable Twitch integration.
-    if True:
-        twitch_client_id = None
-        ewutils.logMsg('Twitch integration disabled.')
-    elif twitch_client_id == None or len(twitch_client_id) == 0:
-        ewutils.logMsg('No twitch_client_id file found. Twitch integration disabled.')
-    else:
-        ewutils.logMsg("Enabled Twitch integration.")
 
     # Channels in the connected discord servers to announce to.
     channels_announcement = []
@@ -283,18 +265,11 @@ async def on_ready():
         # find roles and add them tom the database
         ewrolemgr.setupRoles(client=client, id_server=server.id)
 
-        # Refresh the permissions of all users
-        # await ewrolemgr.refresh_user_perms(client = client, id_server = server.id, startup = True)
-
         # Grep around for channels
         ewutils.logMsg("connected to server: {}".format(server.name))
         for channel in server.channels:
             if (channel.type == discord.ChannelType.text):
-                if (channel.name == ewcfg.channel_twitch_announcement):
-                    channels_announcement.append(channel)
-                    ewutils.logMsg("• found channel for announcements: {}".format(channel.name))
-
-                elif (channel.name == ewcfg.channel_stockexchange):
+                if (channel.name == ewcfg.channel_stockexchange):
                     channels_stockmarket[server.id] = channel
                     ewutils.logMsg("• found channel for stock exchange: {}".format(channel.name))
 
@@ -327,19 +302,15 @@ async def on_ready():
             # call the constructor to create an entry if it doesnt exist yet
             dist = EwDistrict(id_server=server.id, district=poi)
             # change the ownership to the faction that's already in control to initialize topic names
-            try:
                 # initialize gang bases
-                if poi == ewcfg.poi_id_rowdyroughhouse:
-                    dist.controlling_faction = ewcfg.faction_rowdys
-                elif poi == ewcfg.poi_id_copkilltown:
-                    dist.controlling_faction = ewcfg.faction_killers
+            if poi == ewcfg.poi_id_rowdyroughhouse:
+                dist.controlling_faction = ewcfg.faction_rowdys
+            elif poi == ewcfg.poi_id_copkilltown:
+                dist.controlling_faction = ewcfg.faction_killers
 
-                resp_cont = dist.change_ownership(new_owner=dist.controlling_faction, actor="init", client=client)
-                dist.persist()
-                await resp_cont.post()
-
-            except:
-                ewutils.logMsg('Could not change ownership for {} to "{}".'.format(poi, dist.controlling_faction))
+            resp_cont = dist.change_ownership(new_owner=dist.controlling_faction, actor="init", client=client)
+            dist.persist()
+            await resp_cont.post()
 
         # kill people who left the server while the bot was offline
         # ewutils.kill_quitters(server.id) #FIXME function get_member doesn't find users reliably
@@ -363,11 +334,9 @@ async def on_ready():
             asyncio.ensure_future(loop_utils.spawn_prank_items_tick_loop(id_server = server.id))
             asyncio.ensure_future(loop_utils.generate_credence_tick_loop(id_server = server.id))
 
-        if ewcfg.gvs_active:
-            asyncio.ensure_future(loop_utils.gvs_gamestate_tick_loop(id_server=server.id))
-        else:
-            # Enemies do not spawn randomly during Gankers Vs. Shamblers
-            asyncio.ensure_future(loop_utils.spawn_enemies_tick_loop(id_server=server.id))
+
+        # Enemies do spawn randomly
+        asyncio.ensure_future(loop_utils.spawn_enemies_tick_loop(id_server=server.id))
 
         if not debug:
             await transport_utils.init_transports(id_server=server.id)
@@ -397,9 +366,6 @@ async def on_ready():
     time_now = int(time.time())
     time_last_pvp = time_now
 
-    time_last_twitch = time_now
-    time_twitch_downed = 0
-
     # Every three hours we log a message saying the periodic task hook is still active. On startup, we want this to happen within about 60 seconds, and then on the normal 3 hour interval.
     time_last_logged = time_now - ewcfg.update_hookstillactive + 60
 
@@ -414,54 +380,6 @@ async def on_ready():
             time_last_logged = time_now
 
             ewutils.logMsg("Periodic hook still active.")
-
-        # Check to see if a stream is live via the Twitch API.
-        # FIXME disabled
-        if False:
-            # if twitch_client_id != None and (time_now - time_last_twitch) >= ewcfg.update_twitch:
-            time_last_twitch = time_now
-
-            try:
-                # Twitch API call to see if there are any active streams.
-                json_string = ""
-                p = subprocess.Popen(
-                    "curl -H 'Client-ID: {}' -X GET 'https://api.twitch.tv/helix/streams?user_login = rowdyfrickerscopkillers' 2>/dev/null".format(twitch_client_id),
-                    shell=True,
-                    stdout=subprocess.PIPE
-                )
-
-                for line in p.stdout.readlines():
-                    json_string += line.decode('utf-8')
-
-                json_parsed = json.loads(json_string)
-
-                # When a stream is up, data is an array of stream information objects.
-                data = json_parsed.get('data')
-                if data != None:
-                    data_count = len(data)
-                    stream_was_live = stream_live
-                    stream_live = True if data_count > 0 else False
-
-                    if stream_was_live == True and stream_live == False:
-                        time_twitch_downed = time_now
-
-                    if stream_was_live == False and stream_live == True and (time_now - time_twitch_downed) > 600:
-                        ewutils.logMsg("The stream is now live.")
-
-                        # The stream has transitioned from offline to online. Make an announcement!
-                        for channel in channels_announcement:
-                            await fe_utils.send_message(
-                                client,
-                                channel,
-                                "ATTENTION CITIZENS. THE **ROWDY FUCKER** AND THE **COP KILLER** ARE **STREAMING**. BEWARE OF INCREASED KILLER AND ROWDY ACTIVITY.\n\n@everyone\n{}".format(
-                                    "https://www.twitch.tv/rowdyfrickerscopkillers"
-                                )
-                            )
-            except:
-                ewutils.logMsg('Twitch handler hit an exception (continuing): {}'.format(json_string))
-                traceback.print_exc(file=sys.stdout)
-
-
 
         # Parse files dumped into the msgqueue directory and send messages as needed.
         try:
@@ -889,13 +807,6 @@ async def debugHandling(message, cmd, cmd_obj):
         user_data.life_state = ewcfg.life_state_enlisted
         user_data.faction = ewcfg.faction_killers
         user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-        user_data.persist()
-        await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
-
-    elif cmd == (ewcfg.cmd_prefix + 'getshambler'):
-        response = "You get shambler. Jesus fucking Christ, why not, sure."
-        user_data = EwUser(member=message.author)
-        user_data.life_state = ewcfg.life_state_shambler
         user_data.persist()
         await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
 

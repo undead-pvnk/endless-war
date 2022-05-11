@@ -45,7 +45,9 @@ async def set_race(cmd):
             selected_race = ewcfg.defined_races.get(desired_race)
 
             #if race found in dictionary, set race
-            if selected_race != None:
+            if selected_race == ewcfg.race_clown and user_data.faction != ewcfg.faction_rowdys:
+                response = "Only hot-blooded, reckless ROWDYS can become CLOWNS. !ENLIST ROWDYS MF'ERRRRRRRRRRRRRRRR !THRASH !THRASH !THRASH"
+            elif selected_race != None:
                 response = selected_race.get("acknowledgement_str").format(cmd = selected_race.get("racial_cmd"))
 
                 # only set the cooldown if the user is switching race, rather than setting it up for the first time
@@ -498,6 +500,50 @@ async def shamble(cmd):
         
     return await fe_utils.send_response(response, cmd)
 
+
+async def honk(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    response = ""
+    if user_data.race == ewcfg.race_clown:
+        
+        target_name = ""
+        responses = []
+
+        if cmd.mentions_count == 1:
+            target_name = cmd.mentions[0].display_name
+            responses = [
+                "You grab {target} by the shnoz and honk it reeeeeeal loud. Gee golly!",
+                "You grab {target} by the cock and honk it reeeeeeal loud. Gee golly!",
+                "You sneak up on {target} and blast a shitty bicycle horn directly into their ear. Wow, real fuckin funny. No, no, seriously, everyone thinks you're the life of the fucking party over here. Asshole.",
+                "Hey, {target}, knock knock! Who's there, you say? Why it's- https://www.youtube.com/watch?v=al1Cqs_yof8&ab_channel=SoundEffects ",
+                "You try to !honk {target}. You succeed.",
+                "You HONK at {target} like a goose. That's fucked up.", # Would be cool to add anything of worth, but alas, I have no fucking idea how to do any of this. :pensive:
+            ]
+        else:
+            roll = random.randrange(50)
+
+            if roll < 5: #rare response
+                responses = [
+                    "Shit, man, you know Homestuck? You remember that one goofy guy? It's like that, man, you get it.",
+                    "What's that thing you people do again? Squeak? Beep? Something like that, you'll figure it out.",
+                    "You feel the cotton candy bile rise in your throat as your veins push away blood to make room for adrenaline. Several of your knuckles break unclenching your fist to bring air into your rubber sphere. Never matter. The best is yet to come. You pound down so hard on the horn the rubber starts to melt. The air blasts out, meek at first but rapidly crescendos into its zenith. You hear it at its apex as the orchestra swells. Miracles do come true after all. ",
+                ]
+            else: #common response
+                responses = [
+                    "You're not one to toot your own horn- oh what are you saying? Of course you are! HONK!",
+                    "Your horn is in the shop right now, but once you get it back, hooooo boy people are gonna have to watch their backs then.",
+                    "HONK HONK",
+                    "HoNk HoNk",
+                    "Haha, wow dude, you crazy for this one XD",
+                    "HOOOONK! HOOOOOOOOOOOOOOONK! BWOOOOOOOOOOOOOOONK!",
+                ]
+            
+        response = random.choice(responses).format(target = target_name)
+               
+    else:
+        response = "What, really? You think this shit is EASY? You know how hard you have to WORK for this? I graduated Summa Cum Laude from ICPU. Your attempt to appropriate culture is almost as funny as actually BEING a clown. Almost. God you're pathetic."
+        
+    return await fe_utils.send_response(response, cmd)
 
 
 

@@ -392,10 +392,6 @@ async def award_fish(fisher, cmd, user_data):
         #if has_fishingrod == True:
         #    slime_gain = slime_gain * 2
 
-        # trauma = se_static.trauma_map.get(user_data.trauma)
-        # if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
-        #	slime_gain *= (1 - 0.5 * user_data.degradation / 100)
-
         # Fish are more valuable at the void.
         if fisher.pier.pier_type == ewcfg.fish_slime_void:
             slime_gain = slime_gain * 1.5
@@ -415,10 +411,6 @@ async def award_fish(fisher, cmd, user_data):
         if user_data.poi == ewcfg.poi_id_juviesrow_pier:
             exotic_residue = 5
             slime_gain = int(slime_gain / 4)
-
-        #trauma = se_static.trauma_map.get(user_data.trauma)
-        #if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain and False:
-            #slime_gain *= (1 - 0.5 * user_data.degradation / 100)
 
         #FISHINGEVENT - fun extra modifiers for exotic residue
         exotic_residue += random.randrange(0, 11, 5)
@@ -460,13 +452,14 @@ async def award_fish(fisher, cmd, user_data):
             slime_gain = int(0.25 * slime_gain)
             # FISHINGEVENT - give event points
             if fisher.pier.pier_type == ewcfg.fish_slime_saltwater:
-                response = "The two of you together manage to reel in a {fish}! {flavor} {ghost} haunts {slime:,} slime away from the fish before placing it on {fleshling}'s hands. {fleshling} still wrings out the fish, and collects {exoticresidue:,} exotic residue from it." \
+                response = "The two of you together manage to reel in a {fish}! {flavor} It's {length} inches long! {ghost} haunts {slime:,} slime away from the fish before placing it on {fleshling}'s hands. {fleshling} still wrings out the fish, and collects {exoticresidue:,} exotic residue from it." \
                     .format(
                     fish=static_fish.fish_map[fisher.current_fish].str_name,
                     flavor=static_fish.fish_map[fisher.current_fish].str_desc,
                     ghost=inhabitant_name,
                     fleshling=inhabitee_name,
                     slime=slime_gain,
+                    length=fisher.length,
                     exoticresidue=exotic_residue,
                 )
 
@@ -477,13 +470,14 @@ async def award_fish(fisher, cmd, user_data):
                 inhabitant_data.persist()
                 fisher.stop()
             else:
-                response = "The two of you together manage to reel in a {fish}! {flavor} {ghost} haunts {slime:,} slime away from the fish before placing it on {fleshling}'s hands." \
+                response = "The two of you together manage to reel in a {fish}! {flavor} It's {length} inches long! {ghost} haunts {slime:,} slime away from the fish before placing it on {fleshling}'s hands." \
                     .format(
                     fish=static_fish.fish_map[fisher.current_fish].str_name,
                     flavor=static_fish.fish_map[fisher.current_fish].str_desc,
                     ghost=inhabitant_name,
                     fleshling=inhabitee_name,
                     slime=slime_gain,
+                    length=fisher.length,
                 )
 
                 inhabitant_data.change_slimes(n=-slime_gain)
@@ -496,11 +490,11 @@ async def award_fish(fisher, cmd, user_data):
                 market_data.total_event_points += exotic_residue
                 market_data.persist()
 
-                response = "You reel in a {fish}! {flavor} You grab hold and wring {slime:,} slime and {exoticresidue:,} exotic residue from it. " \
-                    .format(fish=static_fish.fish_map[fisher.current_fish].str_name, flavor=static_fish.fish_map[fisher.current_fish].str_desc, slime=slime_gain, exoticresidue=exotic_residue)
+                response = "You reel in a {fish}! {flavor} It's {length} inches long! You grab hold and wring {slime:,} slime and {exoticresidue:,} exotic residue from it. " \
+                    .format(fish=static_fish.fish_map[fisher.current_fish].str_name, length=fisher.length, flavor=static_fish.fish_map[fisher.current_fish].str_desc, slime=slime_gain, exoticresidue=exotic_residue)
             else:
-                response = "You reel in a {fish}! {flavor} You grab hold and wring {slime:,} from it. " \
-                    .format(fish=static_fish.fish_map[fisher.current_fish].str_name, flavor=static_fish.fish_map[fisher.current_fish].str_desc, slime=slime_gain)
+                response = "You reel in a {fish}! {flavor} It's {length} inches long! You grab hold and wring {slime:,} from it. " \
+                    .format(fish=static_fish.fish_map[fisher.current_fish].str_name, length=fisher.length flavor=static_fish.fish_map[fisher.current_fish].str_desc, slime=slime_gain)
             
             # Add to the response if the user gets a gang bonus.
             if gang_bonus == True:

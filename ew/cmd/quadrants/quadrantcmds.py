@@ -13,9 +13,6 @@ async def add_quadrant(cmd):
     author = cmd.message.author
     quadrant = None
     user_data = EwUser(id_user=author.id, id_server=author.guild.id)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     for token in cmd.tokens[1:]:
         if token.lower() in quad_static.quadrants_map:
@@ -66,9 +63,6 @@ async def clear_quadrant(cmd):
     author = cmd.message.author
     quadrant = None
     user_data = EwUser(id_user=author.id, id_server=author.guild.id)
-    if user_data.life_state == ewcfg.life_state_shambler:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     for token in cmd.tokens[1:]:
         if token.lower() in quad_static.quadrants_map:

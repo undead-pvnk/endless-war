@@ -10,6 +10,7 @@ from ew.backend.market import EwStock
 from ew.backend.player import EwPlayer
 from ew.cmd.mutation.mutationcmds import devour
 from ew.static import cfg as ewcfg
+from ew.static import community_cfg as comm_cfg
 from ew.static import cosmetics as static_cosmetics
 from ew.static import food as static_food
 from ew.static import items as static_items
@@ -32,14 +33,12 @@ except:
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 
+
 """ show all available food items """
 
 
 async def menu(cmd):
     user_data = EwUser(member=cmd.message.author, data_level=2)
-    if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_nuclear_beach_edge:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     market_data = EwMarket(id_server=cmd.guild.id)
     # poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
@@ -67,18 +66,6 @@ async def menu(cmd):
                 father_poi = mother_poi_data.father_district
                 mother_district_data = EwDistrict(district=father_poi, id_server=user_data.id_server)
                 break
-
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-        # mother_district_data = EwDistrict(district = destination_poi.id_poi, id_server = user_data.id_server)
-
-        shambler_multiplier = 1  # for speakeasy during shambler times
-
-        if district_data.is_degraded() and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
-            if poi.id_poi == ewcfg.poi_id_speakeasy:
-                shambler_multiplier = 4
-            else:
-                response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         controlling_faction = poi_utils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 
@@ -136,9 +123,6 @@ async def menu(cmd):
 
                 if stock_data != None:
                     value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
-
-                # multiply by 4 is speakeasy is shambled
-                value *= shambler_multiplier
 
                 if mother_district_data != None:
                     if controlling_faction != "" and vendor != ewcfg.vendor_NMSdealer: # FISHINGEVENT
@@ -201,9 +185,6 @@ async def order(cmd):
 
     user_data = EwUser(member=cmd.message.author)
     mutations = user_data.get_mutations()
-    if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_nuclear_beach_edge:
-        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     market_data = EwMarket(id_server=cmd.guild.id)
     currency_used = 'slime'
@@ -215,21 +196,6 @@ async def order(cmd):
         response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."
     else:
         poi = poi_static.id_to_poi.get(user_data.poi)
-        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
-
-        shambler_multiplier = 1  # for speakeasy during shambler times
-
-        if district_data.is_degraded():
-            if poi.id_poi == ewcfg.poi_id_speakeasy:
-                shambler_multiplier = 4
-            else:
-                response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-        # value = ewutils.flattenTokenListToString(cmd.tokens[1:2])
-
-        # if cmd.tokens_count > 1:
-        #	value = cmd.tokens[1]
-        #	value = value.lower()
 
         value = None
 
@@ -363,9 +329,6 @@ async def order(cmd):
                     elif user_data.faction != "":
                         value *= 4
 
-                # raise shambled speakeasy price 4 times
-                value *= shambler_multiplier
-
                 # Raise the price for togo ordering. This gets lowered back down later if someone does togo ordering on a non-food item by mistake.
                 if togo:
                     value *= 1.5
@@ -439,7 +402,7 @@ async def order(cmd):
                         company_data.persist()
 
                     if item.str_name == "arcade cabinet":
-                        item_props['furniture_desc'] = random.choice(ewcfg.cabinets_list)
+                        item_props['furniture_desc'] = random.choice(comm_cfg.cabinets_list)
                     elif item.item_type == ewcfg.it_furniture:
                         if "custom" in item_props.get('id_furniture'):
                             if cmd.tokens_count < 4 or cmd.tokens[2] == "" or cmd.tokens[3] == "":
