@@ -221,7 +221,7 @@ smelting_recipe_list = [
             "dp"
         ],
         ingredients={
-            ewcfg.item_id_minecraftdiamond: 10, #100 megaslime worth
+            ewcfg.item_id_minecraftdiamond: 3, #3000 poudrins worth. Don't you know that the minecraft crafting bench only has 9 slots? The sheer stupidity of trying to make a diamond pickaxe out of ten diamonds confuses everybody. Ask any gamer what the recipe of a minecraft diamond pickaxe is, and they'll say THREE (3) diamonds and two sticks. This is unforgivable.
             ewcfg.item_id_stick: 2
         },
         products=[ewcfg.weapon_id_diamondpickaxe]
@@ -236,7 +236,7 @@ smelting_recipe_list = [
             "minecraftdiamond"
         ],
         ingredients={
-            ewcfg.item_id_slimepoudrin: 1000, #100 megaslime worth
+            ewcfg.item_id_slimepoudrin: 1000, #10 megaslime worth... Someone didn't do their math, 10,000 * 1000 = 10,000,000.
         },
         products=[ewcfg.item_id_minecraftdiamond]
     ),
@@ -320,7 +320,7 @@ smelting_recipe_list = [
         id_recipe="ironingot",
         str_name="an Iron Ingot",
         alias=[
-            "ingot"
+            "ingot",
             "metal",
             "ironingot",
             "iron ingot"
@@ -1740,7 +1740,238 @@ smelting_recipe_list = [
         },
         products=[ewcfg.weapon_id_skateboard]
     ),
-
+    EwSmeltingRecipe(
+        id_recipe="mbbevor",
+        str_name="Monster Bone Bevor",
+        alias=[
+            'mbbevor',
+            'Monster Bone Bevor',
+            'Bevor',
+        ],
+        ingredients={
+            ewcfg.item_id_monsterbones: 150
+        },
+        products=['mbbevor']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="mbgaultet",
+        str_name="Monster Bone Gauntlets",
+        alias=[
+            'mbgaultet',
+            'Monster Bone Gauntlets',
+            'Gauntlets',
+            'Gauntlet',
+        ],
+        ingredients={
+            ewcfg.item_id_monsterbones: 150
+        },
+        products=['mbgaultet']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="mbfullplate",
+        str_name="Monster Bone Bevor",
+        alias=[
+            'mbbevor',
+            'Monster Bone Fullplate',
+            'Fullplate',
+        ],
+        ingredients={
+            ewcfg.item_id_monsterbones: 200
+        },
+        products=['mbfullplate']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="mbgreaves",
+        str_name="Monster Bone Greaves",
+        alias=[
+            'mbgreaves',
+            'Monster Bone Greaves',
+            'Greaves',
+        ],
+        ingredients={
+            ewcfg.item_id_monsterbones: 150
+        },
+        products=['mbgreaves']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="mbsabatons",
+        str_name="Monster Bone Sabatons",
+        alias=[
+            'mbsabatons',
+            'Monster Bone Sabatons',
+            'Sabatons',
+        ],
+        ingredients={
+            ewcfg.item_id_monsterbones: 150
+        },
+        products=['mbsabatons']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="mbarmor",
+        str_name="Monster Bone Armor",
+        alias=[
+            'mbarmor',
+            'Monster Bone Armor',
+            'Bonearmor',
+        ],
+        ingredients={
+            'mbbevor': 1,
+            'mbgaultet': 1, 
+            'mbfullplate': 1, 
+            'mbgreaves': 1, 
+            'mbsabatons': 1,
+        },
+        products=['mbarmor']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="diamondhelmet",
+        str_name="Diamond Helmet",
+        alias=[
+            'diamondhelmet',
+            'Diamond Helmet',
+            'dhelmet',
+        ],
+        ingredients={
+            ewcfg.item_id_minecraftdiamond: 5
+        },
+        products=['diamondhelmet']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="diamondchestplate",
+        str_name="Diamond Chestplate",
+        alias=[
+            'diamondchestplate',
+            'Diamond Chestplate',
+            'dchestplate',
+        ],
+        ingredients={
+            ewcfg.item_id_minecraftdiamond: 8
+        },
+        products=['diamondchestplate']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="diamondleggings",
+        str_name="Diamond Leggings",
+        alias=[
+            'diamondleggings',
+            'Diamond Leggings',
+            'dleggings',
+        ],
+        ingredients={
+            ewcfg.item_id_minecraftdiamond: 7
+        },
+        products=['diamondleggings']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="diamondboots",
+        str_name="Diamond Boots",
+        alias=[
+            'diamondboots',
+            'Diamond Boots',
+            'dboots',
+        ],
+        ingredients={
+            ewcfg.item_id_minecraftdiamond: 4
+        },
+        products=['diamondboots']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="trenchcoat",
+        str_name="Trench coat",
+        alias=[
+            'trenchcoat',
+            'trench',
+            'tcoat',
+        ],
+        ingredients={
+            ewcfg.item_id_negapoudrin: 1,
+            ewcfg.item_id_textiles: 1, 
+            ewcfg.item_id_leather: 1,
+        },
+        products=['trenchcoat']
+    ),  
+    EwSmeltingRecipe(
+        id_recipe="rippedjeans",
+        str_name="Ripped Jeans",
+        alias=[
+            'ripmyjeansplease',
+            'ripjeans',
+            'rippedjeans',
+        ],
+        ingredients={
+            'jeans',
+        },
+        products=['rippedjeans']
+    ),  
+    EwSmeltingRecipe(
+        id_recipe="shortshort",
+        str_name="Short Shorts",
+        alias=[
+            'shortshorts',
+            'shortenmyshorts',
+            'short2',
+        ],
+        ingredients={
+            ewcfg.item_id_tanningknife: 1,
+            'shorts': 1,
+        },
+        products=['shortshort']
+    ),  
+    EwSmeltingRecipe(
+        id_recipe="short3",
+        str_name="Short Short Shorts",
+        alias=[
+            'shortmyshortsagain',
+            'shortshortshorts',
+            'short3',
+        ],
+        ingredients={
+            ewcfg.item_id_tanningknife: 1,
+            'shortshorts': 1,
+        },
+        products=['short3']
+    ),  
+    EwSmeltingRecipe(
+        id_recipe="mbcodpiece",
+        str_name="Monster Bone Codpiece",
+        alias=[
+            'mbcodpiece',
+            'monstercodpiece',
+            'compensatingforsomething',
+            'Monster Bone Codpiece',
+        ],
+        ingredients={
+            ewcfg.item_id_monsterbones: 300,
+        },
+        products=['mbcodpiece']
+    ),  
+    EwSmeltingRecipe(
+        id_recipe="ttinsuit",
+        str_name="Tomato Tin Suit",
+        alias=[
+            'tinsuit',
+            'tomatosuit',
+            'tomatotinsuit',
+        ],
+        ingredients={
+            ewcfg.item_id_tincan: 10,
+            'cannedtomatosoup ': 5, 
+        },
+        products=['ttinsuit']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="hmarmor",
+        str_name="Heavy Metal Armor",
+        alias=[
+            'heavyarmor',
+            'heavymetalarmor',
+            'hmarmor',
+        ],
+        ingredients={
+            'knightarmor': 3,
+        },
+        products=['hmarmor']
+    ),
 ]
 
 

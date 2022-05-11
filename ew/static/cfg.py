@@ -1,6 +1,13 @@
 # Global configuration options.
 
+<<<<<<< Updated upstream
 version = "v4.102 S4A1 🍑🔨"
+=======
+
+
+
+version = "v4.103 S4A1 Cosmiture First Wave"
+>>>>>>> Stashed changes
 
 
 dir_msgqueue = 'msgqueue'
@@ -2521,23 +2528,25 @@ context_prankitem = 'prankitem'
 
 # Item vendor names.
 vendor_bar = 'bar'  # rate of non-mtn dew drinks are 100 slime to 9 hunger
-vendor_pizzahut = 'Pizza Hut'  # rate of fc vendors are 100 slime to 10 hunger
-vendor_tacobell = 'Taco Bell'
-vendor_kfc = 'KFC'
-vendor_mtndew = 'Mtn Dew Fountain'
-vendor_vendingmachine = 'vending machine'
+vendor_pizzahut = 'Pizza Hut'  # rate of fc vendors are 100 slime to 10 hunger, Sub-menu in Food Court
+vendor_tacobell = 'Taco Bell' # Sub-menu in Food Court
+vendor_kfc = 'KFC' # Sub-menu in Food Court
+vendor_mtndew = 'Mtn Dew Fountain' # Sub-menu in Food Court
+vendor_vendingmachine = 'vending machine' # Pourdin Alley's 7/11.
 vendor_seafood = 'Red Mobster Seafood'  # rate of seafood is 100 slime to 9 hunger
 vendor_diner = "Smoker's Cough"  # rate of drinks are 100 slime to 15 hunger
-vendor_beachresort = "Beach Resort"  # Just features clones from the Speakeasy and Red Mobster
-vendor_countryclub = "Country Club"  # Just features clones from the Speakeasy and Red Mobster
+vendor_beachresort = "Beach Resort"  # Assault Flats Beach bar and the sunburnt greasy man to sell you summer-season amenities.
+vendor_countryclub = "Country Club"  # Dreadford's snobbish vendor. Crookline's Splatify is the southwest bar in the game now.
 vendor_farm = "Farm"  # contains all the vegetables you can !reap
-vendor_bazaar = "bazaar"
-vendor_giftshop = "giftshop"
+vendor_bazaar = "bazaar" # General store, and pulls in the item pool from every other vendor in the game.
+vendor_giftshop = "giftshop" 
 vendor_college = "College"  # You can buy game guides from either of the colleges
 vendor_glocksburycomics = "Glocksbury Comics"  # Repels and trading cards are sold here
 vendor_slimypersuits = "Slimy Persuits"  # You can buy candy from here
 vendor_greencakecafe = "Green Cake Cafe"  # Brunch foods
-vendor_bodega = "Bodega"  # Clothing store in Krak Bay
+vendor_bodega = "Bodega"  # Default clothing store in Krak Bay
+vendor_snottopic = "Snot Topic" # Sub-store within Bodega, featuring crappy clothing that no other store would sell.
+vendor_caravan = "Caravan" #Sub-store within Bodega, filters a lot of shoes into one store.
 vendor_secretbodega = "Secret Bodega"  # The secret clothing store in Krak Bay
 vendor_wafflehouse = "Waffle House"  # waffle house in the void, sells non-perishable foods, 50 slime to 1 hunger
 vendor_basedhardware = "Based Hardware"  # Hardware store in West Glocksbury
@@ -3088,8 +3097,9 @@ style_tough = "tough"
 style_smart = "smart"
 style_beautiful = "beautiful"
 style_cute = "cute"
+style_evil = "evil"
 
-fashion_styles = [style_cool, style_tough, style_smart, style_beautiful, style_cute]
+fashion_styles = [style_cool, style_tough, style_smart, style_beautiful, style_cute, style_evil]
 
 freshnesslevel_1 = 500
 freshnesslevel_2 = 1000

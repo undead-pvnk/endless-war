@@ -117,7 +117,8 @@ class EwCosmeticItem:
     # The text displayed when it breaks! Oh no!
     str_onbreak = ""
 
-    # How rare the item is, can be "Plebeian", "Patrician", or "Princeps"
+    # How rare the item is, can be "Plebeian", "Patrician", "Profollean" or "Princeps"
+    # New item rarity "Profollean" assigned to cosmetics that require a good amount of effort to get your hands on. Immune to the usual methods of smelting cosmetics via slimepoudrin + cosmeticsmeltables such as the Cute Cookies.
     rarity = ""
 
     # The stats the item increases/decreases
@@ -150,6 +151,9 @@ class EwCosmeticItem:
     # Whether a cosmetic is a hat or not
     is_hat = False
 
+    # Weather a cosmetic is a pair of shoes or not
+    is_shoe = False
+
     def __init__(
             self,
             id_cosmetic = "",
@@ -170,6 +174,7 @@ class EwCosmeticItem:
             price = 0,
             vendors = [],
             is_hat = False,
+            is_shoe = False,
 
     ):
         self.item_type = ewcfg.it_cosmetic
@@ -192,6 +197,7 @@ class EwCosmeticItem:
         self.price = price
         self.vendors = vendors
         self.is_hat = is_hat
+        self.is_shoe = is_shoe
 
 
 class EwFurniture:
@@ -206,7 +212,8 @@ class EwFurniture:
     # The text displayed when you look at it
     str_desc = ""
 
-    # How rare the item is, can be "Plebeian", "Patrician", or "Princeps"
+    # How rare the item is, can be "Plebeian", "Patrician", "Profollean", or "Princeps"
+    #I've never seen rarity actually apply to furniture, but here it is anyways, huh...
     rarity = ""
 
     # Cost in SlimeCoin to buy this item. (slime now, but hopefully we make an exception for furniture)
