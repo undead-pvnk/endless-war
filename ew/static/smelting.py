@@ -1741,7 +1741,7 @@ smelting_recipe_list = [
         products=[ewcfg.weapon_id_skateboard]
     ),
     EwSmeltingRecipe(
-        id_recipe="mbbevor",
+        id_recipe="monsterbonebevor",
         str_name="Monster Bone Bevor",
         alias=[
             'mbbevor',
@@ -1751,13 +1751,13 @@ smelting_recipe_list = [
         ingredients={
             ewcfg.item_id_monsterbones: 150
         },
-        products=['mbbevor']
+        products=['monsterbonebevor']
     ),
     EwSmeltingRecipe(
-        id_recipe="mbgaultet",
+        id_recipe="monsterbonegauntlets",
         str_name="Monster Bone Gauntlets",
         alias=[
-            'mbgaultet',
+            'mbgaultets',
             'Monster Bone Gauntlets',
             'Gauntlets',
             'Gauntlet',
@@ -1765,23 +1765,23 @@ smelting_recipe_list = [
         ingredients={
             ewcfg.item_id_monsterbones: 150
         },
-        products=['mbgaultet']
+        products=['monsterbonegauntlets']
     ),
     EwSmeltingRecipe(
-        id_recipe="mbfullplate",
-        str_name="Monster Bone Bevor",
+        id_recipe=",monsterbonefullplate",
+        str_name="Monster Bone Fullplate",
         alias=[
-            'mbbevor',
+            'mbfullplate',
             'Monster Bone Fullplate',
             'Fullplate',
         ],
         ingredients={
             ewcfg.item_id_monsterbones: 200
         },
-        products=['mbfullplate']
+        products=['monsterbonefullplate']
     ),
     EwSmeltingRecipe(
-        id_recipe="mbgreaves",
+        id_recipe="monsterbonegreaves",
         str_name="Monster Bone Greaves",
         alias=[
             'mbgreaves',
@@ -1791,10 +1791,10 @@ smelting_recipe_list = [
         ingredients={
             ewcfg.item_id_monsterbones: 150
         },
-        products=['mbgreaves']
+        products=['monsterbonegreaves']
     ),
     EwSmeltingRecipe(
-        id_recipe="mbsabatons",
+        id_recipe="monsterbonesabatons",
         str_name="Monster Bone Sabatons",
         alias=[
             'mbsabatons',
@@ -1804,24 +1804,24 @@ smelting_recipe_list = [
         ingredients={
             ewcfg.item_id_monsterbones: 150
         },
-        products=['mbsabatons']
+        products=['monsterbonesabatons']
     ),
     EwSmeltingRecipe(
-        id_recipe="monsterbonearmor ",
+        id_recipe="monsterbonearmor",
         str_name="Monster Bone Armor",
         alias=[
-            'monsterbonearmor ',
+            'monsterbonearmor',
             'Monster Bone Armor',
             'Bonearmor',
         ],
         ingredients={
-            'mbbevor': 1,
-            'mbgaultet': 1, 
-            'mbfullplate': 1, 
-            'mbgreaves': 1, 
-            'mbsabatons': 1,
+            'monsterbonebevor': 1,
+            'monsterbonegauntlet': 1, 
+            'monsterbonefullplate': 1, 
+            'monsterbonegreaves': 1, 
+            'monsterbonesabatons': 1,
         },
-        products=['monsterbonearmor ']
+        products=['monsterbonearmor']
     ),
     EwSmeltingRecipe(
         id_recipe="diamondhelmet",
@@ -1904,7 +1904,7 @@ smelting_recipe_list = [
         products=['rippedjeans']
     ),  
     EwSmeltingRecipe(
-        id_recipe="shortshort",
+        id_recipe="shortshorts",
         str_name="Short Shorts",
         alias=[
             'shortshorts',
@@ -1915,10 +1915,10 @@ smelting_recipe_list = [
             ewcfg.item_id_tanningknife: 1,
             'shorts': 1,
         },
-        products=['shortshort']
+        products=['shortshorts']
     ),  
     EwSmeltingRecipe(
-        id_recipe="short3",
+        id_recipe="shortshortshorts",
         str_name="Short Short Shorts",
         alias=[
             'shortmyshortsagain',
@@ -1929,10 +1929,10 @@ smelting_recipe_list = [
             ewcfg.item_id_tanningknife: 1,
             'shortshorts': 1,
         },
-        products=['short3']
+        products=['shortshortshorts']
     ),  
     EwSmeltingRecipe(
-        id_recipe="mbcodpiece",
+        id_recipe="monsterbonecodpiece",
         str_name="Monster Bone Codpiece",
         alias=[
             'mbcodpiece',
@@ -1943,10 +1943,10 @@ smelting_recipe_list = [
         ingredients={
             ewcfg.item_id_monsterbones: 300,
         },
-        products=['mbcodpiece']
+        products=['monsterbonecodpiece']
     ),  
     EwSmeltingRecipe(
-        id_recipe="ttinsuit",
+        id_recipe="tomatotinsuit",
         str_name="Tomato Tin Suit",
         alias=[
             'tinsuit',
@@ -1957,10 +1957,10 @@ smelting_recipe_list = [
             ewcfg.item_id_tincan: 10,
             'cannedtomatosoup ': 5, 
         },
-        products=['ttinsuit']
+        products=['tomatotinsuit']
     ),
     EwSmeltingRecipe(
-        id_recipe="hmarmor",
+        id_recipe="heavymetalarmor",
         str_name="Heavy Metal Armor",
         alias=[
             'heavyarmor',
@@ -1970,7 +1970,7 @@ smelting_recipe_list = [
         ingredients={
             'knightarmor': 3,
         },
-        products=['hmarmor']
+        products=['heavymetalarmor']
     ),
 ]
 

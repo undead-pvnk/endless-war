@@ -1400,7 +1400,7 @@ cosmetic_items_list = [
         is_hat = True,
     ),
     EwCosmeticItem(
-        id_cosmetic = "lsshirt",
+        id_cosmetic = "longsleeveshirt",
         str_name = "Long-Sleve Shirt",
         str_desc = "A generic long-sleeved shirt, lovingly crafted by the owner of the bodega. Its long sleeves cover the entirety of your arms, making them durable against the cold! In addition, its finely-tailored fit makes it look perfect on your sweet bod.",
         rarity = "Plebeian",
@@ -1422,7 +1422,7 @@ cosmetic_items_list = [
         vendors = ['bodega'],
     ),
     EwCosmeticItem(
-        id_cosmetic = "jpnsuni",
+        id_cosmetic = "japaneseschooluniform",
         str_name = "Japanese School Uniform",
         str_desc = "It's a japanease highschool uniform, Not exactly what you'd call the height of fashion. Why do they make you wear uniforms, haven't they ever heard of individuality?",
         rarity = "Plebeian",
@@ -1538,7 +1538,7 @@ cosmetic_items_list = [
         vendors = ['snottopic'],
     ),
     EwCosmeticItem(
-        id_cosmetic = "2kbshorts",
+        id_cosmetic = "2000sbootyshorts",
         str_name = "2000s Booty Shorts",
         str_desc = "I'm sure that whoever wears these only does it because they like the patterns they come in. Yep, mhm. Not because of any other reason.",
         rarity = "Plebeian",
@@ -1560,7 +1560,7 @@ cosmetic_items_list = [
         vendors = ['snottopic'],
     ),
     EwCosmeticItem(
-        id_cosmetic = "dvmshirt",
+        id_cosmetic = "devilmanshirt",
         str_name = "Devilman Shirt ",
         str_desc = "I'm Devilman!!! No, not really. I just bought this cheap shirt to cosplay…",
         rarity = "Plebeian",
@@ -1739,7 +1739,7 @@ cosmetic_items_list = [
         vendors = ['bazaar'],
     ),
     EwCosmeticItem(
-        id_cosmetic = "shortshort",
+        id_cosmetic = "shortshorts",
         str_name = "Short Shorts",
         str_desc = "Shorts, but shorter. Brings you more attention from fiendish folk.",
         rarity = "Plebeian",
@@ -1750,7 +1750,7 @@ cosmetic_items_list = [
         price = 50000,
     ),
     EwCosmeticItem(
-        id_cosmetic = "short3",
+        id_cosmetic = "shortshortshorts",
         str_name = "Short Short Shorts",
         str_desc = "This barely even passes as clothing anymore.",
         rarity = "Plebeian",
@@ -1761,7 +1761,7 @@ cosmetic_items_list = [
         price = 50000,
     ),
     EwCosmeticItem(
-        id_cosmetic = "ttinsuit",
+        id_cosmetic = "tomatotinsuit",
         str_name = "Tomato Tin Suit",
         str_desc = "Its a giant fucking tomato soup tin can, you pescatarian.",
         rarity = "Plebeian",
@@ -1772,7 +1772,7 @@ cosmetic_items_list = [
         price = 50000,
     ),
     EwCosmeticItem(
-        id_cosmetic = "hmarmor",
+        id_cosmetic = "heavymetalarmor",
         str_name = "Heavy Metal Armor",
         str_desc = "Armor so heavy... you can barely wear it, let alone walk.",
         rarity = "Plebeian",
@@ -1783,7 +1783,7 @@ cosmetic_items_list = [
         price = 50000,
     ),
     EwCosmeticItem(
-        id_cosmetic = "mbbevor",
+        id_cosmetic = "monsterbonebevor",
         str_name = "Monster Bone Bevor",
         str_desc = "It's a piece of monster bone armor that was handmade. This piece will keep your nose and neck nice and guarded.",
         rarity = "Plebeian",
@@ -1795,7 +1795,7 @@ cosmetic_items_list = [
         is_hat = True,
     ),
     EwCosmeticItem(
-        id_cosmetic = "mbgaultet",
+        id_cosmetic = "monsterbonegauntlets",
         str_name = "Monster Bone Gauntlets",
         str_desc = "It's a piece of monster bone armor that was handmade. This piece will keep your arms and hands nice and guarded.",
         rarity = "Plebeian",
@@ -1806,7 +1806,7 @@ cosmetic_items_list = [
         price = 50000,
     ),
     EwCosmeticItem(
-        id_cosmetic = "mbfullplate",
+        id_cosmetic = "monsterbonefullplate",
         str_name = "Monster Bone Fullplate",
         str_desc = "C",
         rarity = "Plebeian",
@@ -1817,7 +1817,7 @@ cosmetic_items_list = [
         price = 50000,
     ),
     EwCosmeticItem(
-        id_cosmetic = "mbgreaves",
+        id_cosmetic = "monsterbonegreaves",
         str_name = "Monster Bone Greaves",
         str_desc = "It's a piece of monster bone armor that was handmade. This piece will keep your waist and legs nice and guarded.",
         rarity = "Plebeian",
@@ -1828,7 +1828,7 @@ cosmetic_items_list = [
         price = 50000,
     ),
     EwCosmeticItem(
-        id_cosmetic = "mbsabatons",
+        id_cosmetic = "monsterbonesatabons",
         str_name = "Monster Bone Sabatons",
         str_desc = "It's a piece of monster bone armor that was handmade. This piece will keep your feet nice and guarded.",
         rarity = "Plebeian",
@@ -1839,7 +1839,7 @@ cosmetic_items_list = [
         price = 50000,
     ),
     EwCosmeticItem(
-        id_cosmetic = "monsterbonearmor ",
+        id_cosmetic = "monsterbonearmor",
         str_name = "Monster Bone Armor",
         str_desc = "Through all of your hunting, you've finally made the whole set and joined it together. Now you can enjoy the looks on raiders' faces to watch you stomp your way through the outskirts knowing that it's just not work the risk of their lives to enage you. Of course, you're going to kill them all anyways.",
         rarity = "Profollean",
@@ -1851,7 +1851,7 @@ cosmetic_items_list = [
         slots = 3,
     ),
     EwCosmeticItem(
-        id_cosmetic = "mbcodpiece",
+        id_cosmetic = "monsterbonecodpiece",
         str_name = "Monster Bone Cod piece",
         str_desc = "Because a full set wasn't enough.",
         rarity = "Plebeian",
@@ -1949,7 +1949,7 @@ cosmetic_items_list = [
         style = "smart",
         freshness = 5,
         price = 1000000,
-        vendors = ['countryclub'],
+        vendors = ['Country Club'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1961,7 +1961,7 @@ cosmetic_items_list = [
         style = "smart",
         freshness = 8,
         price = 2500000,
-        vendors = ['countryclub'],
+        vendors = ['Country Club'],
     ),
     EwCosmeticItem(
         id_cosmetic = "golfshorts",
@@ -1972,7 +1972,7 @@ cosmetic_items_list = [
         style = "smart",
         freshness = 7,
         price = 3000000,
-        vendors = ['countryclub'],
+        vendors = ['Country Club'],
     ),
     EwCosmeticItem(
         id_cosmetic = "golfoxfords",
@@ -1983,7 +1983,40 @@ cosmetic_items_list = [
         style = "smart",
         freshness = 10,
         price = 5000000,
-        vendors = ['countryclub'],
+        vendors = ['Country Club'],
+    ),
+    EwCosmeticItem(
+        id_cosmetic = "snorkelmask",
+        str_name = "Snorkel Mask",
+        str_desc = "Prepared to go on a diving trip into the Slime Sea? Of course you are, you fucking idiot. Have fun !jumping into the waters!",
+        rarity = "Plebeian",
+        durability = 2500000,
+        style = "cool",
+        freshness = 2,
+        price = 50000,
+        vendors = ['Beach Resort'],
+    ),
+    EwCosmeticItem(
+        id_cosmetic = "beachtowel",
+        str_name = "Beach Towel",
+        str_desc = "Perfect for drying off, this oversized beach towel wraps around your body at least several times, and you nearly trip over yourself as soon as you walk forward.",
+        rarity = "Plebeian",
+        durability = 2500000,
+        style = "cute",
+        freshness = 6,
+        price = 500000,
+        vendors = ['Beach Resort'],
+    ),
+    EwCosmeticItem(
+        id_cosmetic = "poolnoodle",
+        str_name = "Pool Noodle",
+        str_desc = "Made from super-buoyant material, you can wrap one around your neck like some sort of uncomfortable scarf, or cut down the middle and clamp it on your shoulders, or many other things! But we all know you're going to wield it like a club and whack people with it uselessly, anyways...",
+        rarity = "Patrician",
+        durability = 2500000,
+        style = "tough",
+        freshness = 7,
+        price = 1000000,
+        vendors = ['Beach Resort'],
     ),
     EwCosmeticItem(
         id_cosmetic = "programmersocks",
