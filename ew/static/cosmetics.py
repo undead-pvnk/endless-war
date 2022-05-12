@@ -3,8 +3,10 @@ import os
 
 from ..model.item import EwCosmeticItem
 
-unique_smeltables = ['skinsuit', 'eldritchsoul', 'safaribadge', 'cloutgoggles', 'programmersocks']
-
+unique_smeltables = ['skinsuit', 'eldritchsoul', 'safaribadge', 'cloutgoggles', 'programmersocks',]
+complicated_cosmetics = EwCosmeticItem.rarity = "Profollean",
+# Because all profollean cosmetics are complicated, they are in the same boat as unique_smeltables. DO NOT add profollean cosmetics to unique_smeltables! 
+# Profollean cosmetics and unique_smeltables are not smeltable in the slimepoudrin + stylecosmeticitem recipe. (Example: 4 slimepoudrin + 1 coolbeans will NOT give you a programmer socks or a cool profellean cosmetic! ) 
 cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "propellerhat",
@@ -335,7 +337,6 @@ cosmetic_items_list = [
         acquisition = "smelting",
         price = 50000,
         vendors = ['bazaar'],
-        is_shoe = True,
     ),
     EwCosmeticItem(
         id_cosmetic = "fez",
@@ -846,7 +847,6 @@ cosmetic_items_list = [
         style = "cute",
         price = 1000,
         vendors = ['bazaar'],
-        is_shoe = True,
     ),
     EwCosmeticItem(
         id_cosmetic = "crocs",
@@ -1108,7 +1108,6 @@ cosmetic_items_list = [
         style = "cool",
         freshness = 10,
         acquisition = "smelting",
-        is_shoe = True,
     ),
     EwCosmeticItem(
         id_cosmetic = "garfieldtail",
@@ -1212,7 +1211,6 @@ cosmetic_items_list = [
         freshness = 10,
         acquisition = "Safari",
         price = 1000000,
-        is_shoe = True,
     ),
     EwCosmeticItem(
         id_cosmetic = "navaluniform",
@@ -1640,7 +1638,6 @@ cosmetic_items_list = [
         freshness = 7,
         price = 600000,
         vendors = ['caravan'],
-        is_shoe = True,
     ),
     EwCosmeticItem(
         id_cosmetic = "deviouskicks",
@@ -1652,7 +1649,6 @@ cosmetic_items_list = [
         freshness = 5,
         price = 300000,
         vendors = ['caravan'],
-        is_shoe = True,
     ),
     EwCosmeticItem(
         id_cosmetic = "sneakers",
@@ -1664,7 +1660,6 @@ cosmetic_items_list = [
         freshness = 5,
         price = 300000,
         vendors = ['caravan'],
-        is_shoe = True,
     ),
     EwCosmeticItem(
         id_cosmetic = "toeshoes",
@@ -1676,7 +1671,6 @@ cosmetic_items_list = [
         freshness = 5,
         price = 300000,
         vendors = ['caravan'],
-        is_shoe = True,
     ),
     EwCosmeticItem(
         id_cosmetic = "spurs",
@@ -1843,10 +1837,9 @@ cosmetic_items_list = [
         freshness = 2,
         acquisition = "smelting",
         price = 50000,
-        is_shoe = True,
     ),
     EwCosmeticItem(
-        id_cosmetic = "mbarmor",
+        id_cosmetic = "monsterbonearmor ",
         str_name = "Monster Bone Armor",
         str_desc = "Through all of your hunting, you've finally made the whole set and joined it together. Now you can enjoy the looks on raiders' faces to watch you stomp your way through the outskirts knowing that it's just not work the risk of their lives to enage you. Of course, you're going to kill them all anyways.",
         rarity = "Profollean",
@@ -1912,19 +1905,18 @@ cosmetic_items_list = [
         freshness = 10,
         acquisition = "smelting",
         price = 400000000,
-        is_shoe = True,
     ),
-    EwCosmeticItem(
-        id_cosmetic = "fanhoodie",
-        str_name = "Fan Hoodie",
-        str_desc = "You haven't even personalized anyone into this hoodie, and that makes you an awful person.",
-        rarity = "Plebeian",
-        durability = 2500000,
-        style = "evil",
-        freshness = 0,
-        price = 50000,
-        vendors = ['snottopic'],
-    ),
+    #EwCosmeticItem(
+    #    id_cosmetic = "fanhoodie",
+    #    str_name = "Fan Hoodie",
+    #    str_desc = "You haven't even personalized anyone into this hoodie, and that makes you an awful person.",
+    #    rarity = "Plebeian",
+    #    durability = 2500000,
+    #    style = "evil",
+    #   freshness = 0,
+    #    price = 50000,
+    #    vendors = ['snottopic'],
+    #), Soon. I'll need to talk about this subject more with other people on the right way of implementing this. 
     EwCosmeticItem(
         id_cosmetic = "jeans",
         str_name = "Jeans",
@@ -1992,7 +1984,6 @@ cosmetic_items_list = [
         freshness = 10,
         price = 5000000,
         vendors = ['countryclub'],
-        is_shoe = True,
     ),
     EwCosmeticItem(
         id_cosmetic = "programmersocks",

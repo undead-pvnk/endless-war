@@ -1807,10 +1807,10 @@ smelting_recipe_list = [
         products=['mbsabatons']
     ),
     EwSmeltingRecipe(
-        id_recipe="mbarmor",
+        id_recipe="monsterbonearmor ",
         str_name="Monster Bone Armor",
         alias=[
-            'mbarmor',
+            'monsterbonearmor ',
             'Monster Bone Armor',
             'Bonearmor',
         ],
@@ -1821,7 +1821,7 @@ smelting_recipe_list = [
             'mbgreaves': 1, 
             'mbsabatons': 1,
         },
-        products=['mbarmor']
+        products=['monsterbonearmor ']
     ),
     EwSmeltingRecipe(
         id_recipe="diamondhelmet",

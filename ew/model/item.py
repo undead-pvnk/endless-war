@@ -151,9 +151,6 @@ class EwCosmeticItem:
     # Whether a cosmetic is a hat or not
     is_hat = False
 
-    # Weather a cosmetic is a pair of shoes or not
-    is_shoe = False
-
     def __init__(
             self,
             id_cosmetic = "",
@@ -174,7 +171,6 @@ class EwCosmeticItem:
             price = 0,
             vendors = [],
             is_hat = False,
-            is_shoe = False,
 
     ):
         self.item_type = ewcfg.it_cosmetic
@@ -197,7 +193,6 @@ class EwCosmeticItem:
         self.price = price
         self.vendors = vendors
         self.is_hat = is_hat
-        self.is_shoe = is_shoe
 
 
 class EwFurniture:

@@ -2,6 +2,7 @@ import random
 
 from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
+from ew.model.item import EwCosmeticItem
 from ew.static import cfg as ewcfg
 from ew.static import cosmetics
 from ew.static import cosmetics as static_cosmetics
@@ -90,7 +91,8 @@ async def smelt(cmd):
                         style = ewcfg.style_cool
 
                     for result in static_cosmetics.cosmetic_items_list:
-                        if result.style == style and result.acquisition == ewcfg.acquisition_smelting and result.id_cosmetic not in static_cosmetics.unique_smeltables:
+                        if result.style == style and result.acquisition == ewcfg.acquisition_smelting and result.id_cosmetic not in static_cosmetics.unique_smeltables and static_items.id_to_item_def.get(result.id_cosmetic).rarity != ewcfg.rarity_profollean:
+
                             cosmetics_list.append(result)
                         else:
                             pass
