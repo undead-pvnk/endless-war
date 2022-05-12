@@ -77,6 +77,10 @@ async def score(cmd: cmd_utils.EwCmd):
     else:
         target_type = ewutils.mention_type(cmd, cmd.mention_ids[0])
 
+    # :slimeepic:
+    if slime_alias == "slimeepic":
+        slime_alias = ewcfg.emote_slimeepic
+
     # endless war slime check
     if target_type == "ew":
         # get total amount of player slime and total amount of district ground slime
