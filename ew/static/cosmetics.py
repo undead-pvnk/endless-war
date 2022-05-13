@@ -4,9 +4,9 @@ import os
 from ..model.item import EwCosmeticItem
 
 unique_smeltables = ['skinsuit', 'eldritchsoul', 'safaribadge', 'cloutgoggles', 'programmersocks',]
-complicated_cosmetics = EwCosmeticItem.rarity = "Profollean",
+
 # Because all profollean cosmetics are complicated, they are in the same boat as unique_smeltables. DO NOT add profollean cosmetics to unique_smeltables! 
-# Profollean cosmetics and unique_smeltables are not smeltable in the slimepoudrin + stylecosmeticitem recipe. (Example: 4 slimepoudrin + 1 coolbeans will NOT give you a programmer socks or a cool profellean cosmetic! ) 
+# Profollean cosmetics and unique_smeltables are not smeltable in the slimepoudrin + stylecosmeticitem recipe. (Example: 4 slimepoudrin + 1 coolbeans will NOT give you a programmer socks or a cool profollean cosmetic! ) 
 cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "propellerhat",
@@ -1346,7 +1346,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "jress",
         str_name = "Jress",
-        str_desc = "A dress made out of denim. Smelted by the finest child laborers in Slime Thailand, this denim dress is guaranteed to be out-of-season by next month. Wholesome! It is SOOO trendy, like, omg. You wouldn’t BELIEVE! Jeans are so in style, so when they aren’t, it’s, like, totally tragic. But WHATEVS.",
+        str_desc = "A dress made out of denim. Smelted by the finest child laborers in Slime Thailand, this denim dress is guaranteed to be out-of-season by next month. Wholesome! It is SOOO trendy, like, omg. You wouldn't BELIEVE! Jeans are so in style, so when they aren't, it's, like, totally tragic. But WHATEVS.",
         rarity = "Plebeian",
         durability = 2500000,
         style = "beautiful",
@@ -1390,7 +1390,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "visorcap",
         str_name = "Visor Cap",
-        str_desc = "A semi-transparent visor you fit onto your head to protect yourself from harsh overhead lighting, great against the sun and the harsh reality of being outside!",
+        str_desc = "A semi-transparent visor you fit onto your head to protect yourself from harsh overhead lighting. Great against the sun and the harsh reality of being outside!",
         rarity = "Plebeian",
         durability = 2500000,
         style = "smart",
@@ -1424,7 +1424,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "japaneseschooluniform",
         str_name = "Japanese School Uniform",
-        str_desc = "It's a japanease highschool uniform, Not exactly what you'd call the height of fashion. Why do they make you wear uniforms, haven't they ever heard of individuality?",
+        str_desc = "It's a japanese highschool uniform. Not exactly what you'd call the height of fashion. Why do they make you wear uniforms, haven't they ever heard of individuality?",
         rarity = "Plebeian",
         durability = 2500000,
         style = "smart",
@@ -1435,7 +1435,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "punkvest",
         str_name = "Punk Vest",
-        str_desc = "A sick denim jacket with real metal spikes you try to touch said spike and end up pricking your finger. The vest is covered in many patches and pins from either local NLACakaNM bands or anti slime corp propaganda.",
+        str_desc = "A sick denim jacket with real metal spikes! The vest is covered in many patches and pins from either local NLACakaNM bands or anti-SlimeCorp propaganda. You try to touch said spikes and end up pricking your finger!",
         rarity = "Plebeian",
         durability = 2500000,
         style = "tough",
@@ -1446,10 +1446,11 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "rabbitheadband",
         str_name = "Rabbit Ear Headband",
-        str_desc = "These long fake ears blow about in the slightest gust of air, plus often hit the top of any doorframe you enter into. How annoying!",
+        str_desc = "These long fake ears blow about in the slightest gust of air, PLUS they often hit the top of any doorframe you enter into. How annoying!",
         rarity = "Plebeian",
         durability = 2500000,
         style = "beautiful",
+        ability = "furry",
         freshness = 6,
         price = 500000,
         vendors = ['snottopic'],
@@ -1462,6 +1463,7 @@ cosmetic_items_list = [
         rarity = "Plebeian",
         durability = 2500000,
         style = "cool",
+        ability = "furry",
         freshness = 6,
         price = 500000,
         vendors = ['snottopic'],
@@ -1474,6 +1476,7 @@ cosmetic_items_list = [
         rarity = "Plebeian",
         durability = 2500000,
         style = "cute",
+        ability = "furry",
         freshness = 6,
         price = 500000,
         vendors = ['snottopic'],
@@ -1486,6 +1489,7 @@ cosmetic_items_list = [
         rarity = "Plebeian",
         durability = 2500000,
         style = "evil",
+        ability = "demon",
         freshness = 6,
         price = 500000,
         vendors = ['snottopic'],
@@ -1498,6 +1502,7 @@ cosmetic_items_list = [
         rarity = "Plebeian",
         durability = 2500000,
         style = "smart",
+        ability = "bug",
         freshness = 6,
         price = 50000,
         vendors = ['snottopic'],
@@ -1510,6 +1515,7 @@ cosmetic_items_list = [
         rarity = "Plebeian",
         durability = 2500000,
         style = "tough",
+        ability = "furry",
         freshness = 6,
         price = 500000,
         vendors = ['snottopic'],
@@ -1517,8 +1523,8 @@ cosmetic_items_list = [
     ),
     EwCosmeticItem(
         id_cosmetic = "comictee",
-        str_name = "Comic book Graphic Tee",
-        str_desc = "A t-shirt adorning your favorite comic superhero or villian. Just because you only read the omegaverse fanfictions doesn't make you a poser!", # ZUG NO I ONLY READ THIS NOW AAAAGH
+        str_name = "Comic Book Graphic Tee",
+        str_desc = "A t-shirt adorning your favorite comic superhero or villian. Just because you only read Omegaverse fanfictions doesn't make you a poser!",
         rarity = "Plebeian",
         durability = 2500000,
         style = "cool",
@@ -1529,7 +1535,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "cartoontee",
         str_name = "Cartoon Graphic Tee",
-        str_desc = "A t-shirt plastered with your favorite bizney or cartoon character. You're 90 percent sure the art was stolen straight from a DeviantSplart you favorited...",
+        str_desc = "A t-shirt plastered with your favorite bizney or cartoon character. You're 90 percent sure the art was stolen straight from a DeviantSplaart you favorited...",
         rarity = "Plebeian",
         durability = 2500000,
         style = "cute",
@@ -1551,7 +1557,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "gamertee",
         str_name = "Gamer Graphic Tee ",
-        str_desc = "A t-shirt referencing your favorite retro game. Irrefutability, this makes you a TRUE GAMER. Gootube Channel and stupid smile not included.",
+        str_desc = "A t-shirt referencing your favorite retro game. Irrefutably, this makes you a **TRUE GAMER**. Gootube Channel and stupid smile not included.",
         rarity = "Plebeian",
         durability = 2500000,
         style = "smart",
@@ -1562,7 +1568,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "devilmanshirt",
         str_name = "Devilman Shirt ",
-        str_desc = "I'm Devilman!!! No, not really. I just bought this cheap shirt to cosplay…",
+        str_desc = "I'm Devilman!!! No, not really. I just bought this cheap shirt to cosplay...",
         rarity = "Plebeian",
         durability = 2500000,
         style = "tough",
@@ -1629,12 +1635,12 @@ cosmetic_items_list = [
         vendors = ['snottopic'],
     ),
     EwCosmeticItem(
-        id_cosmetic = "platboots",
+        id_cosmetic = "platformboots",
         str_name = "Platform Boots",
         str_desc = "A glossy pair of knee-length leather platform boots, with multiple buckles strewn about. The goth energy they radiate makes you *feel* more powerful as a juvenile. Crush your enemies beneath your foot!",
         rarity = "Plebeian",
         durability = 2500000,
-        style = "cute",
+        style = "evil",
         freshness = 7,
         price = 600000,
         vendors = ['caravan'],
@@ -1642,7 +1648,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "deviouskicks",
         str_name = "Devious Kicks",
-        str_desc = "With pointed ends, these shoes are a staple for beginner villains. ",
+        str_desc = "With pointed ends, these shoes are a staple for beginner villains.",
         rarity = "Plebeian",
         durability = 2500000,
         style = "evil",
@@ -1653,7 +1659,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "sneakers",
         str_name = "Sneakers",
-        str_desc = "A pair of shoes that look as fresh as they did when you popped them out of the box or found lying on the street corner. They smell oddly clean? Either way, if you enjoy the rush of running, then you're just in luck. ",
+        str_desc = "A pair of shoes that look as fresh as they did when you popped them out of the box. Or, err, maybe found lying on a street corner. They smell oddly clean? Either way, if you enjoy the rush of running, then you're just in luck.",
         rarity = "Plebeian",
         durability = 2500000,
         style = "smart",
@@ -1686,7 +1692,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "geta",
         str_name = "Geta",
-        str_desc = "With the growing group of the ‘Red Ronins’ some fashion brands have started to ask a wood working company out in japan to send NLACakaNM these sandals worn by many of those that wish to get that samurai look going.",
+        str_desc = "With the growing group of the 'Red Ronins' some fashion brands have started to ask a woodworking company out in Japan to send NLACakaNM these sandals. Worn by many of those that wish to get that samurai look going.",
         rarity = "Plebeian",
         durability = 2500000,
         style = "tough",
@@ -1697,7 +1703,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "bikini",
         str_name = "Bikini",
-        str_desc = "It's one of those…. things, one of those gross things that has no usability here in NLACakaNM. Everybody and their slimeoids know not to try swimming into the Slime Sea, and there isn't any fucking water parks here. Where did these come from? Why did some asshole entrepaneur try to sell these seditious pieces of fabric? ",
+        str_desc = "It's one of those... things, one of those gross things that has no usability here in NLACakaNM. Everybody and their slimeoids know not to try swimming into the Slime Sea, and there isn't any fucking water parks here. Where did these come from? Why did some asshole entrepeneur try to sell these seditious pieces of fabric?",
         rarity = "Plebeian",
         durability = 2500000,
         style = "evil",
@@ -1707,7 +1713,7 @@ cosmetic_items_list = [
     ),
     EwCosmeticItem(
         id_cosmetic = "trenchcoat",
-        str_name = "Trench coat",
+        str_name = "Trench Coat",
         str_desc = "A classic among people who want to show off dubious or otherwise edgy intentions. The pictures you take while wearing this will age horribly the older you get, unless you start wearing it at the ripe age of 40 and above. Above that point it's an old man coat and suitable for wearing.",
         rarity = "Patrician",
         durability = 2500000,
@@ -1730,7 +1736,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "flagcape",
         str_name = "Flag Cape",
-        str_desc = "Turn your flag into an fucking SICK cape! (be warned, it's still flamable!)",
+        str_desc = "Turn your flag into an fucking SICK cape! (Be warned, it's still flammable!)",
         rarity = "Plebeian",
         durability = 2500000,
         style = "evil",
@@ -1763,7 +1769,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "tomatotinsuit",
         str_name = "Tomato Tin Suit",
-        str_desc = "Its a giant fucking tomato soup tin can, you pescatarian.",
+        str_desc = "It's a giant fucking tomato soup tin can, you pescetarian.",
         rarity = "Plebeian",
         durability = 2500000,
         style = "evil",
@@ -1808,7 +1814,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "monsterbonefullplate",
         str_name = "Monster Bone Fullplate",
-        str_desc = "C",
+        str_desc = "It's a piece of monster bone armor that was handmade. This piece will keep your cock and balls nice and guarded.",
         rarity = "Plebeian",
         durability = 2500000,
         style = "evil",
@@ -1828,7 +1834,7 @@ cosmetic_items_list = [
         price = 50000,
     ),
     EwCosmeticItem(
-        id_cosmetic = "monsterbonesatabons",
+        id_cosmetic = "monsterbonesabatons",
         str_name = "Monster Bone Sabatons",
         str_desc = "It's a piece of monster bone armor that was handmade. This piece will keep your feet nice and guarded.",
         rarity = "Plebeian",
@@ -1841,14 +1847,14 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "monsterbonearmor",
         str_name = "Monster Bone Armor",
-        str_desc = "Through all of your hunting, you've finally made the whole set and joined it together. Now you can enjoy the looks on raiders' faces to watch you stomp your way through the outskirts knowing that it's just not work the risk of their lives to enage you. Of course, you're going to kill them all anyways.",
+        str_desc = "Through all of your hunting, you've finally made the whole set and joined it together. Now you can enjoy the looks on raiders' faces as they watch you stomp your way through the outskirts, knowing that it's just not worth the risk of their lives to engage you. Of course, you're going to kill them all anyways.",
         rarity = "Profollean",
         durability = 2500000,
         style = "evil",
         freshness = 15,
         acquisition = "smelting",
         price = 50000,
-        slots = 3,
+        size = 3,
     ),
     EwCosmeticItem(
         id_cosmetic = "monsterbonecodpiece",
@@ -1864,7 +1870,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "diamondhelmet",
         str_name = "Diamond Helmet",
-        str_desc = "Ill-fitting. Desireable. A symbol of an illustrious gangster. This may as well be your gamer crown, as a blocky helmet made of pure diamonds forged in the sheer wastefulness of the slime poudrins now rests upon your head. Goons look at you and they weep tears of joy, everyone else weeps in laughter from how much of a time waster this must have been.",
+        str_desc = "Ill-fitting. Desirable. A symbol of an illustrious gangster. This may as well be your gamer crown, as a blocky helmet made of pure diamonds forged in the sheer wastefulness of the slime poudrins now rests upon your head. Goons look at you and they weep tears of joy, everyone else weeping in laughter from how much of a time-waster this must have been.",
         rarity = "Profollean",
         durability = 36300000,
         style = "beautiful",
@@ -1876,7 +1882,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "diamondchestplate",
         str_name = "Diamond Chestplate",
-        str_desc = "Ill-fitting. Desireable. A symbol of an illustrious gangster. This solid husk of beauty is now your centerpiece of personality. You flex, and the diamonds show more than your muscles ever will.",
+        str_desc = "Ill-fitting. Desirable. A symbol of an illustrious gangster. This solid husk of beauty is now the centerpiece of your personality. You flex, and the diamonds show more than your muscles ever will.",
         rarity = "Profollean",
         durability = 52800000,
         style = "beautiful",
@@ -1887,7 +1893,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "diamondleggings",
         str_name = "Diamond Leggings",
-        str_desc = "Ill-fitting. Desireable. A symbol of an illustrious gangster. These pants are all the slosh appeal you will ever goddamn need. You're never going to slosh though, you're a goon.",
+        str_desc = "Ill-fitting. Desirable. A symbol of an illustrious gangster. These pants are all the slosh appeal you will ever goddamn need. You're never going to slosh though, you're a goon.",
         rarity = "Profollean",
         durability = 49500000,
         style = "beautiful",
@@ -1898,7 +1904,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "diamondboots",
         str_name = "Diamond Boots",
-        str_desc = "Ill-fitting. Desireable. A symbol of an illustrious gangster. All the citizens of NLACakaNM *wish* they could be showing off these boots on instagrime. You'll never part with these, even if you'll have to adjust its shoe size every six months.",
+        str_desc = "Ill-fitting. Desirable. A symbol of an illustrious gangster. All the citizens of NLACakaNM *wish* they could be showing off these boots on instagrime. You'll never part with these, even if you'll have to adjust the shoe size every six months.",
         rarity = "Profollean",
         durability = 42900000,
         style = "beautiful",
@@ -1920,7 +1926,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "jeans",
         str_name = "Jeans",
-        str_desc = "A set of jeans that look like they've been in a box in someone's attic for at least a century, finally! Now you have something to wear for the occasion for communism AND have something to make you look like the parent of the house-- whatever you view that is!",
+        str_desc = "A set of jeans that look like they've been in a box in someone's attic for at least a century. Finally! COMMUNIST BASTARDS! I'm shitting my dick right now!",
         rarity = "Plebeian",
         durability = 2500000,
         style = "tough",
@@ -1966,7 +1972,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "golfshorts",
         str_name = "Golf Shorts",
-        str_desc = "You have no idea what seperates these from the usual shorts. Is it the pattern? The material? You'll probably never know, it could just be overpriced bullshit.",
+        str_desc = "You have no idea what separates these from the usual shorts. Is it the pattern? The material? You'll probably never know; it could just be overpriced bullshit.",
         rarity = "Patrician",
         durability = 2500000,
         style = "smart",
@@ -1977,7 +1983,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "golfoxfords",
         str_name = "Golf Oxfords",
-        str_desc = "These atypical sport shoes are used only in golfing, something about needing grip strength for your golf swing. Who the fuck would justify the price tag just for this?",
+        str_desc = "These atypical sport shoes are used only in golfing - something about needing grip strength for your golf swing. Who the fuck would justify the price tag just for this?",
         rarity = "Patrician",
         durability = 2500000,
         style = "smart",
@@ -1999,7 +2005,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "beachtowel",
         str_name = "Beach Towel",
-        str_desc = "Perfect for drying off, this oversized beach towel wraps around your body at least several times, and you nearly trip over yourself as soon as you walk forward.",
+        str_desc = "Perfect for drying off, this oversized beach towel wraps around your body at least several times. You nearly trip over yourself as soon as you walk forward.",
         rarity = "Plebeian",
         durability = 2500000,
         style = "cute",
@@ -2010,7 +2016,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "poolnoodle",
         str_name = "Pool Noodle",
-        str_desc = "Made from super-buoyant material, you can wrap one around your neck like some sort of uncomfortable scarf, or cut down the middle and clamp it on your shoulders, or many other things! But we all know you're going to wield it like a club and whack people with it uselessly, anyways...",
+        str_desc = "Made from super-buoyant material, you can wrap one around your neck like some sort of uncomfortable scarf, or cut down the middle and clamp it on your shoulders, or many other things! But we all know you're going to wield it like a club and whack people with it uselessly. Anyways...",
         rarity = "Patrician",
         durability = 2500000,
         style = "tough",
