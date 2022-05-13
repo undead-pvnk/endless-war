@@ -133,13 +133,13 @@ async def event_tick(id_server):
                                 resp_cont.add_channel_response(ch, response)
 
                     bknd_event.delete_world_event(event_data.id_event)
-                except:
-                    ewutils.logMsg("Error in event tick for server {}".format(id_server))
+                except Exception as e:
+                    ewutils.logMsg("Error in event tick for server {}:{}".format(id_server, e))
 
         await resp_cont.post()
 
-    except:
-        ewutils.logMsg("Error in event tick for server {}".format(id_server))
+    except Exception as e:
+        ewutils.logMsg("Error in event tick for server {}:{}".format(id_server, e))
 
 
 """ Decay slime totals for all users, with the exception of Kingpins"""
