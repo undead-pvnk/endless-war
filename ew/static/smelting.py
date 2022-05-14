@@ -70,6 +70,19 @@ smelting_recipe_list = [
         products=cosmetics.cosmetic_names
     ),
     EwSmeltingRecipe(
+        id_recipe="evilcosmetic",
+        str_name="a evil cosmetic",
+        alias=[
+            "evil",
+            "evilhat",
+        ],
+        ingredients={
+            ewcfg.item_id_slimepoudrin: 4,
+            ewcfg.item_id_evil_material: 1
+        },
+        products=cosmetics.cosmetic_names
+    ),
+    EwSmeltingRecipe(
         id_recipe="knightarmor",
         str_name="a set of Knight Armor",
         alias=[
