@@ -3298,7 +3298,7 @@ furniture_list = [
     EwFurniture(
         id_furniture = "shipinabottle",
         str_name = "Ship in a Bottle",
-        str_desc = "One of those mass manufactured, cheaply produced ships inside a large glass bottle.",
+        str_desc = "One of those mass-manufactured, cheaply-produced ships inside a large glass bottle.",
         rarity = "Plebeian",
         acquisition = "bartering",
         price = 400000,
@@ -3325,7 +3325,7 @@ furniture_list = [
         acquisition = "bartering",
         price = 1600000,
         vendors = ['Country Club'],
-        furniture_place_desc = "You clear your living room out of its furniture, and kick the rug down the room in one go. You'll have to vaccum this twice a week just by looking at how heavy of a carpet it is.",
+        furniture_place_desc = "You clear your living room out and kick the rug down the room in one go. You'll have to vacuum this twice a week just by feeling how heavy of a carpet it is.",
         furniture_look_desc = "Your living room's floor is just one giant pattern rug.",
     ),
     EwFurniture(
@@ -3336,7 +3336,7 @@ furniture_list = [
         acquisition = "bartering",
         price = 30000000,
         vendors = ['Country Club'],
-        furniture_place_desc = "You heave the trophy up onto your desk. The weight of this doesn't compare to the weight placed upon your ego, you'll be a narcissist in no time!",
+        furniture_place_desc = "You heave the trophy up onto your desk. The weight of this doesn't compare to the weight placed upon your ego though; you'll be a narcissist in no time!",
         furniture_look_desc = "Your greatest achievement trophy is showing off in a bold display.",
     ),
 ]

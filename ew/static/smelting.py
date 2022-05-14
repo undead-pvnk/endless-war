@@ -221,7 +221,7 @@ smelting_recipe_list = [
             "dp"
         ],
         ingredients={
-            ewcfg.item_id_minecraftdiamond: 3, #3000 poudrins worth. Don't you know that the minecraft crafting bench only has 9 slots? The sheer stupidity of trying to make a diamond pickaxe out of ten diamonds confuses everybody. Ask any gamer what the recipe of a minecraft diamond pickaxe is, and they'll say THREE (3) diamonds and two sticks. This is unforgivable.
+            ewcfg.item_id_minecraftdiamond: 10, #100 megaslime worth
             ewcfg.item_id_stick: 2
         },
         products=[ewcfg.weapon_id_diamondpickaxe]
@@ -236,7 +236,7 @@ smelting_recipe_list = [
             "minecraftdiamond"
         ],
         ingredients={
-            ewcfg.item_id_slimepoudrin: 1000, #10 megaslime worth... Someone didn't do their math, 10,000 * 1000 = 10,000,000.
+            ewcfg.item_id_slimepoudrin: 1000, #10 megaslime worth
         },
         products=[ewcfg.item_id_minecraftdiamond]
     ),
@@ -1768,7 +1768,7 @@ smelting_recipe_list = [
         products=['monsterbonegauntlets']
     ),
     EwSmeltingRecipe(
-        id_recipe=",monsterbonefullplate",
+        id_recipe="monsterbonefullplate",
         str_name="Monster Bone Fullplate",
         alias=[
             'mbfullplate',

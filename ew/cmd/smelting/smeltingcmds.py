@@ -8,6 +8,7 @@ from ew.static import cosmetics
 from ew.static import cosmetics as static_cosmetics
 from ew.static import smelting
 from ew.static import vendors
+from ew.static import items as static_items
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils

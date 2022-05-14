@@ -2286,8 +2286,8 @@ it_relic = 'relic'
 # Cosmetic item rarities
 rarity_plebeian = "Plebeian"
 rarity_patrician = "Patrician"
-rarity_profollean = "Profollean" #  
-rarity_promotional = "Promotional"  # Cosmetics that should be awarded at events, such as a reward for the top 5, or things that you will likely never be able to get after said event is over. Ask Zugerujk, Crank, or Demadunk for elaboration.
+rarity_profollean = "Profollean"
+rarity_promotional = "Promotional"  # Cosmetics awarded at events / achieved through limited ways
 rarity_princeps = "princeps"
 
 # Leaderboard score categories
