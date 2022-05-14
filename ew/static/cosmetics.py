@@ -1814,7 +1814,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "monsterbonefullplate",
         str_name = "Monster Bone Fullplate",
-        str_desc = "It's a piece of monster bone armor that was handmade. This piece will keep your cock and balls nice and guarded.",
+        str_desc = "It's a piece of monster bone armor that was handmade. This piece will keep your chest and vitals nice and guarded.",
         rarity = "Plebeian",
         durability = 2500000,
         style = "evil",
@@ -1854,7 +1854,7 @@ cosmetic_items_list = [
         freshness = 15,
         acquisition = "smelting",
         price = 50000,
-        size = 3,
+        size = 2,
     ),
     EwCosmeticItem(
         id_cosmetic = "monsterbonecodpiece",
