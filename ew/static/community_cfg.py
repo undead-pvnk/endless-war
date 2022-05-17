@@ -151,6 +151,27 @@ pray_responses_list = [
     "ENDLESS WAR is a free text-based MMORPG playable entirely within a Discord server. But, you probably already knew that, didn't you?",
 ]
 
+actual_stds = [
+    "chlamydia",
+    "herpes",
+    "genital herpes",
+    "HPV",
+    "gonorrhea",
+    "HIV",
+    "AIDS",
+    "syphilis",
+    "trichomoniasis",
+    "bacterial vaginosis",
+    "bacterial vagignosis",
+    "hepatitus A",
+    "hepatitus B",
+    "hepatitus C",
+    "mycoplasma genitalium",
+    "Zika",
+    "anal warts",
+    "penis virus",
+    "pokérus"
+]
 
 curator_insults = [
     "LOPSIDED FISHWAGON",

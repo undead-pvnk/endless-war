@@ -14,7 +14,10 @@ from ew.static import weather as weather_static
 from ew.utils import item as itm_utils
 from ew.utils import poi as poi_utils
 from ew.utils.combat import EwUser
-from ew.utils.core import check_moon_phase
+try:    
+    from ew.utils import rutils 
+except:
+    from ew.utils import rutils_dummy as rutils
 
 
 class EwFisher:
@@ -133,12 +136,12 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None, secret_
         fish_pool = [fish for fish in fish_pool if fish not in static_fish.snow_fish]
 
     # Time exclusive fish
-    if 5 < market_data.clock < 20:
+    if rutils.debug30(fisher):
+        fish_pool = [fish for fish in fish_pool if fish in static_fish.specialmoon_fish]
+    elif 5 < market_data.clock < 20:
         fish_pool = [fish for fish in fish_pool if fish not in static_fish.night_fish]
     elif market_data.clock < 8 or market_data.clock > 17:
         fish_pool = [fish for fish in fish_pool if fish not in static_fish.day_fish]
-        if check_moon_phase(market_data) != ewcfg.moon_special:
-            fish_pool = [fish for fish in fish_pool if fish not in static_fish.specialmoon_fish]
     else:
         for fish in fish_pool:
             if static_fish.fish_map[fish].catch_time != None:
@@ -306,6 +309,10 @@ async def award_fish(fisher, cmd, user_data):
             else:
                 response = "You woulda reeled in some {}s, but that's just too many needles for your creaky legs. You've got too many {}s!".format(item.str_name, item.item_type)
 
+        # Seeeeeeeeeecret fishing stuff oh my
+        elif rutils.debug28(user_data):
+            response = await rutils.debug29(user_data, fisher, cmd)
+
         elif (fisher.pier.pier_type != ewcfg.fish_slime_saltwater or len(slimesea_inventory) == 0 or random.random() < 0.2) and fisher.current_fish == "item":
 
             # Choose a random item from the possible mining results - currently just poudrins
@@ -355,6 +362,9 @@ async def award_fish(fisher, cmd, user_data):
             weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
             if weapon.id_weapon == "fishingrod":
                 has_fishingrod = True
+
+        if rutils.debug28(user_data):
+            rutils.debug31(fisher)
 
         # The fish's value, for bartering.
         value = 0

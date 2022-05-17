@@ -27,6 +27,12 @@ from .fishutils import gen_bite_text
 from .fishutils import gen_fish
 from .fishutils import gen_fish_size
 from .fishutils import length_to_size
+try:
+    from ew.utils import rutils as ewrelicutils
+    from ew.cmd import debug as ewdebug
+except:
+    from ew.utils import rutils_dummy as ewrelicutils
+    from ew.cmd import debug_dummy as ewdebug
 
 """ Casts a line into the Slime Sea """
 
@@ -73,7 +79,7 @@ async def cast(cmd):
         if rod_possession:
             fisher.inhabitant_id = rod_possession[0]
 
-        elif user_data.hunger >= user_data.get_hunger_max():
+        if user_data.hunger >= user_data.get_hunger_max():
             response = "You're too hungry to fish right now."
         elif (not fisher.inhabitant_id) and (poi.id_poi == ewcfg.poi_id_blackpond):
             response = "You cast your fishing line into the pond, but your hook bounces off its black waters like hard concrete."
@@ -201,12 +207,19 @@ async def cast(cmd):
             user_data.hunger += ewcfg.hunger_perfish * ewutils.hunger_cost_mod(user_data.slimelevel)
             user_data.persist()
 
-            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
             bite_text = gen_bite_text(fisher.current_size)
 
+            # FISHINGEVENT
+            # Seeeeeecret fishing things for the eventtttt spooooooky. I'm tryin 😔🙏
+            debug = ewrelicutils.debug25(user_data, cmd)
+            if debug == 1:
+                await ewdebug.debug26(user_data, fisher, cmd) 
+            elif debug == 2:
+                await ewdebug.debug27(user_data, fisher, cmd)
+            else:
+                await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
             # User has a 1/10 chance to get a bite
-            fun = 100
+            fun = 10
 
             if fisher.bait == True:
                 # Bait attatched, chance to get a bite increases from 1/10 to 1/7
@@ -254,8 +267,16 @@ async def cast(cmd):
                             await asyncio.sleep(27)
                         else:
                             await asyncio.sleep(50)
+                elif ewdebug.debug28():
+                    if fisher.high:
+                        await asyncio.sleep(35)
+                    else:
+                        await asyncio.sleep(60)
                 else:
-                    await asyncio.sleep(60)
+                    if fisher.high:
+                        await asyncio.sleep(30)
+                    else:
+                        await asyncio.sleep(60)
 
                 # Cancel if fishing was interrupted
                 if current_fishing_id != fisher.fishing_id:
@@ -276,7 +297,10 @@ async def cast(cmd):
                 # If damp is greater than 10, a fish won't bite. If it's less than or equal to 10, a fish will bite.
                 if damp > 10:
                     # Send fishing flavor text
-                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, random.choice(comm_cfg.void_fishing_text if fisher.pier.pier_type == ewcfg.fish_slime_void else comm_cfg.normal_fishing_text)))
+                    if ewrelicutils.debug28(user_data):
+                        await ewdebug.debug32(fisher, cmd)
+                    else:
+                        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, random.choice(comm_cfg.void_fishing_text if fisher.pier.pier_type == ewcfg.fish_slime_void else comm_cfg.normal_fishing_text)))
                     # Make a bite slightly more likely, increase the counter for how many failed ticks
                     fun -= 2
                     bun += 1

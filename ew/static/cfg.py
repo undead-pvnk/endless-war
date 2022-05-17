@@ -3106,28 +3106,6 @@ the_slime_lyrics = [
 ]
 
 
-actual_stds = [
-    "chlamydia",
-    "herpes",
-    "genital herpes",
-    "HPV",
-    "gonorrhea",
-    "HIV",
-    "AIDS",
-    "syphilis",
-    "trichomoniasis",
-    "bacterial vaginosis",
-    "bacterial vagignosis",
-    "hepatitus A",
-    "hepatitus B",
-    "hepatitus C",
-    "mycoplasma genitalium",
-    "Zika",
-    "anal warts",
-    "penis virus",
-    "pokérus"
-]
-
 howls = [
     '**AWOOOOOOOOOOOOOOOOOOOOOOOO**',
     '**5 6 7 0 9**',
