@@ -827,11 +827,8 @@ async def scavenge(cmd):
             # scavenge_mod = 0.003 * (time_since_last_scavenge ** 0.9)
             scavenge_mod = 0.005 * combo
 
-            if (ewcfg.mutation_id_whitenationalist in mutations or ewcfg.mutation_id_airlock in mutations) and market_data.weather == "snow":
-                scavenge_mod *= 1.5
-
             if ewcfg.mutation_id_airlock in mutations and market_data.weather == "snow":
-                scavenge_mod *= 1.5
+                scavenge_mod *= 2.25
 
             if ewcfg.mutation_id_webbedfeet in mutations:
                 district_slimelevel = len(str(district_data.slimes))
