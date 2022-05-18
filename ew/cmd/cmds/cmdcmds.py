@@ -50,6 +50,7 @@ from .cmdsutils import item_commands
 from .cmdsutils import item_off
 from .cmdsutils import location_commands
 from .cmdsutils import mutation_commands
+from ew.cmd.juviecmd import juviecmdutils
 
 from .cmdsutils import holiday_commands
 from .. import item as ewitem
@@ -842,8 +843,8 @@ async def jump(cmd):
     user_data = EwUser(member=cmd.message.author)
     poi = poi_static.id_to_poi.get(user_data.poi)
 
-
-    if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
+    # If the player is in any of the mines
+    if user_data.poi in juviecmdutils.mines_map:
         response = "You bonk your head on the shaft's ceiling."
         # if voidhole world event is valid, move the guy to the void and post a message
         # else, post something about them bonking their heads
@@ -869,20 +870,25 @@ async def jump(cmd):
 
                     return
 
+    # Ghosts and kingpins can't jump
     elif user_data.life_state == ewcfg.life_state_corpse:
         response = "You're already dead. You'd just ghost hover above the drop."
     elif user_data.life_state == ewcfg.life_state_kingpin:
         response = "You try to end things right here. Sadly, the gangster sycophants that kiss the ground you walk on grab your ankles in desperation and prevent you from suicide. Oh, the price of fame."
 
+    # If a poi has a jump destination specificied, go there.
     elif poi.jump_dest != '':
         resp_cont = EwResponseContainer(client=cmd.client, id_server=user_data.id_server)
 
         user_data.poi = poi.jump_dest
         poi_dest = poi_static.id_to_poi.get(poi.jump_dest)
+        # The blimp's jump destination - becomes wherever the blimp is.
         if user_data.poi == 'blimpland':
             blimp_obj = EwTransport(id_server=user_data.id_server, poi = poi.id_poi)
             user_data.poi = blimp_obj.current_stop
+            poi_dest = poi_static.id_to_poi.get(blimp_obj.current_stop)
 
+        # Kill the player if they don't have laaf
         if ewcfg.mutation_id_lightasafeather not in user_data.get_mutations():
             user_data.trauma = ewcfg.trauma_id_environment
             die_resp = user_data.die(cause=ewcfg.cause_falling)
@@ -893,42 +899,105 @@ async def jump(cmd):
         user_data.persist()
         response = ewcfg.jump_responses.get(poi.id_poi).format(cmd.message.author.display_name)
 
+        # Secnd messages to channels
         resp_cont.add_channel_response(channel=poi.channel, response=response)
         resp_cont.add_channel_response(channel=poi_dest.channel, response=response_dest)
         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
         return await resp_cont.post()
+    
+    # If the user has Stiltwalker
+    elif ewcfg.mutation_id_stiltwalker in user_data.get_mutations():
+        blimp_obj = EwTransport(id_server=user_data.id_server, poi = ewcfg.poi_id_blimp)
+        # If the user is under the blimp, put them on the blimp.
+        print(blimp_obj.current_stop)
+        if user_data.poi == blimp_obj.current_stop:
 
+            jump_response = "STR-EEEEETCHHHH!!!!"
+            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, jump_response))
+            await asyncio.sleep(1)
 
+            response = "{} steps up from the city streets below. MF built like a pole, swear to god.".format(cmd.message.author.display_name)
+            # Change their POI
+            user_data.poi = ewcfg.poi_id_blimp
+            blimp_poi = poi_static.id_to_poi.get(ewcfg.poi_id_blimp)
+            user_data.time_lastenter = int(time.time())
+            user_data.persist()
+            # Move ghosts, update roles, send messages.
+            await user_data.move_inhabitants(id_poi=ewcfg.poi_id_blimp)
+            await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+            await fe_utils.send_message(cmd.client, fe_utils.get_channel(cmd.guild, blimp_poi.channel), fe_utils.formatMessage(cmd.message.author, response))
 
+            return
+
+        # If the user is in the Waffle House, put them in a random mine.
+        elif user_data.poi == ewcfg.poi_id_wafflehouse:
+
+            jump_response = "STR-EEEEETCHHHH!!!!"
+            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, jump_response))
+            await asyncio.sleep(1)
+
+            # Choose a random mine
+            jump_poi_id = random.choice([ewcfg.poi_id_mine, ewcfg.poi_id_mine_sweeper, ewcfg.poi_id_mine_bubble, ewcfg.poi_id_tt_mines,
+                                        ewcfg.poi_id_tt_mines_sweeper, ewcfg.poi_id_tt_mines_bubble, ewcfg.poi_id_cv_mines,
+                                        ewcfg.poi_id_cv_mines_sweeper, ewcfg.poi_id_cv_mines_bubble])
+            jump_poi = poi_static.id_to_poi.get(jump_poi_id)
+            response = "{} steps up from the ever-ethereal Waffle House, a creature of the night emerging from utter nothingness. MF built like Slenderman, swear to god.".format(cmd.message.author.display_name)
+            # Change their POI, do all POI-moving checks.
+            user_data.poi = jump_poi_id
+            user_data.time_lastenter = int(time.time())
+            user_data.persist()
+            await user_data.move_inhabitants(id_poi=jump_poi_id)
+            await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+            await fe_utils.send_message(cmd.client, fe_utils.get_channel(cmd.guild, jump_poi.channel), fe_utils.formatMessage(cmd.message.author, response))
+
+            return
+
+        # Unique flavor for the slime's end cliffs, can't kill self.
+        elif user_data.poi == ewcfg.poi_id_slimesendcliffs:
+            response = "You take a step into the Slime Sea. Heh, it tickles! You're feeling your legs getting dissolved, dumbass. You take a step out."
+
+        # Otherwise, unique !jump flavor.
+        else:
+            response = random.choice(comm_cfg.stiltwalker_jump_response)
+            
+    # If you're NOT at the cliffs.
     elif cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
         roll = random.randrange(25)
+        # Small chance to do fucking PARKOUR
         if roll == 0:
             response = "You start running and taking momentum to then make the fucking highest jump you've ever done. When you reach the ground, you somehow manage to do a sommersault landing. Damn, guess you were good at parkour in the end!"
         else:
             response = "You jump. Nope. Still not good at parkour."
+    
+    # Jump off the cliffs
     else:
         response = "Hmm. The cliff looks safe enough. You imagine, with the proper diving posture, you'll be able to land in the slime unharmed. You steel yourself for the fall, run along the cliff, and swan dive off its steep edge. Of course, you forgot that the Slime Sea is highly corrosive, there are several krakens there, and you can't swim. Welp, time to die."
 
+        # Take all of the player's items
         cliff_inventory = bknd_item.inventory(id_server=cmd.guild.id, id_user=user_data.id_user)
         for item in cliff_inventory:
             item_object = EwItem(id_item=item.get('id_item'))
+            # Don't put soulbound items in the sea.
             if item.get('soulbound') == True:
                 pass
 
+            # If a weapon is equipped or sidearmed, put it directly in the sea's inventory.
             elif item_object.item_type == ewcfg.it_weapon:
                 if item.get('id_item') == user_data.weapon or item.get('id_item') == user_data.sidearm:
                     bknd_item.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.guild.id)
-
+                # Otherwise goes through regular cliff !toss checks. 
                 else:
                     item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.guild.id)
 
-
+            # If an item is adorned, put it directly into the sea's inventory.
             elif item_object.item_props.get('adorned') == 'true':
                 bknd_item.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.guild.id)
 
+            # Otherwise goes through regular cliff !toss checks.
             else:
                 item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.guild.id)
 
+        # Kill the player
         user_data.trauma = ewcfg.trauma_id_environment
         die_resp = user_data.die(cause=ewcfg.cause_cliff)
         user_data.persist()

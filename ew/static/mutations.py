@@ -505,6 +505,9 @@ mutations = [
         str_describe_other="Their reach extends to the skies above due to **Long Arms**.",
         str_acquire="The insides of your arms start to feel cramped. You feel the hair on a second skin brush up against the interior of your arm, bunching up. You try to relax your muscles, but a little stretch just causes you to rocket your right arm into the air. Hm. This could be useful, as long as you can get used to having to gather up the limp extended limb afterwards. You have developed the mutation **Long Arms**. Use !longdrop <location> <item> to drop an item to an adjacent area.",
         tier=2,
+        incompatible = {
+            ewcfg.mutation_id_stiltwalker: '"Well waddya need that for? Ya got stilts for legs! It ain\'t pretty when they clash, kid."'
+        },
         str_transplant="Dusttrap makes several incisions into your arms and placed a cyndrilical plate that acts as a filter between your veins. \"OK, all done. If you want to extend your arm, flip this switch. This'll convert your blood to 100% stem cells and expand nice n' fast. Whenever you're done, cut your long arm off and press the GROW HAND button over here, y'see? Simple as pie on a windowsill.\"\n\nYou have developed the mutation **Long Arms**. Use !longdrop <location> <item> to drop an item to an adjacent area.",
     ),
     EwMutationFlavor(
@@ -536,6 +539,19 @@ mutations = [
         str_acquire="Drops of slime fly into your eyeballs, causing them to sting viciously. You quickly go to rub them, but that only makes the pain worse! After a prolonged writhing, you open your oozing eyes with a new view of your environment. You can truly SEE the slime around you. You can CONNECT with the slime MENTALLY. Your sight spheres become conduits for the world. You have developed the mutation **Stink Eye**. When surveying, the amount of slime on the ground is shown, along with 4 items starting with the lowest IDs.",
         tier=4,
         str_transplant="Dr. Dusttrap walks to the back of clinic and returns with a pickled punk. She unscrews the lid and carefully removes the preserved human fetus with tongs. \"This operation's a bit archaic, but it's not like you've got any real qualms, right?\" She instructs you to lie down, and holding your eyes open, Dr Dusttrap carefully positions the fetus above you horizontally. She lowers it inches from your head before giving it a harsh squeeze. Gallons of fetal juice pour directly into your eyes. Dusttrap puts the fetus back in the jar, then returns it to the back of the clinic. By the time she returns, your eyes have become horribly infected. You have developed the mutation **Stink Eye**. When surveying, the amount of slime on the ground is shown, along with 4 items starting with the lowest IDs.",
+    ),
+    EwMutationFlavor(
+        id_mutation=ewcfg.mutation_id_stiltwalker,
+        str_name="Stiltwalker",
+        alias=['sw', 'stilt', 'stilts'],
+        str_describe_self="Your legs are *soooo loooong* due to **Stiltwalker**.",
+        str_describe_other="Their legs are *soooo loooong* due to **Stiltwalker**.",
+        str_acquire="Your leg muscles start to tense up. You feel your tendons squeezing with a force you've never known. With one pull, your legs DOUBLE in size. Oh my. You have developed the mutation **Stiltwalker**. You can !jump. Like, for **REAL** dude. You can reach the blimp from the ground.",
+        tier=2,
+        incompatible = {
+            ewcfg.mutation_id_longarms: '"Well waddya need that for? Your arms already touch the floor! It ain\'t pretty when they clash, kid."',
+        },
+        str_transplant="Dusttrap pulls out a sawblade. \"I ran out of anesthesia a little bit ago, so you'll have to stay awake for this one.\" Turning it on, she saws your legs off. Ouch! She then stabs poles into them, stretching them to over 2x their original length. With some bandages, she reattaches them to your bloody midsection. You have developed the mutation **Stiltwalker**. You can !jump. Like, for **REAL** dude. You can reach the blimp from the ground.",
     ),
 ]
 

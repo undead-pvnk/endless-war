@@ -3974,6 +3974,16 @@ world_events = [
 		event_type=ewcfg.event_type_voidhole,
 		str_event_start="You hit a sudden gap in the stone, with a scary looking drop. You see what looks like a trampoline on a building's roof at the bottom. Do you **{}** in?".format(ewcfg.cmd_jump),
 		str_event_end="The wall collapses.",
+	),
+	EwEventDef(
+		event_type=ewcfg.event_type_spookyghost,
+		str_event_start="A fucking **GHOST** flies out of the rock you just hit! And not a slime one, like an actual white-blanket **SCARY GHOST**. Beat the shit out of it!",
+		str_event_end="The ghost flies past you, hopefully getting the beating of its life.",
+	),
+	EwEventDef(
+		event_type=ewcfg.event_type_spookyskeleton,
+		str_event_start="A fucking **SKELETON** emerges from the rock you just hit! You should beat the shit out of it ):< !",
+		str_event_end="The skeleton crumbles to dust, hopefully getting the beating of its life.",
 	)
 ]
 

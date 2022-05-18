@@ -321,6 +321,12 @@ item_list = [
         context='player_bone',
     ),
     EwGeneralItem(
+        id_item="ectoplasm",
+        str_name="Ectoplasm",
+        str_desc="A good gunky glob of ghost gum. It's like blood, but ghostly! And not slime.",
+        context='ectoplasm',
+    ),
+    EwGeneralItem(
       id_item="batterypack",
       str_name="Battery Pack",
       str_desc="A string of batteries taped together to fit inside a larger receptor. They're about the size of AAs, but they're labeled with some other gay alien letters.",
