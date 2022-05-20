@@ -20,8 +20,10 @@ from . import weather as weather_utils
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
 try:
+    from ew.static.rstatic import relic_map
     from ew.utils import rutils as relicutils
 except:
+    from ew.static.rstatic_dummy import relic_map
     from ew.utils import rutils_dummy as relicutils
 from .combat import EwEnemy
 from .combat import EwUser
@@ -886,40 +888,40 @@ async def auction_tick(id_server):
     current_date = datetime.date.today()
     market_data = EwMarket(id_server)
 
-    item_date_map = ewcfg.auction_item_date_map
+    relic_date_map = relicutils.auction_relic_date_map
 
-    if current_date in item_date_map:
-        if market_data.current_auction_relic != item_date_map[current_date]:
+    if current_date in relic_date_map:
+        if market_data.current_auction_relic != relic_date_map[current_date]:
             # DATE HAS ROLLED OVER, INITIATE AUCTION RENEWALLLLL
-            await auction_renewal(id_server, market_data, current_date, item_date_map)
+            await auction_renewal(id_server, market_data, current_date, relic_date_map)
         else:
             return
 
 
-async def auction_renewal(id_server, market_data, current_date, item_date_map):
+async def auction_renewal(id_server, market_data, current_date, relic_date_map):
     bidder = 0
     bidder = market_data.current_bidder
 
     # Create the starter Auction Updatez message
     auctionmessage = fe_utils.discord.Embed()
-    auctionmessage.set_thumbnail(url="https://cdn.discordapp.com/attachments/858397413568151582/970316539557462037/unknown.png") #PLACEHOLDER
+    auctionmessage.set_thumbnail(url="https://cdn.discordapp.com/attachments/858397413568151582/977066095288664074/unknown.png") #PLACEHOLDER
     auctionmessage.color = fe_utils.discord.Colour(int("00ff00", 16))
-    auctionmessage.description = "**THE AUCTIONEER**"
+    auctionmessage.description = "**BAILEY**"
 
     # If nobody has bidded for the current relic, it's probably day 1 of the event. If there is a bid, it's probably day 2-7.
     if market_data.current_bidder != 0:
         # Give the Bidder their item
                             #     props = itm_utils.gen_item_props(relic_map.get()))???
-        props = itm_utils.gen_item_props(vendors.static_items.item_map.get(market_data.current_auction_relic))
+        props = itm_utils.gen_item_props(relic_map.get(market_data.current_auction_relic))
         bknd_item.item_create(
-            item_type=ewcfg.it_item,
+            item_type=ewcfg.it_relic,
             id_user=bidder,
             id_server=id_server,
             item_props=props
         )
 
         # Generate props for the new relic, to get the name.
-        newitemprops = itm_utils.gen_item_props(vendors.static_items.item_map.get(item_date_map[current_date]))
+        newitemprops = itm_utils.gen_item_props(relic_map.get(relic_date_map[current_date]))
 
         # Create content of the new relic message
         field_1_title = "NEW RELIC AVAILABLE"
@@ -933,7 +935,7 @@ async def auction_renewal(id_server, market_data, current_date, item_date_map):
 
     else:
         # Get the relic's name
-        props = itm_utils.gen_item_props(vendors.static_items.item_map.get(item_date_map[current_date]))
+        props = itm_utils.gen_item_props(relic_map.get(relic_date_map[current_date]))
         item_name = props.get("item_name")
 
         # Create content of the initial post to Auction-Updatez
@@ -944,7 +946,7 @@ async def auction_renewal(id_server, market_data, current_date, item_date_map):
     # Create changes to current auction item, then persist.
     market_data.current_bid = 0
     market_data.current_bidder = 0
-    market_data.current_auction_relic = item_date_map[current_date]
+    market_data.current_auction_relic = relic_date_map[current_date]
     market_data.persist()
 
     # Send the Auction Updatez message

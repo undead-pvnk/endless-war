@@ -2060,6 +2060,17 @@ food_list = [
         time_expir = 3628800,
     ),
     EwFood(
+        id_food="ectocooler",
+        alias=['hi-c', 'hic', 'hicectocooler' 'citruscooler', 'shoutinorangetangergreen', 'crazycitruscooler'],
+        recover_hunger=-1500,
+        str_name="Hi-C Ecto Cooler",
+        vendors=[],
+        str_eat="You sip from the yummy juice box of SPOOKY HI-C ECTO COOLER. This definitely tasted better in your memories.",
+        inebriation=150,
+        str_desc="A reproduction juice box of Hi-C Ecto Cooler. It's kinda grimy, and has a weird green leakage coming from the bottom. You'd be better off throwing it away than anything/",
+        time_expir=5,
+    ),
+    EwFood(
         id_food="druggumbo",
         alias=['gumbo', 'drugbucket'],
         recover_hunger=1000,

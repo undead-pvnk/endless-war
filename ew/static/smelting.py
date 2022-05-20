@@ -1740,6 +1740,20 @@ smelting_recipe_list = [
         },
         products=[ewcfg.weapon_id_skateboard]
     ),
+    EwSmeltingRecipe(
+        id_recipe="ectocooler",
+        str_name="Hi-C Ecto Cooler",
+        alias=[
+            'hicectocooler',
+            'hic',
+            'hi-c'
+        ],
+        ingredients={
+            'direapplefrickenergy': 1,
+            'ectoplasm': 5,
+        },
+        products=['ectocooler']
+    ),
 
 ]
 

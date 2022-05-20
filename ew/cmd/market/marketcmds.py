@@ -20,8 +20,10 @@ from ew.static.fish import fish_map
 from ew.static import vendors
 try:
     from ew.static.rstatic import relic_map
+    from ew.utils.rutils import auction_relic_date_map
 except:
     from ew.static.rstatic_dummy import relic_map
+    from ew.utils.rutils_dummy import auction_relic_date_map
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import market as market_utils
@@ -1426,7 +1428,7 @@ async def bid(cmd):
     current_date = datetime.date.today()
 
     # Check if it's a day of the event.
-    if current_date in ewcfg.auction_item_date_map:
+    if current_date in auction_relic_date_map:
         # Check if the player specified a bid
         if cmd.tokens_count > 1:
             bid = ewutils.getIntToken(tokens=cmd.tokens, allow_all=False)
@@ -1437,7 +1439,7 @@ async def bid(cmd):
                 # Check if the bid is larger than the current bid
                 if bid > market_data.current_bid:
 
-                    response = "You give the auctioneer {:,} Exotic Residue. They happily take it and fiddle on their gellphone for a second.\n\"Thanx for the ER, kid. I'll keep it here in case som1 comes by with some more. You're the new HIGHEST BIDDER, yo.\"".format(bid)
+                    response = "You give Bailey {:,} Exotic Residue. He happily takes it and fiddle on his gellphone for a second.\n\"Thanks for the ER, kid! I'll keep it here in case someone comes by with some more. You're the new HIGHEST BIDDER, yo.\"".format(bid)
 
                     # Give the old highest bidder their Exotic Residue back
                     print(user_data.id_server)
@@ -1449,9 +1451,9 @@ async def bid(cmd):
                     # Create Slime Social Media Auction post
                     # Create the embed and give it its character flavor text.
                     auctionmessage = fe_utils.discord.Embed()
-                    auctionmessage.set_thumbnail(url="https://cdn.discordapp.com/attachments/858397413568151582/970316539557462037/unknown.png") #PLACEHOLDER
+                    auctionmessage.set_thumbnail(url="https://cdn.discordapp.com/attachments/858397413568151582/977066095288664074/unknown.png")
                     auctionmessage.color = fe_utils.discord.Colour(int("FF5733", 16))
-                    auctionmessage.description = "**THE AUCTIONEER**"
+                    auctionmessage.description = "**BAILEY**"
 
                     # Create content of the message
                     field_1_title = "NEW BID OF {bid} EXOTIC RESIDUE".format(user_data_id=user_data.id_user, bid=bid)
@@ -1488,9 +1490,9 @@ async def bid(cmd):
                     market_data.persist()
 
                 else:
-                    response = "You hand {:,} Exotic Residue to the Auctioneer, but it's smaller than the current highest bid.\n\"Sorry kid, but uhhhhh this sicknasty gahler b4 'ya handed me {:,} ER sooooooo. Uh, gotta say noh.\"".format(bid, market_data.current_bid) 
+                    response = "You hand {:,} Exotic Residue to Bailey, but it's smaller than the current highest bid.\n\"Sorry kid, but this sweet dude before 'ya handed me {:,} ER, so. Uh, gotta, say no! Good luck with getting me some more, though. Haha!\"".format(bid, market_data.current_bid) 
         else:
-            response = "You need to specify some amount of Exotic Residue to give the Auctioneer."
+            response = "You need to specify some amount of Exotic Residue to give Bailey."
     else:
         response = "There's no auction going on right now."
     
@@ -1506,13 +1508,13 @@ async def auction(cmd):
     current_date = datetime.date.today()
   
     # Check if it's event day 1-7
-    if current_date in ewcfg.auction_item_date_map:        
+    if current_date in auction_relic_date_map:        
         # Get the current relic's name.
-        itemprops = itm_utils.gen_item_props(vendors.static_items.item_map.get(ewcfg.auction_item_date_map[current_date]))
+        itemprops = itm_utils.gen_item_props(relic_map.get(auction_relic_date_map[current_date]))
         item_name = itemprops.get("item_name")
 
         if user_data.poi == ewcfg.poi_id_neomilwaukeestate:
-            response = "Asking the Auctioneer, they say, \"oh yeah, the current item up for auction is a **{}**. It's currently sitting at a high bid of **{:,}** Exotic Residue. So what drugs ya got?\"".format(item_name, market_data.current_bid)
+            response = "Asking Bailey, they say, \"oh yeah, the current item up for auction is a **{}**. It's currently sitting at a high bid of **{:,}** Exotic Residue. So what drugs ya got?\"".format(item_name, market_data.current_bid)
         else:
             response = "Checking your gellphone, you see the current item up for auction is a **{}**. It's currently sitting a high bid of **{:,}** Exotic Residue. Better bus your way over to Neo Milwaukee State!".format(item_name, market_data.current_bid)
     else:

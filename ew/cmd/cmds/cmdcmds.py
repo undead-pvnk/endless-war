@@ -2650,9 +2650,9 @@ async def turnin(cmd):
             market_data.persist()
 
             # Tell user how many points they got
-            response = "You hand the Auctioneer your used needles and they extract {} exotic residue from the grimy syringes. They pocket the syringes, but are kind enough to give you your rightfully-fished residue.".format(point_gain)
+            response = "You hand Bailey your used needles and he extracts {} exotic residue from the grimy syringes. He pockets the syringes, but is kind enough to give you your rightfully-fished residue.".format(point_gain)
         else:
-            response = "You try to hand the Auctioneer used needles, but you don't have any! Why are you even trying?"
+            response = "You try to hand Bailey used needles, but you don't have any! Such a tragedy!"
 
     return await fe_utils.send_response(response, cmd)
 
