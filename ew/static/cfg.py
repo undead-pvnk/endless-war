@@ -46,7 +46,8 @@ public_gamestates = {
     'slimernaliakingpin':[1, '-1'], #The existing slimernalia kingpin
     'cratersvillehole':[1, '0'],
     'toxingtonhole':[1, '0'],
-    'juviesrowhole':[1, '0']
+    'juviesrowhole':[1, '0'],
+    'hall_counter':[1, '1']
 }
 
 forbidden_channels = ["suggestion-box"]
