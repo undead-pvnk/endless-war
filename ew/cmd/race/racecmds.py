@@ -169,12 +169,55 @@ async def rattle(cmd):
                 " a little bit too hard. Oof ouch owie.",
                 " so viciously they actually get offended.",
                 " in an attempt to socialize, but they don't think you should.",
+                ", inviting them to have a bad time." #blame loom
             ]
-            response = "You rattle your bones at {}{}".format(cmd.mentions[0].display_name, random.choice(responses))
+            responses = [
+                "You rattle your bones at {}{}".format(cmd.mentions[0].display_name, random.choice(responses)),
+                "You have a bone to pick with {}.".format(cmd.mentions[0].display_name) # blame org
 
         # rattle alone
         else:
-            response = "You rattle your bones."
+            roll = random.randrange(100)
+            responses = []
+            # common rattles
+            if roll > 19:
+                responses = [
+                    "You rattle your bones.",
+                    "You  r a t t l e  your  b o n e s .",
+                    "You rattle your bones so aggressively your head goes flying off.",
+                    "You rattle your bones so aggressively your arm flies out of your shoulder's socket.",
+                    "You rattle your bones so aggressively your leg is shaken out of your pelvis, sending you to the floor.",
+                    "You rattle your bones so aggressively a rib flies out and nearly hits someone else's eye.",
+                    "You rattle your bones so aggressively a rib collapses inward, bouncing around your chest cavirty for a good ten minutes."
+                    "You bang your ribcage with a couple of sticks. Sounds less like a xylophone than you would expect.", # partially blame pyro
+                    "You 'nyehh' to yourself",
+                    "Every day you rattlin'.",
+                    "You rattle your bones, thinking about the last time you gave someone a bad time" # blame loom
+                    "You set to work tickling your own ivories. How shameful." # blame dublyn
+                    "A few spinal plates fall out, you give them a lick and stick them back in." # blame ebola
+                    "You give everyone the chills from chattering your teeth too much.", # blame ebola
+                    "You trip on a wayward rock and topple over. What a boner!", # blame loom
+                    "You rib with the fellas. Good bants all 'round.",
+                    "You rib with the ladies, heheh. What, what did I say wrong?", # blame ebola
+                    "You rib with the non-b folk. A healthy mix of people with and without a sense of humor.",
+                    "You spook yourself with how effectively you rattle your bones."
+                ]
+            # rare rattles
+            elif roll > 0:
+                bones = random.randrange(206)
+                insult1 = []
+                insult2 = []
+                # grammar is important, retards
+                if bones > 1:
+                    insult1 = "s "
+                    insult2 = "."
+                elif bones > 0:
+                    insult1 = " "
+                    insult2 = ". What? How? Did you go straight for a thigh?"
+                responses = [
+                    "You rattle your bones so aggressively, you collapse into a pile of bones. It takes a second for you to reassemble yourself",
+                    "You successfully remove {} bone{}before collapsing{}".format(bones, insult1, insult2) # blame ebola
+                ]
     else:
         response = "You people are not allowed to do that."
 
