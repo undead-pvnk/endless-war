@@ -21,6 +21,7 @@ from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
 from ew.utils import poi as poi_utils
 from ew.utils import rolemgr as ewrolemgr
+from ew.utils import combat as cmbt_utils
 from ew.utils import stats as ewstats
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
@@ -37,9 +38,11 @@ from ew.backend.dungeons import EwGamestate
 try:
     from ew.static.rstatic import digup_relics
     from ew.static.rstatic import relic_map
+    from ew.static.rstatic import question_map
 except:
     from ew.static.rstatic_dummy import digup_relics
     from ew.static.rstatic_dummy import relic_map
+    from ew.static.rstatic_dummy import question_map
 
 async def crush(cmd):
     member = cmd.message.author
@@ -970,4 +973,65 @@ async def hole_depth(cmd):
         current_depth = float(gamestate.value)/3000
 
         response = "The hole in {} is {:.2f} feet deep.".format(mother_poi.str_name, current_depth)
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def hall_question(cmd):
+    user_data = EwUser(member = cmd.message.author)
+    gamestate = EwGamestate(id_state='hall_counter', id_server=cmd.guild.id)
+    if user_data.poi != 'doorsofthesludgenant':
+        response = "I'm not answering your questions. Stop being a little bitch and ask bullets instead."
+    else:
+        hallNum = int(gamestate.value)
+        if question_map.get(hallNum)[1][0] == '?':
+            response = "The stone head isn't responding to anything. Maybe it's out of ancient voodo batteries or something."
+        else:
+            response = "{} {}".format("The stone head starts talking:",question_map.get(hallNum)[0])
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def hall_answer(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    gamestate = EwGamestate(id_state='hall_counter', id_server=cmd.guild.id)
+
+    input = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+    if user_data.poi != 'doorsofthesludgenant':
+        response = "I didn't ask you anything, knuckledragger. Don't speak unless spoken to."
+    else:
+        hallNum = int(gamestate.value)
+        if question_map.get(hallNum)[1][0] == '?':
+            response = "The stone head isn't responding to anything. Maybe it's out of ancient voodo batteries or something."
+        elif input.upper() == question_map.get(hallNum)[1]:
+            response = "Nice, that's it! Another door opens.\n\nNext question:{}".format(question_map.get(hallNum)[0])
+            hallNum += 1
+            if question_map.get(hallNum)[1][0] == '?':
+                reward = question_map.get(hallNum)[1][1:]
+                reward_props = itm_utils.gen_item_props(reward)
+                bknd_item.item_create(
+                    item_type=ewcfg.it_relic,
+                    id_server=user_data.id_server,
+                    id_user='doorsofthesludgenant',
+                    item_props=reward_props
+                )
+                response += "\n\n A {} is behind this door! Jackpot!"
+                if (hallNum + 1) in question_map.keys(): #advance to the next question if it exists
+                    hallNum += 1
+
+            gamestate.value = "{}".format(hallNum)
+            gamestate.persist()
+
+        else: #deduct a slime penalty for answering wrong
+            damage = random.randrange(10000, 250000)
+            if user_data.slimes > damage:
+                dealt_string = "loses {} slime!".format(damage)
+                user_data.change_slimes(n=-damage)
+            else:
+                dealt_string = "gets vaporized!"
+                user_data.die(cause=ewcfg.cause_praying)
+                await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+
+            response = "**WRYYYYYYYYY!!!** The stone head reels back and fires a bone hurting beam! Ouch, right in the {hitzone}! {player} {dealt_string}".format(hitzone = cmbt_utils.get_hitzone(), player = cmd.message.author.display_name, dealt_string=dealt_string)
+
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
