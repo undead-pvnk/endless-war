@@ -39,6 +39,7 @@ try:
     from ew.static.rstatic import digup_relics
     from ew.static.rstatic import relic_map
     from ew.static.rstatic import question_map
+
 except:
     from ew.static.rstatic_dummy import digup_relics
     from ew.static.rstatic_dummy import relic_map
@@ -983,7 +984,7 @@ async def hall_question(cmd):
         response = "I'm not answering your questions. Stop being a little bitch and ask bullets instead."
     else:
         hallNum = int(gamestate.value)
-        if question_map.get(hallNum)[1][0] == '?':
+        if question_map.get(hallNum)[0] == '?':
             response = "The stone head isn't responding to anything. Maybe it's out of ancient voodo batteries or something."
         else:
             response = "{} {}".format("The stone head starts talking:",question_map.get(hallNum)[0])
@@ -1000,14 +1001,17 @@ async def hall_answer(cmd):
     if user_data.poi != 'doorsofthesludgenant':
         response = "I didn't ask you anything, knuckledragger. Don't speak unless spoken to."
     else:
+
         hallNum = int(gamestate.value)
-        if question_map.get(hallNum)[1][0] == '?':
+        if question_map.get(hallNum)[0] == '?':
             response = "The stone head isn't responding to anything. Maybe it's out of ancient voodo batteries or something."
+        elif input == "" or input is None:
+            response = "Answer what? You need to !answer <youranswer>."
         elif input.upper() == question_map.get(hallNum)[1]:
-            response = "Nice, that's it! Another door opens.\n\nNext question:{}".format(question_map.get(hallNum)[0])
             hallNum += 1
-            if question_map.get(hallNum)[1][0] == '?':
-                reward = question_map.get(hallNum)[1][1:]
+            response = "Nice, that's it! Another door opens."
+            if question_map.get(hallNum)[0] == '?':
+                reward = relic_map.get(question_map.get(hallNum)[1])
                 reward_props = itm_utils.gen_item_props(reward)
                 bknd_item.item_create(
                     item_type=ewcfg.it_relic,
@@ -1015,9 +1019,14 @@ async def hall_answer(cmd):
                     id_user='doorsofthesludgenant',
                     item_props=reward_props
                 )
-                response += "\n\n A {} is behind this door! Jackpot!"
+                response += "\n\n A {} is behind this door! Jackpot!".format(reward_props.get('relic_name'))
                 if (hallNum + 1) in question_map.keys(): #advance to the next question if it exists
                     hallNum += 1
+            if question_map.get(hallNum)[0] != '?':
+                response += " Next question: {}".format(question_map.get(hallNum)[0])
+
+            response = response.format(question_map.get(hallNum)[0])
+
 
             gamestate.value = "{}".format(hallNum)
             gamestate.persist()
@@ -1027,11 +1036,12 @@ async def hall_answer(cmd):
             if user_data.slimes > damage:
                 dealt_string = "loses {} slime!".format(damage)
                 user_data.change_slimes(n=-damage)
+                user_data.persist()
             else:
                 dealt_string = "gets vaporized!"
                 user_data.die(cause=ewcfg.cause_praying)
                 await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
-            response = "**WRYYYYYYYYY!!!** The stone head reels back and fires a bone hurting beam! Ouch, right in the {hitzone}! {player} {dealt_string}".format(hitzone = cmbt_utils.get_hitzone(), player = cmd.message.author.display_name, dealt_string=dealt_string)
+            response = "**WRYYYYYYYYY!!!** The stone head reels back and fires a bone hurting beam! Ouch, right in the {hitzone}! {player} {dealt_string}".format(hitzone = random.choice(cmbt_utils.get_hitzone().aliases), player = cmd.message.author.display_name, dealt_string=dealt_string)
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

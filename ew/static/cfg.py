@@ -914,6 +914,8 @@ cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_scavenge_alt1 = cmd_prefix + 'lookbetweenthecushions'
 cmd_scavenge_alt2 = cmd_prefix + 'dumpsterdive'
 cmd_scrub = cmd_prefix + 'scrub'
+cmd_question = cmd_prefix + 'question'
+cmd_answer = cmd_prefix + 'answer'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
 cmd_spray = cmd_prefix + 'annex'
@@ -3703,7 +3705,8 @@ district_unique_commands = {
     "limecorp3f": "LIMECORP 3F\n!jump: Commit career suicide.",
     "blimp":"BLIMP:\nGo skydiving. No parachute, but you can pretend.",
     "themuseum":"THE MUSEUM\n!donate <relic/fish/frame>: Donate something to the Curator's museum.",
-    "wafflehouse": "WAFFLE HOUSE\n!restorenegaslimeoid <negaslimeoid>: Restore a Negaslimeoid from a core.\n!destroyslimeoid: Destroy a Slimeoid or Negaslimeoid in your possession.\n!instructions: Go over the many commands used to make a negaslimeoid."
+    "wafflehouse": "WAFFLE HOUSE\n!restorenegaslimeoid <negaslimeoid>: Restore a Negaslimeoid from a core.\n!destroyslimeoid: Destroy a Slimeoid or Negaslimeoid in your possession.\n!instructions: Go over the many commands used to make a negaslimeoid.",
+    "doorsofthesludgenant":"DOOR OF THE SLUDGENANT\n!question: Get a question from that stone face up there.\n!answer <answer>: Answer the question to try opening up a door."
 }
 
 
