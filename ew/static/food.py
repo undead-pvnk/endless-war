@@ -805,6 +805,28 @@ food_list = [
         str_desc = "This thick, viscous orange fluid reeks with a sickly-sweet orangey odor.",
         time_expir = 43200,
     ),
+        EwFood(
+        id_food = "majormelonsyrup",
+        alias = ['mmsyrup', 'mms', 'pinksyrup'],
+        recover_hunger = 100,
+        price = 1000,
+        str_name = "cup of pure undiluted MTN DEW Major Melon syrup",
+        vendors = ['Mtn Dew Fountain'],
+        str_eat = "You pour the molasses-like liquid down your throat. It stings your teeth and clings to your esophagus on the way down, but you feel suddenly invigorated as your blood sugar skyrockets!!",
+        str_desc = "This thick, viscous pink fluid reeks with a sickly-sweet watermelon odor.",
+        time_expir = 43200,
+    ),
+    EwFood(
+        id_food="purplethundersyrup",
+        alias=['ptsyrup', 'pts', 'purpsyrup'],
+        recover_hunger=100,
+        price=1000,
+        str_name="cup of pure undiluted MTN DEW Purple Thunder syrup",
+        vendors=['Mtn Dew Fountain'],
+        str_eat="You pour the molasses-like liquid down your throat. It stings your teeth and clings to your esophagus on the way down, but you feel suddenly invigorated as your blood sugar skyrockets!!",
+        str_desc="This thick, viscous purple fluid reeks with a sickly-sweet grape odor.",
+        time_expir=43200,
+    ),
     EwFood(
         id_food = "mexicanpizza",
         alias = ['mp', 'mexican'],
@@ -1369,6 +1391,30 @@ food_list = [
         str_eat = "You crack open a cold, refreshing can of Kraka Kola flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its extremely potent artificial water flavorings overwhelm your senses, temporarily shutting off your brain from the sheer amount of information being sent to it from your overloaded taste buds. You probably are literally retarded now. Nigh instantaneously the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
         inebriation = 1000,
         str_desc = "A cold, refreshing can of Kraka Kola flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psycadellic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
+        time_expir = 604800,
+    ),
+    EwFood(
+        id_food = "blacklimebonanzafuckenergy",
+        alias = ['bbfu'],
+        recover_hunger = 1200,
+        price = 12000,
+        str_name = "Blacklime Bonanza FUCK ENERGY Drink",
+        vendors = ['The Breakroom', 'Mtn Dew Fountain', 'vending machine'],
+        str_eat = "You crack open a cold, refreshing can of Blacklime Bonanza flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its strongly acidic and astringent blacklime flavour overwhelms your senses, temporarily shutting off your brain from the sheer amount of information being sent to it from your overloaded taste buds. You probably are literally retarded now. Nigh instantaneously the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
+        inebriation = 1000,
+        str_desc = "A cold, refreshing can of Blacklime Bonanza flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psycadellic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED. - Made in collaboration with LIMEcorp*",
+        time_expir = 604800,
+    ),
+	EwFood(
+        id_food = "makrutmadnessfuckenergy",
+        alias = ['mmfu'],
+        recover_hunger = 1200,
+        price = 12000,
+        str_name = "Makrut Madness FUCK ENERGY Drink",
+        vendors = ['The Breakroom', 'Mtn Dew Fountain', 'vending machine'],
+        str_eat = "You crack open a cold, refreshing can of Makrut Madness flavored FUCK ENERGY. You throw your head back and begin to chug it, its ultra-thin consistency is almost enough to trigger your gag reflexes. But, you hold strong. You consider the familiarity of the taste, you wonder to yourself if LIMEcorp has successfully created lime juice and simply hasn't made the information public. The thought overwhelms your senses, temporarily shutting off your brain from the sheer amount of information being sent to it from your overloaded taste buds. You probably are literally retarded now. Nigh instantaneously the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
+        inebriation = 1000,
+        str_desc = "A cold, refreshing can of Makrut Madness flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psycadellic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED. - Made in collaboration with LIMEcorp*",
         time_expir = 604800,
     ),
     EwFood(
@@ -2011,6 +2057,7 @@ food_list = [
         acquisition = "smelting",
         perishable = False,
     ),
+
     EwFood(
         id_food = "windigowhiskey",
         alias = ['corpsebourbon'],
@@ -2070,6 +2117,7 @@ food_list = [
         time_expir=43200,
         acquisition = "smelting",
     ),
+
     EwFood(
         id_food = "cannedtomatosoup",
         alias = ['tomato', 'soup', 'tomatosoup', 'cannedsoup', 'pate'],
@@ -2081,6 +2129,30 @@ food_list = [
         str_desc = "Its a fucking can of tomato soup, what more could you want?!..Ok ill give you more. One canned can of tomato soup. The can is old and rusty, the red label on it worn and faded. If you look hard enough you can see that the label still says Friskies Paté.",
         time_expir = 3628800,
     ),
+    	EwFood(
+        id_food = "blacklimepie",
+        alias = ['blp'],
+        recover_hunger = 140,
+        price = 1400,
+        str_name = "LIMEcorp Brand Black Lime Pie",
+        vendors = ['saloon']
+        str_eat = "You cut into a pie that feels and smells like rotten molasses with your fork and hesitantly lift it to your mouth. The taste you experience is about what you expect from the local crops, the sickly sweetness mellowing out immediately on your tongue and imparting an aftertaste so tart and astringent it dries out your mouth completely and your tongue goes numb. Delicious!",
+        str_desc = "A pie with a flaky crust consisting of blacklime juice and various thickeners. LIMEcorp sells this to raise money for their crop revitalization project.",
+		time_expir = 43200,
+    ),
+	    EwFood(
+        id_food = "limeandtonic",
+        alias = ['whiskeysupersour'],
+        recover_hunger = 28,
+        price = 600,
+        str_name = "a lime and tonic cocktail",
+        vendors = ['saloon'],
+        str_eat = "You sip the dubious beverage, its sour nature balancing nicely with the house whiskey and light carbonation. You breathe out and taste a hint of copper on your breath.",
+        inebriation = 2,
+        str_desc = "A surprisingly refreshing mixture of blacklime juice, tonic water, and corpse bourbon.",
+        time_expir = 43200,
+    ),
+
 ]
 
 # A map of id_food to EwFood objects.
