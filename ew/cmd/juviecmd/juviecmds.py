@@ -1004,10 +1004,10 @@ async def hall_answer(cmd):
 
         hallNum = int(gamestate.value)
         if question_map.get(hallNum)[0] == '?':
-            response = "The stone head isn't responding to anything. Maybe it's out of ancient voodo batteries or something."
+            response = "The stone head isn't responding to anything. Maybe it needs to charge its ancient voodo batteries or something."
         elif input == "" or input is None:
             response = "Answer what? You need to !answer <youranswer>."
-        elif input.upper() == question_map.get(hallNum)[1]:
+        elif input.upper() in question_map.get(hallNum)[1]:
             hallNum += 1
             response = "Nice, that's it! Another door opens."
             if question_map.get(hallNum)[0] == '?':
