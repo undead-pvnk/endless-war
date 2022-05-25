@@ -43,11 +43,6 @@ async def cast(cmd):
     user_data = EwUser(member=cmd.message.author)
     mutations = user_data.get_mutations()
 
-    # Shamblers lol
-    # if user_data.life_state == ewcfg.life_state_shambler:
-    #     response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-    #     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
     # Can only fish in the pier's channel
     if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
@@ -210,7 +205,7 @@ async def cast(cmd):
             bite_text = gen_bite_text(fisher.current_size)
 
             # FISHINGEVENT
-            # Seeeeeecret fishing things for the eventtttt spooooooky. I'm tryin 😔🙏
+            # Seeeeeecret fishing things for the eventtttt spooooooky. I'm tryin
             debug = ewrelicutils.debug25(user_data, cmd)
             if debug == 1:
                 await ewdebug.debug26(user_data, fisher, cmd) 
@@ -254,8 +249,7 @@ async def cast(cmd):
                 # Wait this many seconds until trying for a bite - 30 if high on weed, 5 if debug bait, 60 if regular.
                 if high_value_bait_used:
                     await asyncio.sleep(5)
-                # elif fisher.high:
-                #     await asyncio.sleep(30)
+                # This will be cleaned up after the event I swear
                 # FISHINGEVENT - reduce fishing time if you're in saltwater area, even more if you're on the ferry.
                 elif fisher.pier.pier_type == ewcfg.fish_slime_saltwater:
                     if fisher.pier.id_poi == ewcfg.poi_id_ferry:
@@ -343,11 +337,6 @@ async def cast(cmd):
 
 async def reel(cmd):
     user_data = EwUser(member=cmd.message.author)
-
-    # Shamblers lol
-    # if user_data.life_state == ewcfg.life_state_shambler:
-    #     response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-    #     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     # Must be in the correct channel
     if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:

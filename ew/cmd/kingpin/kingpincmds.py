@@ -448,6 +448,8 @@ async def awardart(cmd):
         # Create the extra response text
         extra_response_text = ", as well as a {},".format(item_props.get('cosmetic_name'))
 
+    user_data.persist()
+
     response = "Gave {} a small bounty{} for their corpulent work. Thank you for your service 🙏".format(target.display_name, extra_response_text)
 
 

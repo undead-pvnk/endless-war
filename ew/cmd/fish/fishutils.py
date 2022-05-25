@@ -328,7 +328,6 @@ async def award_fish(fisher, cmd, user_data):
             else:
                 response = "You woulda reeled in some {}s, but that's just too many needles for your creaky legs. You've got too many {}s!".format(item.str_name, item.item_type)
 
-        # Seeeeeeeeeecret fishing stuff oh my
         elif rutils.debug28(user_data):
             response = await rutils.debug29(user_data, fisher, cmd)
 

@@ -958,7 +958,6 @@ async def auction_renewal(id_server, market_data, current_date, relic_date_map):
     else:
         # Get the relic's name
         props = itm_utils.gen_item_props(relic_map.get(relic_date_map[current_date]))
-        print(props)
         item_name = props.get("relic_name")
 
         # Create content of the initial post to Auction-Updatez
@@ -991,8 +990,6 @@ async def auction_end(id_server, market_data):
 
     # Give the Bidder their item
     props = itm_utils.gen_item_props(relic_map.get(market_data.current_auction_relic))
-    print(props)
-    print(bidder)
     bknd_item.item_create(
         item_type=ewcfg.it_relic,
         id_user=bidder,

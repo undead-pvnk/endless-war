@@ -235,7 +235,6 @@ async def incubate_negaslimeoid(cmd):
                             sacrificed_negaslime = -user_data.slimes
                         
                     else:
-                        print(cmd.tokens[0])
                         sacrificed_negaslime = ewutils.getIntToken(tokens=cmd.tokens) 
                         if sacrificed_negaslime < 0:
                                 sacrificed_negaslime = -sacrificed_negaslime

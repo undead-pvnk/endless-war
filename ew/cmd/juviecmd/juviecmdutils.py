@@ -847,32 +847,6 @@ def create_mining_event(cmd):
 
 
 
-        # # minesweeper
-        # if randomn < 1/2:
-        #     event_props = {}
-        #     event_props['poi'] = user_data.poi
-        #     event_props['channel'] = cmd.message.channel.name
-        #     return bknd_worldevent.create_world_event(
-        #         id_server = cmd.guild.id,
-        #         event_type = ewcfg.event_type_minesweeper,
-        #         time_activate = time_now,
-        #         time_expir = time_now + 60*3,
-        #         event_props = event_props
-        #     )
-
-        # # bubblebreaker
-        # else:
-        #     event_props = {}
-        #     event_props['poi'] = user_data.poi
-        #     event_props['channel'] = cmd.message.channel.name
-        #     return bknd_worldevent.create_world_event(
-        #         id_server = cmd.guild.id,
-        #         event_type = ewcfg.event_type_bubblebreaker,
-        #         time_activate = time_now,
-        #         time_expir = time_now + 60*3,
-        #         event_props = event_props
-        #     )
-
 
 def gen_scavenge_captcha(n = 0, user_data = None):
     captcha_length = math.ceil(n / 3)

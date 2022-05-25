@@ -80,7 +80,7 @@ async def score(cmd: cmd_utils.EwCmd):
         target_type = ewutils.mention_type(cmd, cmd.mention_ids[0])
 
     # :slimeepic:
-    if slime_alias == "slimeepic":
+    if slime_alias == "<slimeepic973836637777825864>":
         slime_alias = ewcfg.emote_slimeepic
 
     # endless war slime check
@@ -2584,7 +2584,6 @@ async def turnin(cmd):
 
         for item in inv_items:
             item_data = EwItem(id_item = item.get('id_item'))
-            print(item_data)
             if item_data.item_props.get("id_item") == ewcfg.item_id_usedneedle:
                 items_to_remove.append(item_data.id_item)
                 point_gain += 6
