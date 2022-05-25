@@ -8,6 +8,7 @@ cmd_map = {
     ewcfg.cmd_score_alt1: cmdcmds.score,
     ewcfg.cmd_score_alt2: cmdcmds.score,
     ewcfg.cmd_score_alt3: cmdcmds.score,
+    ewcfg.cmd_score_alt4: cmdcmds.score,
 
     # Show a player's combat data.
     ewcfg.cmd_data: cmdcmds.data,
@@ -239,6 +240,7 @@ apt_dm_cmd_map = {
     ewcfg.cmd_score_alt1: cmdcmds.score,
     ewcfg.cmd_score_alt2: cmdcmds.score,
     ewcfg.cmd_score_alt3: cmdcmds.score,
+    ewcfg.cmd_score_alt4: cmdcmds.score,
 
     # !booru
     ewcfg.cmd_booru: cmdcmds.booru,

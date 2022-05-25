@@ -122,11 +122,6 @@ async def event_tick(id_server):
                         channel = event_data.event_props.get('channel')
                         if channel != None:
 
-                            # in shambaquarium the event happens in the user's DMs
-                            if event_data.event_type == ewcfg.event_type_shambaquarium:
-                                client = ewutils.get_client()
-                                channel = client.get_guild(id_server).get_member(int(channel))
-
                             resp_cont.add_channel_response(channel, response)
                         elif poi != None:
                             poi_def = poi_static.id_to_poi.get(poi)
@@ -138,13 +133,13 @@ async def event_tick(id_server):
                                 resp_cont.add_channel_response(ch, response)
 
                     bknd_event.delete_world_event(event_data.id_event)
-                except:
-                    ewutils.logMsg("Error in event tick for server {}".format(id_server))
+                except Exception as e:
+                    ewutils.logMsg("Error in event tick for server {}:{}".format(id_server, e))
 
         await resp_cont.post()
 
-    except:
-        ewutils.logMsg("Error in event tick for server {}".format(id_server))
+    except Exception as e:
+        ewutils.logMsg("Error in event tick for server {}:{}".format(id_server, e))
 
 
 """ Decay slime totals for all users, with the exception of Kingpins"""
