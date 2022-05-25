@@ -71,7 +71,7 @@ smelting_recipe_list = [
     ),
     EwSmeltingRecipe(
         id_recipe="evilcosmetic",
-        str_name="a evil cosmetic",
+        str_name="an evil cosmetic",
         alias=[
             "evil",
             "evilhat",

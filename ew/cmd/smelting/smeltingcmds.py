@@ -65,7 +65,7 @@ async def smelt(cmd):
 
             else:
                 # If you try to smelt a random cosmetic, use old smelting code to calculate what your result will be.
-                if found_recipe.id_recipe == "coolcosmetic" or found_recipe.id_recipe == "toughcosmetic" or found_recipe.id_recipe == "smartcosmetic" or found_recipe.id_recipe == "beautifulcosmetic" or found_recipe.id_recipe == "cutecosmetic":
+                if found_recipe.id_recipe == "coolcosmetic" or found_recipe.id_recipe == "toughcosmetic" or found_recipe.id_recipe == "smartcosmetic" or found_recipe.id_recipe == "beautifulcosmetic" or found_recipe.id_recipe == "cutecosmetic" or found_recipe.id_recipe == "evilcosmetic":
 
                     if not bknd_item.check_inv_capacity(user_data=user_data, item_type=ewcfg.it_cosmetic):
                         response = "You can't carry anymore cosmetic items."
@@ -88,8 +88,10 @@ async def smelt(cmd):
                         style = ewcfg.style_beautiful
                     elif found_recipe.id_recipe == "cutecosmetic":
                         style = ewcfg.style_cute
-                    else:
+                    elif found_recipe.id_recipe == "coolcosmetic":
                         style = ewcfg.style_cool
+                    else:
+                        style = ewcfg.style_evil
 
                     for result in static_cosmetics.cosmetic_items_list:
                         if result.style == style and result.acquisition == ewcfg.acquisition_smelting and result.id_cosmetic not in static_cosmetics.unique_smeltables and static_items.id_to_item_def.get(result.id_cosmetic).rarity != ewcfg.rarity_profollean:
@@ -263,7 +265,8 @@ async def find_recipes_by_item(cmd):
                             or item.id_recipe == "beautifulcosmetic" and cosmetics.cosmetic_map[used_recipe].style != ewcfg.style_beautiful
                             or item.id_recipe == "cutecosmetic" and cosmetics.cosmetic_map[used_recipe].style != ewcfg.style_cute
                             or item.id_recipe == "coolcosmetic" and cosmetics.cosmetic_map[used_recipe].style != ewcfg.style_cool
-                            or (item.id_recipe in ["toughcosmetic", "smartcosmetic", "beautifulcosmetic", "cutecosmetic", "coolcosmetic"] and cosmetics.cosmetic_map[used_recipe].id_cosmetic in cosmetics.unique_smeltables)):
+                            or item.id_recipe == "evilcosmetic" and cosmetics.cosmetic_map[used_recipe].style != ewcfg.style_cosmetic
+                            or (item.id_recipe in ["toughcosmetic", "smartcosmetic", "beautifulcosmetic", "cutecosmetic", "coolcosmetic", "evilcosmetic"] and cosmetics.cosmetic_map[used_recipe].id_cosmetic in cosmetics.unique_smeltables)):
                         list_length -= 1
                         continue
                     else:
