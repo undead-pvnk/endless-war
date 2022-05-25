@@ -1,20 +1,4 @@
-Requirements/Steps:
-(explained very vaguely)
-The latest version of MSQL Workbench
-Create a local database with a username of 'rfck-bot' and a password of 'rfck'
-JetBrains PyCharm, or a similar Python IDE
-Git, and if you suck at using Git, install Github Desktop also
-A discord bot account, Discord has tutorials on how to do this.
-You should get a token from this process, make sure that admin permissions are enabled on that token.
-A Github account, with a forked version of https://github.com/aristotlepenguin/endless-war
-Install python 3.7 via command line
-Install the latest version of discord API on that version of python
-Make sure that python 3.7 is usable via command prompt
-Clone your fork of the code base and get it on your computer
 Create a file in the same directory as client.py named "token", which
 contains only your API token.
-Navigate to the folder containing client.py and type "python client.py --debug"
-
 
 Run client.py (with python 3.5+).
-
