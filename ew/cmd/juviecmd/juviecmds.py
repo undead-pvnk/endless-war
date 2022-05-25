@@ -1000,6 +1000,8 @@ async def hall_answer(cmd):
 
     if user_data.poi != 'doorsofthesludgenant':
         response = "I didn't ask you anything, knuckledragger. Don't speak unless spoken to."
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "The stone head pays no attention. It get channeled by way too many dead things to single you out."
     else:
 
         hallNum = int(gamestate.value)
