@@ -904,61 +904,6 @@ async def jump(cmd):
         resp_cont.add_channel_response(channel=poi_dest.channel, response=response_dest)
         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
         return await resp_cont.post()
-    
-    # If the user has Stiltwalker
-    elif ewcfg.mutation_id_stiltwalker in user_data.get_mutations():
-        blimp_obj = EwTransport(id_server=user_data.id_server, poi = ewcfg.poi_id_blimp)
-        # If the user is under the blimp, put them on the blimp.
-        print(blimp_obj.current_stop)
-        if user_data.poi == blimp_obj.current_stop:
-
-            jump_response = "STR-EEEEETCHHHH!!!!"
-            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, jump_response))
-            await asyncio.sleep(1)
-
-            response = "{} steps up from the city streets below. MF built like a pole, swear to god.".format(cmd.message.author.display_name)
-            # Change their POI
-            user_data.poi = ewcfg.poi_id_blimp
-            blimp_poi = poi_static.id_to_poi.get(ewcfg.poi_id_blimp)
-            user_data.time_lastenter = int(time.time())
-            user_data.persist()
-            # Move ghosts, update roles, send messages.
-            await user_data.move_inhabitants(id_poi=ewcfg.poi_id_blimp)
-            await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-            await fe_utils.send_message(cmd.client, fe_utils.get_channel(cmd.guild, blimp_poi.channel), fe_utils.formatMessage(cmd.message.author, response))
-
-            return
-
-        # If the user is in the Waffle House, put them in a random mine.
-        elif user_data.poi == ewcfg.poi_id_wafflehouse:
-
-            jump_response = "STR-EEEEETCHHHH!!!!"
-            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, jump_response))
-            await asyncio.sleep(1)
-
-            # Choose a random mine
-            jump_poi_id = random.choice([ewcfg.poi_id_mine, ewcfg.poi_id_mine_sweeper, ewcfg.poi_id_mine_bubble, ewcfg.poi_id_tt_mines,
-                                        ewcfg.poi_id_tt_mines_sweeper, ewcfg.poi_id_tt_mines_bubble, ewcfg.poi_id_cv_mines,
-                                        ewcfg.poi_id_cv_mines_sweeper, ewcfg.poi_id_cv_mines_bubble])
-            jump_poi = poi_static.id_to_poi.get(jump_poi_id)
-            response = "{} steps up from the ever-ethereal Waffle House, a creature of the night emerging from utter nothingness. MF built like Slenderman, swear to god.".format(cmd.message.author.display_name)
-            # Change their POI, do all POI-moving checks.
-            user_data.poi = jump_poi_id
-            user_data.time_lastenter = int(time.time())
-            user_data.persist()
-            await user_data.move_inhabitants(id_poi=jump_poi_id)
-            await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-            await fe_utils.send_message(cmd.client, fe_utils.get_channel(cmd.guild, jump_poi.channel), fe_utils.formatMessage(cmd.message.author, response))
-
-            return
-
-        # Unique flavor for the slime's end cliffs, can't kill self.
-        elif user_data.poi == ewcfg.poi_id_slimesendcliffs:
-            response = "You take a step into the Slime Sea. Heh, it tickles! You're feeling your legs getting dissolved, dumbass. You take a step out."
-
-        # Otherwise, unique !jump flavor.
-        else:
-            response = random.choice(comm_cfg.stiltwalker_jump_response)
             
     # If you're NOT at the cliffs.
     elif cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
