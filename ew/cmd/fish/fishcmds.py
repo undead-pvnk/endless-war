@@ -65,7 +65,7 @@ async def cast(cmd):
         if rod_possession:
             fisher.inhabitant_id = rod_possession[0]
 
-        elif user_data.hunger >= user_data.get_hunger_max():
+        if user_data.hunger >= user_data.get_hunger_max():
             response = "You're too hungry to fish right now."
         elif (not fisher.inhabitant_id) and (poi.id_poi == ewcfg.poi_id_blackpond):
             response = "You cast your fishing line into the pond, but your hook bounces off its black waters like hard concrete."

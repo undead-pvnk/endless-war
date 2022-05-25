@@ -667,6 +667,7 @@ cmd_score = cmd_prefix + 'slimes'
 cmd_score_alt1 = cmd_prefix + 'slime'
 cmd_score_alt2 = cmd_prefix + 'skune'
 cmd_score_alt3 = cmd_prefix + 'sloim'
+cmd_score_alt4 = cmd_prefix + ':slimeepic:'
 cmd_giveslime = cmd_prefix + 'giveslime'
 cmd_giveslime_alt1 = cmd_prefix + 'giveslimes'
 cmd_help = cmd_prefix + 'help'
@@ -1797,6 +1798,9 @@ emote_phantomhorn = "<:phantomhorn:431282111534858244>"
 emote_strawberrymilk = "<:strawberrymilk:431282128421126144>"
 emote_dab = "<a:dab:805341290220093450>"
 emote_thrash = "<a:thrash:805341344331202620>"
+
+#miscellaneous
+emote_slimeepic = "<:slimeepic:973836637777825864>"
 
 # mining types
 mining_type_minesweeper = "minesweeper"
