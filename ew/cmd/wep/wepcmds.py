@@ -69,7 +69,7 @@ async def attack(cmd):
 
         # Setup flavortext variables
         # this is disgusting, who wrote this?
-        response, mass_status, wep_explode, napalm, hit_msg, rel_warn, new_cap, slimeoid_resp, bounty_resp, contract_resp, lvl_resp = "", None, None, "", "", "", "", "", "", "", "", ""
+        response, mass_status, wep_explode, napalm, hit_msg, rel_warn, new_cap, slimeoid_resp, bounty_resp, contract_resp, lvl_resp = "", None, None, "", "", "", "", "", "", "", ""
         target_killed = False
         bounty = 0
 
