@@ -1771,6 +1771,17 @@ food_list = [
         acquisition = "trickortreating",
     ),
     EwFood(
+        id_food="limefruitsnacks",
+        alias=['fuitgummy'],
+        recover_hunger=250,
+        price=100000,
+        str_name="Lime Fruitsnacks ",
+        str_eat="You tear open the packet and pull out a single fruit snack, trying to figure out what flavor it is before giving up and just dumping the whole thing in your mouth like a goddamn garbage disposal. All you can taste is the overpowering flavor of citrus.",
+        str_desc="A palm-size packet of Limecorp brand fruit snacks. The packaging boasts a number of ‘Exclusive lime-only flavors’. What does that even mean? There’s a few flavors on the back, sorted by color.",
+        time_expir=43200,
+        acquisition="trickortreating",
+    ),
+    EwFood(
         id_food = "sourpussbread",
         alias = ['bowserbread', 'spb', 'sourpuss'],
         recover_hunger = 100,
