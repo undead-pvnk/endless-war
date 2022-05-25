@@ -22,9 +22,11 @@ from . import stats as ewstats
 try:
     from ew.static.rstatic import relic_map
     from ew.utils import rutils as relicutils
+    from ew.cmd import debug
 except:
     from ew.static.rstatic_dummy import relic_map
     from ew.utils import rutils_dummy as relicutils
+    from ew.cmd import debug_dummy as debug
 from .combat import EwEnemy
 from .combat import EwUser
 from .district import EwDistrict
@@ -45,6 +47,7 @@ from ..backend.item import EwItem
 from ..static import cfg as ewcfg
 from ..static import items as static_items
 from ..static.food import swilldermuk_food
+from ..static.food import food_map
 from ..static import poi as poi_static
 from ..static import status as se_static
 from ..static import weapons as static_weapons
@@ -879,7 +882,7 @@ async def release_timed_prisoners_and_blockparties(id_server, day):
 # FISHINGEVENT
 async def auction_tick_loop(id_server):
     while not ewutils.TERMINATE:
-        interval = 3 # 300
+        interval = 300
         await asyncio.sleep(interval)
         await auction_tick(id_server)
 
@@ -896,22 +899,26 @@ async def auction_tick(id_server):
             await auction_renewal(id_server, market_data, current_date, relic_date_map)
         else:
             return
+    elif current_date == ewcfg.fisher_day_overtime and market_data.current_auction_relic != "":
+        await auction_end(id_server, market_data)
 
 
 async def auction_renewal(id_server, market_data, current_date, relic_date_map):
-    bidder = 0
     bidder = market_data.current_bidder
+
+    client = ewutils.get_client()
+    server = client.get_guild(id_server)
+    channel = fe_utils.get_channel(server=server, channel_name=ewcfg.channel_auctionupdatez)
 
     # Create the starter Auction Updatez message
     auctionmessage = fe_utils.discord.Embed()
-    auctionmessage.set_thumbnail(url="https://cdn.discordapp.com/attachments/858397413568151582/977066095288664074/unknown.png") #PLACEHOLDER
+    auctionmessage.set_thumbnail(url="https://cdn.discordapp.com/attachments/858397413568151582/977066095288664074/unknown.png")
     auctionmessage.color = fe_utils.discord.Colour(int("00ff00", 16))
     auctionmessage.description = "**BAILEY**"
-
-    # If nobody has bidded for the current relic, it's probably day 1 of the event. If there is a bid, it's probably day 2-7.
+    
+    # If nobody has bidded for the current relic, it's probably day 1 of the event. If there is a bid, it's day 2-7.
     if market_data.current_bidder != 0:
         # Give the Bidder their item
-                            #     props = itm_utils.gen_item_props(relic_map.get()))???
         props = itm_utils.gen_item_props(relic_map.get(market_data.current_auction_relic))
         bknd_item.item_create(
             item_type=ewcfg.it_relic,
@@ -919,24 +926,45 @@ async def auction_renewal(id_server, market_data, current_date, relic_date_map):
             id_server=id_server,
             item_props=props
         )
+        
+        # Create a gamestate if needed
+        if relicutils.debug33(market_data):
+            state_obj = EwGamestate(id_server=id_server, id_state=market_data.current_auction_relic)
+            state_obj.bit = 0
+            state_obj.value = ""
+            state_obj.persist()
 
         # Generate props for the new relic, to get the name.
         newitemprops = itm_utils.gen_item_props(relic_map.get(relic_date_map[current_date]))
 
-        # Create content of the new relic message
-        field_1_title = "NEW RELIC AVAILABLE"
-        field_1_text = "That's right, y'all! Yet another item is comin' outta the backseat. Today's item is... a **{}**. I dunno where it comes from, to be honest. But the person who gives me the most Exotic Residue for it by the end of tonight is getting it shipped to their grimy hands.".format(newitemprops.get('item_name'))
-        auctionmessage.add_field(name=field_1_title, value=field_1_text, inline=False)
+        # Create the old winner message
+        auctionmessage2 = fe_utils.discord.Embed()
+        auctionmessage2.set_thumbnail(url="https://cdn.discordapp.com/attachments/858397413568151582/977066095288664074/unknown.png")
+        auctionmessage2.color = fe_utils.discord.Colour(int("FF5733", 16))
+        auctionmessage2.description = "**BAILEY**"
 
         # Create content of the old winner message
-        field_2_title = "OLD RELIC WINNER"
-        field_2_text = "<@{}> won the last auction for the {}. So, uh, it'll be delivered to ya lightning-fast, kid. Have fun, and thanks for the Exotic Residue!".format(market_data.current_bidder, props.get('item_name'))
-        auctionmessage.add_field(name=field_2_title, value=field_2_text, inline=False)
+        field_1_title = "RELIC WINNER"
+        field_1_text = "<@{}> won this auction for the {}! So, uh, it'll be delivered to ya lightning-fast, kid. Have fun, and thanks for the Exotic Residue!".format(market_data.current_bidder, props.get('relic_name'))
+        auctionmessage2.add_field(name=field_1_title, value=field_1_text, inline=False)
+
+        field_2_title = "A NEW DAY CALLS"
+        field_2_text = "Which means..."
+        auctionmessage2.add_field(name=field_2_title, value=field_2_text, inline=False)
+
+        await fe_utils.send_message(client, channel, embed=auctionmessage2)
+        await asyncio.sleep(20)
+        
+        # Create content of the new relic message
+        field_1_title = "NEW RELIC AVAILABLE"
+        field_1_text = "That's right, y'all! Yet another item is comin' outta the backseat. Today's item is... a **{}**. I dunno where it comes from, to be honest. But the person who gives me the most Exotic Residue for it by the end of tonight is getting it shipped to their grimy hands.".format(newitemprops.get('relic_name'))
+        auctionmessage.add_field(name=field_1_title, value=field_1_text, inline=False)
 
     else:
         # Get the relic's name
         props = itm_utils.gen_item_props(relic_map.get(relic_date_map[current_date]))
-        item_name = props.get("item_name")
+        print(props)
+        item_name = props.get("relic_name")
 
         # Create content of the initial post to Auction-Updatez
         field_1_title = "AUCTION OPEN!!!!"
@@ -950,9 +978,49 @@ async def auction_renewal(id_server, market_data, current_date, relic_date_map):
     market_data.persist()
 
     # Send the Auction Updatez message
+    await fe_utils.send_message(client, channel, embed=auctionmessage)
+
+
+async def auction_end(id_server, market_data):
+    bidder = market_data.current_bidder
+
     client = ewutils.get_client()
     server = client.get_guild(id_server)
     channel = fe_utils.get_channel(server=server, channel_name=ewcfg.channel_auctionupdatez)
+
+    # Create the FINAL Auction Updatez message
+    auctionmessage = fe_utils.discord.Embed()
+    auctionmessage.set_thumbnail(url="https://cdn.discordapp.com/attachments/858397413568151582/977066095288664074/unknown.png")
+    auctionmessage.color = fe_utils.discord.Colour(int("FF5733", 16))
+    auctionmessage.description = "**BAILEY**"
+
+    # Give the Bidder their item
+    props = itm_utils.gen_item_props(relic_map.get(market_data.current_auction_relic))
+    print(props)
+    print(bidder)
+    bknd_item.item_create(
+        item_type=ewcfg.it_relic,
+        id_user=bidder,
+        id_server=id_server,
+        item_props=props
+    )
+
+    # Create content of the old winner message
+    field_1_title = "RELIC WINNER"
+    field_1_text = "<@{}> won this auction for the {}! So, uh, it'll be delivered to ya lightning-fast, kid. Have fun, and thanks for the Exotic Residue!".format(market_data.current_bidder, props.get('relic_name'))
+    auctionmessage.add_field(name=field_1_title, value=field_1_text, inline=False)
+
+    field_2_title = "FAREWELL FOR NOW"
+    field_2_text = "Sorry to say, but the auction's over kids! My car can only fit so much stuff in the backseat, and the trunk's absolutely stuffed with Exotic Residue. So for now, I bid y'all adieu. I'll still be at NMS though - my passenger seat ALWAYS has junk. I'm pretty sure someone reported me to the NMS Parking authority, so get here before I get towed!"
+    auctionmessage.add_field(name=field_2_title, value=field_2_text, inline=False)
+
+    # Stop the count
+    market_data.current_bid = 0
+    market_data.current_bidder = 0
+    market_data.current_auction_relic = ""
+    market_data.persist()
+
+    # Send the FINAL auction updatez message
     await fe_utils.send_message(client, channel, embed=auctionmessage)
 
 

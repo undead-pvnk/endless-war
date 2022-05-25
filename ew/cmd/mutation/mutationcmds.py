@@ -499,7 +499,7 @@ async def devour(cmd):
         item_obj = EwItem(id_item=item_sought.get('id_item'))
         if time_lastuse + 60 > time_now:
             response = "You're still picking stuff out of your teeth from the last weird shit you ate. Try again in {} seconds.".format(time_lastuse + 60 - time_now)
-        elif (item_obj.item_type not in [ewcfg.it_cosmetic, ewcfg.it_furniture, ewcfg.it_food] and item_obj.item_props.get('id_item') != 'slimepoudrin') or item_obj.item_props.get('id_cosmetic') == 'soul':
+        elif (item_obj.item_type not in [ewcfg.it_cosmetic, ewcfg.it_furniture, ewcfg.it_food] and item_obj.item_props.get('id_item') != 'slimepoudrin') or item_obj.item_props.get('id_cosmetic') in ['soul', 'snouse']:
             response = "You swallow the {} whole, but after realizing this might be a mistake, you cough it back up.".format(item_sought.get('name'))
         elif item_obj.soulbound == True:
             response = "You attempt to consume the {}, but you realize it's soulbound and that you were about to eat your own existnece. Your life flashes before your eyes, so you decide to stop.".format(item_sought.get('name'))

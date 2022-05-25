@@ -240,6 +240,8 @@ item_list = [
         str_name="||Negative Dye||",
         str_desc="A small vial of ||negative dye||.",
         acquisition=ewcfg.acquisition_smelting,
+        price=3750,
+        vendors=[ewcfg.vendor_NMSdealer] # FISHINGEVENT
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_dye_pink,
@@ -452,7 +454,7 @@ item_list = [
     EwGeneralItem(
         id_item=ewcfg.item_id_faggot,
         str_name="faggot",
-        str_desc="Wow, incredible! We’ve evolved from one dumb stick to several, all tied together for the sake of a retarded puesdo-pun! Truly, ENDLESS WAR has reached its peak. It’s all downhill from here, folks.",
+        str_desc="Wow, incredible! We’ve evolved from one dumb stick to several, all tied together for the sake of a retarded pseudo-pun! Truly, ENDLESS WAR has reached its peak. It’s all downhill from here, folks.",
         acquisition=ewcfg.acquisition_smelting
     ),
     EwGeneralItem(
@@ -468,6 +470,8 @@ item_list = [
         acquisition=ewcfg.acquisition_bartering,
         ingredients="generic",
         context=10,
+        price=110,
+        vendors=[ewcfg.vendor_NMSdealer] # FISHINGEVENT
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_oldboot,
@@ -2674,6 +2678,8 @@ furniture_list = [
         str_desc = "It's a fresh cadaver, stitched together with the bits and bobs you find regularly on the street. What a find!",
         rarity = "Patrician",
         acquisition = "smelting",
+        price = 4550,
+        vendors = [ewcfg.vendor_NMSdealer], # FISHINGEVENT
         furniture_place_desc = "You open the bodybag you've been lugging around and splay the corpse out on it. You're no expert on feng shui, but if Martha Stewart saw this, she would probably run the fuck away. Out of jealousy. ",
         furniture_look_desc = "There's a dead body in here.",
     ),

@@ -1439,7 +1439,7 @@ async def bid(cmd):
                 # Check if the bid is larger than the current bid
                 if bid > market_data.current_bid:
 
-                    response = "You give Bailey {:,} Exotic Residue. He happily takes it and fiddle on his gellphone for a second.\n\"Thanks for the ER, kid! I'll keep it here in case someone comes by with some more. You're the new HIGHEST BIDDER, yo.\"".format(bid)
+                    response = "You give Bailey {:,} Exotic Residue. He happily takes it and fiddles on his gellphone for a second.\n\"Thanks for the ER, kid! I'll keep it here in case someone comes by with some more. You're the new HIGHEST BIDDER, yo.\"".format(bid)
 
                     # Give the old highest bidder their Exotic Residue back
                     print(user_data.id_server)
@@ -1452,7 +1452,7 @@ async def bid(cmd):
                     # Create the embed and give it its character flavor text.
                     auctionmessage = fe_utils.discord.Embed()
                     auctionmessage.set_thumbnail(url="https://cdn.discordapp.com/attachments/858397413568151582/977066095288664074/unknown.png")
-                    auctionmessage.color = fe_utils.discord.Colour(int("FF5733", 16))
+                    auctionmessage.color = fe_utils.discord.Colour(int("79a853", 16))
                     auctionmessage.description = "**BAILEY**"
 
                     # Create content of the message
@@ -1462,6 +1462,9 @@ async def bid(cmd):
                             "<@!{user_data_id}> just gave me **{bid:,}** Exotic Residue. Sick, right? I can fit tonza more Exotic Residue in my trunk, though, so don't forget to gimme some more, haha! That knocks <@{ex_bidder_id}> outta the race for now. I'll ship your ER back, bro!".format(user_data_id=user_data.id_user, bid=bid, ex_bidder_id=ex_bidder.id_user),
                             "<@!{user_data_id}> just gave me **{bid:,}** Exotic Residue. That knocks <@{ex_bidder_id}> outta the race for now. If you have any more drugs, make sure to pass 'em my way! And make sure cops don't get on auctionupdatez.com, this place has my full name on it.".format(user_data_id=user_data.id_user, bid=bid, ex_bidder_id=ex_bidder.id_user),
                             "<@!{user_data_id}> just gave me **{bid:,}** Exotic Residue, all stashed in my car. It actually doesn't smell that bad, y'know? I got an air freshener thingy at the Bazaar that makes it smell like, like, uh, pine-y tree sorta stuff. Like my pa's pickup! If the air conditioning worked it'd probs smell better, tho. Oh, and <@{ex_bidder_id}> is no longer the bidder now. I'll ship your ER back, bro!".format(user_data_id=user_data.id_user, bid=bid, ex_bidder_id=ex_bidder.id_user),
+                            "<@!{user_data_id}> just gave me **{bid:,}** Exotic Residue. Have you ever tried Exotic Residue? Shit is NOXIOUS. I've gotta dilute it to such insane levels just to make sure clients don't have to !revive just to buy from me again. Unless that's what they want, in which case it's pretty good at its job. Oh, and <@{ex_bidder_id}>, make sure you don't take all the ER I'm giving back in one place!".format(user_data_id=user_data.id_user, bid=bid, ex_bidder_id=ex_bidder.id_user),    
+                            "<@!{user_data_id}> just gave me **{bid:,}** Exotic Residue. I think my trunk's probably gonna burst at this point, y'all are giving me so much residue. That's not a bad thing though! That knocks <@{ex_bidder_id}> outta the race for now. I'll ship your ER back, bro!".format(user_data_id=user_data.id_user, bid=bid, ex_bidder_id=ex_bidder.id_user),
+                            "<@!{user_data_id}> just gave me **{bid:,}** Exotic Residue. Which is TURNT UP. Thank you, seriously. I'm gonna have so much slime by the time all of this is distributed. You're doing me a massive favor! Oh, and that knocks <@{ex_bidder_id}> outta the race for now. I'll ship your ER back, bro!".format(user_data_id=user_data.id_user, bid=bid, ex_bidder_id=ex_bidder.id_user)
                         ])
                     else:
                         field_1_text = "<@!{user_data_id}> just gave me {bid} Exotic Residue. Sick, right? That's the first bid for the day, so, like, get me more Exotic Residue y'all. Haha!".format(user_data_id=user_data.id_user, bid=bid)
@@ -1511,12 +1514,12 @@ async def auction(cmd):
     if current_date in auction_relic_date_map:        
         # Get the current relic's name.
         itemprops = itm_utils.gen_item_props(relic_map.get(auction_relic_date_map[current_date]))
-        item_name = itemprops.get("item_name")
+        item_name = itemprops.get("relic_name")
 
         if user_data.poi == ewcfg.poi_id_neomilwaukeestate:
-            response = "Asking Bailey, they say, \"oh yeah, the current item up for auction is a **{}**. It's currently sitting at a high bid of **{:,}** Exotic Residue. So what drugs ya got?\"".format(item_name, market_data.current_bid)
+            response = "Asking Bailey, he says, \"oh yeah, the current item up for auction is a **{}**. It's currently sitting at a high bid of **{:,}** Exotic Residue. So what drugs ya got?\"".format(item_name, market_data.current_bid)
         else:
-            response = "Checking your gellphone, you see the current item up for auction is a **{}**. It's currently sitting a high bid of **{:,}** Exotic Residue. Better bus your way over to Neo Milwaukee State!".format(item_name, market_data.current_bid)
+            response = "Checking your gellphone, you see the current item up for auction is a **{}**. It's currently sitting a high bid of **{:,}** Exotic Residue. Better blast your ass over to Neo Milwaukee State!".format(item_name, market_data.current_bid)
     else:
         response = "There's no auction happening right now, bozo."
 

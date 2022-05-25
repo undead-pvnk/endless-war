@@ -1981,8 +1981,9 @@ food_list = [
         id_food = "ferroslimeoid",
         alias = ['ferro', 'magnet'],
         recover_hunger = 1,
-        price = 10000000,
+        price = 330, # FISHINGEVENT
         str_name = "Ferroslimeoid",
+        vendors=['Bailey the NMS Drug-Guy'],
         str_eat = "The ferroslimeoid screams in terror as it nears your mouth. As you chew you feel its little limbs squirming. Its cries die down as it slides down your throat. You shudder as it hits your stomach. Tasty",
         str_desc = "A small magnetic slimeoid created with illegal means, usually used as live bait. DO NOT EAT",
         time_expir = 43200,
@@ -2066,7 +2067,7 @@ food_list = [
         str_name="Hi-C Ecto Cooler",
         vendors=[],
         str_eat="You sip from the yummy juice box of SPOOKY HI-C ECTO COOLER. This definitely tasted better in your memories.",
-        inebriation=150,
+        inebriation=15,
         str_desc="A reproduction juice box of Hi-C Ecto Cooler. It's kinda grimy, and has a weird green leakage coming from the bottom. You'd be better off throwing it away than anything/",
         time_expir=5,
     ),
@@ -2082,6 +2083,18 @@ food_list = [
         str_desc="A jumbo gumbo bucket just FILLED with drugs. This is definitely not good for you.",
         time_expir=43200,
     ),
+    EwFood(
+        id_food = "chking", # It's real. It's fucking real.
+        alias = ["king", "ch'king", "cking"],
+        recover_hunger= 1000000000,
+        price = 42069,
+        inebriation = 1000000000,
+        str_name = "Chi\'King",
+        vendors = ['Bailey the NMS Drug-Guy'],
+        str_eat = "Everything you thought  you knew about the game is dead because of this sandwhich. This is a mere simulcarum of what it felt like for ben saint to eat the ch'king.",
+        str_desc = "a ch\'king. smells like natural gas.",
+        time_expir = 1000000000,
+    )
 ]
 
 # A map of id_food to EwFood objects.

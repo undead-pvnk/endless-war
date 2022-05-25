@@ -1353,7 +1353,7 @@ cosmetic_items_list = [
         durability = 2500000,
         style = "smart",
         freshness = 3,
-        price = 300,
+        price = 200,
         vendors = ['Bailey the NMS Drug-Guy'],
         is_hat = True,
     ),
@@ -1368,7 +1368,7 @@ cosmetic_items_list = [
         durability = 2500000,
         style = "cute",
         freshness = 3,
-        price = 500,
+        price = 400,
         vendors = ['Bailey the NMS Drug-Guy'],
     ),
     EwCosmeticItem(
@@ -1382,7 +1382,7 @@ cosmetic_items_list = [
         durability = 2500000,
         style = "tough",
         freshness = 3,
-        price = 400,
+        price = 300,
         vendors = ['Bailey the NMS Drug-Guy'],
     ),
     EwCosmeticItem(
@@ -1396,7 +1396,7 @@ cosmetic_items_list = [
         durability = 2500000,
         style = "cool",
         freshness = 3,
-        price = 700,
+        price = 500,
         vendors = ['Bailey the NMS Drug-Guy'],
     ),
     EwCosmeticItem(
@@ -1410,7 +1410,7 @@ cosmetic_items_list = [
         durability = 2500000,
         style = "beautiful",
         freshness = 3,
-        price = 450,
+        price = 250,
         vendors = ['Bailey the NMS Drug-Guy'],
     ),
     EwCosmeticItem(

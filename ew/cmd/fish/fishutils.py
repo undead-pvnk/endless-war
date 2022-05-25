@@ -58,7 +58,7 @@ fishing_counter = 0
 
 
 # Randomly generates a fish.
-def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None, secret_unlocked = False):
+def gen_fish(market_data, fisher, has_fishingrod = False,  mutations = [], rarity = None, secret_unlocked = False):
     fish_pool = []
 
     rarity_number = random.randint(0, 100)
@@ -103,6 +103,23 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None, secret_
             else:  # 10%
                 rarity = "promo"
 
+        # If player doesn't have a fishing rod but does have OMJ, increase junk item chance.
+        elif ewcfg.mutation_id_onemansjunk in mutations:
+            if rarity_number >= 0 and rarity_number < 31 and not voidfishing:  # 30%
+                rarity = "item"
+
+            elif rarity_number >= 31 and rarity_number < 71:  # 40%
+                rarity = "common"
+
+            elif rarity_number >= 71 and rarity_number < 91:  # 20%
+                rarity = "uncommon"
+
+            elif rarity_number >= 91 and rarity_number < 100:  # 9%
+                rarity = "rare"
+
+            else:  # 1%
+                rarity = "promo"
+
         else:
             if rarity_number >= 0 and rarity_number < 11 and not voidfishing:  # 10%
                 rarity = "item"
@@ -139,9 +156,9 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None, secret_
     if rutils.debug30(fisher):
         fish_pool = [fish for fish in fish_pool if fish in static_fish.specialmoon_fish]
     elif 5 < market_data.clock < 20:
-        fish_pool = [fish for fish in fish_pool if fish not in static_fish.night_fish]
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.night_fish and fish not in static_fish.specialmoon_fish]
     elif market_data.clock < 8 or market_data.clock > 17:
-        fish_pool = [fish for fish in fish_pool if fish not in static_fish.day_fish]
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.day_fish and fish not in static_fish.specialmoon_fish]
     else:
         for fish in fish_pool:
             if static_fish.fish_map[fish].catch_time != None:
@@ -369,13 +386,13 @@ async def award_fish(fisher, cmd, user_data):
         # The fish's value, for bartering.
         value = 0
 
-        # FISHINGEVENT - how much exotic residue to award. Starts as a random number between 
+        # FISHINGEVENT - how much exotic residue to award.
         exotic_residue = 0
 
         # Rewards from the fish's size
         slime_gain = ewcfg.fish_gain * static_fish.size_to_reward[fisher.current_size]
         value += 10 * static_fish.size_to_reward[fisher.current_size]
-        exotic_residue += 5 * static_fish.size_to_reward[fisher.current_size]
+        exotic_residue += 10 * static_fish.size_to_reward[fisher.current_size]
 
         # Rewards from the fish's rarity
         value += 10 * static_fish.rarity_to_reward[static_fish.fish_map[fisher.current_fish].rarity]

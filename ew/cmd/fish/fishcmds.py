@@ -100,7 +100,7 @@ async def cast(cmd):
             fisher.bait = False
             fisher.bait_id = 0
             fisher.pier = poi
-            fisher.current_fish = gen_fish(market_data, fisher, has_fishingrod)
+            fisher.current_fish = gen_fish(market_data, fisher, has_fishingrod, mutations)
 
             high_value_bait_used = False
 
@@ -246,6 +246,7 @@ async def cast(cmd):
 
                 if fun <= 0:
                     fun = 1
+                    damp = 1
                 else:
                     # Damp is a random number between 0 and (fun - 1). If damp is <= 10, a fish will bite.
                     damp = random.randrange(fun)
