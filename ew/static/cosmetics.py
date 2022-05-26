@@ -1643,7 +1643,7 @@ cosmetic_items_list = [
         style = "evil",
         freshness = 7,
         price = 600000,
-        vendors = ['caravan'],
+        vendors = ['Caravan'],
     ),
     EwCosmeticItem(
         id_cosmetic = "deviouskicks",
@@ -1654,7 +1654,7 @@ cosmetic_items_list = [
         style = "evil",
         freshness = 5,
         price = 300000,
-        vendors = ['caravan'],
+        vendors = ['Caravan'],
     ),
     EwCosmeticItem(
         id_cosmetic = "sneakers",
@@ -1665,7 +1665,7 @@ cosmetic_items_list = [
         style = "smart",
         freshness = 5,
         price = 300000,
-        vendors = ['caravan'],
+        vendors = ['Caravan'],
     ),
     EwCosmeticItem(
         id_cosmetic = "toeshoes",
@@ -1676,7 +1676,7 @@ cosmetic_items_list = [
         style = "tough",
         freshness = 5,
         price = 300000,
-        vendors = ['caravan'],
+        vendors = ['Caravan'],
     ),
     EwCosmeticItem(
         id_cosmetic = "spurs",
@@ -1687,7 +1687,7 @@ cosmetic_items_list = [
         style = "tough",
         freshness = 2,
         price = 400000,
-        vendors = ['caravan'],
+        vendors = ['Caravan'],
     ),
     EwCosmeticItem(
         id_cosmetic = "geta",
@@ -1698,7 +1698,7 @@ cosmetic_items_list = [
         style = "tough",
         freshness = 8,
         price = 600000,
-        vendors = ['caravan'],
+        vendors = ['Caravan'],
     ),
     EwCosmeticItem(
         id_cosmetic = "bikini",
