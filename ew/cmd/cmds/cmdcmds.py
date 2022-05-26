@@ -912,7 +912,7 @@ async def jump(cmd):
     # If you're NOT at the cliffs.
     elif cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
         roll = random.randrange(25)
-        # Small chance to do fucking PARKOUR
+        # Small chance to do parkour
         if roll == 0:
             response = "You start running and taking momentum to then make the fucking highest jump you've ever done. When you reach the ground, you somehow manage to do a sommersault landing. Damn, guess you were good at parkour in the end!"
         else:
@@ -2657,7 +2657,7 @@ async def set_slime(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-# FISHINGEVENT - copying setslime lol  38)) < 38)   
+# FISHINGEVENT - copying setslime   
 async def set_event_points(cmd):
     if not cmd.message.author.guild_permissions.administrator:
         return

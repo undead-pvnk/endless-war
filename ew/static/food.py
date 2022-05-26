@@ -2090,7 +2090,7 @@ food_list = [
         vendors=[],
         str_eat="You sip from the yummy juice box of SPOOKY HI-C ECTO COOLER. This definitely tasted better in your memories.",
         inebriation=15,
-        str_desc="A reproduction juice box of Hi-C Ecto Cooler. It's kinda grimy, and has a weird green leakage coming from the bottom. You'd be better off throwing it away than anything/",
+        str_desc="A reproduction juice box of Hi-C Ecto Cooler. It's kinda grimy, and has a weird green leakage coming from the bottom. You'd be better off throwing it away than anything.",
         time_expir=5,
     ),
     EwFood(

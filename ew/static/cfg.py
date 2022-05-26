@@ -2930,14 +2930,14 @@ weapon_id_roomba = 'roomba'
 
 # FISHINGEVENT dates. All placeholder
 
-fisher_day_one = datetime.date(2022, 5, 1)
-fisher_day_two = datetime.date(2022, 5, 2)
-fisher_day_three = datetime.date(2022, 5, 3)
-fisher_day_four = datetime.date(2022, 5, 4)
-fisher_day_five = datetime.date(2022, 5, 5)
-fisher_day_six = datetime.date(2022, 5, 22)
-fisher_day_seven = datetime.date(2022, 5, 23)
-fisher_day_overtime = datetime.date(2022, 5, 24)
+fisher_day_one = datetime.date(2022, 5, 27)
+fisher_day_two = datetime.date(2022, 5, 28)
+fisher_day_three = datetime.date(2022, 5, 29)
+fisher_day_four = datetime.date(2022, 5, 30)
+fisher_day_five = datetime.date(2022, 5, 31)
+fisher_day_six = datetime.date(2022, 6, 1)
+fisher_day_seven = datetime.date(2022, 6, 2)
+fisher_day_overtime = datetime.date(2022, 6, 3)
 
 
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \

@@ -962,7 +962,7 @@ async def auction_renewal(id_server, market_data, current_date, relic_date_map):
 
         # Create content of the initial post to Auction-Updatez
         field_1_title = "AUCTION OPEN!!!!"
-        field_1_text = "Hey, so my auction's now fully up-and-running! Head on over to Neo Milwaukee State - my car's parked in the parking lot. You'll know it when you see it. I snagged some sick thingamabobs from around, but I don't really have much use for them. So! Just !bid your Exotic Residue, and I'll give them to the highest bidder. Today's item is... a **{}**. So what drugs ya got? Oh, and if you're a cop, you'll be dead on sight. Lol.".format(item_name)
+        field_1_text = "Hey, so my auction's now fully up-and-running! Head on over to Neo Milwaukee State - my car's parked in the parking lot. You'll know it when you see it. I snagged some sick thingamabobs from around, but I don't really have much use for them. So! Just !bid your Exotic Residue, and I'll give them to the highest bidder. You can check the state of my auction with !auction, too. Today's item is... a **{}**. So what drugs ya got? Oh, and if you're a cop, you'll be dead on sight. Lol.".format(item_name)
         auctionmessage.add_field(name=field_1_title, value=field_1_text)
 
     # Create changes to current auction item, then persist.
