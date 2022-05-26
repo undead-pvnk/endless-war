@@ -893,7 +893,7 @@ async def jump(cmd):
             poi_dest = poi_static.id_to_poi.get(blimp_obj.current_stop)
 
         # Kill the player if they don't have laaf
-        if (ewcfg.mutation_id_lightasafeather not in user_data.get_mutations() or ewcfg.mutation_id_airlock not in user_data.get_mutations()):
+        if ewcfg.mutation_id_lightasafeather not in user_data.get_mutations():
             user_data.trauma = ewcfg.trauma_id_environment
             die_resp = user_data.die(cause=ewcfg.cause_falling)
             resp_cont.add_response_container(die_resp)

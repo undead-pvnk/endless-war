@@ -87,6 +87,19 @@ mutations = [
         str_transplant="You decide to get the liposuction deluxe package. Once in the OR, you are prodded on all sides with a surgical vacuum, sucking out whatever looks unneccesary. She takes a couple kidneys and your gallbladder though, so maybe the word necessary is a bit subjective. All is forgiven though; your new flabby frame gives flying squirrels a run for their money.\n\nYou have developed the mutation **Light As A Feather**. Double movement speed while weather is windy.",
     ),
     EwMutationFlavor(
+        id_mutation=ewcfg.mutation_id_whitenationalist,
+        str_name="White Nationalist",
+        alias=['wn', 'white', 'racism'],
+        str_describe_self="Your bleached white, peeling skin is surely the envy of lesser races due to **White Nationalist**.",
+        str_describe_other="Their bleached white, peeling skin is surely the envy of lesser races due to **White Nationalist**.",
+        str_acquire="Every pore on your skin suddenly feels like it’s being punctured by a rusty needle. Your skin’s pigment rapidly desaturates to the point of pure #ffffff whiteness. You suddenly love country music, too. Wow, that was a really stupid joke. You have developed the mutation **White Nationalist**. Scavenge bonus and cannot be scouted while weather is snowy.",
+        tier=1,
+        incompatible = {
+            ewcfg.mutation_id_airlock : '"Nope, you already have that mutation, its even got a little extra tacked on."'
+        },
+        str_transplant="You are led to the clinic's basement, where you find an empty laptop sitting on the dark cement floor. The keyboard and mouse are broken, and it's got Richard Spencer tirades on autoplay. All of a sudden, the door locks. You spend an indefinite amount of time slowly falling in love with his dreamy soft-serve flip haircut, and as you waste away you eventually grow deathly pale, too.\n\nYou have developed the mutation **White Nationalist**. Scavenge bonus and cannot be scouted while weather is snowy.",
+    ),
+    EwMutationFlavor(
         id_mutation=ewcfg.mutation_id_spoiledappetite,
         str_name="Spoiled Appetite",
         alias=['spoiled'],
@@ -416,12 +429,13 @@ mutations = [
         alias=['al', 'air'],
         str_describe_self="The weather is your bitch due to **Airlock**.",
         str_describe_other="The weather is their bitch due to **Airlock**.",
-        str_acquire="Without thinking you take a deep breath. The air is so clean! You feel like this is your first taste of oxygen in years. A droplet falls on you from above, but it just runs off you, rolling down your face with a refreshing coolness. For once, the quantum wind has shown mercy. You have developed the mutation **Air Lock**. Gain the effects of Light as a Feather as well as other weather-exclusive boosts. Does not stack with Light as a Feather.",
+        str_acquire="Without thinking you take a deep breath. The air is so clean! You feel like this is your first taste of oxygen in years. A droplet falls on you from above, but it just runs off you, rolling down your face with a refreshing coolness. For once, the quantum wind has shown mercy. You have developed the mutation **Air Lock**. Gain the effects of White Nationalist and Light as a Feather. These effects do not stack with those mutations.",
         tier=4,
         incompatible = {
+            ewcfg.mutation_id_whitenationalist: '"Nope, you already have that mutation, or half of it anyway. They don\'t multiply, you know."',
             ewcfg.mutation_id_lightasafeather: '"Nope, you already have that mutation, or half of it anyway. They don\'t multiply, you know."'
         },
-        str_transplant="Dr. Dusttrap straps a small, high-grade air purifier around your neck, and runs a cord through your nose and into your stomach. The cords take somme getting used to, but this procedure was shockingly painless.\n\nYou have developed the mutation **Air Lock**. Gain the effects of Light as a Feather as well as other weather-exclusive boosts. Does not stack with Light as a Feather.",
+        str_transplant="Dr. Dusttrap straps a small, high-grade air purifier around your neck, and runs a cord through your nose and into your stomach. The cords take somme getting used to, but this procedure was shockingly painless.\n\nYou have developed the mutation **Air Lock**. Gain the effects of White Nationalist and Light as a Feather. These effects do not stack with those mutations.",
     ),
     EwMutationFlavor(
         id_mutation=ewcfg.mutation_id_unnaturalcharisma,
