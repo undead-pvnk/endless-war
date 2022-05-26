@@ -1453,7 +1453,7 @@ cosmetic_items_list = [
         ability = "furry",
         freshness = 6,
         price = 500000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1466,7 +1466,7 @@ cosmetic_items_list = [
         ability = "furry",
         freshness = 6,
         price = 500000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1479,7 +1479,7 @@ cosmetic_items_list = [
         ability = "furry",
         freshness = 6,
         price = 500000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1492,7 +1492,7 @@ cosmetic_items_list = [
         ability = "demon",
         freshness = 6,
         price = 500000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1505,7 +1505,7 @@ cosmetic_items_list = [
         ability = "bug",
         freshness = 6,
         price = 50000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1518,7 +1518,7 @@ cosmetic_items_list = [
         ability = "furry",
         freshness = 6,
         price = 500000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1530,7 +1530,7 @@ cosmetic_items_list = [
         style = "cool",
         freshness = 5,
         price = 100000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
     ),
     EwCosmeticItem(
         id_cosmetic = "cartoontee",
@@ -1541,7 +1541,7 @@ cosmetic_items_list = [
         style = "cute",
         freshness = 5,
         price = 100000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
     ),
     EwCosmeticItem(
         id_cosmetic = "2000sbootyshorts",
@@ -1552,7 +1552,7 @@ cosmetic_items_list = [
         style = "cute",
         freshness = 4,
         price = 300000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
     ),
     EwCosmeticItem(
         id_cosmetic = "gamertee",
@@ -1563,7 +1563,7 @@ cosmetic_items_list = [
         style = "smart",
         freshness = 5,
         price = 100000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
     ),
     EwCosmeticItem(
         id_cosmetic = "devilmanshirt",
@@ -1574,7 +1574,7 @@ cosmetic_items_list = [
         style = "tough",
         freshness = 5,
         price = 100000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
     ),
     EwCosmeticItem(
         id_cosmetic = "tacohat",
@@ -1585,7 +1585,7 @@ cosmetic_items_list = [
         style = "tough",
         freshness = 2,
         price = 25000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1597,7 +1597,7 @@ cosmetic_items_list = [
         style = "smart",
         freshness = 2,
         price = 25000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1609,7 +1609,7 @@ cosmetic_items_list = [
         style = "cool",
         freshness = 2,
         price = 25000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1621,7 +1621,7 @@ cosmetic_items_list = [
         style = "evil",
         freshness = 5,
         price = 100000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
     ),
     EwCosmeticItem(
         id_cosmetic = "animetee",
@@ -1632,7 +1632,7 @@ cosmetic_items_list = [
         style = "evil",
         freshness = 5,
         price = 50000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
     ),
     EwCosmeticItem(
         id_cosmetic = "platformboots",
@@ -1921,7 +1921,7 @@ cosmetic_items_list = [
     #    style = "evil",
     #   freshness = 0,
     #    price = 50000,
-    #    vendors = ['snottopic'],
+    #    vendors = ['Snot Topic'],
     #), Soon. I'll need to talk about this subject more with other people on the right way of implementing this. 
     EwCosmeticItem(
         id_cosmetic = "jeans",
