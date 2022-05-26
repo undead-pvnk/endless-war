@@ -8,7 +8,6 @@ from ew.static import cosmetics
 from ew.static import cosmetics as static_cosmetics
 from ew.static import smelting
 from ew.static import vendors
-from ew.static import items as static_items
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
@@ -65,7 +64,7 @@ async def smelt(cmd):
 
             else:
                 # If you try to smelt a random cosmetic, use old smelting code to calculate what your result will be.
-                if found_recipe.id_recipe == "coolcosmetic" or found_recipe.id_recipe == "toughcosmetic" or found_recipe.id_recipe == "smartcosmetic" or found_recipe.id_recipe == "beautifulcosmetic" or found_recipe.id_recipe == "cutecosmetic":
+                if found_recipe.id_recipe == "coolcosmetic" or found_recipe.id_recipe == "toughcosmetic" or found_recipe.id_recipe == "smartcosmetic" or found_recipe.id_recipe == "beautifulcosmetic" or found_recipe.id_recipe == "cutecosmetic" or found_recipe.id_recipe == "evilcosmetic":
 
                     if not bknd_item.check_inv_capacity(user_data=user_data, item_type=ewcfg.it_cosmetic):
                         response = "You can't carry anymore cosmetic items."
@@ -92,7 +91,7 @@ async def smelt(cmd):
                         style = ewcfg.style_cool
 
                     for result in static_cosmetics.cosmetic_items_list:
-                        if result.style == style and result.acquisition == ewcfg.acquisition_smelting and result.id_cosmetic not in static_cosmetics.unique_smeltables and static_items.id_to_item_def.get(result.id_cosmetic).rarity != ewcfg.rarity_profollean:
+                        if result.style == style and result.acquisition == ewcfg.acquisition_smelting and result.id_cosmetic not in static_cosmetics.unique_smeltables and cosmetics != ewcfg.rarity_profollean:
 
                             cosmetics_list.append(result)
                         else:

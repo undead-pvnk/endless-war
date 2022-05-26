@@ -333,7 +333,7 @@ smelting_recipe_list = [
         id_recipe="ironingot",
         str_name="an Iron Ingot",
         alias=[
-            "ingot",
+            "ingot"
             "metal",
             "ironingot",
             "iron ingot"
