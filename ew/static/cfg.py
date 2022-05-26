@@ -4,8 +4,8 @@ import datetime #FISHINGEVENT - remove after
 
 
 
-version = "v4.102 S4A1 🍑🔨"
-
+version = "v4.103 Fishing Event 🐟💉"
+# THE HOMESTUCK NUMBER HOLY SHIT
 
 dir_msgqueue = 'msgqueue'
 
@@ -1052,6 +1052,7 @@ cmd_unpot = cmd_prefix + 'unpot'
 cmd_wash = cmd_prefix + 'wash'
 cmd_browse = cmd_prefix + 'browse'
 cmd_smoke = cmd_prefix + 'smoke'
+cmd_vape = cmd_prefix + 'vape'
 cmd_frame = cmd_prefix + 'frame'
 cmd_addart = cmd_prefix + 'addart'
 cmd_extractsoul = cmd_prefix + 'extractsoul'
@@ -2666,6 +2667,12 @@ item_id_rainwing = "rainwing"
 item_id_dyesolution = "dyesolution"
 item_id_textiles = "textiles"
 item_id_foodbase = "foodbase"
+item_id_mastectomy_mango_pod = "mastectomymangopod"
+item_id_menthol_mint_pod = "mentholmintpod"
+item_id_striking_strawberry_pod = "strikingstrawberrypod"
+item_id_ten_story_tobacco_pod = "tenstorytobaccopod"
+item_id_cop_killer_cotton_candy_pod = "copkillercottoncandypod"
+item_id_spent_pod = "spentpod"
 item_id_civilianscalp = "civilianscalp"
 item_id_modelovaccine = "modelovirusvaccine"
 item_id_key = "key"
@@ -3735,6 +3742,8 @@ item_unique_commands = {
     "laptopcomputer": "LAPTOP\n!browse: Browse the web on your laptop for RFCK Discord servers if it is in your apartment.",
     "cigarette": "CIGARETTE\n!smoke <cigarette>: Smoke cigarettes.",
     "cigar": "CIGAR\n!smoke <cigar>: Smoke cigars.",
+    "vape": "VAPE\n!vape <vape pod>: Smoke vape pods in your inventory.",
+    "usedneedle": "USED NEEDLE\n!use <@player>: Totally PRANK someone.\n!turnin: Turn in used needles at Neo Milwaukee State for Exotic Residue.",
     "pictureframe": "PICTURE FRAME\n!frame <image link>: Put an image in a picture frame.\n!titleframe <title>: Add a title to a picture frame.",
     "television": "TV\n!watch: Watch TV if it's in your apartment. Stop watching by taking the TV out of your apartment."
 }

@@ -553,6 +553,77 @@ item_list = [
         context=60,
     ),
     EwGeneralItem(
+        id_item=ewcfg.item_id_spent_pod,
+        str_name="spent vape pod",
+        str_desc="A spent vape pod. Junk.",
+        context = "spentpod",
+    ),
+    EwGeneralItem(
+        id_item=ewcfg.item_id_mastectomy_mango_pod,
+        alias = [
+            "mango",
+            "mangopod",
+            "mangojuice",
+        ],
+        str_name="Mastectomy Mango Vape Pod",
+        str_desc="A mango-flavored vape pod. Specially-engineered to cause cancer within frequent users.",
+        price=50,
+        context = "vapepod",
+        vendors=[ewcfg.vendor_NMSdealer]
+    ),
+    EwGeneralItem(
+        id_item=ewcfg.item_id_menthol_mint_pod,
+        alias = [
+            "mint",
+            "mintpod",
+            "mintjuice",
+        ],
+        str_name="Menthol Mint Vape Pod",
+        str_desc="A mint-flavored vape pod. This one is SO COOL, you're gonna feel ice-cold after taking a sick vape on this juice.",
+        price=50,
+        context = "vapepod",
+        vendors=[ewcfg.vendor_NMSdealer]
+    ),
+    EwGeneralItem(
+        id_item=ewcfg.item_id_striking_strawberry_pod,
+        alias = [
+            "strawberry",
+            "strawberrypod",
+            "strawberryjuice",
+        ],
+        str_name="Striking Strawberry Vape Pod",
+        str_desc="A strawberry-flavored vape pod. Even though they're bitty, they can do big things!.",
+        price=50,
+        context = "vapepod",
+        vendors=[ewcfg.vendor_NMSdealer]
+    ),
+    EwGeneralItem(
+        id_item=ewcfg.item_id_ten_story_tobacco_pod,
+        alias = [
+            "tobacco",
+            "tobaccopod",
+            "tobaccojuice",
+        ],
+        str_name="Ten-Story Tobacco Vape Pod",
+        str_desc="A tobacco-flavored vape pod. It's designed to evoke the feeling of \"jumping off of a building\". You can attest that it's nothing like the real deal.",
+        price=50,
+        context = "vapepod",
+        vendors=[ewcfg.vendor_NMSdealer]
+    ),
+    EwGeneralItem(
+        id_item=ewcfg.item_id_cop_killer_cotton_candy_pod,
+        alias = [
+            "cottoncandy",
+            "cottoncandypod",
+            "cottoncandyjuice",
+        ],
+        str_name="Cop Killer Cotton Candy Vape Pod",
+        str_desc="A cotton candy-flavored vape pod. Poorly-named, considering cotton candy could be considered rowdycore. !DAB though amirite? !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB ",
+        price=50,
+        context = "vapepod",
+        vendors=[ewcfg.vendor_NMSdealer]
+    ),
+    EwGeneralItem(
         id_item=ewcfg.item_id_gameguide,
         alias=[
             "gg",

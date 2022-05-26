@@ -214,7 +214,7 @@ async def cast(cmd):
             else:
                 await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
             # User has a 1/10 chance to get a bite
-            fun = 10
+            fun = 100
 
             if fisher.bait == True:
                 # Bait attatched, chance to get a bite increases from 1/10 to 1/7
@@ -262,11 +262,11 @@ async def cast(cmd):
                             await asyncio.sleep(27)
                         else:
                             await asyncio.sleep(50)
-                elif ewdebug.debug28():
+                elif ewrelicutils.debug28(user_data):
                     if fisher.high:
                         await asyncio.sleep(35)
                     else:
-                        await asyncio.sleep(60)
+                        await asyncio.sleep(70)
                 else:
                     if fisher.high:
                         await asyncio.sleep(30)

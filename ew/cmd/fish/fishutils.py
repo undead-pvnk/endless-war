@@ -521,7 +521,7 @@ async def award_fish(fisher, cmd, user_data):
                 response = "You reel in a {fish}! {flavor} It's {length} inches long! You grab hold and wring {slime:,} slime and {exoticresidue:,} exotic residue from it. " \
                     .format(fish=static_fish.fish_map[fisher.current_fish].str_name, length=fisher.length, flavor=static_fish.fish_map[fisher.current_fish].str_desc, slime=slime_gain, exoticresidue=exotic_residue)
             else:
-                response = "You reel in a {fish}! {flavor} It's {length} inches long! You grab hold and wring {slime:,} from it. " \
+                response = "You reel in a {fish}! {flavor} It's {length} inches long! You grab hold and wring {slime:,} slime from it. " \
                     .format(fish=static_fish.fish_map[fisher.current_fish].str_name, length=fisher.length, flavor=static_fish.fish_map[fisher.current_fish].str_desc, slime=slime_gain)
             
             # Add to the response if the user gets a gang bonus.

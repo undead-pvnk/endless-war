@@ -1343,6 +1343,18 @@ cosmetic_items_list = [
         freshness = 10, # Actually variable, depending on slimeoid's freshness when created ingame. Max of 10.
     ),
     EwCosmeticItem(
+        id_cosmetic = "vape",
+        str_name = "Vape",
+        str_desc = "A sick-ass vape. SUPER in nowadays. Takes disposable vape pods as its medium of juice.",
+        str_onadorn = "You flick the vape into your pocket, ready to whip out at a moment's notice. Gotta keep non-vapers on their toes.",
+        rarity = "Plebeian",
+        durability = 2500000,
+        style = "cool",
+        freshness = 7,
+        price = 400,
+        vendors = ['Bailey the NMS Drug-Guy'],
+    ),
+    EwCosmeticItem(
         id_cosmetic = "nmsmascothead",
         str_name = "NMS Mascot Head",
         str_desc = "A mascot head, fashioned to look like the front of an airplane. It's got a little twirly bit at the top.",
