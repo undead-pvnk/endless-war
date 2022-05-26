@@ -45,7 +45,8 @@ public_gamestates = {
     'slimernaliakingpin':[1, '-1'], #The existing slimernalia kingpin
     'cratersvillehole':[1, '0'],
     'toxingtonhole':[1, '0'],
-    'juviesrowhole':[1, '0']
+    'juviesrowhole':[1, '0'],
+    'hall_counter':[1, '1']
 }
 
 forbidden_channels = ["suggestion-box"]
@@ -666,6 +667,7 @@ cmd_score = cmd_prefix + 'slimes'
 cmd_score_alt1 = cmd_prefix + 'slime'
 cmd_score_alt2 = cmd_prefix + 'skune'
 cmd_score_alt3 = cmd_prefix + 'sloim'
+cmd_score_alt4 = cmd_prefix + ':slimeepic:'
 cmd_giveslime = cmd_prefix + 'giveslime'
 cmd_giveslime_alt1 = cmd_prefix + 'giveslimes'
 cmd_help = cmd_prefix + 'help'
@@ -912,6 +914,8 @@ cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_scavenge_alt1 = cmd_prefix + 'lookbetweenthecushions'
 cmd_scavenge_alt2 = cmd_prefix + 'dumpsterdive'
 cmd_scrub = cmd_prefix + 'scrub'
+cmd_question = cmd_prefix + 'question'
+cmd_answer = cmd_prefix + 'answer'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
 cmd_spray = cmd_prefix + 'annex'
@@ -1796,6 +1800,9 @@ emote_phantomhorn = "<:phantomhorn:431282111534858244>"
 emote_strawberrymilk = "<:strawberrymilk:431282128421126144>"
 emote_dab = "<a:dab:805341290220093450>"
 emote_thrash = "<a:thrash:805341344331202620>"
+
+#miscellaneous
+emote_slimeepic = "<:slimeepic:973836637777825864>"
 
 # mining types
 mining_type_minesweeper = "minesweeper"
@@ -3706,7 +3713,8 @@ district_unique_commands = {
     "limecorp3f": "LIMECORP 3F\n!jump: Commit career suicide.",
     "blimp":"BLIMP:\nGo skydiving. No parachute, but you can pretend.",
     "themuseum":"THE MUSEUM\n!donate <relic/fish/frame>: Donate something to the Curator's museum.",
-    "wafflehouse": "WAFFLE HOUSE\n!restorenegaslimeoid <negaslimeoid>: Restore a Negaslimeoid from a core.\n!destroyslimeoid: Destroy a Slimeoid or Negaslimeoid in your possession.\n!instructions: Go over the many commands used to make a negaslimeoid."
+    "wafflehouse": "WAFFLE HOUSE\n!restorenegaslimeoid <negaslimeoid>: Restore a Negaslimeoid from a core.\n!destroyslimeoid: Destroy a Slimeoid or Negaslimeoid in your possession.\n!instructions: Go over the many commands used to make a negaslimeoid.",
+    "doorsofthesludgenant":"DOOR OF THE SLUDGENANT\n!question: Get a question from that stone face up there.\n!answer <answer>: Answer the question to try opening up a door."
 }
 
 

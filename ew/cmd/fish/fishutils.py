@@ -234,8 +234,10 @@ def gen_bite_text(size):
         text = "You feel a mildly threatening tug at your fishing pole!"
     elif size == ewcfg.fish_size_huge:
         text = "You feel a startlingly strong tug at your fishing pole!"
-    else:
+    elif size == ewcfg.fish_size_colossal:
         text = "You feel a tug at your fishing pole so intense that you nearly get swept off your feet!"
+    else:
+        text = "You feel a tug at your fishing pole!" # Just in case flavor text fix
 
     text += " **!REEL NOW!!!!!**"
     return text
