@@ -923,12 +923,6 @@ async def auction_renewal(id_server, current_date, relic_date_map):
             id_server=id_server,
             item_props=props
         )
-        
-        # Create a gamestate for the relic
-        state_obj = EwGamestate(id_server=id_server, id_state=current_auction_relic.value)
-        state_obj.bit = 0
-        state_obj.value = ""
-        state_obj.persist()
 
         # Generate props for the new relic, to get the name.
         newitemprops = itm_utils.gen_item_props(relic_map.get(relic_date_map[current_date]))
