@@ -108,7 +108,7 @@ async def sow(cmd):
 
                 elif item_data.item_type == ewcfg.it_cosmetic:
                     if item_data.item_props['id_cosmetic'] == 'scalp':
-                        vegetable = static_items.item_map.get('evilweeds')
+                        vegetable = static_items.item_map.get('evilstuds')
                         slimes_onreap *= 0.25
                         is_item = True
                     else:
@@ -281,7 +281,7 @@ async def reap(cmd):
                             response += "two {}s, ".format(item.str_name)
 
                     #  Determine what crop is grown.
-                    if farm.crop == "evilweeds":
+                    if farm.crop == "evilstuds":
                         vegetable = static_items.item_map.get(farm.crop)
                     else:
                         vegetable = static_food.food_map.get(farm.crop)
