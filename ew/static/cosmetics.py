@@ -1453,7 +1453,7 @@ cosmetic_items_list = [
         ability = "furry",
         freshness = 6,
         price = 500000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1466,7 +1466,7 @@ cosmetic_items_list = [
         ability = "furry",
         freshness = 6,
         price = 500000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1479,7 +1479,7 @@ cosmetic_items_list = [
         ability = "furry",
         freshness = 6,
         price = 500000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1492,7 +1492,7 @@ cosmetic_items_list = [
         ability = "demon",
         freshness = 6,
         price = 500000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1504,8 +1504,8 @@ cosmetic_items_list = [
         style = "smart",
         ability = "bug",
         freshness = 6,
-        price = 50000,
-        vendors = ['snottopic'],
+        price = 500000,
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1518,7 +1518,7 @@ cosmetic_items_list = [
         ability = "furry",
         freshness = 6,
         price = 500000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1530,7 +1530,7 @@ cosmetic_items_list = [
         style = "cool",
         freshness = 5,
         price = 100000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
     ),
     EwCosmeticItem(
         id_cosmetic = "cartoontee",
@@ -1541,7 +1541,7 @@ cosmetic_items_list = [
         style = "cute",
         freshness = 5,
         price = 100000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
     ),
     EwCosmeticItem(
         id_cosmetic = "2000sbootyshorts",
@@ -1552,7 +1552,7 @@ cosmetic_items_list = [
         style = "cute",
         freshness = 4,
         price = 300000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
     ),
     EwCosmeticItem(
         id_cosmetic = "gamertee",
@@ -1563,7 +1563,7 @@ cosmetic_items_list = [
         style = "smart",
         freshness = 5,
         price = 100000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
     ),
     EwCosmeticItem(
         id_cosmetic = "devilmanshirt",
@@ -1574,7 +1574,7 @@ cosmetic_items_list = [
         style = "tough",
         freshness = 5,
         price = 100000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
     ),
     EwCosmeticItem(
         id_cosmetic = "tacohat",
@@ -1585,7 +1585,7 @@ cosmetic_items_list = [
         style = "tough",
         freshness = 2,
         price = 25000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1597,7 +1597,7 @@ cosmetic_items_list = [
         style = "smart",
         freshness = 2,
         price = 25000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1609,7 +1609,7 @@ cosmetic_items_list = [
         style = "cool",
         freshness = 2,
         price = 25000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1621,7 +1621,7 @@ cosmetic_items_list = [
         style = "evil",
         freshness = 5,
         price = 100000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
     ),
     EwCosmeticItem(
         id_cosmetic = "animetee",
@@ -1632,7 +1632,7 @@ cosmetic_items_list = [
         style = "evil",
         freshness = 5,
         price = 50000,
-        vendors = ['snottopic'],
+        vendors = ['Snot Topic'],
     ),
     EwCosmeticItem(
         id_cosmetic = "platformboots",
@@ -1643,7 +1643,7 @@ cosmetic_items_list = [
         style = "evil",
         freshness = 7,
         price = 600000,
-        vendors = ['caravan'],
+        vendors = ['Caravan'],
     ),
     EwCosmeticItem(
         id_cosmetic = "deviouskicks",
@@ -1654,7 +1654,7 @@ cosmetic_items_list = [
         style = "evil",
         freshness = 5,
         price = 300000,
-        vendors = ['caravan'],
+        vendors = ['Caravan'],
     ),
     EwCosmeticItem(
         id_cosmetic = "sneakers",
@@ -1665,7 +1665,7 @@ cosmetic_items_list = [
         style = "smart",
         freshness = 5,
         price = 300000,
-        vendors = ['caravan'],
+        vendors = ['Caravan'],
     ),
     EwCosmeticItem(
         id_cosmetic = "toeshoes",
@@ -1676,7 +1676,7 @@ cosmetic_items_list = [
         style = "tough",
         freshness = 5,
         price = 300000,
-        vendors = ['caravan'],
+        vendors = ['Caravan'],
     ),
     EwCosmeticItem(
         id_cosmetic = "spurs",
@@ -1687,7 +1687,7 @@ cosmetic_items_list = [
         style = "tough",
         freshness = 2,
         price = 400000,
-        vendors = ['caravan'],
+        vendors = ['Caravan'],
     ),
     EwCosmeticItem(
         id_cosmetic = "geta",
@@ -1698,7 +1698,7 @@ cosmetic_items_list = [
         style = "tough",
         freshness = 8,
         price = 600000,
-        vendors = ['caravan'],
+        vendors = ['Caravan'],
     ),
     EwCosmeticItem(
         id_cosmetic = "bikini",
@@ -1792,7 +1792,7 @@ cosmetic_items_list = [
         id_cosmetic = "monsterbonebevor",
         str_name = "Monster Bone Bevor",
         str_desc = "It's a piece of monster bone armor that was handmade. This piece will keep your nose and neck nice and guarded.",
-        rarity = "Plebeian",
+        rarity = "Profollean",
         durability = 2500000,
         style = "evil",
         freshness = 2,
@@ -1804,7 +1804,7 @@ cosmetic_items_list = [
         id_cosmetic = "monsterbonegauntlets",
         str_name = "Monster Bone Gauntlets",
         str_desc = "It's a piece of monster bone armor that was handmade. This piece will keep your arms and hands nice and guarded.",
-        rarity = "Plebeian",
+        rarity = "Profollean",
         durability = 2500000,
         style = "evil",
         freshness = 3,
@@ -1815,7 +1815,7 @@ cosmetic_items_list = [
         id_cosmetic = "monsterbonefullplate",
         str_name = "Monster Bone Fullplate",
         str_desc = "It's a piece of monster bone armor that was handmade. This piece will keep your chest and vitals nice and guarded.",
-        rarity = "Plebeian",
+        rarity = "Profollean",
         durability = 2500000,
         style = "evil",
         freshness = 4,
@@ -1826,7 +1826,7 @@ cosmetic_items_list = [
         id_cosmetic = "monsterbonegreaves",
         str_name = "Monster Bone Greaves",
         str_desc = "It's a piece of monster bone armor that was handmade. This piece will keep your waist and legs nice and guarded.",
-        rarity = "Plebeian",
+        rarity = "Profollean",
         durability = 2500000,
         style = "evil",
         freshness = 2,
@@ -1837,7 +1837,7 @@ cosmetic_items_list = [
         id_cosmetic = "monsterbonesabatons",
         str_name = "Monster Bone Sabatons",
         str_desc = "It's a piece of monster bone armor that was handmade. This piece will keep your feet nice and guarded.",
-        rarity = "Plebeian",
+        rarity = "Profollean",
         durability = 2500000,
         style = "evil",
         freshness = 2,
@@ -1860,7 +1860,7 @@ cosmetic_items_list = [
         id_cosmetic = "monsterbonecodpiece",
         str_name = "Monster Bone Cod piece",
         str_desc = "Because a full set wasn't enough.",
-        rarity = "Plebeian",
+        rarity = "Profollean",
         durability = 2500000,
         style = "evil",
         freshness = 7,
@@ -1921,7 +1921,7 @@ cosmetic_items_list = [
     #    style = "evil",
     #   freshness = 0,
     #    price = 50000,
-    #    vendors = ['snottopic'],
+    #    vendors = ['Snot Topic'],
     #), Soon. I'll need to talk about this subject more with other people on the right way of implementing this. 
     EwCosmeticItem(
         id_cosmetic = "jeans",
@@ -1937,7 +1937,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "yarmulke",
         str_name = "Yarmulke",
-        str_desc = "Oy Vey!",
+        str_desc = "Oy Vey!", # For the love of all that is holy please do not smite me down, Igonis was the one behind this item.
         rarity = "Patrician",
         durability = 2500000,
         style = "smart",
