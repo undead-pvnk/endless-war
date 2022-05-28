@@ -1410,7 +1410,8 @@ async def cancel_trade(cmd):
 # FISHINGEVENT - auctionnnnn babyyyyy
 async def bid(cmd):
     user_data = EwUser(member = cmd.message.author)
-    market_data = EwMarket(id_server = user_data.id_server)
+    current_bidder = EwGamestate(id_server=cmd.guild.id, id_state='currentbidder')
+    current_bid = EwGamestate(id_server=cmd.guild.id, id_state='currentbid')
 
     # Player has to be at NMS and can't be dead or already the highest bid.
     if user_data.life_state == ewcfg.life_state_corpse:
@@ -1419,7 +1420,7 @@ async def bid(cmd):
     elif user_data.poi != ewcfg.poi_id_neomilwaukeestate:
         response = "You can't place bids through your gellphone."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    elif user_data.id_user == market_data.current_bidder:
+    elif user_data.id_user == int(current_bidder.value):
         response = "You can't bid against yourself, dumbass!"
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
@@ -1437,15 +1438,14 @@ async def bid(cmd):
                 response = "You don't have that much Exotic Residue to bid!"
             else:
                 # Check if the bid is larger than the current bid
-                if bid > market_data.current_bid:
+                if bid > current_bid.bit:
 
                     response = "You give Bailey {:,} Exotic Residue. He happily takes it and fiddles on his gellphone for a second.\n\"Thanks for the ER, kid! I'll keep it here in case someone comes by with some more. You're the new HIGHEST BIDDER, yo.\"".format(bid)
 
                     # Give the old highest bidder their Exotic Residue back
-                    print(user_data.id_server)
-                    if market_data.current_bidder != 0:
-                        ex_bidder = EwUser(id_user=market_data.current_bidder, id_server=user_data.id_server)
-                        ex_bidder.event_points += market_data.current_bid
+                    if current_bidder.value != '':
+                        ex_bidder = EwUser(id_user=int(current_bidder.value), id_server=user_data.id_server)
+                        ex_bidder.event_points += current_bid.bit
                         ex_bidder.persist()
 
                     # Create Slime Social Media Auction post
@@ -1457,7 +1457,7 @@ async def bid(cmd):
 
                     # Create content of the message
                     field_1_title = "NEW BID OF {bid} EXOTIC RESIDUE".format(user_data_id=user_data.id_user, bid=bid)
-                    if market_data.current_bidder != 0:
+                    if current_bidder.value != '':
                         field_1_text = random.choice([
                             "<@!{user_data_id}> just gave me **{bid:,}** Exotic Residue. Sick, right? I can fit tonza more Exotic Residue in my trunk, though, so don't forget to gimme some more, haha! That knocks <@{ex_bidder_id}> outta the race for now. I'll ship your ER back, bro!".format(user_data_id=user_data.id_user, bid=bid, ex_bidder_id=ex_bidder.id_user),
                             "<@!{user_data_id}> just gave me **{bid:,}** Exotic Residue. That knocks <@{ex_bidder_id}> outta the race for now. If you have any more drugs, make sure to pass 'em my way! And make sure cops don't get on auctionupdatez.com, this place has my full name on it.".format(user_data_id=user_data.id_user, bid=bid, ex_bidder_id=ex_bidder.id_user),
@@ -1478,22 +1478,22 @@ async def bid(cmd):
                     hourdigit = minutesleft // 60
                     minutesdigit = minutesleft % 60
                     footermessage = "{}h:{}m left in today's auction".format(hourdigit, minutesdigit)
-                    print(footermessage)
                     auctionmessage.set_footer(text="{}".format(footermessage))
 
                     # Send the message
                     channel = fe_utils.get_channel(server=cmd.guild, channel_name=ewcfg.channel_auctionupdatez)
                     await fe_utils.send_message(cmd.client, channel, embed=auctionmessage)
 
-                    # Take the player's Exotic Residue and set their bid in market_data
-                    market_data.current_bid = bid
-                    market_data.current_bidder = user_data.id_user
+                    # Take the player's Exotic Residue and set their bid
+                    current_bid.bit = bid
+                    current_bidder.value = user_data.id_user
                     user_data.event_points -= bid
                     user_data.persist()
-                    market_data.persist()
+                    current_bid.persist()
+                    current_bidder.persist()
 
                 else:
-                    response = "You hand {:,} Exotic Residue to Bailey, but it's smaller than the current highest bid.\n\"Sorry kid, but this sweet dude before 'ya handed me {:,} ER, so. Uh, gotta, say no! Good luck with getting me some more, though. Haha!\"".format(bid, market_data.current_bid) 
+                    response = "You hand {:,} Exotic Residue to Bailey, but it's smaller than the current highest bid.\n\"Sorry kid, but this sweet dude before 'ya handed me {:,} ER, so. Uh, gotta, say no! Good luck with getting me some more, though. Haha!\"".format(bid, current_bid.bit) 
         else:
             response = "You need to specify some amount of Exotic Residue to give Bailey."
     else:
@@ -1504,8 +1504,7 @@ async def bid(cmd):
 
 async def auction(cmd):
     user_data = EwUser(member = cmd.message.author)
-    market_data = EwMarket(id_server = user_data.id_server)
-    
+    current_bid = EwGamestate(id_server=cmd.guild.id, id_state='currentbid')
     # PRESENT DAY
     # PRESENT TIME
     current_date = datetime.date.today()
@@ -1517,9 +1516,9 @@ async def auction(cmd):
         item_name = itemprops.get("relic_name")
 
         if user_data.poi == ewcfg.poi_id_neomilwaukeestate:
-            response = "Asking Bailey, he says, \"oh yeah, the current item up for auction is a **{}**. It's currently sitting at a high bid of **{:,}** Exotic Residue. So what drugs ya got?\"".format(item_name, market_data.current_bid)
+            response = "Asking Bailey, he says, \"oh yeah, the current item up for auction is a **{}**. It's currently sitting at a high bid of **{:,}** Exotic Residue. So what drugs ya got?\"".format(item_name, current_bid.bit)
         else:
-            response = "Checking your gellphone, you see the current item up for auction is a **{}**. It's currently sitting a high bid of **{:,}** Exotic Residue. Better blast your ass over to Neo Milwaukee State!".format(item_name, market_data.current_bid)
+            response = "Checking your gellphone, you see the current item up for auction is a **{}**. It's currently sitting a high bid of **{:,}** Exotic Residue. Better blast your ass over to Neo Milwaukee State!".format(item_name, current_bid.bit)
     else:
         response = "There's no auction happening right now, bozo."
 

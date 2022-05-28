@@ -5,6 +5,7 @@ import time
 from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
+from ew.backend.dungeons import EwGamestate
 from ew.static import cfg as ewcfg
 from ew.static import fish as static_fish
 from ew.static import status as se_static
@@ -493,8 +494,9 @@ async def award_fish(fisher, cmd, user_data):
 
                 inhabitant_data.change_slimes(n=-slime_gain)
                 user_data.event_points += exotic_residue
-                market_data.total_event_points += exotic_residue
-                market_data.persist()
+                gamestate = EwGamestate(id_server=cmd.guild.id, id_state='totaleventpoints')
+                gamestate.bit += exotic_residue
+                gamestate.persist()
                 inhabitant_data.persist()
                 fisher.stop()
             else:
@@ -515,8 +517,9 @@ async def award_fish(fisher, cmd, user_data):
             # FISHINGEVENT - give Exotic Residue
             if fisher.pier.pier_type == ewcfg.fish_slime_saltwater:
                 user_data.event_points += exotic_residue
-                market_data.total_event_points += exotic_residue
-                market_data.persist()
+                gamestate = EwGamestate(id_server=cmd.guild.id, id_state='totaleventpoints')
+                gamestate.bit += exotic_residue
+                gamestate.persist()
 
                 response = "You reel in a {fish}! {flavor} It's {length} inches long! You grab hold and wring {slime:,} slime and {exoticresidue:,} exotic residue from it. " \
                     .format(fish=static_fish.fish_map[fisher.current_fish].str_name, length=fisher.length, flavor=static_fish.fish_map[fisher.current_fish].str_desc, slime=slime_gain, exoticresidue=exotic_residue)

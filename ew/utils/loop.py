@@ -884,22 +884,24 @@ async def auction_tick_loop(id_server):
 
 async def auction_tick(id_server):
     current_date = datetime.date.today()
-    market_data = EwMarket(id_server)
-
+    current_auction_relic = EwGamestate(id_server=id_server, id_state='currentauctionrelic')
     relic_date_map = relicutils.auction_relic_date_map
 
     if current_date in relic_date_map:
-        if market_data.current_auction_relic != relic_date_map[current_date]:
+        if current_auction_relic.value != relic_date_map[current_date]:
             # DATE HAS ROLLED OVER, INITIATE AUCTION RENEWALLLLL
-            await auction_renewal(id_server, market_data, current_date, relic_date_map)
+            await auction_renewal(id_server, current_date, relic_date_map)
         else:
             return
-    elif current_date == ewcfg.fisher_day_overtime and market_data.current_auction_relic != "":
-        await auction_end(id_server, market_data)
+    elif current_date == ewcfg.fisher_day_overtime and current_auction_relic.value != 0:
+        await auction_end(id_server)
 
 
-async def auction_renewal(id_server, market_data, current_date, relic_date_map):
-    bidder = market_data.current_bidder
+async def auction_renewal(id_server, current_date, relic_date_map):
+    current_bidder = EwGamestate(id_server=id_server, id_state='currentbidder')
+    bidder = int(current_bidder.value)
+    current_bid = EwGamestate(id_server=id_server, id_state='currentbid')
+    current_auction_relic = EwGamestate(id_server=id_server, id_state='currentauctionrelic')
 
     client = ewutils.get_client()
     server = client.get_guild(id_server)
@@ -912,9 +914,9 @@ async def auction_renewal(id_server, market_data, current_date, relic_date_map):
     auctionmessage.description = "**BAILEY**"
     
     # If nobody has bidded for the current relic, it's probably day 1 of the event. If there is a bid, it's day 2-7.
-    if market_data.current_bidder != 0:
+    if bidder != 0:
         # Give the Bidder their item
-        props = itm_utils.gen_item_props(relic_map.get(market_data.current_auction_relic))
+        props = itm_utils.gen_item_props(relic_map.get(current_auction_relic.value))
         bknd_item.item_create(
             item_type=ewcfg.it_relic,
             id_user=bidder,
@@ -922,12 +924,11 @@ async def auction_renewal(id_server, market_data, current_date, relic_date_map):
             item_props=props
         )
         
-        # Create a gamestate if needed
-        if relicutils.debug33(market_data):
-            state_obj = EwGamestate(id_server=id_server, id_state=market_data.current_auction_relic)
-            state_obj.bit = 0
-            state_obj.value = ""
-            state_obj.persist()
+        # Create a gamestate for the relic
+        state_obj = EwGamestate(id_server=id_server, id_state=current_auction_relic.value)
+        state_obj.bit = 0
+        state_obj.value = ""
+        state_obj.persist()
 
         # Generate props for the new relic, to get the name.
         newitemprops = itm_utils.gen_item_props(relic_map.get(relic_date_map[current_date]))
@@ -940,7 +941,7 @@ async def auction_renewal(id_server, market_data, current_date, relic_date_map):
 
         # Create content of the old winner message
         field_1_title = "RELIC WINNER"
-        field_1_text = "<@{}> won this auction for the {}! So, uh, it'll be delivered to ya lightning-fast, kid. Have fun, and thanks for the Exotic Residue!".format(market_data.current_bidder, props.get('relic_name'))
+        field_1_text = "<@{}> won this auction for the {}! So, uh, it'll be delivered to ya lightning-fast, kid. Have fun, and thanks for the Exotic Residue!".format(bidder, props.get('relic_name'))
         auctionmessage2.add_field(name=field_1_title, value=field_1_text, inline=False)
 
         field_2_title = "A NEW DAY CALLS"
@@ -966,17 +967,22 @@ async def auction_renewal(id_server, market_data, current_date, relic_date_map):
         auctionmessage.add_field(name=field_1_title, value=field_1_text)
 
     # Create changes to current auction item, then persist.
-    market_data.current_bid = 0
-    market_data.current_bidder = 0
-    market_data.current_auction_relic = relic_date_map[current_date]
-    market_data.persist()
+    current_bid.bit = 0
+    current_bidder.value = ''
+    current_auction_relic.value = relic_date_map[current_date]
+    current_bidder.persist()
+    current_bid.persist()
+    current_auction_relic.persist()
 
     # Send the Auction Updatez message
     await fe_utils.send_message(client, channel, embed=auctionmessage)
 
 
-async def auction_end(id_server, market_data):
-    bidder = market_data.current_bidder
+async def auction_end(id_server):
+    current_bidder = EwGamestate(id_server=id_server, id_state='currentbidder')
+    bidder = int(current_bidder.value)
+    current_bid = EwGamestate(id_server=id_server, id_state='currentbid')
+    current_auction_relic = EwGamestate(id_server=id_server, id_state='currentauctionrelic')
 
     client = ewutils.get_client()
     server = client.get_guild(id_server)
@@ -989,7 +995,7 @@ async def auction_end(id_server, market_data):
     auctionmessage.description = "**BAILEY**"
 
     # Give the Bidder their item
-    props = itm_utils.gen_item_props(relic_map.get(market_data.current_auction_relic))
+    props = itm_utils.gen_item_props(relic_map.get(current_auction_relic.value))
     bknd_item.item_create(
         item_type=ewcfg.it_relic,
         id_user=bidder,
@@ -999,7 +1005,7 @@ async def auction_end(id_server, market_data):
 
     # Create content of the old winner message
     field_1_title = "RELIC WINNER"
-    field_1_text = "<@{}> won this auction for the {}! So, uh, it'll be delivered to ya lightning-fast, kid. Have fun, and thanks for the Exotic Residue!".format(market_data.current_bidder, props.get('relic_name'))
+    field_1_text = "<@{}> won this auction for the {}! So, uh, it'll be delivered to ya lightning-fast, kid. Have fun, and thanks for the Exotic Residue!".format(bidder, props.get('relic_name'))
     auctionmessage.add_field(name=field_1_title, value=field_1_text, inline=False)
 
     field_2_title = "FAREWELL FOR NOW"
@@ -1007,10 +1013,12 @@ async def auction_end(id_server, market_data):
     auctionmessage.add_field(name=field_2_title, value=field_2_text, inline=False)
 
     # Stop the count
-    market_data.current_bid = 0
-    market_data.current_bidder = 0
-    market_data.current_auction_relic = ""
-    market_data.persist()
+    current_bid.bit = 0
+    current_bidder.value = 0
+    current_auction_relic.value = ""
+    current_bid.persist()
+    current_bidder.persist()
+    current_auction_relic.persist()
 
     # Send the FINAL auction updatez message
     await fe_utils.send_message(client, channel, embed=auctionmessage)

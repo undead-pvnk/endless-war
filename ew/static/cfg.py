@@ -2134,12 +2134,6 @@ col_juviemode = 'juviemode'
 col_horseman_deaths = 'horseman_deaths'
 col_horseman_timeofdeath = 'horseman_timeofdeath'
 
-# Auction & FISHINGEVENT points
-col_total_event_points = "total_event_points"
-col_current_bidder = "current_bidder"
-col_current_bid = "current_bid"
-col_current_auction_relic = "current_auction_relic"
-
 # Database columns for bartering
 col_offer_give = 'offer_give'
 col_offer_receive = 'offer_receive'
@@ -2930,14 +2924,14 @@ weapon_id_roomba = 'roomba'
 
 # FISHINGEVENT dates. All placeholder
 
-fisher_day_one = datetime.date(2022, 5, 27)
-fisher_day_two = datetime.date(2022, 5, 28)
-fisher_day_three = datetime.date(2022, 5, 29)
-fisher_day_four = datetime.date(2022, 5, 30)
-fisher_day_five = datetime.date(2022, 5, 31)
-fisher_day_six = datetime.date(2022, 6, 1)
-fisher_day_seven = datetime.date(2022, 6, 2)
-fisher_day_overtime = datetime.date(2022, 6, 3)
+fisher_day_one = datetime.date(2022, 5, 29)
+fisher_day_two = datetime.date(2022, 5, 30)
+fisher_day_three = datetime.date(2022, 5, 31)
+fisher_day_four = datetime.date(2022, 6, 1)
+fisher_day_five = datetime.date(2022, 6, 2)
+fisher_day_six = datetime.date(2022, 6, 3)
+fisher_day_seven = datetime.date(2022, 6, 4)
+fisher_day_overtime = datetime.date(2022, 6, 5)
 
 
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \

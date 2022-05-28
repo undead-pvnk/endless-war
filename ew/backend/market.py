@@ -34,12 +34,6 @@ class EwMarket:
     # slimefest
     winner = ''
 
-    # Auction and FISHINGEVENT 
-    total_event_points = 0
-    current_bidder = 0
-    current_bid = 0
-    current_auction_relic = 0
-
     # Dict of bazaar items available for purchase
     bazaar_wares = None
 
@@ -56,7 +50,7 @@ class EwMarket:
                 cursor = conn.cursor()
 
                 # Retrieve object
-                cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath}, {winner}, {total_event_points}, {current_bidder}, {current_bid}, {current_auction_relic} FROM markets WHERE id_server = %s".format(
+                cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath}, {winner} FROM markets WHERE id_server = %s".format(
                     time_lasttick=ewcfg.col_time_lasttick,
                     slimes_revivefee=ewcfg.col_slimes_revivefee,
                     negaslime=ewcfg.col_negaslime,
@@ -71,11 +65,7 @@ class EwMarket:
                     global_swear_jar=ewcfg.col_global_swear_jar,
                     horseman_deaths=ewcfg.col_horseman_deaths,
                     horseman_timeofdeath=ewcfg.col_horseman_timeofdeath,
-                    winner=ewcfg.col_winner,
-                    total_event_points=ewcfg.col_total_event_points,
-                    current_bidder=ewcfg.col_current_bidder,
-                    current_bid=ewcfg.col_current_bid,
-                    current_auction_relic=ewcfg.col_current_auction_relic
+                    winner=ewcfg.col_winner
 
                 ), (self.id_server,))
                 result = cursor.fetchone()
@@ -97,10 +87,6 @@ class EwMarket:
                     self.horseman_deaths = result[12]
                     self.horseman_timeofdeath = result[13]
                     self.winner = result[14]
-                    self.total_event_points = result[15]
-                    self.current_bidder = result[16]
-                    self.current_bid = result[17]
-                    self.current_auction_relic = result[18]
 
                     cursor.execute("SELECT {}, {} FROM bazaar_wares WHERE {} = %s".format(
                         ewcfg.col_name,
@@ -136,7 +122,7 @@ class EwMarket:
             cursor = conn.cursor()
 
             # Save the object.
-            cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath}, {winner}, {total_event_points}, {current_bidder}, {current_bid}, {current_auction_relic}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+            cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath}, {winner}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
                 id_server=ewcfg.col_id_server,
                 time_lasttick=ewcfg.col_time_lasttick,
                 slimes_revivefee=ewcfg.col_slimes_revivefee,
@@ -152,11 +138,7 @@ class EwMarket:
                 global_swear_jar=ewcfg.col_global_swear_jar,
                 horseman_deaths=ewcfg.col_horseman_deaths,
                 horseman_timeofdeath=ewcfg.col_horseman_timeofdeath,
-                winner=ewcfg.col_winner,
-                total_event_points=ewcfg.col_total_event_points,
-                current_bidder=ewcfg.col_current_bidder,
-                current_bid=ewcfg.col_current_bid,
-                current_auction_relic=ewcfg.col_current_auction_relic
+                winner=ewcfg.col_winner
             ), (
                 self.id_server,
                 self.time_lasttick,
@@ -173,11 +155,7 @@ class EwMarket:
                 self.global_swear_jar,
                 self.horseman_deaths,
                 self.horseman_timeofdeath,
-                self.winner,
-                self.total_event_points,
-                self.current_bidder,
-                self.current_bid,
-                self.current_auction_relic
+                self.winner
             ))
 
             cursor.execute("DELETE FROM bazaar_wares WHERE {} = %s".format(

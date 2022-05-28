@@ -14,6 +14,7 @@ from ew.backend.status import EwEnemyStatusEffect
 from ew.backend.status import EwStatusEffect
 from ew.backend.worldevent import EwWorldEvent
 from ew.backend.mutation import EwMutation
+from ew.backend.dungeons import EwGamestate
 
 from ew.utils.transport import EwTransport
 
@@ -2591,7 +2592,9 @@ async def turnin(cmd):
         # Add points to user and to the market total.
         if point_gain > 0:
             user_data.event_points += point_gain
-            market_data.total_event_points += point_gain
+            total_points = EwGamestate(id_server=cmd.guild.id, id_state='totaleventpoints')
+            total_points.value += point_gain
+            total_points.persist()
 
             # Take away the used needles
             for id in items_to_remove:
