@@ -1416,6 +1416,11 @@ item_list = [
         str_desc="A few large clumps of invasive weeds. They were grown out from the remains you took from someone's death, probably full of microbacteria and toxins harmful to the body. What a disgusting plant! You can't wait to commit all kinds of evil with them.",
      ),
     EwGeneralItem(
+        id_item=ewcfg.item_id_evil_material,
+        str_name="Evil Weeds",
+        str_desc="A handful of weeds, grown from a useless rotting scalp. They're razor-sharp, and just holding them cuts your hand. Damn, these make you mad!",
+    ),
+    EwGeneralItem(
         id_item=ewcfg.item_id_dyesolution,
         str_name="Dye Solution",
         str_desc="A small vial of salt, water, and vinegar. You can smelt this together with crop materials to make dyes.",
@@ -3352,7 +3357,7 @@ furniture_list = [
         acquisition = "bartering",
         price = 10000000,
         vendors = ['Country Club'],
-        furniture_place_desc = "You hire a bunch of contract workers from the yellow pages, having the fireplace installed. Of course, you act like a curmudgeon all the while and don't even pay them afterwards, citing that you wanted it a few centimeters to the left.",
+        furniture_place_desc = "You hire a bunch of contract workers from the yellow pages, getting the fireplace installed. Of course, you act like a curmudgeon all the while and don't even pay them afterwards, citing that you wanted it a few centimeters to the left.",
         furniture_look_desc = "Your apartment has a luxury chimney fireplace, giving your entire apartment supercilious aura.",
     ),
 ]
