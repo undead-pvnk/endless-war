@@ -1410,15 +1410,10 @@ item_list = [
         str_name="Cute Buttons",
         str_desc="A wardrobe of cute buttons. You know you should probably be concerned that these lil’ guys were hiding in your crops, but honestly you’re overcome with emotion and feel utterly blessed. Lookit ‘em! They’re adorable! D’awww...",
     ),
-     EwGeneralItem(
-        id_item=ewcfg.item_id_evil_material,
-        str_name="Evil Weeds",
-        str_desc="A few large clumps of invasive weeds. They were grown out from the remains you took from someone's death, probably full of microbacteria and toxins harmful to the body. What a disgusting plant! You can't wait to commit all kinds of evil with them.",
-     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_evil_material,
-        str_name="Evil Weeds",
-        str_desc="A handful of weeds, grown from a useless rotting scalp. They're razor-sharp, and just holding them cuts your hand. Damn, these make you mad!",
+        str_name="Evil Studs",
+        str_desc="A handful of studs, cultivated from a useless rotting scalp. They're razor-sharp, and just holding them cuts your hand. Damn, these make you mad!",
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_dyesolution,

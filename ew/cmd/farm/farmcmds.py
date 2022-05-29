@@ -281,7 +281,7 @@ async def reap(cmd):
                             response += "two {}s, ".format(item.str_name)
 
                     #  Determine what crop is grown.
-                    if farm.crop == "evilstuds":
+                    if farm.crop == ewcfg.item_id_evil_material:
                         vegetable = static_items.item_map.get(farm.crop)
                     else:
                         vegetable = static_food.food_map.get(farm.crop)
