@@ -159,7 +159,7 @@ async def rattle(cmd):
 
         # spook mentioned player
         if cmd.mentions_count == 1:
-            agroskelly-response = [
+            agroskelly_response = [
                 ", sending a shiver down their spine.",
                 ", who clearly does not appreciate it.",
                 ". They almost faint in shock.",
@@ -171,17 +171,17 @@ async def rattle(cmd):
                 " in an attempt to socialize, but they don't think you should.",
                 ", inviting them to have a bad time." #blame loom
             ]
-            response = [
-                "You rattle your bones at {}{}".format(cmd.mentions[0].display_name, random.choice(agroskell-response)),
+            response = random.choice([ # thanks zug
+                "You rattle your bones at {}{}".format(cmd.mentions[0].display_name, random.choice(agroskell_response)),
                 "You have a bone to pick with {}.".format(cmd.mentions[0].display_name) # blame org
-
+            ])
         # rattle alone
         else:
             roll = random.randrange(100)
-            lonelyskelly-response = []
+            lonelyskelly_response = []
             # common rattles
-            if roll > 19:
-                lonelyskelly-response = [
+            if roll > 9:
+                lonelyskelly_response = [
                     "You rattle your bones.",
                     "You  r a t t l e  your  b o n e s .",
                     "You rattle your bones so aggressively your head goes flying off.",
@@ -203,7 +203,7 @@ async def rattle(cmd):
                     "You spook yourself with how effectively you rattle your bones."
                 ]
             # rare rattles
-            elif roll > 0:
+            elif roll > 1:
                 bones = random.randrange(206)
                 insult1 = []
                 insult2 = []
@@ -214,11 +214,14 @@ async def rattle(cmd):
                 elif bones > 0:
                     insult1 = " "
                     insult2 = ". What? How? Did you go straight for a thigh?"
-                lonelyskelly-response = [
+                lonelyskelly_response = [
                     "You rattle your bones so aggressively, you collapse into a pile of bones. It takes a second for you to reassemble yourself",
                     "You successfully remove {} bone{}before collapsing{}".format(bones, insult1, insult2), # blame ebola
-                    "https://youtu.be/RojReJ7bzCw"
                 ]
+                # ultra rare rattle
+                elif roll > 0:
+                    lonelyskelly_response = "https://youtu.be/RojReJ7bzCw"
+                response = random.choice(lonelyskelly_response) # thanks zug
     else:
         response = "You people are not allowed to do that."
 
