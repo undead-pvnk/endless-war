@@ -101,6 +101,9 @@ channels_deviantsplaart = {}
 
 channels_artexhibits = {}
 
+# Map of server ID to auction updates channel
+channels_auctionupdatez = {}
+
 # Map of all command words in the game to their implementing function.
 
 #cmd_map = cmds.cmd_map
@@ -281,6 +284,10 @@ async def on_ready():
                 elif (channel.name == ewcfg.channel_deviantsplaart):
                     channels_deviantsplaart[server.id] = channel
                     ewutils.logMsg("• found channel for deviantSPLAART: {}".format(channel.name))
+                
+                elif (channel.name == ewcfg.channel_auctionupdatez):
+                    channels_auctionupdatez[server.id] = channel
+                    ewutils.logMsg("• found channel for auction updatez: {}".format(channel.name))
 
         ewdebug.initialize_gamestate(id_server=server.id)
 
@@ -334,7 +341,9 @@ async def on_ready():
         if not debug:
             await transport_utils.init_transports(id_server=server.id)
             asyncio.ensure_future(bknd_weather.weather_tick_loop(id_server=server.id))
-        
+
+        asyncio.ensure_future(loop_utils.auction_tick_loop(id_server=server.id)) # FISHINGEVENT
+
         asyncio.ensure_future(bknd_farm.farm_tick_loop(id_server=server.id))
         
         asyncio.ensure_future(sports_utils.slimeball_tick_loop(id_server=server.id))
@@ -825,7 +834,7 @@ async def debugHandling(message, cmd, cmd_obj):
 
         response = "Time has progressed 1 day forward manually."
 
-        if ewutils.check_fursuit_active(market_data):
+        if ewutils.check_moon_phase(market_data) == ewcfg.moon_full:
             response += "\nIt's a full moon!"
 
         await fe_utils.send_message(client, message.channel, fe_utils.formatMessage(message.author, response))
@@ -840,7 +849,7 @@ async def debugHandling(message, cmd, cmd_obj):
             market_data.day += 1
             response += "\nMidnight has come. 1 day progressed forward."
 
-        if ewutils.check_fursuit_active(market_data):
+        if ewutils.check_moon_phase(market_data) == ewcfg.moon_full:
             response += "\nIt's a full moon!"
 
         market_data.persist()

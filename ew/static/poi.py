@@ -1430,14 +1430,14 @@ poi_list = [
 		id_poi = "neomilwaukeestate",
 		alias = ['neomilwaukee', 'state', 'college', 'nms'],
 		str_name = "Neo Milwaukee State",
-		str_desc = "An abysmally funded public college, with a student body of high school has-beens and future gas station attendants. With nearly a 100% acceptance rate, it's needless to say that the riff raff is not kept out of this seedy establishment. People are here to stumble through their meaningless lives, chasing normality and appeasing their poor parent's ideas of success by enrolling in the first college they get accepted to and walking out four years later with thousands of dollars of debt and a BA in English. No one here is excited to learn, no one is excited to teach, no one is excited for anything here. They all just want to die, and thankfully they will someday. **Use '!help' to get info on game mechanics, or '!order' if you want to purchase a game guide.**\n\nExits into North Sleezeborough. ",
+		str_desc = "An abysmally funded public college, with a student body of high school has-beens and future gas station attendants. With nearly a 100% acceptance rate, it's needless to say that the riff raff is not kept out of this seedy establishment. People are here to stumble through their meaningless lives, chasing normality and appeasing their poor parent's ideas of success by enrolling in the first college they get accepted to and walking out four years later with thousands of dollars of debt and a BA in English. No one here is excited to learn, no one is excited to teach, no one is excited for anything here. They all just want to die, and thankfully they will someday. **Use '!help' to get info on game mechanics, or '!order' if you want to purchase a game guide.**\n\nHoly shit, Bailey is in the parking lot! Your friendly neighborhood drug dealer has set up shop next to the science building, and their car is bursting at the seams with stuff to trade Exotic Residue for. **Use !menu to see his wares, !auction to check the status of his auction, !turnin to turn in your used needles, and !bid to bid on the auction.**\n\nExits into North Sleezeborough. ",
 		channel = "neo-milwaukee-state",
 		role = "Neo Milwaukee State",
 		major_role = "northsleezeborough_major",
 		minor_role = "nullminorrole",
 		permissions = {'neo-milwaukee-state': ['read', 'send', 'connect']},
 		pvp = False,
-		vendors = ['College'],
+		vendors = ['College', 'Bailey the NMS Drug-Guy'],
 		is_subzone = True,
 		mother_districts = ['northsleezeborough'],
 		write_manuscript = True,
@@ -3120,16 +3120,16 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "themoon",
-		alias = ['moon', 'luna', 'n1'],
+		alias = ['moon', 'luna', 'loona', 'n1'],
 		str_name = "The Moon",
 		str_desc = "Hey wait, you're on the moon. How are you able to breathe? Well never mind that. You're doing it and that's what counts. There's a pretty sizable chunk taken out of it ever since N1 went and exploded. If only you could fish here, then you'd be able to fulfill your lifelong dream of imitating the guy from the Dreamworks logo. Whatever the case, there isn't anywhere else to go. !loop back or die, it's your decision.",
 		channel = "the-moon",
-		major_role = "downtown_major",
-		minor_role = "nullminorrole",
+		major_role = "themoon_major",
+		minor_role = "themoon_minor",
 		permissions = {'the-moon': ['read', 'send', 'connect']},
-		property_class = "A",
-		is_subzone = True,
-		neighbors = {},
+		property_class = "C", # Moon capping eventually I prommy
+		is_district = True,
+		topic = "The moon. Pretty self-explanatory. It's permanently shaped like a crescent due to a quirky mishap.",
 	),
 	EwPoi(
 		id_poi = "themuseum",
@@ -3974,6 +3974,16 @@ world_events = [
 		event_type=ewcfg.event_type_voidhole,
 		str_event_start="You hit a sudden gap in the stone, with a scary looking drop. You see what looks like a trampoline on a building's roof at the bottom. Do you **{}** in?".format(ewcfg.cmd_jump),
 		str_event_end="The wall collapses.",
+	),
+	EwEventDef(
+		event_type=ewcfg.event_type_spookyghost,
+		str_event_start="A fucking **GHOST** flies out of the rock you just hit! And not a slime one, like an actual white-blanket **SCARY GHOST**. Beat the shit out of it!",
+		str_event_end="The ghost flies past you, hopefully getting the beating of its life.",
+	),
+	EwEventDef(
+		event_type=ewcfg.event_type_spookyskeleton,
+		str_event_start="A fucking **SKELETON** emerges from the rock you just hit! You should beat the shit out of it ):< !",
+		str_event_end="The skeleton crumbles to dust, hopefully getting the beating of its life.",
 	)
 ]
 

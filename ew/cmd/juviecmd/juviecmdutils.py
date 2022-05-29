@@ -724,26 +724,21 @@ def create_mining_event(cmd):
     life_states = [ewcfg.life_state_enlisted, ewcfg.life_state_juvenile]
     num_miners = len(mine_district_data.get_players_in_district(life_states=life_states, ignore_offline=True))
 
-    common_event_chance = 0.7  # 7/10
+    common_event_chance = 0.7  # 7/10, not used
     uncommon_event_chance = 0.3  # 3/10
-    rare_event_chance = 0.1 / num_miners  # 1/10 for 1 miner, 1/20 for 2 miners, etc.
+    rare_event_chance = 0.05 / num_miners  #  1/2 usual chance for 2 miners, 1/3 for 3 miners etc.
 
     common_event_triggered = False
     uncommon_event_triggered = False
     rare_event_triggered = False
 
-    # This might seem a bit confusing, so let's run through an example.
-    # The random number is 0.91, and the number of valid miners is 2.
 
-    # 0.91 < (0.6 + 0.05), condition not met
-    # 0.91 < (0.9 + 0.05), condition met, uncommon event used
-
-    if randomn < common_event_chance:  # + (0.1 - rare_event_chance)):
-        common_event_triggered = True
-    else:  # randomn < (common_event_chance + uncommon_event_chance + (0.1 - rare_event_chance)):
+    if randomn < rare_event_chance: # 5% chance, divided by # of players
+        rare_event_triggered = True
+    elif randomn < (uncommon_event_chance + rare_event_chance): # Always 30%
         uncommon_event_triggered = True
-    # else:
-    #	rare_event_triggered = True
+    else:       # 70% - rare_event_chance (usually 5%)
+        common_event_triggered = True 
 
     # common event
     if common_event_triggered:
@@ -789,7 +784,7 @@ def create_mining_event(cmd):
                 id_server=cmd.guild.id,
                 event_type=ewcfg.event_type_voidhole,
                 time_activate=time_now,
-                time_expir=time_now + 10,
+                time_expir=time_now + 15, # should be longer than ratelimit
                 event_props=event_props
             )
         # mine shaft collapse
@@ -820,37 +815,37 @@ def create_mining_event(cmd):
                     event_props=event_props
                 )
 
-    """
     # rare event
     elif rare_event_triggered:
         randomn = random.random()
-
-        # minesweeper
-        if randomn < 1/2:
+        # You beat up a skeleton - get poudrins and monsterbones
+        if randomn < 0.5:
             event_props = {}
+            event_props['id_user'] = cmd.message.author.id
             event_props['poi'] = user_data.poi
             event_props['channel'] = cmd.message.channel.name
             return bknd_worldevent.create_world_event(
-                id_server = cmd.guild.id,
-                event_type = ewcfg.event_type_minesweeper,
-                time_activate = time_now,
-                time_expir = time_now + 60*3,
-                event_props = event_props
+                id_server=cmd.guild.id,
+                event_type=ewcfg.event_type_spookyskeleton,
+                time_activate=time_now,
+                time_expir=time_now + 15,
+                event_props=event_props
             )
-
-        # bubblebreaker
+        # You beat up a ghost - get triple slime and mine ectoplasm
         else:
             event_props = {}
+            event_props['id_user'] = cmd.message.author.id
             event_props['poi'] = user_data.poi
             event_props['channel'] = cmd.message.channel.name
             return bknd_worldevent.create_world_event(
-                id_server = cmd.guild.id,
-                event_type = ewcfg.event_type_bubblebreaker,
-                time_activate = time_now,
-                time_expir = time_now + 60*3,
-                event_props = event_props
+                id_server=cmd.guild.id,
+                event_type=ewcfg.event_type_spookyghost,
+                time_activate=time_now,
+                time_expir=time_now + 15,
+                event_props=event_props
             )
-        """
+
+
 
 
 def gen_scavenge_captcha(n = 0, user_data = None):

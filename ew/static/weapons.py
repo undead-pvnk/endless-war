@@ -225,7 +225,7 @@ def wef_staff(ctn = None):
     conditions = {
         lambda _: 3 <= market_data.clock < 4,  # witching hour
         lambda _: market_data.weather == ewcfg.weather_foggy,
-        lambda _: (market_data.day % 31 == 15 and market_data.clock >= 20) or (market_data.day % 31 == 16 and market_data.clock <= 6),  # moonless night
+        lambda _: ewutils.check_moon_phase(market_data) == ewcfg.moon_new,  # moonless night
         lambda ctn: not ctn.user_data.has_soul,
         lambda ctn: ctn.user_data.get_possession('weapon'),
         lambda ctn: ctn.user_data.poi == ewcfg.poi_id_thevoid,
@@ -1551,6 +1551,8 @@ weapon_list = [
         fn_effect=wef_harpoon,
         classes=[ewcfg.weapon_class_ammo],
         stat=ewcfg.stat_harpoon_kills,
+        price=1000000000, # FISHINGEVENT Billion or bust
+        vendors=[ewcfg.vendor_NMSdealer],
         # YOU EITHER KILL 'EM OR YOU DON'T, BROTHERRRR
         clip_size=1,
         str_brandish="{name} takes out {weapon} and racks their brain for a quote from Moby Dick. They can't think of a quote from Moby Dick."

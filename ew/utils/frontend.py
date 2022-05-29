@@ -474,6 +474,10 @@ def create_death_report(cause = None, user_data = None):
 
     if (cause == ewcfg.cause_poison):  # Response for praying
         deathreport = formatMessage(user_member, "{} couldn't stop guzzling poison. {}".format(user_nick, ewcfg.emote_slimeskull))
+    
+    if (cause == ewcfg.cause_crushing): # Response for crushing a negapoudrin/negaslimeoid core
+        deathreport = "You bit into **NEGASLIME**, dink. Fucking idiot. {}".format(ewcfg.emote_slimeskull)
+        deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
     return (deathreport)
 

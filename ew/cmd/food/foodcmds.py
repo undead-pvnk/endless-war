@@ -125,7 +125,7 @@ async def menu(cmd):
                     value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
 
                 if mother_district_data != None:
-                    if controlling_faction != "":
+                    if controlling_faction != "" and vendor != ewcfg.vendor_NMSdealer: # FISHINGEVENT
                         # prices are halved for the controlling gang
                         if controlling_faction == user_data.faction:
                             value /= 2
@@ -281,6 +281,10 @@ async def order(cmd):
                     else:
                         current_vendor = None
 
+            # FISHINGEVENT - 
+            if current_vendor == ewcfg.vendor_NMSdealer:
+                currency_used = 'Exotic Residue'
+                current_currency_amount = user_data.event_points
 
             if current_vendor is None or len(current_vendor) < 1:
                 response = "Check the {} for a list of items you can {}.".format(ewcfg.cmd_menu, ewcfg.cmd_order)
@@ -316,7 +320,7 @@ async def order(cmd):
 
                 controlling_faction = poi_utils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 
-                if controlling_faction != "":
+                if controlling_faction != "" and vendor != ewcfg.vendor_NMSdealer: # FISHINGEVENT
                     # prices are halved for the controlling gang
                     if controlling_faction == user_data.faction:
                         value /= 2
@@ -390,6 +394,9 @@ async def order(cmd):
                     if currency_used == 'slime':
                         user_data.change_slimes(n=-value, source=ewcfg.source_spending)
 
+                    elif currency_used == 'Exotic Residue': # FISHINGEVENT
+                        user_data.event_points -= value
+
                     if company_data is not None:
                         company_data.recent_profits += value
                         company_data.persist()
@@ -445,7 +452,7 @@ async def order(cmd):
                             if value == 0:
                                 response = "You swipe a {} from the counter at {} and give it to {}.".format(name, current_vendor, target_player_data.display_name)
                             else:
-                                response = "You slam {:,} slime down on the counter at {} for {} and give it to {}.".format(value, current_vendor, name, target_player_data.display_name)
+                                response = "You slam {:,} {} down on the counter at {} for {} and give it to {}.".format(value, currency_used, current_vendor, name, target_player_data.display_name)
 
                             response += "\n\n*{}*: ".format(target_player_data.display_name) + target_data.eat(item_data)
                             target_data.persist()
@@ -455,7 +462,7 @@ async def order(cmd):
                             if value == 0:
                                 response = "You swipe a {} from the counter at {} and eat it right on the spot.".format(name, current_vendor)
                             else:
-                                response = "You slam {:,} slime down on the counter at {} for {} and eat it right on the spot.".format(value, current_vendor, name)
+                                response = "You slam {:,} {} down on the counter at {} for {} and eat it right on the spot.".format(value, currency_used, current_vendor, name)
 
                             user_player_data = EwPlayer(id_user=user_data.id_user)
 

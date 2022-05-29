@@ -48,6 +48,7 @@ CREATE TABLE users (
 	gender varchar(16) NOT NULL DEFAULT 'boi',
     hogtied smallint NOT NULL DEFAULT '0',
     crime bigint NOT NULL DEFAULT '0',
+	event_points bigint NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
@@ -78,6 +79,7 @@ CREATE TABLE markets (
 	horseman_deaths int NOT NULL DEFAULT '0',
 	horseman_timeofdeath int NOT NULL DEFAULT '0',
 	winner varchar(32) NOT NULL DEFAULT '',
+
 	PRIMARY KEY (id_server)
 );
 
