@@ -1420,7 +1420,7 @@ async def bid(cmd):
     elif user_data.poi != ewcfg.poi_id_neomilwaukeestate:
         response = "You can't place bids through your gellphone."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    elif user_data.id_user == int(current_bidder.value):
+    elif str(user_data.id_user) == current_bidder.value:
         response = "You can't bid against yourself, dumbass!"
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
