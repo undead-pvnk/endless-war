@@ -1352,7 +1352,7 @@ cosmetic_items_list = [
         style = "beautiful",
         freshness = 3,
         price = 50000,
-        vendors = ['bodega'],
+        vendors = ['Bodega'],
     ),  
     EwCosmeticItem(
         id_cosmetic = "shorts",
@@ -1363,7 +1363,7 @@ cosmetic_items_list = [
         style = "cool",
         freshness = 3,
         price = 50000,
-        vendors = ['bodega'],
+        vendors = ['Bodega'],
     ),
     EwCosmeticItem(
         id_cosmetic = "sweatpants",
@@ -1374,7 +1374,7 @@ cosmetic_items_list = [
         style = "cute",
         freshness = 3,
         price = 50000,
-        vendors = ['bodega'],
+        vendors = ['Bodega'],
     ),
     EwCosmeticItem(
         id_cosmetic = "hoodie",
@@ -1385,7 +1385,7 @@ cosmetic_items_list = [
         style = "cool",
         freshness = 4,
         price = 50000,
-        vendors = ['bodega'],
+        vendors = ['Bodega'],
     ),
     EwCosmeticItem(
         id_cosmetic = "visorcap",
@@ -1396,7 +1396,7 @@ cosmetic_items_list = [
         style = "smart",
         freshness = 4,
         price = 50000,
-        vendors = ['bodega'],
+        vendors = ['Bodega'],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1408,7 +1408,7 @@ cosmetic_items_list = [
         style = "smart",
         freshness = 2,
         price = 50000,
-        vendors = ['bodega'],
+        vendors = ['Bodega'],
     ),
     EwCosmeticItem(
         id_cosmetic = "suspenders",
@@ -1419,7 +1419,7 @@ cosmetic_items_list = [
         style = "smart",
         freshness = 3,
         price = 50000,
-        vendors = ['bodega'],
+        vendors = ['Bodega'],
     ),
     EwCosmeticItem(
         id_cosmetic = "japaneseschooluniform",
@@ -1430,7 +1430,7 @@ cosmetic_items_list = [
         style = "smart",
         freshness = 2,
         price = 50000,
-        vendors = ['bodega'],
+        vendors = ['Bodega'],
     ),
     EwCosmeticItem(
         id_cosmetic = "punkvest",
@@ -1441,7 +1441,7 @@ cosmetic_items_list = [
         style = "tough",
         freshness = 3,
         price = 50000,
-        vendors = ['bodega'],
+        vendors = ['Bodega'],
     ),
     EwCosmeticItem(
         id_cosmetic = "rabbitheadband",
@@ -1932,7 +1932,7 @@ cosmetic_items_list = [
         style = "tough",
         freshness = 3,
         price = 50000,
-        vendors = ['bodega'],
+        vendors = ['Bodega'],
     ),
     EwCosmeticItem(
         id_cosmetic = "yarmulke",
