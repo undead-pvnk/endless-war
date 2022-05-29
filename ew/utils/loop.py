@@ -893,7 +893,7 @@ async def auction_tick(id_server):
             await auction_renewal(id_server, current_date, relic_date_map)
         else:
             return
-    elif current_date == ewcfg.fisher_day_overtime and current_auction_relic.value != 0:
+    elif current_date == ewcfg.fisher_day_overtime and current_auction_relic.value != "":
         await auction_end(id_server)
 
 
