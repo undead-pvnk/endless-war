@@ -1912,7 +1912,7 @@ smelting_recipe_list = [
             'rippedjeans',
         ],
         ingredients={
-            'jeans',
+            'jeans': 1,
         },
         products=['rippedjeans']
     ),  
