@@ -330,7 +330,7 @@ async def send_message(client, channel, text = None, embed = None, delete_after 
         ewutils.logMsg('Could not message user: {}\n{}'.format(channel, text))
         raise
     except:
-        ewutils.logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))
+        ewutils.logMsg('frontend send_message Failed to send message to channel: {}\n{}'.format(channel, text))
 
 
 """ Simpler to use version of send_message that formats message by default """
