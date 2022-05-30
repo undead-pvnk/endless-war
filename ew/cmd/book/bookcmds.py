@@ -705,10 +705,10 @@ async def browse_zines(cmd):
                         resp_num += 1
 
                 for resp_block in resp_list:
-                    resp_cont.add_channel_response(cmd.message.channel.name, resp_block)
+                    resp_cont.add_channel_response(cmd.message.channel, resp_block)
 
                 # Send the response to the player.
-                resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
+                resp_cont.format_channel_response(cmd.message.channel, cmd.message.author)
 
                 await resp_cont.post(channel=cmd.message.channel)
             else:

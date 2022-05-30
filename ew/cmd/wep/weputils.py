@@ -747,8 +747,8 @@ async def attackEnemy(cmd):
             enemy_data.persist()
             response = "You wrap your wire around {}'s neck...\n**...to no avail! {} breaks free with ease!**".format(
                 enemy_data.display_name, enemy_data.display_name)
-            resp_cont.add_channel_response(cmd.message.channel.name, response)
-            resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
+            resp_cont.add_channel_response(cmd.message.channel, response)
+            resp_cont.format_channel_response(cmd.message.channel, cmd.message.author)
             await resp_cont.post()
 
             user_data = EwUser(member=cmd.message.author)
@@ -981,7 +981,7 @@ async def attackEnemy(cmd):
             response += "\n" + brain.str_kill.format(slimeoid_name=slimeoid.name)
 
         user_data.persist()
-        resp_cont.add_channel_response(cmd.message.channel.name, response)
+        resp_cont.add_channel_response(cmd.message.channel, response)
 
         if enemy_data.enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman and ewcfg.dh_active:
             horseman_deaths = market_data.horseman_deaths
@@ -995,7 +995,7 @@ async def attackEnemy(cmd):
             market_data.horseman_timeofdeath = int(time_now)
             market_data.persist()
 
-            resp_cont.add_channel_response(cmd.message.channel.name, defeat_response)
+            resp_cont.add_channel_response(cmd.message.channel, defeat_response)
 
         user_data = EwUser(member=cmd.message.author)
     else:
@@ -1067,11 +1067,11 @@ async def attackEnemy(cmd):
         if sandbag_mode:
             response += '\n*The dojo master cries out from afar:*\n"If this were a real fight, you would have spent **{}** slime on that attack!"'.format(slimes_spent_sandbag)
 
-        resp_cont.add_channel_response(cmd.message.channel.name, response)
+        resp_cont.add_channel_response(cmd.message.channel, response)
 
     # Add level up text to response if appropriate
     if user_inital_level < user_data.slimelevel:
-        resp_cont.add_channel_response(cmd.message.channel.name, "\n" + levelup_response)
+        resp_cont.add_channel_response(cmd.message.channel, "\n" + levelup_response)
     # Enemy kills don't award slime to the kingpin.
 
     # Persist user data.

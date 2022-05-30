@@ -1432,8 +1432,7 @@ async def enemy_perform_action(id_server):
                         fe_utils.delete_last_message(client, last_messages, ewcfg.enemy_attack_tick_length))
                     resp_cont = None
 
-                elif any([ewcfg.status_evasive_id, ewcfg.status_aiming_id]) not in enemy_statuses and random.randrange(
-                        10) == 0:
+                elif any([ewcfg.status_evasive_id, ewcfg.status_aiming_id]) not in enemy_statuses and random.randrange(10) == 0:
                     resp_cont = random.choice([enemy.dodge, enemy.taunt, enemy.aim])()
                 else:
                     resp_cont = await enemy.kill()
@@ -1811,25 +1810,26 @@ class EwUser(EwUserBase):
 
                 ewutils.weaponskills_clear(id_server=self.id_server, id_user=self.id_user, weaponskill=ewcfg.weaponskill_max_onrevive)
 
-                try:
-                    drop_list = ','.join(map(str, ids_to_drop))
-                    bknd_core.execute_sql_query(
-                        "UPDATE items SET {id_user} = %s WHERE id_item IN({drop_list})".format(
-                            id_user=ewcfg.col_id_user,
-                        drop_list = drop_list
-                        ),
-                        (
-                            [self.poi]
-                        ))
+                if len(ids_to_drop) > 0:
+                    try:
+                        drop_list = ','.join(map(str, ids_to_drop))
+                        bknd_core.execute_sql_query(
+                            "UPDATE items SET {id_user} = %s WHERE id_item IN({drop_list})".format(
+                                id_user=ewcfg.col_id_user,
+                                drop_list = drop_list
+                            ),
+                            (
+                                [self.poi]
+                            ))
 
-                except Exception as e:
-                    ewutils.logMsg('Failed to drop items on death, {}.'.format(e))
+                    except Exception as e:
+                        ewutils.logMsg('Failed to drop items on death, {}.'.format(e))
 
-                item_cache = bknd_core.get_cache(obj_type="EwItem")
-                for id in ids_to_drop:
-                    cache_item = item_cache.get_entry(unique_vals={"id_item": id})
-                    cache_item.update({'id_owner': self.poi})
-                    item_cache.set_entry(data=cache_item)
+                    item_cache = bknd_core.get_cache(obj_type="EwItem")
+                    for id in ids_to_drop:
+                        cache_item = item_cache.get_entry(unique_vals={"id_item": id})
+                        cache_item.update({'id_owner': self.poi})
+                        item_cache.set_entry(data=cache_item)
 
             try:
 
@@ -1883,7 +1883,6 @@ class EwUser(EwUserBase):
         if cause not in explosion_block_list:  # Run explosion after location/stat reset, to prevent looping onto self
             if user_hasCombustion:
                 explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!\n".format(server.get_member(self.id_user).display_name)
-                ewutils.logMsg("")
                 resp_cont.add_channel_response(explode_poi_channel, explode_resp)
 
                 explosion = explode(damage=explode_damage, district_data=explode_district)

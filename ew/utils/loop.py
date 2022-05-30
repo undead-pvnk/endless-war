@@ -3,6 +3,8 @@ import math
 import random
 import time
 import datetime
+import traceback
+import sys
 
 import discord
 
@@ -912,7 +914,7 @@ async def auction_renewal(id_server, current_date, relic_date_map):
     auctionmessage.set_thumbnail(url="https://cdn.discordapp.com/attachments/858397413568151582/977066095288664074/unknown.png")
     auctionmessage.color = fe_utils.discord.Colour(int("00ff00", 16))
     auctionmessage.description = "**BAILEY**"
-    
+
     # If nobody has bidded for the current relic, it's probably day 1 of the event. If there is a bid, it's day 2-7.
     if bidder != 0:
         # Give the Bidder their item
@@ -944,7 +946,7 @@ async def auction_renewal(id_server, current_date, relic_date_map):
 
         await fe_utils.send_message(client, channel, embed=auctionmessage2)
         await asyncio.sleep(20)
-        
+
         # Create content of the new relic message
         field_1_title = "NEW RELIC AVAILABLE"
         field_1_text = "That's right, y'all! Yet another item is comin' outta the backseat. Today's item is... a **{}**. I dunno where it comes from, to be honest. But the person who gives me the most Exotic Residue for it by the end of tonight is getting it shipped to their grimy hands.".format(newitemprops.get('relic_name'))
@@ -1517,4 +1519,5 @@ async def clock_tick_loop(id_server = None, force_active = False):
                     ewutils.logMsg("Finished clock tick.")
                 await asyncio.sleep(60)
     except Exception as e:
+        traceback.print_exc(file=sys.stdout)
         ewutils.logMsg('An error occurred in the scheduled slime market update task: {}. Fix that.'.format(e))

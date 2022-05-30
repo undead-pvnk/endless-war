@@ -91,7 +91,6 @@ def gen_data_text(
         id_user = None,
         id_server = None,
         display_name = None,
-        channel_name = None
 ):
     user_data = EwUser(
         id_user=id_user,

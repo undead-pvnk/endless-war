@@ -406,7 +406,6 @@ async def data(cmd):
             id_user=member.id,
             id_server=member.guild.id,
             display_name=member.display_name,
-            channel_name=cmd.message.channel.name
         )
 
         response += "\n\nhttps://rfck.app/stats/player.html?pl={}".format(member.id)
@@ -1628,7 +1627,7 @@ async def help(cmd):
             "precision", "incendiary", "explosive",
         ]
 
-        if poi is None:
+        if poi is None or cmd.message.guild is None:
             # catch-all response for when user isn't in a sub-zone with a help response
             response = ewcfg.generic_help_response
 

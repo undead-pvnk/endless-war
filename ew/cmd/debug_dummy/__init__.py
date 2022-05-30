@@ -1,4 +1,5 @@
 from ew.static import cfg as ewcfg
+from . import debugcmds
 from .debugcmds import *
 from .debugutils import *
 
