@@ -1449,7 +1449,7 @@ cosmetic_items_list = [
     ),
     EwCosmeticItem(
         id_cosmetic = "amateurartistpin",
-        str_name = "amateurartistpin",
+        str_name = "Amateur Artist Pin",
         str_desc = "A pin given to you by the Curator for your a great work of artistry you've made. Good for you, I guess.",
         str_onadorn = "You stick the tiny amateur archeologist pin on.",
         str_unadorn = "You take the tiny amateur archeologist pin off.",
