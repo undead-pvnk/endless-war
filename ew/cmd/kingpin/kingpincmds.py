@@ -446,7 +446,7 @@ async def awardart(cmd):
             item_props=item_props
         )
         # Create the extra response text
-        extra_response_text = ", as well as a {},".format(item_props.get('cosmetic_name'))
+        extra_response_text = ", as well as an {},".format(item_props.get('cosmetic_name'))
 
     user_data.persist()
 
