@@ -2593,9 +2593,8 @@ async def turnin(cmd):
         if point_gain > 0:
             user_data.event_points += point_gain
             total_points = EwGamestate(id_server=cmd.guild.id, id_state='totaleventpoints')
-            if total_points.value == '':
-                total_points.value = 0
-            total_points.value = int(total_points.value) + point_gain
+
+            total_points.number += point_gain
             total_points.persist()
 
             # Take away the used needles

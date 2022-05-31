@@ -495,7 +495,7 @@ async def award_fish(fisher, cmd, user_data):
                 inhabitant_data.change_slimes(n=-slime_gain)
                 user_data.event_points += exotic_residue
                 gamestate = EwGamestate(id_server=cmd.guild.id, id_state='totaleventpoints')
-                gamestate.bit += exotic_residue
+                gamestate.number += exotic_residue
                 gamestate.persist()
                 inhabitant_data.persist()
                 fisher.stop()
@@ -518,7 +518,7 @@ async def award_fish(fisher, cmd, user_data):
             if fisher.pier.pier_type == ewcfg.fish_slime_saltwater:
                 user_data.event_points += exotic_residue
                 gamestate = EwGamestate(id_server=cmd.guild.id, id_state='totaleventpoints')
-                gamestate.bit += exotic_residue
+                gamestate.number += exotic_residue
                 gamestate.persist()
 
                 response = "You reel in a {fish}! {flavor} It's {length} inches long! You grab hold and wring {slime:,} slime and {exoticresidue:,} exotic residue from it. " \
