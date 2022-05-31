@@ -481,6 +481,7 @@ CREATE TABLE gamestates (
     id_state varchar(32) NOT NULL,
     state_bit smallint NOT NULL DEFAULT '0',
     value varchar(255) NOT NULL DEFAULT '',
+    number bigint NOT NULL DEFAULT '0',
 
     PRIMARY KEY (id_server, id_state)
 );

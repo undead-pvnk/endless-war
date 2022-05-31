@@ -86,7 +86,7 @@ async def post_leaderboards(client = None, server = None):
 
     gamestate = EwGamestate(id_server=server.id, id_state='totaleventpoints')
 
-    total_residue = "{} ▓▓▓▓▓ CITYWIDE SPICE FLOW ▓▓▓▓▓ {}\n{} `{:_>15} | NLACakaNM`".format(ewcfg.emote_slimeshot, ewcfg.emote_slimeshot, ewcfg.emote_nlacakanm, gamestate.bit)
+    total_residue = "{} ▓▓▓▓▓ CITYWIDE SPICE FLOW ▓▓▓▓▓ {}\n{} `{:_>15} | NLACakaNM`".format(ewcfg.emote_slimeshot, ewcfg.emote_slimeshot, ewcfg.emote_nlacakanm, gamestate.number)
     resp_cont.add_channel_response(leaderboard_channel, total_residue)
 
     topfishers = make_userdata_board(server=server.id, category=ewcfg.col_event_points, title=ewcfg.leaderboard_fishers)
