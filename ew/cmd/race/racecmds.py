@@ -220,7 +220,7 @@ async def rattle(cmd):
                 ]
                 # ultra rare rattle
                 elif roll > 0:
-                    lonelyskelly_response = "https://youtu.be/RojReJ7bzCw"
+                    lonelyskelly_response = "https://youtu.be/TFwXbp9bLlY"
                 response = random.choice(lonelyskelly_response) # thanks zug
     else:
         response = "You people are not allowed to do that."
