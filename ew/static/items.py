@@ -1888,6 +1888,11 @@ item_list = [
         str_desc="A party popper! Hell yeah!",
         context='partypopper',
         acquisition=ewcfg.acquisition_smelting
+    ),
+    EwGeneralItem(
+        id_item=ewcfg.item_id_ghostlycloth,
+        str_name="Ghostly Cloth",
+        str_desc="A smooth piece of white fabric. It is almost translucent, and is so light it feels like its almost not there.",
     )
 ]
 # item_list += ewdebug.debugitem_set

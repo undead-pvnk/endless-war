@@ -979,6 +979,7 @@ cmd_slimefest = cmd_prefix + 'slimefest'
 cmd_identify = cmd_prefix + 'identify'
 cmd_startshift = cmd_prefix + 'startshift'
 cmd_serve = cmd_prefix + 'serve'
+cmd_sow_cloth = cmd_prefix + 'sowcloth'
 
 cmd_preserve = cmd_prefix + 'preserve'
 cmd_stink = cmd_prefix + 'stink'
@@ -2598,6 +2599,7 @@ vendor_NMSdealer = "Bailey the NMS Drug-Guy"
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
+item_id_ghostlycloth = 'ghostlycloth'
 item_id_monstersoup = 'monstersoup'
 item_id_doublestuffedcrust = 'doublestuffedcrust'
 item_id_quadruplestuffedcrust = 'quadruplestuffedcrust'

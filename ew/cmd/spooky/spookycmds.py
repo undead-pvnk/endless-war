@@ -651,12 +651,12 @@ async def startshift(cmd):
 			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 			await asyncio.sleep(5)
 			
-			while funnything == True:
+			while True:
 				if chef.prompts > 0:
 					response = random.choice(cookingresponses)
 					await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 					chef.serve = True
-					await asyncio.sleep(random.randrange(5, 8))
+					await asyncio.sleep(random.randrange(4, 7))
 					if chef.serve == True:
 						response = "You messed up and dwopped the dish ಥ_ಥ! Your manager angwily shoos you away into the bathwoom to cwean up and takes cawe of the guest. You eawned no moneyz!"
 						await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -696,3 +696,27 @@ async def serve(cmd):
 		chef.serve = False
 		response = "You gwab a dish and..."
 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+async def sow_cloth(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    response = ""
+    if user_data.life_state != ewcfg.life_state_corpse:
+        response = "You dry to tug at your flesh, but it won't come free!"
+    elif user_data.slimes >= -100000:
+        response = "Using your form to create cloth would probably destroy you... Get more antislime!"
+    else:
+        cloth_data = next(i for i in static_items.item_list if i.id_item == ewcfg.item_id_ghostlycloth)
+        bknd_item.item_create(
+            item_type=ewcfg.it_item,
+            id_user=user_data.id_user,
+            id_server=cmd.guild.id,
+            item_props={
+                'id_item': cloth_data.id_item,
+                'item_name': cloth_data.str_name,
+                'item_desc': cloth_data.str_desc,
+            }
+        )
+        user_data.change_slimes(n=-(-100000), source=ewcfg.source_spending)
+        user_data.persist()
+        response = "You rip a sheet of your ghostly form free, feeling the essence ripped from your very being. using your teeth to refine it into a fine white cloth."
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

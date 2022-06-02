@@ -64,6 +64,8 @@ cmd_map = {
 
     # ghosts can serve food at the maid cafe (¬‿¬)
     ewcfg.cmd_serve: spookycmds.serve,
+    
+    ewcfg.cmd_sow_cloth: spookycmds.sow_cloth,
 }
 if ewcfg.dh_active and ewcfg.dh_stage == 2:
     cmd_map[ewcfg.cmd_sacrifice] = spookycmds.sacrifice
