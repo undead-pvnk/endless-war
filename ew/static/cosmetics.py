@@ -1467,7 +1467,54 @@ cosmetic_items_list = [
         str_onbreak = "FREEDOM! The socks rip apart!",
         durability = 2500000,
         freshness = 10,
-    )
+    ),
+    EwCosmeticItem(
+		id_cosmetic = "maidoutfit",
+        str_name = "Maid outfit",
+        str_desc = "A cute little maid outfit! You look so cute with the little skirt and the little head thing that you don't remember the name of... You would rather not remember the things you had to do to get this outfit.",
+        str_onadorn = "You pull on the maid outfit, ready to get to work!",
+        str_unadorn = "You quickly pull off the outfit. \"Mom, I can explain!\" you shout as she runs away in shame.",
+        durability = 2500000,
+        style = "cute",
+        freshness = 7,
+        price = 50000,
+        vendors = ['Ghost Maid Cafe']
+    ),
+    EwCosmeticItem(
+        id_cosmetic = "cigaretteholder",
+        str_name = "Cigarette Holder",
+        str_desc = "A long piece of... stick, or something, with a cigarette spot on the end. You are too unrefined to know the specifics but DANG you look pretty holding it. It could put someone's eye out!",
+        str_onadorn = "You stick the cigarette holder into your mouth, inhaling deeply before blowing out a puff of smoke.",
+        str_unadorn = "you remove the cigarette holder from your mouth and store it in your pocket.",
+        durability = 2500000,
+        style = "beautiful",
+        freshness = 5,
+        price = 50000,
+        vendors = ['Ghost Maid Cafe']
+    ),
+    EwCosmeticItem(
+        id_cosmetic = "widebrimmedhat",
+        str_name = "Wide Brimmed Hat",
+        str_desc = "This hat cost you so many hours, you might as well be the lord of this city! Better not let the patrons see you in it though... They keep asking you to... Crush them...",
+        str_onadorn = "You place the wide brimmed hat on your head, the edge flopping over one eye sexily. Oh yeah, lets get this ~~blood~~ bread.",
+        str_unadorn = "You remove the wide brimmed hat, setting it down. You feel shorter now.",
+        durability = 2500000,
+        style = "beautiful",
+        freshness = 8,
+        price = 1000000,
+        vendors = ['Ghost Maid Cafe']
+    ),
+    EwCosmeticItem(
+        id_cosmetic = "drapeddress",
+        str_name = "Draped Evening Dress",
+        str_onadorn = "You slide into the beautiful dress... you are now absolutely breathtaking. Men (and women) bow before you, almost trying to throw themselves under your feet. It's kinda annoying.",
+        str_unadorn = "You cannot stand it any longer! You tear off the dress, walking around people in this is just too difficult!",
+        durability = 2500000,
+        style = "beautiful",
+        freshness = 10,
+        price = 5000000,
+        vendors = ['Ghost Maid Cafe'], # nyaa~
+    ),
 ]
 
 
