@@ -671,7 +671,7 @@ async def startshift(cmd):
 						await asyncio.sleep(random.randrange(3, 6))
 				else:
 					response = "You finish up youw shift and punch out! You wost {} slime!!!".format(chef.reward)
-					user_data.change_slimes(n=-reward, source=ewcfg.source_haunting)
+					user_data.change_slimes(n=-reward)
 					market_data.negaslime -= reward
 					user_data.persist
 					market_data.persist
