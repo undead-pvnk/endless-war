@@ -166,6 +166,8 @@ poi_id_clinicofslimoplasty = "clinicofslimoplasty"
 poi_id_thebreakroom = "thebreakroom"
 poi_id_underworld = "underworld"
 poi_id_themuseum = "themuseum"
+poi_id_ghostcafe = "ghostmaidcafe"
+
 
 poi_id_themoon = "themoon"
 
@@ -975,6 +977,8 @@ cmd_rejuvenate = cmd_prefix + 'rejuvenate'
 cmd_win = cmd_prefix + 'win'
 cmd_slimefest = cmd_prefix + 'slimefest'
 cmd_identify = cmd_prefix + 'identify'
+cmd_startshift = cmd_prefix + 'startshift'
+cmd_serve = cmd_prefix + 'serve'
 
 cmd_preserve = cmd_prefix + 'preserve'
 cmd_stink = cmd_prefix + 'stink'
