@@ -625,3 +625,72 @@ async def favor(cmd):
         favor = ewstats.get_stat(user=user_data, metric='sacrificerate')
         response = "You have {} favor with the ancient eldritch gods.".format(favor)
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+async def startshift(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	if user_data.poi != 'ghostmaidcafe':
+		response = "Sowwy, you can't stawt cooking unwess you'we at the maid cafe! (✿◡‿◡)"
+	elif user_data.life_state != ewcfg.life_state_corpse:
+		response = "Sowwy, you awen't enough of a degenewate to do that. UwU💝"
+	else:
+		if cmd.message.author.id not in chefs.keys():
+			chefs[cmd.message.author.id] = EwChef()
+		chef = chefs[cmd.message.author.id]
+
+		if chef.cooking == True:
+			response = "You are already on the clock! You might boil the milk if you try to do more dishes!"
+		else:
+			market_data = EwMarket(id_server=cmd.guild.id)
+			chef.cooking = True
+			chef.prompts = 1 #random.randrange(1, 50)
+			reward = chef.prompts * random.randrange(20, 50)
+			response = "You punch your time card and get ready to serve!"
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+			await asyncio.sleep(5)
+			
+			while funnything == True:
+				if chef.prompts > 0:
+					response = random.choice(cookingresponses)
+					await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+					chef.serve = True
+					await asyncio.sleep(random.randrange(5, 8))
+					if chef.serve == True:
+						response = "You messed up and dwopped the dish ಥ_ಥ! Your manager angwily shoos you away into the bathwoom to cwean up and takes cawe of the guest. You eawned no moneyz!"
+						await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+						chef.stop()
+						chef.cooking = False
+						user_data.persist
+						break
+					else:
+						response = "you slide the dish over to the customer! nice job!"
+						await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+						chef.prompts -= 1
+						await asyncio.sleep(random.randrange(3, 6))
+				else:
+					response = "You finish up youw shift and punch out! You wost {} slime!!!".format(chef.reward)
+					user_data.change_slimes(n=-reward, source=ewcfg.source_haunting)
+					market_data.negaslime -= reward
+					user_data.persist
+					market_data.persist
+					chef.cooking = False
+					break
+					
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+async def serve(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	if cmd.message.author.id not in chefs.keys():
+		chefs[cmd.message.author.id] = EwChef()
+	chef = chefs[cmd.message.author.id]
+	if user_data.poi != 'ghostmaidcafe':
+		response = "Sowwy, you can't stawt cooking unwess you'we at the maid cafe! (✿◡‿◡)"
+	elif user_data.life_state != ewcfg.life_state_corpse:
+		response = "Sowwy, you awen't enough of a degenewate to do that. UwU💝"
+	elif chef.serve != True:
+		response = "No one is hewe... (┬┬﹏┬┬)"
+	else:
+		chef.serve = False
+		response = "You gwab a dish and..."
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
