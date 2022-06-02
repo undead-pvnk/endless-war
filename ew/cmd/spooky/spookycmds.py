@@ -1,6 +1,7 @@
 import random
 import re
 import time
+import asyncio
 
 from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
@@ -22,6 +23,7 @@ from ew.utils.item import EwItem
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
+from spookyutils import chefs, EwChef
 try:
     from ew.cmd.debugr import debug13
 except:
