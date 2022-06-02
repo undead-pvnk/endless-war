@@ -45,9 +45,7 @@ async def set_race(cmd):
             selected_race = ewcfg.defined_races.get(desired_race)
 
             #if race found in dictionary, set race
-            if desired_race == ewcfg.race_clown and user_data.faction != ewcfg.faction_rowdys:
-                response = "Only hot-blooded, reckless ROWDYS can become CLOWNS. !ENLIST ROWDYS MF'ERRRRRRRRRRRRRRRR !THRASH !THRASH !THRASH"
-            elif selected_race != None:
+            if selected_race != None:
                 response = selected_race.get("acknowledgement_str").format(cmd = selected_race.get("racial_cmd"))
 
                 # only set the cooldown if the user is switching race, rather than setting it up for the first time
