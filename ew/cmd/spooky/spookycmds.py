@@ -29,6 +29,8 @@ try:
 except:
     from ew.cmd.debugr_dummy import debug13
 
+cookingresponses = ['A fat man slams his fist down, demanding his chicken nuggies!\nquick! **!serve** !', 'A truly fashionable man, wearing a kimono, slides up to the bar and asks you for a drink.\nquick! **!serve**', 'A girl with a "Ghots FTW" shirt demands some authentic quizie!\nQuick! **!serve**!!!', 'A killer with four lip piercings slams their slime on the counter! They want a big ass cake! **!serve**', 'Past president Ronald Raegan demands some nice ghost pie! **!serve**']
+
 async def negapool(cmd):
     # Add persisted negative slime.
     market_data = EwMarket(id_server=cmd.guild.id)
