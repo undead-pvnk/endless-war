@@ -631,7 +631,7 @@ async def favor(cmd):
 async def startshift(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
-	if user_data.poi != 'ghostmaidcafe':
+	if user_data.poi != 'ghostmaidcafe' or poi_static.chname_to_poi.get(cmd.message.channel.name).id_poi != 'ghostmaidcafe':
 		response = "Sowwy, you can't stawt cooking unwess you'we at the maid cafe! (✿◡‿◡)"
 	elif user_data.life_state != ewcfg.life_state_corpse:
 		response = "Sowwy, you awen't enough of a degenewate to do that. UwU💝"
@@ -656,7 +656,7 @@ async def startshift(cmd):
 					response = random.choice(cookingresponses)
 					await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 					chef.serve = True
-					await asyncio.sleep(random.randrange(4, 7))
+					await asyncio.sleep(random.randrange(3, 6))
 					if chef.serve == True:
 						response = "You messed up and dwopped the dish ಥ_ಥ! Your manager angwily shoos you away into the bathwoom to cwean up and takes cawe of the guest. You eawned no moneyz!"
 						await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -668,7 +668,7 @@ async def startshift(cmd):
 						response = "you slide the dish over to the customer! nice job!"
 						await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 						chef.prompts -= 1
-						await asyncio.sleep(random.randrange(3, 6))
+						await asyncio.sleep(random.randrange(5, 9))
 				else:
 					response = "You finish up youw shift and punch out! You wost {} slime!!!".format(chef.reward)
 					user_data.change_slimes(n=-reward)
