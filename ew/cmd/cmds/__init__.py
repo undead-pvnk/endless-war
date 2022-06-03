@@ -46,6 +46,7 @@ cmd_map = {
     ewcfg.cmd_jam: cmdcmds.jam,
     ewcfg.cmd_stunt: cmdcmds.stunt,
     ewcfg.cmd_stuntalt1: cmdcmds.stunt,
+    ewcfg.cmd_stuntalt2: cmdcmds.stunt,
 
     # Show the total of positive slime in the world.
     ewcfg.cmd_endlesswar: cmdcmds.endlesswar,
