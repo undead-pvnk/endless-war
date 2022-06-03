@@ -1754,7 +1754,64 @@ smelting_recipe_list = [
         },
         products=['ectocooler']
     ),
-
+    EwSmeltingRecipe(
+        id_recipe="maidoutfit",
+        str_name = "Maid outfit",
+        alias=[
+            'maid suit',
+            'maid dress',
+            'maid outfit'
+        ],
+        ingredients = {
+            ewcfg.item_id_ghostlycloth : 5,
+            ewcfg.item_id_negapoudrin : 1,
+            ewcfg.item_id_cute_material : 2
+        },
+        products=['maidoutfit']
+    ),
+    EwSmeltingRecipe(
+        id_recipe = "cigaretteholder",
+        str_name = "Cigarette Holder",
+        alias =[
+            'cigholder',
+            'cighold',
+            'cigstickonastick'
+        ],
+        ingredients={
+            'cigarette': 1,
+            ewcfg.item_id_stick: 1
+        },
+        products=['cigaretteholder']
+    ),
+    EwSmeltingRecipe(
+        id_recipe = "widebrimmedhat",
+        str_name ='Wide Brimmed Hat',
+        alias = [
+            'vampirehat',
+            'sunhat',
+            'moonhat'
+        ],
+        ingredients = {
+            ewcfg.item_id_ghostlycloth: 3,
+            ewcfg.item_id_blacklimeade : 2,
+        },
+        products=['widebrimmedhat']
+    ),
+    EwSmeltingRecipe(
+        id_recipe = 'drapeddress',
+        str_name = 'Draped Evening Dress',
+        alias = [
+            'bigdress',
+            'drapeddress',
+            'eveningdress',
+        ],
+        ingredients = {
+            ewcfg.item_id_ghostlycloth : 4,
+            ewcfg.item_id_negapoudrin : 1,
+            ewcfg.item_id_faggot : 1
+        },
+        products = ['drapeddress']
+    )
 ]
 
 
