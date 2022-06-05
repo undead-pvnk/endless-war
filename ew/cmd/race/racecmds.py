@@ -169,10 +169,15 @@ async def rattle(cmd):
                 " a little bit too hard. Oof ouch owie.",
                 " so viciously they actually get offended.",
                 " in an attempt to socialize, but they don't think you should.",
-                ", inviting them to have a bad time." #blame loom
+                ", inviting them to have a bad time.", #blame loom
+                ", coaxing the skeleton within to become without.",
+                ", assuring them it's too late.",
+                ", wondering if they know who the girl next door is, living in the haunted mansion.",
+                " to assure them that this is, in fact, Halloween."
             ]
             response = random.choice([ # thanks zug
-                "You rattle your bones at {}{}".format(cmd.mentions[0].display_name, random.choice(agroskell_response)),
+                "You start removing ribs and throwing them at {}. Rib fight!".format(cmd.mentions[0].display_name),
+                "You rattle your bones at {}{}".format(cmd.mentions[0].display_name, random.choice(agroskelly_response)),
                 "You have a bone to pick with {}.".format(cmd.mentions[0].display_name) # blame org
             ])
         # rattle alone
@@ -200,7 +205,9 @@ async def rattle(cmd):
                     "You rib with the fellas. Good bants all 'round.",
                     "You rib with the ladies, heheh. What, what did I say wrong?", # blame ebola
                     "You rib with the non-b folk. A healthy mix of people with and without a sense of humor.",
-                    "You spook yourself with how effectively you rattle your bones."
+                    "You spook yourself with how effectively you rattle your bones.",
+                    "You play a somber tune on your ribcage, fondly remembering the last Double Halloween.",
+                    "You shiver loudly as you remember the cold of the catacombs."
                 ]
             # rare rattles
             elif roll > 1:
@@ -217,6 +224,7 @@ async def rattle(cmd):
                 lonelyskelly_response = [
                     "You rattle your bones so aggressively, you collapse into a pile of bones. It takes a second for you to reassemble yourself",
                     "You successfully remove {} bone{}before collapsing{}".format(bones, insult1, insult2), # blame ebola
+                    "You remove your head before entering a nearby bowling alley."
                 ]
                 # ultra rare rattle
                 elif roll > 0:
