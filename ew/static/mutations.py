@@ -551,7 +551,7 @@ if the_month == 6: # June - pride month
         str_describe_other="They're **Gay**.",
         str_acquire="You're gay now.",
         tier=1,
-        str_transplant="Dr. Dusttrap sits down and has a frank conversation with you. After a few quizzes on Google, a thorough analysis of your dating history, and a one pamphlet, you find yourself screaming \"I'm a homosexual!\" You have developed the mutation **Gay**. You're gay.",
+        str_transplant="Dr. Dusttrap sits down and has a frank conversation with you. After a few quizzes on Google, a thorough analysis of your dating history, and a pamphlet, you find yourself screaming \"I'm a homosexual!\" You have developed the mutation **Gay**. You're gay.",
     ))
 
 mutations_map = {}
