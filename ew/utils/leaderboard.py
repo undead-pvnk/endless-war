@@ -84,14 +84,6 @@ async def post_leaderboards(client = None, server = None):
         topfavor = make_statdata_board(server=server.id, category='sacrificerate', title =ewcfg.leaderboard_sacrificial)
         resp_cont.add_channel_response(leaderboard_channel, topfavor)
 
-    gamestate = EwGamestate(id_server=server.id, id_state='totaleventpoints')
-
-    total_residue = "{} ▓▓▓▓▓ CITYWIDE SPICE FLOW ▓▓▓▓▓ {}\n{} `{:_>15} | NLACakaNM`".format(ewcfg.emote_slimeshot, ewcfg.emote_slimeshot, ewcfg.emote_nlacakanm, gamestate.number)
-    resp_cont.add_channel_response(leaderboard_channel, total_residue)
-
-    topfishers = make_userdata_board(server=server.id, category=ewcfg.col_event_points, title=ewcfg.leaderboard_fishers)
-    resp_cont.add_channel_response(leaderboard_channel, topfishers)
-
     await resp_cont.post()
 
     ewutils.logMsg("...finished leaderboard calcs.")
@@ -696,10 +688,6 @@ def board_header(title):
 
     elif title == ewcfg.leaderboard_kingpindonated:
         emote = "👑"
-        bar += " "
-
-    elif title == ewcfg.leaderboard_fishers: # FISHINGEVENT
-        emote = ewcfg.emote_tfwslime
         bar += " "
 
     if emote == None and emote2 == None:

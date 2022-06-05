@@ -125,7 +125,7 @@ async def menu(cmd):
                     value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
 
                 if mother_district_data != None:
-                    if controlling_faction != "" and vendor != ewcfg.vendor_NMSdealer: # FISHINGEVENT
+                    if controlling_faction != "":
                         # prices are halved for the controlling gang
                         if controlling_faction == user_data.faction:
                             value /= 2
@@ -281,11 +281,6 @@ async def order(cmd):
                     else:
                         current_vendor = None
 
-            # FISHINGEVENT - 
-            if current_vendor == ewcfg.vendor_NMSdealer:
-                currency_used = 'Exotic Residue'
-                current_currency_amount = user_data.event_points
-
             if current_vendor is None or len(current_vendor) < 1:
                 response = "Check the {} for a list of items you can {}.".format(ewcfg.cmd_menu, ewcfg.cmd_order)
 
@@ -320,7 +315,7 @@ async def order(cmd):
 
                 controlling_faction = poi_utils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 
-                if controlling_faction != "" and vendor != ewcfg.vendor_NMSdealer: # FISHINGEVENT
+                if controlling_faction != "":
                     # prices are halved for the controlling gang
                     if controlling_faction == user_data.faction:
                         value /= 2
@@ -393,9 +388,6 @@ async def order(cmd):
 
                     if currency_used == 'slime':
                         user_data.change_slimes(n=-value, source=ewcfg.source_spending)
-
-                    elif currency_used == 'Exotic Residue': # FISHINGEVENT
-                        user_data.event_points -= value
 
                     if company_data is not None:
                         company_data.recent_profits += value

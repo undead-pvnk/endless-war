@@ -1,5 +1,4 @@
 import time
-import datetime
 import random
 from copy import deepcopy
 
@@ -20,17 +19,14 @@ from ew.static.fish import fish_map
 from ew.static import vendors
 try:
     from ew.static.rstatic import relic_map
-    from ew.utils.rutils import auction_relic_date_map
 except:
     from ew.static.rstatic_dummy import relic_map
-    from ew.utils.rutils_dummy import auction_relic_date_map
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import market as market_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
-from ew.utils import item as itm_utils
 
 try:
     import ew.static.rstatic as relic_static
@@ -1405,124 +1401,6 @@ async def cancel_trade(cmd):
         response = "You're not trading with anyone right now."
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-
-# FISHINGEVENT - auctionnnnn babyyyyy
-async def bid(cmd):
-    user_data = EwUser(member = cmd.message.author)
-    current_bidder = EwGamestate(id_server=cmd.guild.id, id_state='currentbidder')
-    current_bid = EwGamestate(id_server=cmd.guild.id, id_state='currentbid')
-
-    # Player has to be at NMS and can't be dead or already the highest bid.
-    if user_data.life_state == ewcfg.life_state_corpse:
-        response = "Corpses can't bid on any auctions, you ghastly freak."
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    elif user_data.poi != ewcfg.poi_id_neomilwaukeestate:
-        response = "You can't place bids through your gellphone."
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    elif str(user_data.id_user) == current_bidder.value:
-        response = "You can't bid against yourself, dumbass!"
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-    # PRESENT DAY
-    # PRESENT TIME
-    current_date = datetime.date.today()
-
-    # Check if it's a day of the event.
-    if current_date in auction_relic_date_map:
-        # Check if the player specified a bid
-        if cmd.tokens_count > 1:
-            bid = ewutils.getIntToken(tokens=cmd.tokens, allow_all=False)
-
-            if bid > user_data.event_points:
-                response = "You don't have that much Exotic Residue to bid!"
-            else:
-                # Check if the bid is larger than the current bid
-                if bid > current_bid.bit:
-
-                    response = "You give Bailey {:,} Exotic Residue. He happily takes it and fiddles on his gellphone for a second.\n\"Thanks for the ER, kid! I'll keep it here in case someone comes by with some more. You're the new HIGHEST BIDDER, yo.\"".format(bid)
-
-                    # Give the old highest bidder their Exotic Residue back
-                    if current_bidder.value != '':
-                        ex_bidder = EwUser(id_user=int(current_bidder.value), id_server=user_data.id_server)
-                        ex_bidder.event_points += current_bid.bit
-                        ex_bidder.persist()
-
-                    # Create Slime Social Media Auction post
-                    # Create the embed and give it its character flavor text.
-                    auctionmessage = fe_utils.discord.Embed()
-                    auctionmessage.set_thumbnail(url="https://cdn.discordapp.com/attachments/858397413568151582/977066095288664074/unknown.png")
-                    auctionmessage.color = fe_utils.discord.Colour(int("79a853", 16))
-                    auctionmessage.description = "**BAILEY**"
-
-                    # Create content of the message
-                    field_1_title = "NEW BID OF {bid} EXOTIC RESIDUE".format(user_data_id=user_data.id_user, bid=bid)
-                    if current_bidder.value != '':
-                        field_1_text = random.choice([
-                            "<@!{user_data_id}> just gave me **{bid:,}** Exotic Residue. Sick, right? I can fit tonza more Exotic Residue in my trunk, though, so don't forget to gimme some more, haha! That knocks <@{ex_bidder_id}> outta the race for now. I'll ship your ER back, bro!".format(user_data_id=user_data.id_user, bid=bid, ex_bidder_id=ex_bidder.id_user),
-                            "<@!{user_data_id}> just gave me **{bid:,}** Exotic Residue. That knocks <@{ex_bidder_id}> outta the race for now. If you have any more drugs, make sure to pass 'em my way! And make sure cops don't get on auctionupdatez.com, this place has my full name on it.".format(user_data_id=user_data.id_user, bid=bid, ex_bidder_id=ex_bidder.id_user),
-                            "<@!{user_data_id}> just gave me **{bid:,}** Exotic Residue, all stashed in my car. It actually doesn't smell that bad, y'know? I got an air freshener thingy at the Bazaar that makes it smell like, like, uh, pine-y tree sorta stuff. Like my pa's pickup! If the air conditioning worked it'd probs smell better, tho. Oh, and <@{ex_bidder_id}> is no longer the bidder now. I'll ship your ER back, bro!".format(user_data_id=user_data.id_user, bid=bid, ex_bidder_id=ex_bidder.id_user),
-                            "<@!{user_data_id}> just gave me **{bid:,}** Exotic Residue. Have you ever tried Exotic Residue? Shit is NOXIOUS. I've gotta dilute it to such insane levels just to make sure clients don't have to !revive just to buy from me again. Unless that's what they want, in which case it's pretty good at its job. Oh, and <@{ex_bidder_id}>, make sure you don't take all the ER I'm giving back in one place!".format(user_data_id=user_data.id_user, bid=bid, ex_bidder_id=ex_bidder.id_user),    
-                            "<@!{user_data_id}> just gave me **{bid:,}** Exotic Residue. I think my trunk's probably gonna burst at this point, y'all are giving me so much residue. That's not a bad thing though! That knocks <@{ex_bidder_id}> outta the race for now. I'll ship your ER back, bro!".format(user_data_id=user_data.id_user, bid=bid, ex_bidder_id=ex_bidder.id_user),
-                            "<@!{user_data_id}> just gave me **{bid:,}** Exotic Residue. Which is TURNT UP. Thank you, seriously. I'm gonna have so much slime by the time all of this is distributed. You're doing me a massive favor! Oh, and that knocks <@{ex_bidder_id}> outta the race for now. I'll ship your ER back, bro!".format(user_data_id=user_data.id_user, bid=bid, ex_bidder_id=ex_bidder.id_user)
-                        ])
-                    else:
-                        field_1_text = "<@!{user_data_id}> just gave me {bid} Exotic Residue. Sick, right? That's the first bid for the day, so, like, get me more Exotic Residue y'all. Haha!".format(user_data_id=user_data.id_user, bid=bid)
-                    auctionmessage.add_field(name=field_1_title, value=field_1_text)
-                    
-                    # Create footer for time remaining in the auction
-                    present = datetime.datetime.now()
-                    current_hour = int(present.strftime("%H"))
-                    current_minute = int(present.strftime("%M")) + (current_hour * 60) 
-                    minutesleft = 1440 - current_minute # this is so bad 
-                    hourdigit = minutesleft // 60
-                    minutesdigit = minutesleft % 60
-                    footermessage = "{}h:{}m left in today's auction".format(hourdigit, minutesdigit)
-                    auctionmessage.set_footer(text="{}".format(footermessage))
-
-                    # Send the message
-                    channel = fe_utils.get_channel(server=cmd.guild, channel_name=ewcfg.channel_auctionupdatez)
-                    await fe_utils.send_message(cmd.client, channel, embed=auctionmessage)
-
-                    # Take the player's Exotic Residue and set their bid
-                    current_bid.bit = bid
-                    current_bidder.value = user_data.id_user
-                    user_data.event_points -= bid
-                    user_data.persist()
-                    current_bid.persist()
-                    current_bidder.persist()
-
-                else:
-                    response = "You hand {:,} Exotic Residue to Bailey, but it's smaller than the current highest bid.\n\"Sorry kid, but this sweet dude before 'ya handed me {:,} ER, so. Uh, gotta, say no! Good luck with getting me some more, though. Haha!\"".format(bid, current_bid.bit) 
-        else:
-            response = "You need to specify some amount of Exotic Residue to give Bailey."
-    else:
-        response = "There's no auction going on right now."
-    
-    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-
-async def auction(cmd):
-    user_data = EwUser(member = cmd.message.author)
-    current_bid = EwGamestate(id_server=cmd.guild.id, id_state='currentbid')
-    # PRESENT DAY
-    # PRESENT TIME
-    current_date = datetime.date.today()
-  
-    # Check if it's event day 1-7
-    if current_date in auction_relic_date_map:        
-        # Get the current relic's name.
-        itemprops = itm_utils.gen_item_props(relic_map.get(auction_relic_date_map[current_date]))
-        item_name = itemprops.get("relic_name")
-
-        if user_data.poi == ewcfg.poi_id_neomilwaukeestate:
-            response = "Asking Bailey, he says, \"oh yeah, the current item up for auction is a **{}**. It's currently sitting at a high bid of **{:,}** Exotic Residue. So what drugs ya got?\"".format(item_name, current_bid.bit)
-        else:
-            response = "Checking your gellphone, you see the current item up for auction is a **{}**. It's currently sitting a high bid of **{:,}** Exotic Residue. Better blast your ass over to Neo Milwaukee State!".format(item_name, current_bid.bit)
-    else:
-        response = "There's no auction happening right now, bozo."
-
-    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def bazaar_refresh(cmd):

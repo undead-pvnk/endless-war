@@ -479,6 +479,10 @@ def create_death_report(cause = None, user_data = None):
         deathreport = "You bit into **NEGASLIME**, dink. Fucking idiot. {}".format(ewcfg.emote_slimeskull)
         deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
+    if (cause == ewcfg.cause_gay): # Response for being gay in July
+        deathreport = "https://cdn.discordapp.com/attachments/431240644464214017/982634916854497321/unknown.png"
+        deathreport = formatMessage(user_player, deathreport)
+
     return (deathreport)
 
 
