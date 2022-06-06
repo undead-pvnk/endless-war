@@ -120,31 +120,27 @@ async def smelt(cmd):
 
                     # Matches the recipe's listed products to actual items.
                     for result in vendors.smelt_results:
-                        if hasattr(result, 'id_item'):
-                            if result.id_item not in found_recipe.products:
-                                pass
-                            else:
-                                possible_results.append(result)
-                        if hasattr(result, 'id_food'):
-                            if result.id_food not in found_recipe.products:
-                                pass
-                            else:
-                                possible_results.append(result)
-                        if hasattr(result, 'id_cosmetic'):
-                            if result.id_cosmetic not in found_recipe.products:
-                                pass
-                            else:
-                                possible_results.append(result)
-                        if hasattr(result, 'id_weapon'):
-                            if result.id_weapon not in found_recipe.products:
-                                pass
-                            else:
-                                possible_results.append(result)
-                        if hasattr(result, 'id_furniture'):
-                            if result.id_furniture not in found_recipe.products:
-                                pass
-                            else:
-                                possible_results.append(result)
+                        # Find all attributes starting with id_ (to match id_item or id_food or...)
+                        possible_id_attrs = [attr for attr in dir(result) if attr.startswith("id_")]
+                        probable_id_str = possible_id_attrs[0] if len(possible_id_attrs) == 1 else None
+
+                        # If there was only one match, and the value of that attribute (the id) is a product of the recipe, add to results
+                        if probable_id_str is not None and getattr(result, probable_id_str) in found_recipe.products:
+                            possible_results.append(result)
+                        # Log if an item's definition didn't have a parsable id
+                        elif probable_id_str is None:
+                            ewutils.logMsg("Error in Item Definition: Item Definition identifying string could not be parsed.\n__dict__: {}".format(result.__dict__))
+
+                    # In case someone improperly defines the product, and it can't be found
+                    if not len(possible_results) == len(found_recipe.products):
+                        ewutils.logMsg("Error in Item Definition: Smelting recipe %s could not find all products" % found_recipe.id_recipe)
+                        possible_result_ids = [getattr(_res, [attr for attr in dir(_res) if attr.startswith("id_")][0]) for _res in possible_results]
+                        missing_def_ids = [_prod for _prod in found_recipe.products if _prod not in possible_result_ids]
+                        ewutils.logMsg("Failed to find item templates with the following identifier(s): {}".format(missing_def_ids))
+                        if len(possible_results) < 1:
+                            debug_resp = "Endless War understands the process, but cannot fathom what it will create. Perhaps a Brimstone Programmer could enlighten the obelisk."
+                            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, debug_resp))
+
                     # If there are multiple possible products, randomly select one.
                     item = random.choice(possible_results)
 
