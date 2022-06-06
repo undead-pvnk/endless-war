@@ -335,7 +335,7 @@ async def reap(cmd):
                     farm.time_lastsow = 0  # 0 means no seeds are currently planted
                     farm.persist()
 
-    respctn = fe_utils.EwResponseContainer(client=cmd.client, id_server=cmd.message.guild)
+    respctn = fe_utils.EwResponseContainer(client=cmd.client, id_server=cmd.message.guild.id)
     respctn.add_channel_response(cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     await respctn.post()
 
