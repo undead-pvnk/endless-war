@@ -71,11 +71,30 @@ class EwResponseContainer:
         if not hasattr(channel, "send"):
             ewutils.logMsg("Error: add_channel_response could not parse channel from {}".format(channel))
 
+        # Attempt to split at newlines if it exceeds the max length
+        responses = []
+        if len(response) > ewcfg.discord_message_length_limit and len(response.split("\n")) > 2:
+            temp_str = response.split("\n", 1)[0]
+            for shortstr in response.split("\n")[1:]:
+                shortstr = "\n" + shortstr
+                if len(temp_str) + len(shortstr) < ewcfg.discord_message_length_limit:
+                    temp_str += shortstr
+                else:
+                    responses.append(temp_str)
+                    temp_str = shortstr
+            responses.append(temp_str)
+
         # Add response to existing entry for its channel, or create a new entry
         if channel in self.channel_responses:
-            self.channel_responses[channel].append(response)
+            if len(responses) > 1:  # Use listed responses only when splitting successfully created at least 2
+                self.channel_responses[channel] += responses
+            else:
+                self.channel_responses[channel].append(response)
         else:
-            self.channel_responses[channel] = [response]
+            if len(responses) > 1:
+                self.channel_responses[channel] = responses
+            else:
+                self.channel_responses[channel] = [response]
 
     def add_channel_topic(self, channel, topic):
         if isinstance(channel, str):  # For consistency (Even though this is commented out of post???)
@@ -330,7 +349,9 @@ async def send_message(client, channel, text = None, embed = None, delete_after 
         ewutils.logMsg('Could not message user: {}\n{}'.format(channel, text))
         raise
     except:
-        ewutils.logMsg('frontend send_message Failed to send message to channel: {}\n{}'.format(channel, text))
+        # Whitespace messages will always fail to send, don't clutter the log
+        if not text.isspace():
+            ewutils.logMsg('frontend send_message Failed to send message to channel: {}\n{}'.format(channel, text))
 
 
 """ Simpler to use version of send_message that formats message by default """
