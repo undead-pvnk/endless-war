@@ -1764,7 +1764,7 @@ smelting_recipe_list = [
         ],
         ingredients = {
             ewcfg.item_id_ghostlycloth : 5,
-            ewcfg.item_id_negapoudrin : 1,
+            ewcfg.item_id_negapoudrin : 3,
             ewcfg.item_id_cute_material : 2
         },
         products=['maidoutfit']
@@ -1779,7 +1779,7 @@ smelting_recipe_list = [
         ],
         ingredients={
             'cigarette': 1,
-            ewcfg.item_id_stick: 1
+            ewcfg.item_id_stick: 2
         },
         products=['cigaretteholder']
     ),
