@@ -375,7 +375,7 @@ food_list = [
         str_desc = "Ah, a nice cold brew resembling a mix between battery acid and artificial orange flavoring. Tubular!!",
         time_expir = 43200,
     ),
-  EwFood(
+    EwFood(
         id_food = "majormelon",
         alias = ['rowdydew'],
         recover_hunger = 10,
@@ -385,8 +385,8 @@ food_list = [
         str_eat = "You fill your jumbo fountain drink vessel with pink swill and gulp it down.",
         str_desc = "Ah, a nice cold brew resembling a mix between battery acid and artificial watermelon flavoring. Rowdycore!!",
         time_expir = 43200,
-	),
-		EwFood(
+    ),
+    EwFood(
         id_food = "purplethunder",
         alias = ['purpledew'],
         recover_hunger = 10,
@@ -2092,6 +2092,7 @@ food_list = [
         inebriation=15,
         str_desc="A reproduction juice box of Hi-C Ecto Cooler. It's kinda grimy, and has a weird green leakage coming from the bottom. You'd be better off throwing it away than anything.",
         time_expir=5,
+        acquisition="smelting",
     ),
     EwFood(
         id_food="druggumbo",
