@@ -2152,29 +2152,7 @@ food_list = [
         str_desc = "Its a fucking can of tomato soup, what more could you want?!..Ok ill give you more. One canned can of tomato soup. The can is old and rusty, the red label on it worn and faded. If you look hard enough you can see that the label still says Friskies Paté.",
         time_expir = 3628800,
     ),
-    	EwFood(
-        id_food = "blacklimepie",
-        alias = ['blp'],
-        recover_hunger = 140,
-        price = 1400,
-        str_name = "LIMEcorp Brand Black Lime Pie",
-        vendors = ['saloon']
-        str_eat = "You cut into a pie that feels and smells like rotten molasses with your fork and hesitantly lift it to your mouth. The taste you experience is about what you expect from the local crops, the sickly sweetness mellowing out immediately on your tongue and imparting an aftertaste so tart and astringent it dries out your mouth completely and your tongue goes numb. Delicious!",
-        str_desc = "A pie with a flaky crust consisting of blacklime juice and various thickeners. LIMEcorp sells this to raise money for their crop revitalization project.",
-		time_expir = 43200,
-    ),
-	    EwFood(
-        id_food = "limeandtonic",
-        alias = ['whiskeysupersour'],
-        recover_hunger = 28,
-        price = 600,
-        str_name = "a lime and tonic cocktail",
-        vendors = ['saloon'],
-        str_eat = "You sip the dubious beverage, its sour nature balancing nicely with the house whiskey and light carbonation. You breathe out and taste a hint of copper on your breath.",
-        inebriation = 2,
-        str_desc = "A surprisingly refreshing mixture of blacklime juice, tonic water, and corpse bourbon.",
-        time_expir = 43200,
-    ),
+
 
 ]
 
