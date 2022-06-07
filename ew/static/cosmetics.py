@@ -1351,10 +1351,10 @@ cosmetic_items_list = [
         durability = 2500000,
         style = "cool",
         freshness = 7,
-        price = 400,
-        vendors = ['Bailey the NMS Drug-Guy'],
+        price = 30000,
+        vendors = ['bazaar', 'Slimy Persuits'],
     ),
-    EwCosmeticItem(
+    EwCosmeticItem( # Make available later in the future somehow, change from promotional to plebeian.
         id_cosmetic = "nmsmascothead",
         str_name = "NMS Mascot Head",
         str_desc = "A mascot head, fashioned to look like the front of an airplane. It's got a little twirly bit at the top.",
@@ -1366,7 +1366,7 @@ cosmetic_items_list = [
         style = "smart",
         freshness = 3,
         price = 200,
-        vendors = ['Bailey the NMS Drug-Guy'],
+        vendors = [''],
         is_hat = True,
     ),
     EwCosmeticItem(
@@ -1381,7 +1381,7 @@ cosmetic_items_list = [
         style = "cute",
         freshness = 3,
         price = 400,
-        vendors = ['Bailey the NMS Drug-Guy'],
+        vendors = [''],
     ),
     EwCosmeticItem(
         id_cosmetic = "nmsmascotlegs",
@@ -1395,7 +1395,7 @@ cosmetic_items_list = [
         style = "tough",
         freshness = 3,
         price = 300,
-        vendors = ['Bailey the NMS Drug-Guy'],
+        vendors = [''],
     ),
     EwCosmeticItem(
         id_cosmetic = "nmsmascotwings",
@@ -1409,7 +1409,7 @@ cosmetic_items_list = [
         style = "cool",
         freshness = 3,
         price = 500,
-        vendors = ['Bailey the NMS Drug-Guy'],
+        vendors = [''],
     ),
     EwCosmeticItem(
         id_cosmetic = "nmsmascotwheels",
@@ -1423,7 +1423,7 @@ cosmetic_items_list = [
         style = "beautiful",
         freshness = 3,
         price = 250,
-        vendors = ['Bailey the NMS Drug-Guy'],
+        vendors = [''],
     ),
     EwCosmeticItem(
         id_cosmetic = "amateurichthyologistpin",
@@ -1449,7 +1449,7 @@ cosmetic_items_list = [
     ),
     EwCosmeticItem(
         id_cosmetic = "amateurartistpin",
-        str_name = "amateurartistpin",
+        str_name = "Amateur Artist Pin",
         str_desc = "A pin given to you by the Curator for your a great work of artistry you've made. Good for you, I guess.",
         str_onadorn = "You stick the tiny amateur archeologist pin on.",
         str_unadorn = "You take the tiny amateur archeologist pin off.",

@@ -163,15 +163,6 @@ cmd_map = {
     ewcfg.cmd_gvs_almanac: cmdcmds.almanac,
 
 
-    # Check your event points
-    ewcfg.cmd_event_points: cmdcmds.event_points,
-    ewcfg.cmd_event_points_alt1: cmdcmds.event_points,
-    ewcfg.cmd_event_points_alt2: cmdcmds.event_points,
-    ewcfg.cmd_event_points_alt3: cmdcmds.event_points,
-    ewcfg.cmd_turnin: cmdcmds.turnin,
-    ewcfg.cmd_turnin_alt1: cmdcmds.turnin,
-
-
     # Check your weapon masteries
     ewcfg.cmd_mastery: cmdcmds.check_mastery,
 
@@ -205,8 +196,7 @@ cmd_map = {
     ewcfg.cmd_measurecock: cmdcmds.cockdraw,
     ewcfg.cmd_dual_key_ban:cmdcmds.dual_key_ban,
     ewcfg.cmd_dual_key_release:cmdcmds.dual_key_release,
-    ewcfg.cmd_setslime: cmdcmds.set_slime,
-    ewcfg.cmd_seteventpoints: cmdcmds.set_event_points # FISHINGEVENT
+    ewcfg.cmd_setslime: cmdcmds.set_slime
 }
 if ewcfg.dh_active:
     cmd_map[ewcfg.cmd_spook] = cmdcmds.spook

@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import random
 import sys
 import time
@@ -435,6 +436,16 @@ async def mutations(cmd):
 
         if user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_lucky]:
             return await exec_mutations(cmd)
+
+        if ewcfg.mutation_id_gay in mutations:
+            # PRESENT DAY
+            # PRESENT TIME
+            the_month = datetime.datetime.now().month
+            if the_month != 6: # If it's not pride month, sorry bucko.
+                resp_cont = EwResponseContainer(client=cmd.client, id_server=user_data.id_server)
+                die_resp = user_data.die(cause=ewcfg.cause_gay)
+                resp_cont.add_response_container(die_resp)
+                return await resp_cont.post()
 
         for mutation in mutations:
             mutation_flavor = static_mutations.mutations_map[mutation]
@@ -2522,96 +2533,6 @@ async def almanac(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-# FISHINGEVENT
-async def event_points(cmd):
-    selfcheck = True
-
-    # If a player is mentioned, get their data. Otherwise, get the user's.
-    if len(cmd.mention_ids) == 1:
-        member = cmd.mentions[0]
-        user_data = EwUser(member=member)
-        event_points = user_data.event_points
-        selfcheck = False
-    else:
-        user_data = EwUser(member=cmd.message.author)
-        event_points = user_data.event_points
-
-    # Different flavortext for whether the user checking themselves or someone else
-    if selfcheck:
-        # User can't check event points if they're a ghost
-        if user_data.life_state == ewcfg.life_state_corpse:
-            response = "You fool! You're too gussied up with ghost shiznasty to handle Exotic Residue. That stuff's TOXIC, man!"
-        else:
-            # Get different flavor text for how many event points you have
-            if event_points <= 0:
-                response = "You check your pockets, but you don't have a lick of exotic residue on you! How LAME {}".format(ewcfg.emote_slimeskull)
-            elif event_points <=100:
-                response = "Checking your pockets, you have a small splattering of {} Exotic Residue.".format(event_points)
-            elif event_points <=1000:
-                response = "Checking your pockets, you have a good gulch of {:,} Exotic Residue.".format(event_points)
-            elif event_points <=3000:
-                response = "Checking your pockets, you have a splendiferous splattering of {:,} Exotic Residue.".format(event_points)
-            elif event_points <=6000:
-                response = "Checking your pockets, you have a glamorous gulch of {:,} Exotic Residue.".format(event_points)
-            elif event_points <=10000:
-                response = "Your pockets are overflowing! You have a streaming tsunami of {:,} Exotic Residue!".format(event_points)
-            else:
-                response = "Your pockets are overflowing! You have a screaming tsunami of {:,} Exotic Residue!".format(event_points)
-    else:
-        if user_data.life_state == ewcfg.life_state_corpse:
-            response = "You really think a corpse would have Exotic Residue? That stuff's TOXIC, man!"
-        else:
-            response = "Sniffing in their general direction, it seems that {} has a collection of {:,} Exotic Residue.".format(member.display_name, event_points)
-
-    # Send the response omg
-    return await fe_utils.send_response(response, cmd)
-
-
-# FISHINGEVENT
-async def turnin(cmd):
-    user_data = EwUser(member=cmd.message.author)
-    market_data = EwMarket(id_server = user_data.id_server)
-
-    if user_data.poi != ewcfg.poi_id_neomilwaukeestate:
-        response = "As much as the street urchins around you would love to take your used needles, they won't give you any residue for them. Go to Neo Milwaukee State, dumbass."
-    elif user_data.life_state == ewcfg.life_state_kingpin:
-        response = "Lol hi ben :3"
-    else:
-        point_gain = 0
-        items_to_remove = []
-
-        # Search for needals 
-        inv_items = bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
-
-        for item in inv_items:
-            item_data = EwItem(id_item = item.get('id_item'))
-            if item_data.item_props.get("id_item") == ewcfg.item_id_usedneedle:
-                items_to_remove.append(item_data.id_item)
-                point_gain += 6
-
-        # Add points to user and to the market total.
-        if point_gain > 0:
-            user_data.event_points += point_gain
-            total_points = EwGamestate(id_server=cmd.guild.id, id_state='totaleventpoints')
-
-            total_points.number += point_gain
-            total_points.persist()
-
-            # Take away the used needles
-            for id in items_to_remove:
-                bknd_item.item_delete(id_item=id)
-
-            user_data.persist()
-            market_data.persist()
-
-            # Tell user how many points they got
-            response = "You hand Bailey your used needles and he extracts {} exotic residue from the grimy syringes. He pockets the syringes, but is kind enough to give you your rightfully-fished residue.".format(point_gain)
-        else:
-            response = "You try to hand Bailey used needles, but you don't have any! Such a tragedy!"
-
-    return await fe_utils.send_response(response, cmd)
-
-
 """
     DEBUG COMMANDS
 """
@@ -2655,44 +2576,6 @@ async def set_slime(cmd):
         target_user_data.persist()
 
         response = "Set {}'s slime to {}.".format(target.display_name, target_user_data.slimes)
-    else:
-        return
-
-    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-
-# FISHINGEVENT - copying setslime   
-async def set_event_points(cmd):
-    if not cmd.message.author.guild_permissions.administrator:
-        return
-
-    response = ""
-    target = None
-
-    if cmd.mentions_count != 1:
-        response = "Invalid use of command. Example: !setresidue @player 420"
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    else:
-        target = cmd.mentions[0]
-
-    target_user_data = EwUser(id_user=target.id, id_server=cmd.guild.id)
-
-    if len(cmd.tokens) > 2:
-        new_points = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
-        if new_points == None:
-            response = "Invalid number entered."
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-    else:
-        return
-
-    if target_user_data != None:
-
-        target_user_data.event_points = new_points
-
-        target_user_data.persist()
-
-        response = "Set {}'s Exotic Residue to {}.".format(target.display_name, target_user_data.event_points)
     else:
         return
 

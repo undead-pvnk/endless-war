@@ -147,7 +147,7 @@ async def vape(cmd):
 
             # Have them vaaaaaaaaaaaaape
             vapes = 0
-            while vapes != 11:
+            while vapes < 11:
                 if random.randint(1, 10) == 1:
                     response = "You do a slick trick with an epic vape cloud. Sheeeeeeeesh..."
                 else:

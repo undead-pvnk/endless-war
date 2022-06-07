@@ -101,9 +101,6 @@ channels_deviantsplaart = {}
 
 channels_artexhibits = {}
 
-# Map of server ID to auction updates channel
-channels_auctionupdatez = {}
-
 # Map of all command words in the game to their implementing function.
 
 #cmd_map = cmds.cmd_map
@@ -284,10 +281,6 @@ async def on_ready():
                 elif (channel.name == ewcfg.channel_deviantsplaart):
                     channels_deviantsplaart[server.id] = channel
                     ewutils.logMsg("• found channel for deviantSPLAART: {}".format(channel.name))
-                
-                elif (channel.name == ewcfg.channel_auctionupdatez):
-                    channels_auctionupdatez[server.id] = channel
-                    ewutils.logMsg("• found channel for auction updatez: {}".format(channel.name))
 
         ewdebug.initialize_gamestate(id_server=server.id)
 
@@ -341,8 +334,6 @@ async def on_ready():
         if not debug:
             await transport_utils.init_transports(id_server=server.id)
             asyncio.ensure_future(bknd_weather.weather_tick_loop(id_server=server.id))
-
-        asyncio.ensure_future(loop_utils.auction_tick_loop(id_server=server.id)) # FISHINGEVENT
 
         asyncio.ensure_future(bknd_farm.farm_tick_loop(id_server=server.id))
         
@@ -961,7 +952,7 @@ async def on_message(message):
                 await message.delete()
                 return
 
-    if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())) or message.channel in ["nurses-office", "suggestion-box", "detention-center", "community-service", "playground", "graffiti-wall", "post-slime-drip", "outside-the-lunchroom", "outside-the-lunchrooom"]:
+    if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())) or message.channel in ["nurses-office", "suggestion-box", "detention-center", "community-service", "playground", "graffiti-wall", "post-slime-drip", "outside-the-lunchroom", "outside-the-lunchrooom", "outside-the-lunchroooom"]:
         """
             Wake up if we need to respond to messages. Could be:
                 message starts with !

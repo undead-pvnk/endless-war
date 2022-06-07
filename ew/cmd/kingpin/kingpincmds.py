@@ -426,14 +426,11 @@ async def awardart(cmd):
                 'id_item': 'royaltypoudrin'
             })
 
-    # FISHINGEVENT
-    user_data.event_points += 300
-
     # If the user is a corpse, give them -300,000 slime. Otherwise, give them 250,000 slime.
-    # if user_data.life_state == ewcfg.life_state_corpse:
-    #     user_data.change_slimes(n=-ewcfg.slimes_addart - (royaltypoudrins_reward * 5000)) # Ghosts can't !crush royalty poudrins for slime
-    # else:
-    #     user_data.change_slimes(n=ewcfg.slimes_addart)
+    if user_data.life_state == ewcfg.life_state_corpse:
+        user_data.change_slimes(n=-ewcfg.slimes_addart - (royaltypoudrins_reward * 5000)) # Ghosts can't !crush royalty poudrins for slime
+    else:
+        user_data.change_slimes(n=ewcfg.slimes_addart)
         
     # Give the player an associated pin if specified
     if award_pin:
@@ -446,7 +443,7 @@ async def awardart(cmd):
             item_props=item_props
         )
         # Create the extra response text
-        extra_response_text = ", as well as a {},".format(item_props.get('cosmetic_name'))
+        extra_response_text = ", as well as an {},".format(item_props.get('cosmetic_name'))
 
     user_data.persist()
 

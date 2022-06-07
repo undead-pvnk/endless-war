@@ -1749,10 +1749,36 @@ smelting_recipe_list = [
             'hi-c'
         ],
         ingredients={
+            ewcfg.item_id_ectoplasm: 5,
             'direapplefrickenergy': 1,
-            'ectoplasm': 5,
         },
         products=['ectocooler']
+    ),
+    EwSmeltingRecipe(
+        id_recipe="druggumbo",
+        str_name="Drug Gumbo",
+        alias=[
+            'drugsoup',
+        ],
+        ingredients={
+            ewcfg.item_id_foodbase: 1,
+            ewcfg.item_id_dankwheatchaff: 1,
+            ewcfg.item_id_seaweed: 1,
+            'purpledrink': 1,
+            'coleslaw': 1,
+            'justcumfuckenergy': 1,
+            ewcfg.item_id_gmaxfuckenergybodyspray: 1,
+            'pileofmysteriouspowder': 1,
+            'armageddonspritzer': 1,
+            ewcfg.item_id_pheromones: 1,
+            ewcfg.item_id_carpotoxin: 1,
+            'cigarette': 1,
+            'cigarettebutt': 1,
+            'cigar': 1,
+            ewcfg.item_id_spent_pod: 1,
+            ewcfg.item_id_usedneedle: 1,
+        },
+        products=['druggumbo']
     ),
 
 ]

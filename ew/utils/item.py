@@ -488,7 +488,7 @@ async def perform_prank_item_side_effect(side_effect, cmd = None, member = None)
         if random.randrange(2) == 0:
             target_data.rand_seed = random.randrange(500000)        
             target_data.persist()
-            response += "\n\n*{}*: What's this? You feel a shift in your pants. You whip them open and see your cock changing in size! Unbelievable! You must've contracted {} from the used needle!".format(target_member.display_name, comm_cfg.actual_stds)
+            response += "\n\n*{}*: What's this? You feel a shift in your pants. You whip them open and see your cock changing in size! Unbelievable! You must've contracted {} from the used needle!".format(target_member.display_name, random.choice(comm_cfg.actual_stds))
 
     return response
 

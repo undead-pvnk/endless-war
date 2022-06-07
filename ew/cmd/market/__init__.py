@@ -42,9 +42,5 @@ cmd_map = {
 
     ewcfg.cmd_addart:marketcmds.populate_image,
 
-    # Auctioning
-    ewcfg.cmd_bid: marketcmds.bid,
-    ewcfg.cmd_auction: marketcmds.auction
-
 
 }
