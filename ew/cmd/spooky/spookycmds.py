@@ -30,7 +30,7 @@ try:
 except:
     from ew.cmd.debugr_dummy import debug13
 
-cookingresponses = ['A fat man slams his fist down, demanding his chicken nuggies!\nquick! **!serve** !', 'A truly fashionable man, wearing a kimono, slides up to the bar and asks you for a drink.\nquick! **!serve**', 'A girl with a "Ghots FTW" shirt demands some authentic quizie!\nQuick! **!serve**!!!', 'A killer with four lip piercings slams their slime on the counter! They want a big ass cake! **!serve**', 'Past president Ronald Raegan demands some nice ghost pie! **!serve**']
+cookingresponses = ['A fat man slams his fist down, demanding his chicken nuggies!\nquick! **!serve** !', 'A truly fashionable man, wearing a kimono, slides up to the bar and asks you for a drink.\nquick! **!serve**', 'A girl with a "Ghots FTW" shirt demands some authentic quizie!\nQuick! **!serve**!!!', 'A killer with four lip piercings slams their slime on the counter! They want a big ass cake!\nquick! **!serve** !', 'Past president Ronald Raegan demands some nice ghost pie!\nquick! **!serve** !', 'A large humanoid slug slithers into the cafe! He wants the worst pie ever!\nquick! **!serve** !', 'The human version of a pile of phlegm enters the cafe. He wants to drink your best brew with ghost milk!\nquick! **!serve** !']
 
 async def negapool(cmd):
     # Add persisted negative slime.
