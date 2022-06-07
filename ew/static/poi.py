@@ -3375,15 +3375,15 @@ EwPoi(
 		str_name = "The Ghost Maid Cafe",
 		str_desc = "This small rundown cafe is filled with all kinds of degenerates. They sit at their tables, eagerly waiting for the ghosts dressed in maid outfits and cat ears to serve them. The food coming from the back looks horrible, too, but that's not why people are here. \n\nExits into Charcoal Park",
 		channel = "ghost-maid-cafe",
-		major_role = "thevoid_major",
+		major_role = "juviesrow_major",
 		minor_role = "nullminorrole",
 		permissions = {'ghost-maid-cafe': ['read', 'send', 'connect']},
 		pvp = False,
-		vendors = ['Ghost Maid Cafe'],
+		vendors = [],
 		is_subzone = True,
-		mother_districts = ['thevoid'],
-		neighbors = {'thevoid': 20},
-		wikipage = "https://rfck.miraheze.org/wiki/Crookline#GhostMaidCafe"
+		mother_districts = ['juviesrow'],
+		neighbors = {'juviesrow': 20},
+		wikipage = "https://rfck.miraheze.org/wiki/JuviesRow#GhostMaidCafe"
 	  ),
 ]
 

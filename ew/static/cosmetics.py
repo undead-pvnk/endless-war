@@ -1473,26 +1473,24 @@ cosmetic_items_list = [
         str_name = "Maid outfit",
         str_desc = "A cute little maid outfit! You look so cute with the little skirt and the little head thing that you don't remember the name of... You would rather not remember the things you had to do to get this outfit.",
         str_onadorn = "You pull on the maid outfit, ready to get to work!",
-        str_unadorn = "You quickly pull off the outfit. \"Mom, I can explain!\" you shout as she runs away in shame.",
+        str_unadorn = "You quickly pull off the outfit. \"Mom, I can explain!\" You shout as she runs away in shame.",
         durability = 2500000,
         style = "cute",
         freshness = 7,
         acquisition = "smelting",
         price = 50000,
-        vendors = ['Ghost Maid Cafe']
     ),
     EwCosmeticItem(
         id_cosmetic = "cigaretteholder",
         str_name = "Cigarette Holder",
         str_desc = "A long piece of... stick, or something, with a cigarette spot on the end. You are too unrefined to know the specifics but DANG you look pretty holding it. It could put someone's eye out!",
         str_onadorn = "You stick the cigarette holder into your mouth, inhaling deeply before blowing out a puff of smoke.",
-        str_unadorn = "you remove the cigarette holder from your mouth and store it in your pocket.",
+        str_unadorn = "You remove the cigarette holder from your mouth and store it in your pocket.",
         durability = 2500000,
         style = "beautiful",
         freshness = 5,
         acquisition = "smelting",
         price = 50000,
-        vendors = ['Ghost Maid Cafe']
     ),
     EwCosmeticItem(
         id_cosmetic = "widebrimmedhat",
@@ -1505,19 +1503,17 @@ cosmetic_items_list = [
         freshness = 8,
         acquisition = "smelting",
         price = 1000000,
-        vendors = ['Ghost Maid Cafe']
     ),
     EwCosmeticItem(
         id_cosmetic = "drapeddress",
         str_name = "Draped Evening Dress",
-        str_onadorn = "You slide into the beautiful dress... you are now absolutely breathtaking. Men (and women) bow before you, almost trying to throw themselves under your feet. It's kinda annoying.",
+        str_onadorn = "You slide into the beautiful dress... you are now absolutely breathtaking. Men (and women) bow before you, almost trying to throw themselves under your feet. It is rather annoying.",
         str_unadorn = "Your huge body rips out of the dress, tearing it to shreds! It was no match for your impressive figure! (Don't worry though it still is in your inventory.)",
         durability = 2500000,
         style = "beautiful",
         freshness = 10,
         acquisition = "smelting",
         price = 5000000,
-        vendors = ['Ghost Maid Cafe'], # nyaa~
     ),
 ]
 

@@ -23,8 +23,8 @@ from ew.utils.item import EwItem
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
-from spookyutils import chefs
-from spookyutils import EwChef
+from ew.cmd.spooky.spookyutils import chefs
+from ew.cmd.spooky.spookyutils import EwChef
 try:
     from ew.cmd.debugr import debug13
 except:
@@ -692,7 +692,7 @@ async def serve(cmd):
 	if user_data.poi != 'ghostmaidcafe':
 		response = "Sowwy, you can't stawt cooking unwess you'we at the maid cafe! (✿◡‿◡)"
 	elif user_data.life_state != ewcfg.life_state_corpse:
-		response = "Sowwy, you awen't enough of a degenewate to do that. UwU💝"
+		response = "Sowwy, you awen't enough of a degenewate to do that. UwU <3"
 	elif chef.serve != True:
 		response = "No one is hewe... (┬┬﹏┬┬)"
 	else:
@@ -721,5 +721,5 @@ async def sow_cloth(cmd):
         )
         user_data.change_slimes(n=-(-100000), source=ewcfg.source_spending)
         user_data.persist()
-        response = "You rip a sheet of your ghostly form free, feeling the essence ripped from your very being. using your teeth to refine it into a fine white cloth."
+        response = "You rip a sheet of your ghostly form free, feeling the essence ripped from your very being. Using your teeth to refine it into a fine white cloth."
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
