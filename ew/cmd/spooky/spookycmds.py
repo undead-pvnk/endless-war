@@ -648,7 +648,7 @@ async def startshift(cmd):
 		else:
 			market_data = EwMarket(id_server=cmd.guild.id)
 			chef.cooking = True
-			chef.prompts = 1 #random.randrange(1, 50)
+			chef.prompts = random.randrange(1, 50)
 			reward = chef.prompts * random.randrange(20, 50)
 			response = "You punch your time card and get ready to serve!"
 			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
