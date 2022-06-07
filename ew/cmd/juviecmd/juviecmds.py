@@ -601,7 +601,7 @@ async def mine(cmd):
                         )
 
                     if unearthed_item_type != "":
-                        response += "You {} one {} out of the {}!".format(random.choice("beat", "smack", "strike", "!mine", "brutalize"), item.str_name, unearthed_item_type)
+                        response += "You {} one {} out of the {}!".format(random.choice(["beat", "smack", "strike", "!mine", "brutalize"]), item.str_name, unearthed_item_type)
                     elif unearthed_item_amount == 1:
                         response += "You unearthed a {}! ".format(item.str_name)
                     else:
