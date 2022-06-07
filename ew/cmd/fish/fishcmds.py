@@ -6,6 +6,7 @@ from ew.backend import item as bknd_item
 from ew.backend.fish import EwOffer
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
+from ew.backend.dungeons import EwGamestate
 from ew.static import cfg as ewcfg
 from ew.static import community_cfg as comm_cfg
 from ew.static import fish as static_fish
@@ -17,6 +18,7 @@ from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
 from ew.utils import rolemgr as ewrolemgr
+from ew.cmd.move.moveutils import one_eye_dm
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from . import fishutils
@@ -27,18 +29,16 @@ from .fishutils import gen_bite_text
 from .fishutils import gen_fish
 from .fishutils import gen_fish_size
 from .fishutils import length_to_size
-try:
-    from ew.utils import rutils as ewrelicutils
-    from ew.cmd import debug as ewdebug
+
+try:    
+    from ew.utils import rutils 
 except:
-    from ew.utils import rutils_dummy as ewrelicutils
-    from ew.cmd import debug_dummy as ewdebug
+    from ew.utils import rutils_dummy as rutils
 
 """ Casts a line into the Slime Sea """
 
 
 async def cast(cmd):
-    time_now = round(time.time())
     has_reeled = False
     user_data = EwUser(member=cmd.message.author)
     mutations = user_data.get_mutations()
@@ -150,6 +150,9 @@ async def cast(cmd):
                         if random.randrange(5) == 1:
                             fisher.current_fish = "uncookedkingpincrab"
 
+                    elif id_food == "druggumbo":
+                        fisher.pier.pier_type = ewcfg.fish_slime_event
+
                     elif id_food == "masterbait":
                         high_value_bait_used = True
 
@@ -198,21 +201,92 @@ async def cast(cmd):
                 response += "glowing Slime Lake."
             elif fisher.pier.pier_type == ewcfg.fish_slime_void:
                 response += "pond's black waters."
+            elif fisher.pier.pier_type == ewcfg.fish_slime_event:
+                response += "slime, leaving a trail of pollution in its stead."
 
             user_data.hunger += ewcfg.hunger_perfish * ewutils.hunger_cost_mod(user_data.slimelevel)
             user_data.persist()
 
-            bite_text = gen_bite_text(fisher.current_size)
+            # Moon fishing
+            if fisher.pier.pier_type == ewcfg.fish_slime_moon:
+                player_cast = False
+                if cmd.mentions_count == 1:
+                    target_data = EwUser(member=cmd.mentions[0])
+                    moonfishing = EwGamestate(id_state='moonfishing', id_server=cmd.guild.id)
+                    # If Player Casting has been turned on (through the moonfishing bit), and the target is in the poi, then make player_cast work.
+                    if moonfishing.bit == 1 and target_data.poi == user_data.poi:
+                        player_cast = True
 
-            # FISHINGEVENT
-            # Seeeeeecret fishing things for the eventtttt spooooooky. I'm tryin
-            debug = ewrelicutils.debug25(user_data, cmd)
-            if debug == 1:
-                await ewdebug.debug26(user_data, fisher, cmd) 
-            elif debug == 2:
-                await ewdebug.debug27(user_data, fisher, cmd)
+                if player_cast:
+                    # Send a bit of a wait message
+                    response = "***HRRRRKK-!!!***"
+                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    await asyncio.sleep(2)
+
+                    # Get target_data and make sure they can't be thrown if they have Big Bones
+                    target_data = EwUser(member=cmd.mentions[0])
+                    target_mutations = target_data.get_mutations()
+                    if ewcfg.mutation_id_bigbones in target_mutations:
+                        response = "You try to cast {} off towards NLACakaNM, but their ass is too fat! They simply refuse to break from the moon's gravitational pull.".format(cmd.mentions[0].display_name)
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+                    # Make response container
+                    resp_cont = fe_utils.EwResponseContainer(id_server=user_data.id_server)
+
+                    # Make cast flavor text, update hunger, persist user_data.
+                    response = "You cast {} off towards NLACakaNM.".format(cmd.mentions[0].display_name)
+                    user_data.hunger += ewcfg.hunger_perfish * ewutils.hunger_cost_mod(user_data.slimelevel)
+                    user_data.persist()
+                    resp_cont.add_channel_response(cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+                    # Get a district to toss the target into
+                    targeted_district_id = random.choice(poi_static.capturable_districts)
+                    targeted_district = poi_static.id_to_poi.get(targeted_district_id)
+                    
+                    ewutils.moves_active[target_data.id_user] = 0
+                    rutils.movement_checker(target_data, poi_static.id_to_poi.get(target_data.poi), targeted_district)
+
+                    # Move the target into that district
+                    await ewrolemgr.updateRoles(client=cmd.client, member=cmd.mentions[0], new_poi=targeted_district_id)
+                    target_data.poi = targeted_district.id_poi
+                    target_data.time_lastenter = int(time.time())
+                    target_data.persist()
+
+                    # Move ghosts and make possible oeo dms.
+                    await one_eye_dm(id_user=target_data.id_user, id_server=target_data.id_server, poi=targeted_district_id)
+                    await target_data.move_inhabitants(id_poi=targeted_district_id)
+                    response = "You land in {}, being thrown from the moon by {}. That bastard!".format(targeted_district.str_name, cmd.message.author.display_name)
+                    resp_cont.add_channel_response(targeted_district.channel, fe_utils.formatMessage(cmd.mentions[0], response))
+                    
+                    await resp_cont.post()
+                    
+                    fisher.cast_poi = targeted_district
+                    fisher.bait = True
+
+                else: # Cast off of the moon (normal fishing)
+                    # If the player casts at a specific district, then do that. Otherwise, FIND a random district.
+                    valid_poi = False
+                    if ewutils.flattenTokenListToString(cmd.tokens[1:]) != "":
+                        district_sought = ewutils.flattenTokenListToString(cmd.tokens[1:])
+                        district = poi_static.id_to_poi.get(district_sought)
+
+                        # If the the found district is cappable 
+                        if district != None and district.id_poi in poi_static.capturable_districts:
+                            valid_poi = True
+
+                    if valid_poi is False:
+                        district_sought_id = random.choice(poi_static.capturable_districts)
+                        district = poi_static.id_to_poi.get(district_sought_id)
+                    
+                    response = "You cast your fishing pole towards NLACakaNM. You wager it'll land in... {}? Probably.".format(district.str_name)
+                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    
+                    fisher.cast_poi = district
             else:
                 await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+            bite_text = gen_bite_text(fisher.current_size)
+
             # User has a 1/10 chance to get a bite
             fun = 100
 
@@ -225,9 +299,6 @@ async def cast(cmd):
             if ewcfg.mutation_id_lucky in mutations:
                 # If they have the Lucky mutation, chance to bite increases to 1/8
                 fun -= 20
-            if fisher.pier.pier_type == ewcfg.fish_slime_saltwater:
-                # Make fishing faster for the FISHINGEVENT
-                fun -= 10
             if fisher.inhabitant_id:
                 # Having your rod possessed increases your chance to get a bite by 50%
                 fun = int(fun // 2)
@@ -249,20 +320,7 @@ async def cast(cmd):
                 # Wait this many seconds until trying for a bite - 30 if high on weed, 5 if debug bait, 60 if regular.
                 if high_value_bait_used:
                     await asyncio.sleep(5)
-                # This will be cleaned up after the event I swear
-                # FISHINGEVENT - reduce fishing time if you're in saltwater area, even more if you're on the ferry.
-                elif fisher.pier.pier_type == ewcfg.fish_slime_saltwater:
-                    if fisher.pier.id_poi == ewcfg.poi_id_ferry:
-                        if fisher.high:
-                            await asyncio.sleep(25)
-                        else:
-                            await asyncio.sleep(45)
-                    else:
-                        if fisher.high:
-                            await asyncio.sleep(27)
-                        else:
-                            await asyncio.sleep(50)
-                elif ewrelicutils.debug28(user_data):
+                elif fisher.pier.pier_type == ewcfg.fish_slime_moon:
                     if fisher.high:
                         await asyncio.sleep(35)
                     else:
@@ -292,10 +350,13 @@ async def cast(cmd):
                 # If damp is greater than 10, a fish won't bite. If it's less than or equal to 10, a fish will bite.
                 if damp > 10:
                     # Send fishing flavor text
-                    if ewrelicutils.debug28(user_data):
-                        await ewdebug.debug32(fisher, cmd)
+                    if fisher.pier.pier_type == ewcfg.fish_slime_void:
+                        flavor_response = random.choice(comm_cfg.void_fishing_text)
+                    elif fisher.pier.pier_type == ewcfg.fish_slime_moon:
+                        flavor_response = random.choice(comm_cfg.moon_fishing_text)
                     else:
-                        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, random.choice(comm_cfg.void_fishing_text if fisher.pier.pier_type == ewcfg.fish_slime_void else comm_cfg.normal_fishing_text)))
+                        flavor_response = random.choice(comm_cfg.normal_fishing_text)
+                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, flavor_response))
                     # Make a bite slightly more likely, increase the counter for how many failed ticks
                     fun -= 2
                     bun += 1

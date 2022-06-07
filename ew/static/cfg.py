@@ -1,11 +1,8 @@
 # Global configuration options.
 
-import datetime #FISHINGEVENT - remove after
 
 
-
-version = "v4.103 Fishing Event 🐟💉"
-# THE HOMESTUCK NUMBER HOLY SHIT
+version = "v4.1031 Event Cleanup 🚛"
 
 dir_msgqueue = 'msgqueue'
 
@@ -639,8 +636,6 @@ channel_slimetwitter = "slime-twitter"
 channel_artexhibits = "art-exhibits"
 channel_deviantsplaart = "deviant-splaart"
 
-channel_auctionupdatez = "auction-updatez"
-
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown, channel_breakroom]
 hideout_by_faction = {
     faction_rowdys: channel_rowdyroughhouse,
@@ -1014,12 +1009,6 @@ cmd_set_gambit = cmd_prefix + 'setgambit'
 cmd_pointandlaugh = cmd_prefix + 'pointandlaugh'
 cmd_prank = cmd_prefix + 'prank'
 cmd_gvs_almanac = cmd_prefix + 'almanac'
-cmd_event_points = cmd_prefix + 'eventpoints' # FISHINGEVENT
-cmd_event_points_alt1 = cmd_prefix + 'exoticresidue' # The actual event point names
-cmd_event_points_alt2 = cmd_prefix + 'residue'
-cmd_event_points_alt3 = cmd_prefix + 'exotic'
-cmd_turnin = cmd_prefix + 'turnin'
-cmd_turnin_alt1 = cmd_prefix + 'exchange'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_paspeaker = cmd_prefix + 'paspeaker'
@@ -2357,8 +2346,6 @@ leaderboard_gambit_low = "LOWEST GAMBIT"
 leaderboard_sacrificial = "SACRIFICIAL LAMBS"
 leaderboard_lifetimekills = "LIFETIME KILLS"
 leaderboard_lifetimedeaths = "BIGGEST VICTIMS"
-# FISHINGEVENT - most event points currently
-leaderboard_fishers = "RESIDUE RECALCITRANTS"
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -2550,6 +2537,7 @@ cause_backfire = 14
 cause_praying = 15
 cause_poison = 16
 cause_crushing = 17
+cause_gay = 18
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
@@ -2595,9 +2583,6 @@ vendor_atomicforest = "Atomic Forest Stockpile"  # Storage of atomic forest
 vendor_downpourlaboratory = "Downpour Armament Vending Machines"  # Store for shamblers to get stuff
 vendor_breakroom = "The Breakroom"  # Security officers can order items here for free.
 vendor_rpcity = "RP City"  # Double halloween costume store
-
-# Temporary Exotic Residue vendor for FISHINGEVENT
-vendor_NMSdealer = "Bailey the NMS Drug-Guy"
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
@@ -2653,6 +2638,7 @@ item_id_string = "string"
 item_id_tincan = "tincan"
 item_id_oldboot = "oldboot"
 item_id_leather = "leather"
+item_id_ectoplasm = "ectoplasm"
 item_id_feather = "feather"
 item_id_partypoppepperseeds = "partypoppepperseeds"
 item_id_partypopper = "partypopper"
@@ -2675,6 +2661,7 @@ item_id_menthol_mint_pod = "mentholmintpod"
 item_id_striking_strawberry_pod = "strikingstrawberrypod"
 item_id_ten_story_tobacco_pod = "tenstorytobaccopod"
 item_id_cop_killer_cotton_candy_pod = "copkillercottoncandypod"
+item_id_mustard_gas_pod = "mustardgaspod"
 item_id_spent_pod = "spentpod"
 item_id_civilianscalp = "civilianscalp"
 item_id_modelovaccine = "modelovirusvaccine"
@@ -2931,17 +2918,6 @@ weapon_id_fingernails = 'fingernails'
 weapon_id_roomba = 'roomba'
 
 
-# FISHINGEVENT dates. All placeholder
-
-fisher_day_one = datetime.date(2022, 5, 29)
-fisher_day_two = datetime.date(2022, 5, 30)
-fisher_day_three = datetime.date(2022, 5, 31)
-fisher_day_four = datetime.date(2022, 6, 1)
-fisher_day_five = datetime.date(2022, 6, 2)
-fisher_day_six = datetime.date(2022, 6, 3)
-fisher_day_seven = datetime.date(2022, 6, 4)
-fisher_day_overtime = datetime.date(2022, 6, 5)
-
 
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
                              "as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
@@ -3028,13 +3004,13 @@ fish_rarity_promo = "promo"
 
 fish_catchtime_night = "night"
 fish_catchtime_day = "day"
+fish_catchtime_moon_phase_special = "moonphasespecial"
 
 fish_slime_freshwater = "freshwater"
 fish_slime_saltwater = "saltwater"
 fish_slime_void = "void"
-
-# FISHINGEVENT
 fish_slime_event = "event"
+fish_slime_moon = "moon"
 
 fish_size_miniscule = "miniscule"
 fish_size_small = "small"
@@ -3323,6 +3299,7 @@ mutation_id_airlock = "airlock"
 mutation_id_lightminer = "lightminer"
 mutation_id_amnesia = "amnesia"
 mutation_id_stinkeye = "stinkeye"
+mutation_id_gay = "gay"
 
 mutation_milestones = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
 
@@ -3661,6 +3638,7 @@ mutation_descriptions = {
     mutation_id_landlocked: "When standing in a street either bordering an outskirt or the Slime Sea, use !loop to warp to the opposite side of the map. This also works on the ferry and at Slime's End Cliffs. There is a 60 second travel time when using !loop.",
     mutation_id_amnesia: "Your display name is replaced with ????? in EW's messages, and you can delete your message commands without ENDLESS WAR reacting. On a kill, the kill feed message is delayed by 60 seconds.",
     mutation_id_stinkeye: "When surveying a district, the amount of slime on the ground is shown, along with 4 items starting with the lowest IDs.",
+    mutation_id_gay: "You're gay.",
 
 }
 

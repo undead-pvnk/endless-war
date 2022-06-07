@@ -240,8 +240,8 @@ item_list = [
         str_name="||Negative Dye||",
         str_desc="A small vial of ||negative dye||.",
         acquisition=ewcfg.acquisition_smelting,
-        price=3750,
-        vendors=[ewcfg.vendor_NMSdealer] # FISHINGEVENT
+        price=10000000,
+        vendors=[]
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_dye_pink,
@@ -470,8 +470,6 @@ item_list = [
         acquisition=ewcfg.acquisition_bartering,
         ingredients="generic",
         context=10,
-        price=110,
-        vendors=[ewcfg.vendor_NMSdealer] # FISHINGEVENT
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_oldboot,
@@ -567,9 +565,9 @@ item_list = [
         ],
         str_name="Mastectomy Mango Vape Pod",
         str_desc="A mango-flavored vape pod. Specially-engineered to cause cancer within frequent users.",
-        price=50,
+        price=250000,
         context = "vapepod",
-        vendors=[ewcfg.vendor_NMSdealer]
+        vendors=[ewcfg.vendor_bazaar, ewcfg.vendor_slimypersuits]
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_menthol_mint_pod,
@@ -580,9 +578,9 @@ item_list = [
         ],
         str_name="Menthol Mint Vape Pod",
         str_desc="A mint-flavored vape pod. This one is SO COOL, you're gonna feel ice-cold after taking a sick vape on this juice.",
-        price=50,
+        price=250000,
         context = "vapepod",
-        vendors=[ewcfg.vendor_NMSdealer]
+        vendors=[ewcfg.vendor_bazaar, ewcfg.vendor_slimypersuits]
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_striking_strawberry_pod,
@@ -593,9 +591,9 @@ item_list = [
         ],
         str_name="Striking Strawberry Vape Pod",
         str_desc="A strawberry-flavored vape pod. Even though they're bitty, they can do big things!.",
-        price=50,
+        price=250000,
         context = "vapepod",
-        vendors=[ewcfg.vendor_NMSdealer]
+        vendors=[ewcfg.vendor_bazaar, ewcfg.vendor_slimypersuits]
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_ten_story_tobacco_pod,
@@ -606,9 +604,9 @@ item_list = [
         ],
         str_name="Ten-Story Tobacco Vape Pod",
         str_desc="A tobacco-flavored vape pod. It's designed to evoke the feeling of \"jumping off of a building\". You can attest that it's nothing like the real deal.",
-        price=50,
+        price=249999,
         context = "vapepod",
-        vendors=[ewcfg.vendor_NMSdealer]
+        vendors=[ewcfg.vendor_bazaar, ewcfg.vendor_slimypersuits]
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_cop_killer_cotton_candy_pod,
@@ -619,9 +617,22 @@ item_list = [
         ],
         str_name="Cop Killer Cotton Candy Vape Pod",
         str_desc="A cotton candy-flavored vape pod. Poorly-named, considering cotton candy could be considered rowdycore. !DAB though amirite? !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB !DAB ",
-        price=50,
+        price=250000,
         context = "vapepod",
-        vendors=[ewcfg.vendor_NMSdealer]
+        vendors=[ewcfg.vendor_bazaar, ewcfg.vendor_slimypersuits]
+    ),
+    EwGeneralItem(
+        id_item=ewcfg.item_id_mustard_gas_pod,
+        alias = [
+            "mustardgas",
+            "mustardpod",
+            "mustardgasjuice",
+        ],
+        str_name="Mustard Gas Vape Pod",
+        str_desc="A mustard gas-flavored vape pod. Vape just doesn't hit the same way these days. You could huff in the same old dusty vape but you've just too resistant. In order to make it hit the same way it use to you would have to chemically shred your lungs just to absorb more. Luckily mustard gas vape pods are being mass-produced and shipped to stores near you.",
+        price=700000,
+        context = "vapepod",
+        vendors=[ewcfg.vendor_bazaar]
     ),
     EwGeneralItem(
         id_item=ewcfg.item_id_gameguide,
@@ -1448,7 +1459,7 @@ item_list = [
         str_desc="A used needle, with some mysterious residue still inside! While you're already chock-full of STDs, stabbing other people with this could be some jolly good fun!" + ewcfg.prank_type_text_instantuse,
         prank_type=ewcfg.prank_type_instantuse,
         prank_desc="{} sneaks up behind you! You feel a slight prick on your shoulder, and you notice them injecting a mysterious fluid into you with a dirty needle. Tee-hee! How quirky :3. What a good friend!",
-        rarity=None, #FISHINGEVENT - give it an actual rarity after the event's over so it can spawn in prank capsules #ewcfg.prank_rarity_scandalous,
+        rarity=ewcfg.prank_rarity_scandalous,
         gambit=30,
         side_effect="usedneedle_effect",
     ),
@@ -2754,8 +2765,6 @@ furniture_list = [
         str_desc = "It's a fresh cadaver, stitched together with the bits and bobs you find regularly on the street. What a find!",
         rarity = "Patrician",
         acquisition = "smelting",
-        price = 4550,
-        vendors = [ewcfg.vendor_NMSdealer], # FISHINGEVENT
         furniture_place_desc = "You open the bodybag you've been lugging around and splay the corpse out on it. You're no expert on feng shui, but if Martha Stewart saw this, she would probably run the fuck away. Out of jealousy. ",
         furniture_look_desc = "There's a dead body in here.",
     ),
@@ -3344,7 +3353,6 @@ furniture_list = [
         str_desc = "A cheap felt pennant for Neo Milwaukee State, presumably given free to every NMS freshman preparing for their upcoming year. Loads of these end up in the garbage, but this one ended up with you.",
         rarity = "Promotional",
         price = 60,
-        vendors = ['Bailey the NMS Drug-Guy'],
         furniture_place_desc = "You hang the Neo Milwaukee State pennant on your wall. It lowers the vibe of your room slightly.",
         furniture_look_desc = "There's a pennant on your wall with NMS emblazoned on it.",
         furn_set = "NMS",
@@ -3355,7 +3363,6 @@ furniture_list = [
         str_desc = "A cheap wooden two-position chair. It's surprisingly good for the price.",
         rarity = "Promotional",
         price = 150,
-        vendors = ['Bailey the NMS Drug-Guy'],
         furniture_place_desc = "You place the NMS chair near a desk. Make sure you don't sit in it too fast!",
         furniture_look_desc = "There's a Neo Milwaukee State two-position chair set up near a desk.",
         furn_set = "NMS",
@@ -3366,7 +3373,6 @@ furniture_list = [
         str_desc = "Some thin bedsheets with Neo Milwaukee State printed on them. They're horrible.",
         rarity = "Promotional",
         price = 100,
-        vendors = ['Bailey the NMS Drug-Guy'],
         furniture_place_desc = "You place the Neo Milwaukee State bedsheets on the floor.",
         furniture_look_desc = "There's some Neo Milwaukee State bedsheets on the floor.",
         furn_set = "NMS",
@@ -3377,7 +3383,6 @@ furniture_list = [
         str_desc = "A hotplate. Nothing about it makes it Neo Milwaukee State related, other than that it's fucking ILLEGAL in their dorms. If you use it, you're a **criminal!**",
         rarity = "Promotional",
         price = 300,
-        vendors = ['Bailey the NMS Drug-Guy'],
         furniture_place_desc = "You put the hotplate deep in your closet. Can't have anybody finding out about this.",
         furniture_look_desc = "There's a hotplate in the back of the closet.",
         furn_set = "NMS",
@@ -3388,7 +3393,6 @@ furniture_list = [
         str_desc = "A Neo Milwaukee State desk. From the nameplate embedded on it, you can tell this was stolen from the library. Nice job, Robin Hood!",
         rarity = "Promotional",
         price = 210,
-        vendors = ['Bailey the NMS Drug-Guy'],
         furniture_place_desc = "Putting the Neo Milwaukee State desk against the wall, you seriously begin wondering why you'd ever want a desk from a college library in your apartment.",
         furniture_look_desc = "There's a Neo Milwaukee State desk against the wall.",
         furn_set = "NMS",
@@ -3399,7 +3403,6 @@ furniture_list = [
         str_desc = "A Neo Milwaukee State diploma. Lord knows where this came from, it's sure as hell not yours.",
         rarity = "Promotional",
         price = 800,
-        vendors = ['Bailey the NMS Drug-Guy'],
         furniture_place_desc = "You delicately place the rightfully-earned Neo Milwaukee State diploma on your wall.",
         furniture_look_desc = "There's a Neo Milwaukee State diploma hung on the wall.",
         furn_set = "NMS",
