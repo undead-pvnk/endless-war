@@ -1477,6 +1477,7 @@ cosmetic_items_list = [
         durability = 2500000,
         style = "cute",
         freshness = 7,
+        acquisition = "smelting",
         price = 50000,
         vendors = ['Ghost Maid Cafe']
     ),
@@ -1489,6 +1490,7 @@ cosmetic_items_list = [
         durability = 2500000,
         style = "beautiful",
         freshness = 5,
+        acquisition = "smelting",
         price = 50000,
         vendors = ['Ghost Maid Cafe']
     ),
@@ -1501,6 +1503,7 @@ cosmetic_items_list = [
         durability = 2500000,
         style = "beautiful",
         freshness = 8,
+        acquisition = "smelting",
         price = 1000000,
         vendors = ['Ghost Maid Cafe']
     ),
@@ -1512,6 +1515,7 @@ cosmetic_items_list = [
         durability = 2500000,
         style = "beautiful",
         freshness = 10,
+        acquisition = "smelting",
         price = 5000000,
         vendors = ['Ghost Maid Cafe'], # nyaa~
     ),

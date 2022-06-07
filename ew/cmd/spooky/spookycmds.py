@@ -23,7 +23,8 @@ from ew.utils.item import EwItem
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
-from spookyutils import chefs, EwChef
+from spookyutils import chefs
+from spookyutils import EwChef
 try:
     from ew.cmd.debugr import debug13
 except:
@@ -664,7 +665,7 @@ async def startshift(cmd):
 						await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 						chef.stop()
 						chef.cooking = False
-						user_data.persist
+						user_data.persist()
 						break
 					else:
 						response = "you slide the dish over to the customer! nice job!"
@@ -672,11 +673,11 @@ async def startshift(cmd):
 						chef.prompts -= 1
 						await asyncio.sleep(random.randrange(5, 9))
 				else:
-					response = "You finish up youw shift and punch out! You wost {} slime!!!".format(chef.reward)
+					response = "You finish up youw shift and punch out! You wost {} slime!!!".format(reward)
 					user_data.change_slimes(n=-reward)
 					market_data.negaslime -= reward
-					user_data.persist
-					market_data.persist
+					user_data.persist()
+					market_data.persist()
 					chef.cooking = False
 					break
 					
