@@ -20,6 +20,6 @@ apt_dm_cmd_map = {
 
     # !checkfarm
     # Why was this in here btw? it doesnt even work
-    ewcfg.cmd_check_farm: farmcmds.check_farm,
+    # ewcfg.cmd_check_farm: farmcmds.check_farm,
 
 }

@@ -155,7 +155,7 @@ async def crush(cmd):
 
             # Kill player if they have less than 1 million slime
             if user_data.slimes < 1000000:
-                die_resp = user_data.die(cause=ewcfg.cause_suicide)
+                die_resp = user_data.die(cause=ewcfg.cause_crushing)
                 resp_cont.add_response_container(die_resp)
 
                 response = "You {} your hard-earned slime crystal with your bare teeth.\nAs the nerve endings in your teeth explode, you realize you bit into a negapoudrin! You writhe on the ground as slime gushes from all of your orifices. You fucking die. {}".format(command, ewcfg.emote_slimeskull)
@@ -181,7 +181,7 @@ async def crush(cmd):
 
             # Kill player if they have less than 1 million slime
             if user_data.slimes < 1000000:
-                die_resp = user_data.die(cause=ewcfg.cause_suicide)
+                die_resp = user_data.die(cause=ewcfg.cause_crushing)
                 resp_cont.add_response_container(die_resp)
                 
                 response = "You {} the Negaslimeoid core with your bare teeth.\nAs the nerve endings in your teeth explode, you recoil in pain! You writhe on the ground as slime gushes from all of your orifices. You fucking die. {}".format(command, ewcfg.emote_slimeskull)
@@ -222,7 +222,7 @@ async def crush(cmd):
             response = "{} which item? (check **!inventory**)".format(command)
 
     # Send the response to the player.
-    resp_cont.add_channel_response(cmd.message.channel.name, fe_utils.formatMessage(cmd.message.author, response))
+    resp_cont.add_channel_response(cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     await resp_cont.post()
 
 
@@ -370,6 +370,7 @@ async def mine(cmd):
     time_now = int(time.time())
     poi = poi_static.id_to_poi.get(user_data.poi)
 
+    unearthed_item_type = ""
     response = ""
     # Kingpins can't mine.
     if user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe:
@@ -515,16 +516,37 @@ async def mine(cmd):
             # event bonus
             for id_event in world_events:
 
+                # Double slimegain
                 if world_events.get(id_event) == ewcfg.event_type_slimefrenzy:
                     event_data = EwWorldEvent(id_event=id_event)
                     if event_data.event_props.get('poi') == user_data.poi and int(event_data.event_props.get('id_user')) == user_data.id_user:
                         mining_yield *= 2
 
+                # Get a poudrin every !mine
                 if world_events.get(id_event) == ewcfg.event_type_poudrinfrenzy:
                     event_data = EwWorldEvent(id_event=id_event)
                     if event_data.event_props.get('poi') == user_data.poi and int(event_data.event_props.get('id_user')) == user_data.id_user:
                         unearthed_item_chance = 1
                         unearthed_item_amount = 1
+                    
+                # Get a poudrin or bone every !mine
+                if world_events.get(id_event) == ewcfg.event_type_spookyskeleton:
+                    event_data = EwWorldEvent(id_event=id_event)
+                    if event_data.event_props.get('poi') == user_data.poi and int(event_data.event_props.get('id_user')) == user_data.id_user:
+                        unearthed_item_chance = 1
+                        unearthed_item_amount = 1
+                        # Set the item pool to skeleton
+                        unearthed_item_type = "skeleton"
+
+                # Triple slimegain and ectoplasm every !mine
+                if world_events.get(id_event) == ewcfg.event_type_spookyskeleton:
+                    event_data = EwWorldEvent(id_event=id_event)
+                    if event_data.event_props.get('poi') == user_data.poi and int(event_data.event_props.get('id_user')) == user_data.id_user:
+                        mining_yield *= 3
+                        unearthed_item_chance = .85
+                        unearthed_item_amount = 1
+                        # Set the item pool to ghost
+                        unearthed_item_type = "ghost"
 
             if random.random() < 0.05:
                 id_event = create_mining_event(cmd)
@@ -559,7 +581,12 @@ async def mine(cmd):
 
             if unearthed_item == True:
                 # If there are multiple possible products, randomly select one.
-                item = random.choice(vendors.mine_results)
+                if unearthed_item_type == "ghost":
+                    item = random.choice([static_items.item_map.get('ectoplasm')])
+                elif unearthed_item_type == "skeleton":
+                    item = random.choice(vendors.mine_results + [static_items.item_map.get('bone')])
+                else:
+                    item = random.choice(vendors.mine_results)
 
                 if bknd_item.check_inv_capacity(user_data=user_data, item_type=item.item_type):
 
@@ -573,7 +600,9 @@ async def mine(cmd):
                             item_props=item_props
                         )
 
-                    if unearthed_item_amount == 1:
+                    if unearthed_item_type != "":
+                        response += "You {} one {} out of the {}!".format(random.choice(["beat", "smack", "strike", "!mine", "brutalize"]), item.str_name, unearthed_item_type)
+                    elif unearthed_item_amount == 1:
                         response += "You unearthed a {}! ".format(item.str_name)
                     else:
                         response += "You unearthed {} {}s! ".format(unearthed_item_amount, item.str_name)

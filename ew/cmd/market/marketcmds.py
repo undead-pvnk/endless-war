@@ -16,6 +16,7 @@ from ew.static import cfg as ewcfg
 from ew.static import community_cfg as comm_cfg
 from ew.static import poi as poi_static
 from ew.static.fish import fish_map
+from ew.static import vendors
 try:
     from ew.static.rstatic import relic_map
 except:
@@ -26,6 +27,7 @@ from ew.utils import market as market_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
+
 try:
     import ew.static.rstatic as relic_static
 except:
@@ -1399,6 +1401,7 @@ async def cancel_trade(cmd):
         response = "You're not trading with anyone right now."
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def bazaar_refresh(cmd):
     if not cmd.message.author.guild_permissions.administrator:

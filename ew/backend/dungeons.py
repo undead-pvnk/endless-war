@@ -17,6 +17,9 @@ class EwGamestate():
     # additional value for unique states
     value = ""
 
+    # numerical value
+    number = 0
+
     def __init__(
             self,
             id_state = None,
@@ -27,12 +30,13 @@ class EwGamestate():
             self.id_server = id_server
             self.id_state = id_state
             try:
-                data = bknd_core.execute_sql_query("SELECT {col_bit}, {col_value} FROM gamestates WHERE {id_server} = %s AND {id_state} = %s".format(
+                data = bknd_core.execute_sql_query("SELECT {col_bit}, {col_value}, {col_number} FROM gamestates WHERE {id_server} = %s AND {id_state} = %s".format(
 
                     id_state=ewcfg.col_id_state,
                     id_server=ewcfg.col_id_server,
                     col_bit=ewcfg.col_bit,
-                    col_value=ewcfg.col_value
+                    col_value=ewcfg.col_value,
+                    col_number = ewcfg.col_number
                 ), (
                     self.id_server,
                     self.id_state
@@ -42,6 +46,7 @@ class EwGamestate():
                     self.id_state = id_state
                     self.bit = data[0][0]
                     self.value = data[0][1]
+                    self.number = data[0][2]
                 else:
                     self.bit = None
 
@@ -50,14 +55,16 @@ class EwGamestate():
 
     def persist(self):
         bknd_core.execute_sql_query(
-            "REPLACE INTO gamestates ({id_server}, {id_state},  {col_bit}, {col_value}) VALUES (%s, %s, %s, %s)".format(
+            "REPLACE INTO gamestates ({id_server}, {id_state},  {col_bit}, {col_value}, {col_number}) VALUES (%s, %s, %s, %s, %s)".format(
                 id_server=ewcfg.col_id_server,
                 id_state=ewcfg.col_id_state,
                 col_bit=ewcfg.col_bit,
-                col_value=ewcfg.col_value
+                col_value=ewcfg.col_value,
+                col_number = ewcfg.col_number
             ), (
                 self.id_server,
                 self.id_state,
                 self.bit,
-                self.value
+                self.value,
+                self.number
             ))

@@ -33,8 +33,10 @@ async def debug8(cmd):
 async def debug9(cmd):
     return
 
+
 async def debug11(cmd):
     return
+
 
 async def scrutinize(cmd):
     return
@@ -47,14 +49,18 @@ async def change_gamestate(cmd):
 async def display_states(cmd):
     return
 
+
 async def debug12(cmd):
     return
+
 
 def bazaarTurnout():
     return 1
 
+
 async def contentCheck():
     return
+
 
 async def debug24():
     return

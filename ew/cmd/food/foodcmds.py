@@ -281,7 +281,6 @@ async def order(cmd):
                     else:
                         current_vendor = None
 
-
             if current_vendor is None or len(current_vendor) < 1:
                 response = "Check the {} for a list of items you can {}.".format(ewcfg.cmd_menu, ewcfg.cmd_order)
 
@@ -445,7 +444,7 @@ async def order(cmd):
                             if value == 0:
                                 response = "You swipe a {} from the counter at {} and give it to {}.".format(name, current_vendor, target_player_data.display_name)
                             else:
-                                response = "You slam {:,} slime down on the counter at {} for {} and give it to {}.".format(value, current_vendor, name, target_player_data.display_name)
+                                response = "You slam {:,} {} down on the counter at {} for {} and give it to {}.".format(value, currency_used, current_vendor, name, target_player_data.display_name)
 
                             response += "\n\n*{}*: ".format(target_player_data.display_name) + target_data.eat(item_data)
                             target_data.persist()
@@ -455,7 +454,7 @@ async def order(cmd):
                             if value == 0:
                                 response = "You swipe a {} from the counter at {} and eat it right on the spot.".format(name, current_vendor)
                             else:
-                                response = "You slam {:,} slime down on the counter at {} for {} and eat it right on the spot.".format(value, current_vendor, name)
+                                response = "You slam {:,} {} down on the counter at {} for {} and eat it right on the spot.".format(value, currency_used, current_vendor, name)
 
                             user_player_data = EwPlayer(id_user=user_data.id_user)
 

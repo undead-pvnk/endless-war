@@ -1,7 +1,8 @@
 # Global configuration options.
 
-version = "v4.102 S4A1 🍑🔨"
 
+
+version = "v4.1031 Event Cleanup 🚛"
 
 dir_msgqueue = 'msgqueue'
 
@@ -668,7 +669,7 @@ cmd_score = cmd_prefix + 'slimes'
 cmd_score_alt1 = cmd_prefix + 'slime'
 cmd_score_alt2 = cmd_prefix + 'skune'
 cmd_score_alt3 = cmd_prefix + 'sloim'
-cmd_score_alt4 = cmd_prefix + ':slimeepic:'
+cmd_score_alt4 = cmd_prefix + '<:slimeepic:973836637777825864>'
 cmd_giveslime = cmd_prefix + 'giveslime'
 cmd_giveslime_alt1 = cmd_prefix + 'giveslimes'
 cmd_help = cmd_prefix + 'help'
@@ -897,10 +898,12 @@ cmd_createall = cmd_prefix + 'createall'
 cmd_manualsoulbind = cmd_prefix + 'soulbind'
 cmd_editprops = cmd_prefix + 'editprops'
 cmd_setslime = cmd_prefix + 'setslime'
+cmd_seteventpoints = cmd_prefix + 'setresidue'
 cmd_setfestivity = cmd_prefix + 'setfestivity'
 cmd_checkstats = cmd_prefix + 'checkstats'
 cmd_makebp = cmd_prefix + 'makebp'
 cmd_exalt = cmd_prefix + 'exalt'
+cmd_awardart = cmd_prefix + 'awardart'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
 cmd_discard_alt1 = cmd_prefix + 'drop'
@@ -1001,7 +1004,6 @@ cmd_pointandlaugh = cmd_prefix + 'pointandlaugh'
 cmd_prank = cmd_prefix + 'prank'
 cmd_gvs_almanac = cmd_prefix + 'almanac'
 
-
 cmd_retire = cmd_prefix + 'retire'
 cmd_paspeaker = cmd_prefix + 'paspeaker'
 cmd_depart = cmd_prefix + 'depart'
@@ -1039,6 +1041,7 @@ cmd_unpot = cmd_prefix + 'unpot'
 cmd_wash = cmd_prefix + 'wash'
 cmd_browse = cmd_prefix + 'browse'
 cmd_smoke = cmd_prefix + 'smoke'
+cmd_vape = cmd_prefix + 'vape'
 cmd_frame = cmd_prefix + 'frame'
 cmd_addart = cmd_prefix + 'addart'
 cmd_extractsoul = cmd_prefix + 'extractsoul'
@@ -1251,6 +1254,10 @@ cmd_remove_offer = cmd_prefix + 'removeoffer'
 cmd_completetrade = cmd_prefix + 'completetrade'
 cmd_canceltrade = cmd_prefix + 'canceltrade'
 
+# Auction
+cmd_bid = cmd_prefix + 'bid'
+cmd_auction = cmd_prefix + 'auction'
+
 cmd_bazaar_refresh = cmd_prefix + 'refreshbazaar'
 
 cmd_cockdraw = cmd_prefix + 'cockdraw'
@@ -1387,6 +1394,7 @@ slimes_to_possess_fishing_rod = -10000
 slimes_to_crystalize_negapoudrin = -1000000
 slimes_cliffdrop = 200000
 slimes_item_drop = 10000
+slimes_addart = 250000
 
 # hunger
 min_stamina = 100
@@ -1595,6 +1603,15 @@ crime_status = {
 # how often to apply weather effects
 weather_tick_length = 10
 
+# moon phase string names
+moon_new = "new" #                      
+moon_waxing_start = "waxinghorns" #       :
+moon_waxing_end = "waxingmaw" #          (:
+moon_full = "crescent" #                ((:
+moon_waning_start = "waningmandibles" # ((
+moon_waning_end = "waningsliver" #      (
+moon_special = "green" #               glows
+
 # how often to delete expired world events
 event_tick_length = 5
 
@@ -1802,7 +1819,9 @@ emote_strawberrymilk = "<:strawberrymilk:431282128421126144>"
 emote_dab = "<a:dab:805341290220093450>"
 emote_thrash = "<a:thrash:805341344331202620>"
 
-#miscellaneous
+# Miscellaneous
+emote_tfwslime = "<:tfwslime:713609663832391680>"
+emote_ewspin = "<a:ewspin:694097283293118525>"
 emote_slimeepic = "<:slimeepic:973836637777825864>"
 
 # mining types
@@ -2074,6 +2093,7 @@ col_time_lastpremiumpurchase = 'time_lastpremiumpurchase'
 col_verified = 'verified'
 col_gender = 'gender'
 col_hogtied = 'hogtied'
+col_event_points = 'event_points'
 
 col_attack = 'attack'
 col_speed = 'speed'
@@ -2273,6 +2293,7 @@ col_empowered = "empowered"
 # Gamestate columns
 col_bit = "state_bit"
 col_id_state = "id_state"
+col_number = "number"
 
 # SWILLDERMUK
 col_id_user_pranker = 'id_user_pranker'
@@ -2508,6 +2529,8 @@ cause_cliff = 13
 cause_backfire = 14
 cause_praying = 15
 cause_poison = 16
+cause_crushing = 17
+cause_gay = 18
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
@@ -2607,6 +2630,7 @@ item_id_string = "string"
 item_id_tincan = "tincan"
 item_id_oldboot = "oldboot"
 item_id_leather = "leather"
+item_id_ectoplasm = "ectoplasm"
 item_id_feather = "feather"
 item_id_partypoppepperseeds = "partypoppepperseeds"
 item_id_partypopper = "partypopper"
@@ -2624,6 +2648,13 @@ item_id_rainwing = "rainwing"
 item_id_dyesolution = "dyesolution"
 item_id_textiles = "textiles"
 item_id_foodbase = "foodbase"
+item_id_mastectomy_mango_pod = "mastectomymangopod"
+item_id_menthol_mint_pod = "mentholmintpod"
+item_id_striking_strawberry_pod = "strikingstrawberrypod"
+item_id_ten_story_tobacco_pod = "tenstorytobaccopod"
+item_id_cop_killer_cotton_candy_pod = "copkillercottoncandypod"
+item_id_mustard_gas_pod = "mustardgaspod"
+item_id_spent_pod = "spentpod"
 item_id_civilianscalp = "civilianscalp"
 item_id_modelovaccine = "modelovirusvaccine"
 item_id_key = "key"
@@ -2682,6 +2713,7 @@ item_id_alligatortoy = "alligatortoy"
 item_id_undefinedprankscrap = "undefinedprankscrap"
 item_id_janusmask = "janusmask"
 item_id_swordofseething = "swordofseething"
+item_id_usedneedle = "usedneedle"
 
 prank_type_instantuse = 'instantuse'
 prank_type_response = 'response'
@@ -2877,6 +2909,8 @@ weapon_id_slimeringcan = 'slimeringcan'
 weapon_id_fingernails = 'fingernails'
 weapon_id_roomba = 'roomba'
 
+
+
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
                              "as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
                              "destructive capabilities that is beyond any human’s true understanding. And for its power, " \
@@ -2962,10 +2996,13 @@ fish_rarity_promo = "promo"
 
 fish_catchtime_night = "night"
 fish_catchtime_day = "day"
+fish_catchtime_moon_phase_special = "moonphasespecial"
 
 fish_slime_freshwater = "freshwater"
 fish_slime_saltwater = "saltwater"
 fish_slime_void = "void"
+fish_slime_event = "event"
+fish_slime_moon = "moon"
 
 fish_size_miniscule = "miniscule"
 fish_size_small = "small"
@@ -3111,9 +3148,11 @@ soul_durability = 100000000  # 100 mega
 
 cosmetic_id_raincoat = "raincoat"
 
-cosmeticAbility_id_lucky = "lucky"
+cosmeticAbility_id_lucky = "lucky" 
 cosmeticAbility_id_boost = "boost"  # Not in use. Rollerblades have this ability.
-cosmeticAbility_id_clout = "clout"
+cosmeticAbility_id_clout = "clout" 
+cosmeticAbility_id_nmsmascot = "nmsmascot" # Used to track whether you're wearing any mascot pieces.
+cosmeticAbility_id_furry = "furry"
 
 # Slimeoid attributes.
 slimeoid_strat_attack = "attack"
@@ -3252,6 +3291,7 @@ mutation_id_airlock = "airlock"
 mutation_id_lightminer = "lightminer"
 mutation_id_amnesia = "amnesia"
 mutation_id_stinkeye = "stinkeye"
+mutation_id_gay = "gay"
 
 mutation_milestones = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
 
@@ -3589,7 +3629,8 @@ mutation_descriptions = {
     mutation_id_coleblooded: "You get the ability to bust ghosts without coleslaw. If a ghost haunts you, they lose negaslime instead of gaining it.",
     mutation_id_landlocked: "When standing in a street either bordering an outskirt or the Slime Sea, use !loop to warp to the opposite side of the map. This also works on the ferry and at Slime's End Cliffs. There is a 60 second travel time when using !loop.",
     mutation_id_amnesia: "Your display name is replaced with ????? in EW's messages, and you can delete your message commands without ENDLESS WAR reacting. On a kill, the kill feed message is delayed by 60 seconds.",
-    mutation_id_stinkeye: "When surveying a district, the amount of slime on the ground is shown, along with 4 items starting with the lowest IDs."
+    mutation_id_stinkeye: "When surveying a district, the amount of slime on the ground is shown, along with 4 items starting with the lowest IDs.",
+    mutation_id_gay: "You're gay.",
 
 }
 
@@ -3674,6 +3715,8 @@ item_unique_commands = {
     "laptopcomputer": "LAPTOP\n!browse: Browse the web on your laptop for RFCK Discord servers if it is in your apartment.",
     "cigarette": "CIGARETTE\n!smoke <cigarette>: Smoke cigarettes.",
     "cigar": "CIGAR\n!smoke <cigar>: Smoke cigars.",
+    "vape": "VAPE\n!vape <vape pod>: Smoke vape pods in your inventory.",
+    "usedneedle": "USED NEEDLE\n!use <@player>: Totally PRANK someone.\n!turnin: Turn in used needles at Neo Milwaukee State for Exotic Residue.",
     "pictureframe": "PICTURE FRAME\n!frame <image link>: Put an image in a picture frame.\n!titleframe <title>: Add a title to a picture frame.",
     "television": "TV\n!watch: Watch TV if it's in your apartment. Stop watching by taking the TV out of your apartment."
 }
@@ -4327,6 +4370,8 @@ event_type_slimefrenzy = "slimefrenzy"
 event_type_poudrinfrenzy = "poudrinfrenzy"
 event_type_minecollapse = "minecollapse"
 event_type_voidhole = "voidhole"
+event_type_spookyghost = "spookyghost"
+event_type_spookyskeleton = "spookyskeleton"
 event_type_voidconnection = "voidconnection"
 event_type_marriageceremony = "marriageceremony"
 

@@ -55,19 +55,52 @@ class EwResponseContainer:
     members_to_update = []
 
     def __init__(self, client = None, id_server = None):
-        self.client = client
+        self.client = client if client is not None else ewutils.get_client()
         self.id_server = id_server
         self.channel_responses = {}
         self.channel_topics = {}
         self.members_to_update = []
 
     def add_channel_response(self, channel, response):
+        # Try to keep channels as objects where possible. between thread, regular, and dm channels, names are spooky to rely on
+        if isinstance(channel, str):
+            seek = get_channel(server=self.client.get_guild(int(self.id_server)), channel_name=channel)
+            channel = seek if seek is not None else channel
+
+        # Report bad inputs
+        if not hasattr(channel, "send"):
+            ewutils.logMsg("Error: add_channel_response could not parse channel from {}".format(channel))
+
+        # Attempt to split at newlines if it exceeds the max length
+        responses = []
+        if len(response) > ewcfg.discord_message_length_limit and len(response.split("\n")) > 2:
+            temp_str = response.split("\n", 1)[0]
+            for shortstr in response.split("\n")[1:]:
+                shortstr = "\n" + shortstr
+                if len(temp_str) + len(shortstr) < ewcfg.discord_message_length_limit:
+                    temp_str += shortstr
+                else:
+                    responses.append(temp_str)
+                    temp_str = shortstr
+            responses.append(temp_str)
+
+        # Add response to existing entry for its channel, or create a new entry
         if channel in self.channel_responses:
-            self.channel_responses[channel].append(response)
+            if len(responses) > 1:  # Use listed responses only when splitting successfully created at least 2
+                self.channel_responses[channel] += responses
+            else:
+                self.channel_responses[channel].append(response)
         else:
-            self.channel_responses[channel] = [response]
+            if len(responses) > 1:
+                self.channel_responses[channel] = responses
+            else:
+                self.channel_responses[channel] = [response]
 
     def add_channel_topic(self, channel, topic):
+        if isinstance(channel, str):  # For consistency (Even though this is commented out of post???)
+            seek = get_channel(server=self.client.get_guild(int(self.id_server)), channel_name=channel)
+            channel = seek if seek is not None else channel
+
         self.channel_topics[channel] = topic
 
     def add_member_to_update(self, member):
@@ -111,10 +144,9 @@ class EwResponseContainer:
             await ewrolemgr.updateRoles(client=self.client, member=member)
 
         for ch in self.channel_responses:
-            if channel == None:
-                current_channel = get_channel(server=server, channel_name=ch)
-                if current_channel == None:
-                    current_channel = ch
+            if channel is None:
+                # add_channel_response should be catching any string entries
+                current_channel = ch
             else:
                 current_channel = channel
             try:
@@ -255,7 +287,7 @@ def get_channel(server = None, channel_name = ""):
         if chan.name == channel_name:
             channel = chan
 
-    if channel == None and not ewutils.DEBUG:
+    if channel is None and not ewutils.DEBUG:
         ewutils.logMsg('Error: In get_channel(), could not find channel using channel_name "{}"'.format(channel_name))
 
     return channel
@@ -317,7 +349,9 @@ async def send_message(client, channel, text = None, embed = None, delete_after 
         ewutils.logMsg('Could not message user: {}\n{}'.format(channel, text))
         raise
     except:
-        ewutils.logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))
+        # Whitespace messages will always fail to send, don't clutter the log
+        if not text.isspace():
+            ewutils.logMsg('frontend send_message Failed to send message to channel: {}\n{}'.format(channel, text))
 
 
 """ Simpler to use version of send_message that formats message by default """
@@ -474,6 +508,14 @@ def create_death_report(cause = None, user_data = None):
 
     if (cause == ewcfg.cause_poison):  # Response for praying
         deathreport = formatMessage(user_member, "{} couldn't stop guzzling poison. {}".format(user_nick, ewcfg.emote_slimeskull))
+    
+    if (cause == ewcfg.cause_crushing): # Response for crushing a negapoudrin/negaslimeoid core
+        deathreport = "You bit into **NEGASLIME**, dink. Fucking idiot. {}".format(ewcfg.emote_slimeskull)
+        deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
+
+    if (cause == ewcfg.cause_gay): # Response for being gay in July
+        deathreport = "https://cdn.discordapp.com/attachments/431240644464214017/982634916854497321/unknown.png"
+        deathreport = formatMessage(user_player, deathreport)
 
     return (deathreport)
 

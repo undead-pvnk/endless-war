@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import random
 import sys
 import time
@@ -14,6 +15,7 @@ from ew.backend.status import EwEnemyStatusEffect
 from ew.backend.status import EwStatusEffect
 from ew.backend.worldevent import EwWorldEvent
 from ew.backend.mutation import EwMutation
+from ew.backend.dungeons import EwGamestate
 
 from ew.utils.transport import EwTransport
 
@@ -25,6 +27,7 @@ from ew.static import mutations as static_mutations
 from ew.static import poi as poi_static
 from ew.static import status as se_static
 from ew.static import vendors
+from ew.static import cosmetics as static_cosmetics
 
 from ew.backend.player import EwPlayer
 
@@ -49,6 +52,7 @@ from .cmdsutils import item_commands
 from .cmdsutils import item_off
 from .cmdsutils import location_commands
 from .cmdsutils import mutation_commands
+from ew.cmd.juviecmd import juviecmdutils
 
 from .cmdsutils import holiday_commands
 from .. import item as ewitem
@@ -78,7 +82,7 @@ async def score(cmd: cmd_utils.EwCmd):
         target_type = ewutils.mention_type(cmd, cmd.mention_ids[0])
 
     # :slimeepic:
-    if slime_alias == "slimeepic":
+    if slime_alias == "<slimeepic973836637777825864>":
         slime_alias = ewcfg.emote_slimeepic
 
     # endless war slime check
@@ -208,11 +212,15 @@ async def data(cmd):
         )
         adorned_cosmetics = []
 
+        # A list of all adorned cosmetics' ids
+        cosmetic_id_list = []
+
         for cosmetic in cosmetics:
             cos = EwItem(id_item=cosmetic.get('id_item'))
             if cos.item_props['adorned'] == 'true':
                 hue = hue_static.hue_map.get(cos.item_props.get('hue'))
                 adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
+                cosmetic_id_list.append(cos.item_props['id_cosmetic'])
 
         poi = poi_static.id_to_poi.get(user_data.poi)
         if poi != None:
@@ -289,9 +297,13 @@ async def data(cmd):
             outfit_map = itm_utils.get_outfit_info(id_user=cmd.message.author.id, id_server=cmd.guild.id)
             user_data.persist()
 
-            if outfit_map is not None:
+            # If user is wearing all pieces of the NMS mascot costume, add text 
+            if all(elem in cosmetic_id_list for elem in static_cosmetics.cosmetic_nmsmascot):
+                response_block += "You're dressed like a fucking airplane with tits, dude. "
+            # Otherwise, generate response text for freshness and style.
+            elif outfit_map is not None:
                 response_block += itm_utils.get_style_freshness_rating(user_data=user_data, dominant_style=outfit_map['dominant_style']) + " "
-
+            
         if user_data.hunger > 0:
             response_block += "You are {}% hungry. ".format(
                 round(user_data.hunger * 100.0 / user_data.get_hunger_max(), 1)
@@ -395,7 +407,6 @@ async def data(cmd):
             id_user=member.id,
             id_server=member.guild.id,
             display_name=member.display_name,
-            channel_name=cmd.message.channel.name
         )
 
         response += "\n\nhttps://rfck.app/stats/player.html?pl={}".format(member.id)
@@ -424,6 +435,16 @@ async def mutations(cmd):
 
         if user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_lucky]:
             return await exec_mutations(cmd)
+
+        if ewcfg.mutation_id_gay in mutations:
+            # PRESENT DAY
+            # PRESENT TIME
+            the_month = datetime.datetime.now().month
+            if the_month != 6: # If it's not pride month, sorry bucko.
+                resp_cont = EwResponseContainer(client=cmd.client, id_server=user_data.id_server)
+                die_resp = user_data.die(cause=ewcfg.cause_gay)
+                resp_cont.add_response_container(die_resp)
+                return await resp_cont.post()
 
         for mutation in mutations:
             mutation_flavor = static_mutations.mutations_map[mutation]
@@ -837,8 +858,8 @@ async def jump(cmd):
     user_data = EwUser(member=cmd.message.author)
     poi = poi_static.id_to_poi.get(user_data.poi)
 
-
-    if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
+    # If the player is in any of the mines
+    if user_data.poi in juviecmdutils.mines_map:
         response = "You bonk your head on the shaft's ceiling."
         # if voidhole world event is valid, move the guy to the void and post a message
         # else, post something about them bonking their heads
@@ -864,20 +885,25 @@ async def jump(cmd):
 
                     return
 
+    # Ghosts and kingpins can't jump
     elif user_data.life_state == ewcfg.life_state_corpse:
         response = "You're already dead. You'd just ghost hover above the drop."
     elif user_data.life_state == ewcfg.life_state_kingpin:
         response = "You try to end things right here. Sadly, the gangster sycophants that kiss the ground you walk on grab your ankles in desperation and prevent you from suicide. Oh, the price of fame."
 
+    # If a poi has a jump destination specificied, go there.
     elif poi.jump_dest != '':
         resp_cont = EwResponseContainer(client=cmd.client, id_server=user_data.id_server)
 
         user_data.poi = poi.jump_dest
         poi_dest = poi_static.id_to_poi.get(poi.jump_dest)
+        # The blimp's jump destination - becomes wherever the blimp is.
         if user_data.poi == 'blimpland':
             blimp_obj = EwTransport(id_server=user_data.id_server, poi = poi.id_poi)
             user_data.poi = blimp_obj.current_stop
+            poi_dest = poi_static.id_to_poi.get(blimp_obj.current_stop)
 
+        # Kill the player if they don't have laaf
         if ewcfg.mutation_id_lightasafeather not in user_data.get_mutations():
             user_data.trauma = ewcfg.trauma_id_environment
             die_resp = user_data.die(cause=ewcfg.cause_falling)
@@ -888,42 +914,50 @@ async def jump(cmd):
         user_data.persist()
         response = ewcfg.jump_responses.get(poi.id_poi).format(cmd.message.author.display_name)
 
+        # Secnd messages to channels
         resp_cont.add_channel_response(channel=poi.channel, response=response)
         resp_cont.add_channel_response(channel=poi_dest.channel, response=response_dest)
         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
         return await resp_cont.post()
-
-
-
+            
+    # If you're NOT at the cliffs.
     elif cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
         roll = random.randrange(25)
+        # Small chance to do parkour
         if roll == 0:
             response = "You start running and taking momentum to then make the fucking highest jump you've ever done. When you reach the ground, you somehow manage to do a sommersault landing. Damn, guess you were good at parkour in the end!"
         else:
             response = "You jump. Nope. Still not good at parkour."
+    
+    # Jump off the cliffs
     else:
         response = "Hmm. The cliff looks safe enough. You imagine, with the proper diving posture, you'll be able to land in the slime unharmed. You steel yourself for the fall, run along the cliff, and swan dive off its steep edge. Of course, you forgot that the Slime Sea is highly corrosive, there are several krakens there, and you can't swim. Welp, time to die."
 
+        # Take all of the player's items
         cliff_inventory = bknd_item.inventory(id_server=cmd.guild.id, id_user=user_data.id_user)
         for item in cliff_inventory:
             item_object = EwItem(id_item=item.get('id_item'))
+            # Don't put soulbound items in the sea.
             if item.get('soulbound') == True:
                 pass
 
+            # If a weapon is equipped or sidearmed, put it directly in the sea's inventory.
             elif item_object.item_type == ewcfg.it_weapon:
                 if item.get('id_item') == user_data.weapon or item.get('id_item') == user_data.sidearm:
                     bknd_item.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.guild.id)
-
+                # Otherwise goes through regular cliff !toss checks. 
                 else:
                     item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.guild.id)
 
-
+            # If an item is adorned, put it directly into the sea's inventory.
             elif item_object.item_props.get('adorned') == 'true':
                 bknd_item.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.guild.id)
 
+            # Otherwise goes through regular cliff !toss checks.
             else:
                 item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.guild.id)
 
+        # Kill the player
         user_data.trauma = ewcfg.trauma_id_environment
         die_resp = user_data.die(cause=ewcfg.cause_cliff)
         user_data.persist()
@@ -1254,8 +1288,12 @@ async def fashion(cmd):
 
                 outfit_map = itm_utils.get_outfit_info(id_user=cmd.message.author.id, id_server=cmd.guild.id)
                 user_data.persist()
-
-                if outfit_map is not None:
+                
+                # If user is wearing all pieces of the NMS mascot costume, add text 
+                if all(elem in adorned_ids for elem in static_cosmetics.cosmetic_nmsmascot):
+                    response += "You're dressed like a fucking airplane with tits, dude."
+                
+                elif outfit_map is not None:
                     response += itm_utils.get_style_freshness_rating(user_data=user_data, dominant_style=outfit_map['dominant_style'])
 
             response += " Your total freshness rating is {}.\n\n".format(user_data.freshness)
@@ -1343,7 +1381,10 @@ async def fashion(cmd):
             if len(adorned_cosmetics) >= 2:
                 response += "\n\n"
 
-                if user_data.freshness < ewcfg.freshnesslevel_1:
+                # If user is wearing all pieces of the NMS mascot costume, add text 
+                if all(elem in adorned_ids for elem in static_cosmetics.cosmetic_nmsmascot):
+                    response += "They're dressed like a fucking airplane with tits, dude."
+                elif user_data.freshness < ewcfg.freshnesslevel_1:
                     response += "Their outfit is starting to look pretty fresh, but They’ve got a long way to go if they wanna be NLACakaNM’s next top model."
                 elif user_data.freshness < ewcfg.freshnesslevel_2:
                     response += "Their outfit is low-key on point, not gonna lie. They’re goin’ places, kid."
@@ -1597,7 +1638,7 @@ async def help(cmd):
             "precision", "incendiary", "explosive",
         ]
 
-        if poi is None:
+        if poi is None or cmd.message.guild is None:
             # catch-all response for when user isn't in a sub-zone with a help response
             response = ewcfg.generic_help_response
 

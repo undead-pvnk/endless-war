@@ -452,15 +452,23 @@ async def fursuit(cmd):
     mutations = user_data.get_mutations()
     market_data = EwMarket(id_server=cmd.guild.id)
 
+    # gets days until full moon
     if ewcfg.mutation_id_organicfursuit in mutations:
-        days_until = -market_data.day % 31
+        days_until = -market_data.day % 29
+        if days_until > 15:
+            days_until -= 14
+        elif days_until < 13:
+            days_until += 15
+        else:
+            days_until = 0
 
         if days_until == 0:
             response = "Hair is beginning to grow on the surface of your skin rapidly. Your canine instincts will take over soon!"
         else:
             response = "With a basic hairy palm reading, you determine that you'll be particularly powerful in {} day{}.".format(days_until, "s" if days_until != 1 else "")
 
-        if ewutils.check_fursuit_active(market_data):
+        # If there's an active full moon, tell the user that they have the associated buffs.
+        if ewutils.check_moon_phase(market_data) == ewcfg.moon_full:
             response = "The full moon shines above! Now's your chance to strike!"
 
     else:
@@ -491,7 +499,7 @@ async def devour(cmd):
         item_obj = EwItem(id_item=item_sought.get('id_item'))
         if time_lastuse + 60 > time_now:
             response = "You're still picking stuff out of your teeth from the last weird shit you ate. Try again in {} seconds.".format(time_lastuse + 60 - time_now)
-        elif (item_obj.item_type not in [ewcfg.it_cosmetic, ewcfg.it_furniture, ewcfg.it_food] and item_obj.item_props.get('id_item') != 'slimepoudrin') or item_obj.item_props.get('id_cosmetic') == 'soul':
+        elif (item_obj.item_type not in [ewcfg.it_cosmetic, ewcfg.it_furniture, ewcfg.it_food] and item_obj.item_props.get('id_item') != 'slimepoudrin') or item_obj.item_props.get('id_cosmetic') in ['soul', 'snouse']:
             response = "You swallow the {} whole, but after realizing this might be a mistake, you cough it back up.".format(item_sought.get('name'))
         elif item_obj.soulbound == True:
             response = "You attempt to consume the {}, but you realize it's soulbound and that you were about to eat your own existnece. Your life flashes before your eyes, so you decide to stop.".format(item_sought.get('name'))

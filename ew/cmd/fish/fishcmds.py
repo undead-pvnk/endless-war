@@ -6,6 +6,7 @@ from ew.backend import item as bknd_item
 from ew.backend.fish import EwOffer
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
+from ew.backend.dungeons import EwGamestate
 from ew.static import cfg as ewcfg
 from ew.static import community_cfg as comm_cfg
 from ew.static import fish as static_fish
@@ -17,6 +18,7 @@ from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
 from ew.utils import rolemgr as ewrolemgr
+from ew.cmd.move.moveutils import one_eye_dm
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from . import fishutils
@@ -28,21 +30,27 @@ from .fishutils import gen_fish
 from .fishutils import gen_fish_size
 from .fishutils import length_to_size
 
+try:    
+    from ew.utils import rutils 
+except:
+    from ew.utils import rutils_dummy as rutils
+
 """ Casts a line into the Slime Sea """
 
 
 async def cast(cmd):
-    time_now = round(time.time())
     has_reeled = False
     user_data = EwUser(member=cmd.message.author)
     mutations = user_data.get_mutations()
 
+    # Can only fish in the pier's channel
     if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
     market_data = EwMarket(id_server=cmd.message.author.guild.id)
     statuses = user_data.getStatusEffects()
 
+    # Add the user to the fishers list if they're not there already.
     if cmd.message.author.id not in fishutils.fishers.keys():
         fishutils.fishers[cmd.message.author.id] = EwFisher()
 
@@ -61,6 +69,7 @@ async def cast(cmd):
         poi = poi_static.id_to_poi.get(user_data.poi)
         district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
+        # If they're possessed, mark that.
         rod_possession = user_data.get_possession('rod')
         if rod_possession:
             fisher.inhabitant_id = rod_possession[0]
@@ -72,6 +81,7 @@ async def cast(cmd):
         else:
             has_fishingrod = False
 
+            # Check for if the user is holding a fishingrod or high, for their corresponding effects later.
             if user_data.weapon >= 0:
                 weapon_item = EwItem(id_item=user_data.weapon)
                 weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
@@ -80,11 +90,12 @@ async def cast(cmd):
 
             if ewcfg.status_high_id in statuses:
                 fisher.high = True
+
             fisher.fishing = True
             fisher.bait = False
             fisher.bait_id = 0
             fisher.pier = poi
-            fisher.current_fish = gen_fish(market_data, fisher, has_fishingrod)
+            fisher.current_fish = gen_fish(market_data, fisher, has_fishingrod, mutations)
 
             high_value_bait_used = False
 
@@ -98,6 +109,7 @@ async def cast(cmd):
 
             item_sought = bknd_item.find_item(item_search=item_search, id_user=author.id, id_server=server.id)
 
+            # Give a chance to catch a specific fish if you use certain items as bait
             if item_sought:
                 item = EwItem(id_item=item_sought.get('id_item'))
 
@@ -138,6 +150,9 @@ async def cast(cmd):
                         if random.randrange(5) == 1:
                             fisher.current_fish = "uncookedkingpincrab"
 
+                    elif id_food == "druggumbo":
+                        fisher.pier.pier_type = ewcfg.fish_slime_event
+
                     elif id_food == "masterbait":
                         high_value_bait_used = True
 
@@ -152,19 +167,26 @@ async def cast(cmd):
             if fisher.current_fish == "item":
                 fisher.current_size = "item"
 
+            # Fishing rod stuff
             else:
                 mastery_bonus = 0
                 # Git gud.
+
+                # If user has a fishing rod, take their mastery (10 at max !anoint) minus 4.
                 if has_fishingrod:
                     mastery_bonus += user_data.weaponskill - 4 #
+                # If user doesn't have a fishing rod, mastery_bonus is -4.
                 else:
                     mastery_bonus += -4
-                
+
+                # If ghost fishing, mastery_bonus is boosted by 1.
                 if rod_possession:
                     mastery_bonus += 1
 
+                # If mastery_bonus is below 0, make it 0.
                 mastery_bonus = max(0, mastery_bonus)
 
+                # Create fish size and length based on mastery_bonus
                 fisher.length = gen_fish_size(mastery_bonus)
                 fisher.current_size = length_to_size(fisher.length)
 
@@ -179,11 +201,89 @@ async def cast(cmd):
                 response += "glowing Slime Lake."
             elif fisher.pier.pier_type == ewcfg.fish_slime_void:
                 response += "pond's black waters."
+            elif fisher.pier.pier_type == ewcfg.fish_slime_event:
+                response += "slime, leaving a trail of pollution in its stead."
 
             user_data.hunger += ewcfg.hunger_perfish * ewutils.hunger_cost_mod(user_data.slimelevel)
             user_data.persist()
 
-            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            # Moon fishing
+            if fisher.pier.pier_type == ewcfg.fish_slime_moon:
+                player_cast = False
+                if cmd.mentions_count == 1:
+                    target_data = EwUser(member=cmd.mentions[0])
+                    moonfishing = EwGamestate(id_state='moonfishing', id_server=cmd.guild.id)
+                    # If Player Casting has been turned on (through the moonfishing bit), and the target is in the poi, then make player_cast work.
+                    if moonfishing.bit == 1 and target_data.poi == user_data.poi:
+                        player_cast = True
+
+                if player_cast:
+                    # Send a bit of a wait message
+                    response = "***HRRRRKK-!!!***"
+                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    await asyncio.sleep(2)
+
+                    # Get target_data and make sure they can't be thrown if they have Big Bones
+                    target_data = EwUser(member=cmd.mentions[0])
+                    target_mutations = target_data.get_mutations()
+                    if ewcfg.mutation_id_bigbones in target_mutations:
+                        response = "You try to cast {} off towards NLACakaNM, but their ass is too fat! They simply refuse to break from the moon's gravitational pull.".format(cmd.mentions[0].display_name)
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+                    # Make response container
+                    resp_cont = fe_utils.EwResponseContainer(id_server=user_data.id_server)
+
+                    # Make cast flavor text, update hunger, persist user_data.
+                    response = "You cast {} off towards NLACakaNM.".format(cmd.mentions[0].display_name)
+                    user_data.hunger += ewcfg.hunger_perfish * ewutils.hunger_cost_mod(user_data.slimelevel)
+                    user_data.persist()
+                    resp_cont.add_channel_response(cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+                    # Get a district to toss the target into
+                    targeted_district_id = random.choice(poi_static.capturable_districts)
+                    targeted_district = poi_static.id_to_poi.get(targeted_district_id)
+                    
+                    ewutils.moves_active[target_data.id_user] = 0
+                    rutils.movement_checker(target_data, poi_static.id_to_poi.get(target_data.poi), targeted_district)
+
+                    # Move the target into that district
+                    await ewrolemgr.updateRoles(client=cmd.client, member=cmd.mentions[0], new_poi=targeted_district_id)
+                    target_data.poi = targeted_district.id_poi
+                    target_data.time_lastenter = int(time.time())
+                    target_data.persist()
+
+                    # Move ghosts and make possible oeo dms.
+                    await one_eye_dm(id_user=target_data.id_user, id_server=target_data.id_server, poi=targeted_district_id)
+                    await target_data.move_inhabitants(id_poi=targeted_district_id)
+                    response = "You land in {}, being thrown from the moon by {}. That bastard!".format(targeted_district.str_name, cmd.message.author.display_name)
+                    resp_cont.add_channel_response(targeted_district.channel, fe_utils.formatMessage(cmd.mentions[0], response))
+                    
+                    await resp_cont.post()
+                    
+                    fisher.cast_poi = targeted_district
+                    fisher.bait = True
+
+                else: # Cast off of the moon (normal fishing)
+                    # If the player casts at a specific district, then do that. Otherwise, FIND a random district.
+                    valid_poi = False
+                    if ewutils.flattenTokenListToString(cmd.tokens[1:]) != "":
+                        district_sought = ewutils.flattenTokenListToString(cmd.tokens[1:])
+                        district = poi_static.id_to_poi.get(district_sought)
+
+                        # If the the found district is cappable 
+                        if district != None and district.id_poi in poi_static.capturable_districts:
+                            valid_poi = True
+
+                    if valid_poi is False:
+                        district_sought_id = random.choice(poi_static.capturable_districts)
+                        district = poi_static.id_to_poi.get(district_sought_id)
+                    
+                    response = "You cast your fishing pole towards NLACakaNM. You wager it'll land in... {}? Probably.".format(district.str_name)
+                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    
+                    fisher.cast_poi = district
+            else:
+                await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
             bite_text = gen_bite_text(fisher.current_size)
 
@@ -193,10 +293,11 @@ async def cast(cmd):
             if fisher.bait == True:
                 # Bait attatched, chance to get a bite increases from 1/10 to 1/7
                 fun -= 30
-            if fisher.pier == ewcfg.poi_id_ferry:
+            if fisher.pier.id_poi == ewcfg.poi_id_ferry:
                 # Fisher is on the ferry, chance to get a bite increases from 1/10 to 1/9
                 fun -= 10
             if ewcfg.mutation_id_lucky in mutations:
+                # If they have the Lucky mutation, chance to bite increases to 1/8
                 fun -= 20
             if fisher.inhabitant_id:
                 # Having your rod possessed increases your chance to get a bite by 50%
@@ -204,21 +305,31 @@ async def cast(cmd):
             if high_value_bait_used:
                 fun = 5
 
+            # A variable to track how many times a fish has not bit per !cast
             bun = 0
 
             while not ewutils.TERMINATE:
 
                 if fun <= 0:
                     fun = 1
+                    damp = 1
                 else:
+                    # Damp is a random number between 0 and (fun - 1). If damp is <= 10, a fish will bite.
                     damp = random.randrange(fun)
 
-                if fisher.high:
-                    await asyncio.sleep(30)
-                elif high_value_bait_used:
+                # Wait this many seconds until trying for a bite - 30 if high on weed, 5 if debug bait, 60 if regular.
+                if high_value_bait_used:
                     await asyncio.sleep(5)
+                elif fisher.pier.pier_type == ewcfg.fish_slime_moon:
+                    if fisher.high:
+                        await asyncio.sleep(35)
+                    else:
+                        await asyncio.sleep(70)
                 else:
-                    await asyncio.sleep(60)
+                    if fisher.high:
+                        await asyncio.sleep(30)
+                    else:
+                        await asyncio.sleep(60)
 
                 # Cancel if fishing was interrupted
                 if current_fishing_id != fisher.fishing_id:
@@ -228,6 +339,7 @@ async def cast(cmd):
 
                 user_data = EwUser(member=cmd.message.author)
 
+                # If user changes POIs or dies, stop.
                 if fisher.pier == "" or user_data.poi != fisher.pier.id_poi:
                     fisher.stop()
                     return
@@ -235,21 +347,34 @@ async def cast(cmd):
                     fisher.stop()
                     return
 
+                # If damp is greater than 10, a fish won't bite. If it's less than or equal to 10, a fish will bite.
                 if damp > 10:
-                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, random.choice(comm_cfg.void_fishing_text if fisher.pier.pier_type == ewcfg.fish_slime_void else comm_cfg.normal_fishing_text)))
+                    # Send fishing flavor text
+                    if fisher.pier.pier_type == ewcfg.fish_slime_void:
+                        flavor_response = random.choice(comm_cfg.void_fishing_text)
+                    elif fisher.pier.pier_type == ewcfg.fish_slime_moon:
+                        flavor_response = random.choice(comm_cfg.moon_fishing_text)
+                    else:
+                        flavor_response = random.choice(comm_cfg.normal_fishing_text)
+                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, flavor_response))
+                    # Make a bite slightly more likely, increase the counter for how many failed ticks
                     fun -= 2
                     bun += 1
+                    # If 5 or 15 ticks have gone by without a bite, make a bite even slightly more likely.
                     if bun >= 5:
                         fun -= 1
                     if bun >= 15:
                         fun -= 1
+                    # repeat
                     continue
                 else:
                     break
 
+            # Set bite to true, send !REEL alert, wait 8 seconds.
             fisher.bite = True
             await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, bite_text))
 
+            # Wait for !reel
             await asyncio.sleep(8)
 
             if fisher.bite != False:
@@ -274,6 +399,7 @@ async def cast(cmd):
 async def reel(cmd):
     user_data = EwUser(member=cmd.message.author)
 
+    # Must be in the correct channel
     if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
@@ -282,30 +408,42 @@ async def reel(cmd):
     fisher = fishutils.fishers[cmd.message.author.id]
     poi = poi_static.id_to_poi.get(user_data.poi)
 
+    # If the user is a ghost
     if user_data.life_state == ewcfg.life_state_corpse:
         valid_possession = user_data.get_possession('rod')
+        
+        # Make sure user is actually possessing a rod.
         if valid_possession:
             inhabitee = user_data.get_inhabitee()
             fisher = fishutils.fishers[inhabitee] if inhabitee in fishutils.fishers.keys() else None
+
+            # If the player the ghost is fishing with has !cast
             if fisher:
+                # If a fish hasn't bit, cancel possession and cast.
                 if fisher.bite == False:
                     fisher.fleshling_reeled = True
                     response = "You reeled in too early! You and your pal get nothing."
                     response += cancel_rod_possession(fisher, user_data)
                     fisher.fleshling_reeled = True
                     fisher.stop()
+
+                # If a fish has bit
                 else:
+                    # If the living player has !reeled, award the fish to the player and negaslime to the ghost
                     if fisher.fleshling_reeled:
                         response = await award_fish(fisher, cmd, user_data)
                         user_data = EwUser(member = cmd.message.author)
+                    # If the living player hasn't !reeled, wait for them to !reel.
                     else:
                         fisher.ghost_reeled = True
                         response = "You reel in anticipation of your fleshy partner!"
+
             else:
                 response = "You fleshy partner hasn't even cast their hook yet."
         else:
             response = "You can't fish while you're dead."
 
+    # if the user isn't a ghost
     elif user_data.poi in poi_static.piers:
         # Players who haven't cast a line cannot reel.
         if fisher.fishing == False:
@@ -314,21 +452,28 @@ async def reel(cmd):
         # If a fish isn't biting, then a player reels in nothing.
         elif fisher.bite == False:
             response = ''
+            # If you're fishing with a ghost
             if fisher.inhabitant_id:
                 fisher.ghost_reeled = True
                 response = "You reeled in too early! You and your pal get nothing."
                 response += cancel_rod_possession(fisher, user_data)
+            # If you're fishing alone
             else:
                 response = "You reeled in too early! Nothing was caught."
+
+            # Stop the fisher created in !cast
             fisher.stop()
 
         # On successful reel.
         else:
+            # If you're fishing alone OR if you're fishing with a ghost and they've already !reeled.
             if fisher.ghost_reeled or not fisher.inhabitant_id:
                 response = await award_fish(fisher, cmd, user_data)
+            # If you're fishing with a ghost and they haven't !reeled.
             else:
                 fisher.fleshling_reeled = True
                 response = "You reel in anticipation of your ghostly partner!"
+
     else:
         response = "You cast your fishing rod unto a sidewalk. That is to say, you've accomplished nothing. Go to a pier if you want to fish."
 

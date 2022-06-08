@@ -55,6 +55,10 @@ async def vouch(cmd):
 
 
 async def store(cmd):
+    if len(cmd.tokens) < 2:
+        response = "{} what?".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
     user_data = EwUser(member=cmd.message.author)
     response = ""
 
@@ -155,6 +159,10 @@ async def store(cmd):
 
 
 async def take(cmd):
+    if len(cmd.tokens) < 2:
+        response = "{} what?".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
     user_data = EwUser(member=cmd.message.author)
     response = ""
     admin = 0

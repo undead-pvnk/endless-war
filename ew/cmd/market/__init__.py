@@ -43,6 +43,4 @@ cmd_map = {
     ewcfg.cmd_addart:marketcmds.populate_image,
 
 
-
-
 }

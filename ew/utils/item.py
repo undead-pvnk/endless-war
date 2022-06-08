@@ -17,6 +17,7 @@ from ..backend.item import EwItem
 from ..backend.player import EwPlayer
 from ..backend.user import EwUserBase as EwUser
 from ..static import cfg as ewcfg
+from ..static import community_cfg as comm_cfg
 from ..static import hue as hue_static
 from ..static import items as static_items
 from ..static import weapons as static_weapons
@@ -476,7 +477,18 @@ async def perform_prank_item_side_effect(side_effect, cmd = None, member = None)
         try:
             await fe_utils.send_message(cmd.client, target_member, direct_message)
         except:
-            await fe_utils.send_message(cmd.client, fe_utils.get_channel(cmd.guild, cmd.message.channel), fe_utils.formatMessage(target_member, direct_message))
+            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(target_member, direct_message))
+
+    elif side_effect == "usedneedle_effect":
+        target_member = cmd.mentions[0]
+        target_data = EwUser(member=target_member)
+        
+        response = "\n\n(﹁ _﹁) ~→       ԅ(¯﹃¯ԅ)"
+
+        if random.randrange(2) == 0:
+            target_data.rand_seed = random.randrange(500000)        
+            target_data.persist()
+            response += "\n\n*{}*: What's this? You feel a shift in your pants. You whip them open and see your cock changing in size! Unbelievable! You must've contracted {} from the used needle!".format(target_member.display_name, random.choice(comm_cfg.actual_stds))
 
     return response
 

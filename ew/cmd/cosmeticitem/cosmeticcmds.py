@@ -1,4 +1,6 @@
 import asyncio
+import time
+import random
 
 from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
@@ -95,8 +97,86 @@ async def smoke(cmd):
 
         else:
             response = "You can't smoke that."
-    else:
+    else:   
         response = "There aren't any usable cigarettes or cigars in your inventory."
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def vape(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    vape_sought = None
+    pod_sought = None
+
+    # If the player specified a pod type, get that pod
+    search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    pod_seek = bknd_item.find_item(item_search=search, id_user=cmd.message.author.id, id_server=cmd.guild.id)
+    if pod_seek:
+        item = EwItem(id_item=pod_seek.get('id_item'))
+        if item.item_props.get('context') == "vapepod":
+            pod_sought = item
+
+    # Find a vape and a pod
+    inventory = bknd_item.inventory(id_user=cmd.message.author.id, id_server=user_data.id_server)
+    for inv_item in inventory:
+        # If there's no vape found, check if the item is a vape.
+        if inv_item.get('item_type') == ewcfg.it_cosmetic and vape_sought == None:
+            item = EwItem(id_item=inv_item.get('id_item'))
+            if item.item_props.get('id_cosmetic') == "vape":
+                vape_sought = item
+
+        # If there's no pod found, check if the item is a pod.
+        elif inv_item.get('item_type') == ewcfg.it_item and pod_sought == None:
+            item = EwItem(id_item=inv_item.get('id_item'))
+            if item.item_props.get('context') == "vapepod":
+                pod_sought = item
+
+    # If there was a vape
+    if vape_sought:
+        # If there was a pod
+        if pod_sought:
+            # Give the user some crime and a response
+            user_data.change_crime(n=ewcfg.cr_underage_smoking_points)
+            response = "You flick out your vape and bring it to your mouth. The {} feels so relaxing. So *hip* (and with the times). All those adults who told you to stop smoking clearly don't know how fun vaping is.".format(pod_sought.item_props.get('item_name'))
+            user_data.persist()
+        
+            # Delete vape pod
+            bknd_item.item_delete(pod_sought.id_item)
+    
+            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            await asyncio.sleep(9)
+
+            # Have them vaaaaaaaaaaaaape
+            vapes = 0
+            while vapes < 11:
+                if random.randint(1, 10) == 1:
+                    response = "You do a slick trick with an epic vape cloud. Sheeeeeeeesh..."
+                else:
+                    response = "You take a puff of the vape."
+
+                await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                await asyncio.sleep(28)
+                vapes += random.randint(1, 5)
+
+            # Create a spent vape pod
+            bknd_item.item_create(
+            item_type=ewcfg.it_item,
+            id_user=user_data.id_user,
+            id_server=cmd.guild.id,
+            item_props={
+                'id_item': ewcfg.item_id_spent_pod,
+                'item_name': 'Spent Vape Pod',
+                'item_desc': 'A spent vape pod. Junk.',
+                'context': 'spentpod',
+            })
+            
+            # Final message
+            response = "Your vape ran out of juice. Better get a new pod."
+
+        else:
+            response = "You don't have any usable pods in your inventory."
+    else:
+        response = "You don't have a vape in your inventory, dink."
+    # Send message
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
@@ -144,7 +224,7 @@ async def adorn(cmd):
                 if i.item_props.get("adorned") == 'true':
                     already_adorned = True
                 elif i.item_props.get("context") == 'costume' and not ewcfg.dh_active:
-                    if not ewcfg.dh_active and not ewutils.check_fursuit_active(market_data) :
+                    if not ewcfg.dh_active and ewutils.check_moon_phase(market_data) != ewcfg.moon_full:
                         response = "You can't adorn your costume right now."
                 else:
                     item_sought = i
@@ -167,6 +247,7 @@ async def adorn(cmd):
             # If you have enough space, adorn
             else:
                 item_sought.item_props['adorned'] = 'true'
+                ability = item_sought.item_props['ability']
 
                 # Take the hat from your slimeoid if necessary
                 if item_sought.item_props.get('slimeoid') == 'true':
@@ -175,6 +256,15 @@ async def adorn(cmd):
                 else:
                     onadorn_response = item_sought.item_props['str_onadorn']
                     response = onadorn_response.format(item_sought.item_props['cosmetic_name'])
+
+                # Cosmetics with these abilities will turn you into a furry
+                if ability in ['nmsmascot', 'furry', 'moonlighter']:
+                    user_data.race = ewcfg.race_furry
+                    time_now = int(time.time())
+                    user_data.time_racialability = time_now + ewcfg.cd_change_race
+                    # Only certain will get extra flavor text
+                    if ability in ['moonlighter', 'furry']:
+                        response += " ...You feel yourself becoming... furpilled?"
 
                 item_sought.persist()
                 user_data.persist()

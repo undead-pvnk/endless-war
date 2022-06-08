@@ -8,6 +8,7 @@ from ..backend.market import EwMarket
 from ..backend.market import EwStock
 from ..backend.player import EwPlayer
 from ..utils.frontend import EwResponseContainer
+from ..backend.dungeons import EwGamestate
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
 import asyncio

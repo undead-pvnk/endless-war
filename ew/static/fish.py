@@ -1005,6 +1005,208 @@ fish_list = [
         str_desc = "This dude just has a bad vibe.",
         slime = "void",
     ),
+    EwFish(
+        id_fish = "greenmoonwrasse",
+        str_name = "Green Moon Wrasse",
+        rarity = "rare",
+        catch_time = "moonphasespecial",
+        catch_weather = None,
+        str_desc = "Its scales are only visible in cool green moonlight.",
+        slime = None,
+    ),
+    EwFish(
+        id_fish = "deadplebefish",
+        str_name = "Dead Plebefish",
+        rarity = "common",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "It overdosed ):",
+        slime = "event",
+    ),
+    EwFish(
+        id_fish = "dabbutithasavape",
+        str_name = "Dab But It Has A Vape",
+        rarity = "common",
+        catch_time = "night",
+        catch_weather = None,
+        str_desc = "Definitely hasn't developed an addiction to mango vape pens.",
+        slime = "event",
+    ),
+    EwFish(
+        id_fish = "thrashbutitsoncocaine",
+        str_name = "Thrash But It's On Cocaine",
+        rarity = "common",
+        catch_time = "day",
+        catch_weather = None,
+        str_desc = "GETTT ROOOOOWWWWWWWWWWWWDDDDDDDDDDDYYYYYYYYYYYY MF'ERRRRRRRRRRRRRRRRRRR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+        slime = "event",
+    ),
+    EwFish(
+        id_fish = "methamphetaminnow",
+        str_name = "Methamphetaminnow",
+        rarity = "common",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "Its shiny quartz-like hide is quite delicious!",
+        slime = "event",
+    ),
+    # Uncommon
+    EwFish(
+        id_fish = "needlefish",
+        str_name = "Needlefish",
+        rarity = "uncommon",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "Don't prick yourself!",
+        slime = "event",
+    ),
+    EwFish(
+        id_fish = "fangblenny",
+        str_name = "Fang Blenny",
+        rarity = "uncommon",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "One bite from this guy's chompers and you'll be OUT.",
+        slime = "event",
+    ),
+    EwFish(
+        id_fish = "salviamander",
+        str_name = "Salviamander",
+        rarity = "uncommon",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "Frequently found bouncing on his boy's dick.",
+        slime = "event",
+    ),
+    # Rare
+    EwFish( # Gives BLUNT effects 
+        id_fish = "weedurchin",
+        str_name = "Weed Urchin",
+        rarity = "rare",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "An urchin that's totallyyyyyyy chill, broh.",
+        slime = "event",
+    ),
+    EwFish(
+        id_fish = "blackgar",
+        str_name = "Black Gar",
+        rarity = "rare",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "It may have a snout, but there's no included spoon.",
+        slime = "event",
+    ),
+    EwFish(
+        id_fish = "salemaporgyznuts",
+        str_name = "Salema Porgyznuts",
+        rarity = "rare",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "Loves to roast people so hard.",
+        slime = "event",
+    ),
+    # Promo
+    EwFish(
+        id_fish = "deepseaaddict",
+        str_name = "Deep-Sea Addict",
+        rarity = "promo",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "The corpse of a slimeboi who tried to brave the Slime Sea's depths for some *exotic drugs*.",
+        slime = "event",
+    ),
+    EwFish(
+        id_fish = "prescriptionpilligator",
+        str_name = "Prescription Pilligator",
+        rarity = "promo",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "Noooo babyyyy don't abuse your meds, your so sexy ahahaa...,,.",
+        slime = "event",
+    ),
+    EwFish(
+        id_fish = "merhunk",
+        str_name = "Merhunk",
+        rarity = "promo",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "Formerly a mertwink, it gained its big buff bara dom daddy hot hot hot hot steamy physique from... ***STEROIDS!!!***",
+        slime = "event",
+    ),
+    # MOON FISHING FISH (oh my)
+    EwFish(
+        id_fish = "n1sleftfootballfish",
+        str_name = "N1's Left Footballfish",
+        rarity = "common",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "Oh shit, it's N1's Left Foo-! wait, nevermind, it's just another footballfish.",
+        slime = "moon",
+    ),
+    EwFish(
+        id_fish = "meteoroidgrouper",
+        str_name = "Meteoroid Grouper",
+        rarity = "common",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "This bitch ugly!",
+        slime = "moon",
+    ),
+    EwFish(
+        id_fish = "lunarjellyfish",
+        str_name = "Lunar Jellyfish",
+        rarity = "uncommon",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "Despite the name, it only lives within the earth's atmosphere.",
+        slime = "moon",
+    ),
+    EwFish(
+        id_fish = "galarianstunfisk",
+        str_name = "Galarian Stunfisk",
+        rarity = "uncommon",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "Due to NLACakaNM's extreme pollution, it has a latent Smoggy Terrain that permanently changes Galarian Stunfisk's type to Flying. It usually gets trapped in the outer exosphere.",
+        slime = "moon",
+    ),
+    EwFish(
+        id_fish = "sunspotlamprey",
+        str_name = "Sunspot Lamprey",
+        rarity = "rare",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "Evolved to inhabit solar flares, it's made a liking to SLIME.",
+        slime = "moon",
+    ),
+    EwFish(
+        id_fish = "solardolphin",
+        str_name = "Solar Dophin",
+        rarity = "rare",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "eEeEeEeEeEeEeEeEeEeE",
+        slime = "moon",
+    ),
+    EwFish(
+        id_fish = "gbu38jointdirectattackmolamola",
+        str_name = "GBU-38 Joint Direct Attack Mola Mola",
+        rarity = "promo",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "These JDAMMs pack a real punch!",
+        slime = "moon",
+    ),
+    EwFish(
+        id_fish = "qlcladf",
+        str_name = "Ql'cladf",
+        rarity = "promo",
+        catch_time = None,
+        catch_weather = None,
+        str_desc = "Thought to be an incarnation of one of the Lower Gods among Orthodox Slime-Jesuits.",
+        slime = "moon",
+    ),
 ]
 
 # A map of id_fish to EwFish objects.
@@ -1022,10 +1224,12 @@ foggy_fish = []
 snow_fish = []
 night_fish = []
 day_fish = []
-
+moon_phase_special_fish = []
 salt_fish = []
 fresh_fish = []
 void_fish = []
+event_fish = []
+moon_fish = []
 
 size_to_reward = {
     "miniscule": 1,
@@ -1073,11 +1277,18 @@ for fish in fish_list:
         night_fish.append(fish.id_fish)
     elif fish.catch_time == "day":
         day_fish.append(fish.id_fish)
+    elif fish.catch_time == "moonphasespecial":
+        night_fish.append(fish.id_fish)
+        moon_phase_special_fish.append(fish.id_fish)
     if fish.slime == "freshwater":
         fresh_fish.append(fish.id_fish)
     elif fish.slime == "saltwater":
         salt_fish.append(fish.id_fish)
     elif fish.slime == "void":
         void_fish.append(fish.id_fish)
+    elif fish.slime == "moon":
+        moon_fish.append(fish.id_fish)
+    elif fish.slime == "event":
+        event_fish.append(fish.id_fish)
     for alias in fish.alias:
         fish_map[alias] = fish

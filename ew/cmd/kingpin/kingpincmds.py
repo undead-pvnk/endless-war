@@ -376,6 +376,83 @@ async def exalt(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
+# Command to give selected player a reward for art / artistic contributions, only usable by mods, kingpins, and admins.
+async def awardart(cmd):
+    # Fake fans
+    if not 0 < ewrolemgr.check_clearance(member=cmd.message.author) < 4:
+        return await cmd_utils.fake_failed_command(cmd)
+
+    response = ""
+    target = None
+    award_type = ""
+    award_pin = True
+    extra_response_text = ""
+
+    if cmd.mentions_count != 1:
+        response = "Invalid use of command. Example: !awardart @player [\"fish\", \"relic\", \"art\", \"none\"]"
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    else:
+        target = cmd.mentions[0]
+
+    # Figure out the award type the user specifies
+    award_type = cmd.tokens[2]
+
+    # Figure out if the award_type string is valid
+    if award_type == "fish":
+        item_name = "amateurichthyologistpin"
+    elif award_type == "relic":
+        item_name = "amateurarcheologistpin"
+    elif award_type == "art":
+        item_name = "amateurartistpin"
+    elif award_type == "none": # Must specify "none" instead of being default so that it's intentional
+        award_pin = False
+    else:
+        response = "Invalid use of command. You must specify \"fish\", \"relic\", \"art\", or \"none\"."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    user_data = EwUser(member=target)
+
+    # Award the specificied player royalty poudrins
+    royaltypoudrins_reward = 10
+    for pouds in range(royaltypoudrins_reward):
+        bknd_item.item_create(
+            item_type=ewcfg.it_item,
+            id_user=user_data.id_user,
+            id_server=cmd.guild.id,
+            item_props={
+                'context': 'poudrin',
+                'item_name': 'Royalty Poudrin',
+                'item_desc': 'You received this less powerful poudrin from some fool who liked your creative contribution. !crush it for 5k slime.',
+                'id_item': 'royaltypoudrin'
+            })
+
+    # If the user is a corpse, give them -300,000 slime. Otherwise, give them 250,000 slime.
+    if user_data.life_state == ewcfg.life_state_corpse:
+        user_data.change_slimes(n=-ewcfg.slimes_addart - (royaltypoudrins_reward * 5000)) # Ghosts can't !crush royalty poudrins for slime
+    else:
+        user_data.change_slimes(n=ewcfg.slimes_addart)
+        
+    # Give the player an associated pin if specified
+    if award_pin:
+        cosmetic = cosmetics.cosmetic_map.get(item_name)
+        item_props = itm_utils.gen_item_props(cosmetic)
+        bknd_item.item_create(
+            item_type=ewcfg.it_cosmetic,
+            id_user=user_data.id_user,  
+            id_server=cmd.guild.id,
+            item_props=item_props
+        )
+        # Create the extra response text
+        extra_response_text = ", as well as an {},".format(item_props.get('cosmetic_name'))
+
+    user_data.persist()
+
+    response = "Gave {} a small bounty{} for their corpulent work. Thank you for your service 🙏".format(target.display_name, extra_response_text)
+
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
 async def hogtie(cmd):
 
     if not 0 < ewrolemgr.check_clearance(member=cmd.message.author) < 4:

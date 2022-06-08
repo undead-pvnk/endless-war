@@ -126,6 +126,28 @@ void_fishing_text = [
                         "What is _that_?",
                         "The girl across the pond has such a nice voice... Please keep singing...",
                     ] + generic_fishing_text
+moon_fishing_text = [
+                        "You see your line floating through space. How long is this thing anyway?",
+                        "A little asteroid flies by, colliding with another. Quite beautiful, really.",
+                        "There's an astronaut in the distance floating by. You should give them your number.",
+                        "How are you breathing, again?",
+                        "ARHGHGHHHHGHH!!!",
+                        "What?",
+                        "Hold on...",
+                        "https://cdn.discordapp.com/attachments/748116009470132274/841975359888293898/video0.mov",
+                        "Guh?",
+                        "It's a lovely night, isn't it? At least you think. There's not exactly a day-night cycle on the moon.  ",
+                        "Wait, how did you get here again?",
+                        "You see a Space Carp fly by. What pricks.",
+                        "You take a bite of a moon rock. Cheesy!",
+                        "You think of almond sex...",
+                        "Your mom is so fat, you can see her from all the way up here!",
+                        "You whistle a tune...",
+                        "♪ Singing in the Rain! ♪",
+                        "♪ I'm so freaky fishy fishy, I'm so freaky fishy fishy. ♪",
+                        "You spot your pals waving from below!",
+                        "You think of all your favorite Dreamworks films..."
+                    ]
 
 
 bazaar_distractions = [
@@ -151,6 +173,28 @@ pray_responses_list = [
     "ENDLESS WAR is a free text-based MMORPG playable entirely within a Discord server. But, you probably already knew that, didn't you?",
 ]
 
+actual_stds = [
+    "chlamydia",
+    "herpes",
+    "genital herpes",
+    "HPV",
+    "gonorrhea",
+    "HIV",
+    "Slime AIDS",
+    "SLAIDS",
+    "syphilis",
+    "trichomoniasis",
+    "bacterial vaginosis",
+    "bacterial vagignosis",
+    "hepatitus A",
+    "hepatitus B",
+    "hepatitus C",
+    "mycoplasma genitalium",
+    "Zika",
+    "anal warts",
+    "penis virus",
+    "pokérus"
+]
 
 curator_insults = [
     "LOPSIDED FISHWAGON",

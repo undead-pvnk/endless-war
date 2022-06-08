@@ -6,6 +6,9 @@ cmd_map = {
     # Smoke a cosmetic. preferably a cigarette
     ewcfg.cmd_smoke: cosmeticcmds.smoke,
 
+    # Vape a vape
+    ewcfg.cmd_vape: cosmeticcmds.vape,
+
     # Wearing cosmetics
     ewcfg.cmd_adorn: cosmeticcmds.adorn,
     ewcfg.cmd_dedorn: cosmeticcmds.dedorn,
@@ -31,6 +34,9 @@ apt_dm_cmd_map = {
     # Smoke a cosmetic. preferably a cigarette
     ewcfg.cmd_smoke: cosmeticcmds.smoke,
 
+    # Vape a vape
+    ewcfg.cmd_vape: cosmeticcmds.vape,
+    
     # Wearing cosmetics
     ewcfg.cmd_adorn: cosmeticcmds.adorn,
     ewcfg.cmd_dedorn: cosmeticcmds.dedorn,

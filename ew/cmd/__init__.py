@@ -1,3 +1,6 @@
+from pkgutil import extend_path
+__path__ = extend_path(__path__, __name__)
+
 from . import ads
 from . import apt
 from . import book
@@ -5,7 +8,7 @@ from . import casino
 from . import cmds
 from . import cosmeticitem
 try:
-    from . import debug as ewdebug
+    from ew.cmd import debug as ewdebug
 except:
     from . import debug_dummy as ewdebug
 from . import district
@@ -33,7 +36,7 @@ from . import wep
 
 from . import prank
 try:
-    from . import debugr
+    from ew.cmd import debugr
 except:
     from . import debugr_dummy as debugr
 

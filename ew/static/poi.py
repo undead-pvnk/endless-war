@@ -3120,16 +3120,30 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "themoon",
-		alias = ['moon', 'luna', 'n1'],
+		alias = ['moon', 'luna', 'loona', 'n1'],
 		str_name = "The Moon",
-		str_desc = "Hey wait, you're on the moon. How are you able to breathe? Well never mind that. You're doing it and that's what counts. There's a pretty sizable chunk taken out of it ever since N1 went and exploded. If only you could fish here, then you'd be able to fulfill your lifelong dream of imitating the guy from the Dreamworks logo. Whatever the case, there isn't anywhere else to go. !loop back or die, it's your decision.",
+		str_desc = "Hey wait, you're on the moon. How are you able to breathe? Well never mind that. You're doing it and that's what counts. There's a pretty sizable chunk taken out of it ever since N1 went and exploded. If only you could fish here, then you'd be able to fulfill your lifelong dream of imitating the guy from the Dreamworks logo. Whatever the case, there isn't anywhere else to go. !loop back or die, it's your decision.\n\nThis area continues to the Crest of the Crescent Moon.",
 		channel = "the-moon",
-		major_role = "downtown_major",
-		minor_role = "nullminorrole",
+		major_role = "themoon_major",
+		minor_role = "themoon_minor",
 		permissions = {'the-moon': ['read', 'send', 'connect']},
-		property_class = "A",
+		property_class = "C", # Moon capping eventually I prommy
+		is_district = True,
+		neighbors = {'crestofthecrescentmoon': 20},
+		topic = "The moon. Pretty self-explanatory. It's permanently shaped like a crescent due to a quirky mishap.",
+	),
+	EwPoi(
+		id_poi = "crestofthecrescentmoon",
+		alias = ['crestofthemoon', 'crest', 'moonfishing', 'tipofthemoon', 'mooncrest', 'crescent'],
+		str_name = "Crest of the Crescent Moon",
+		str_desc = "The tip of the crescent moon. From all the way out here, you can feel the lunar winds streaming into the ether. You can see a jetstream traveling towards earth, specifically the garish glowing-green spec NLACakaNM makes. Maybe you should try... fishing from here? Like the Dreamworks guy? Holy shit?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?! IT'S FINALLY REAL, AFTER ALL THIS TIME. YOU CAN FUCKING MOON FISH. THE HIGHLY REQUESTED, MUCH-AWAITED FEATURE TO FUCKING FISH FROM THE MOON IS **HERE**, FOLKS. This is auditorium-worthy news. I wonder if... there's possibly a post there? I wonder.\n\nRIP to LUNAR WAR, though. Gone but not forgotten. 😔🙏\n\nExits back onto the Moon.",
+		channel = "crest-of-the-crescent-moon",
+		permissions = {'crest-of-the-crescent-moon': ['read', 'send', 'connect']},
 		is_subzone = True,
-		neighbors = {},
+		mother_districts = ['themoon'],
+		is_pier = True,
+		pier_type = "moon",
+		neighbors = {'themoon': 20},
 	),
 	EwPoi(
 		id_poi = "themuseum",
@@ -3974,6 +3988,16 @@ world_events = [
 		event_type=ewcfg.event_type_voidhole,
 		str_event_start="You hit a sudden gap in the stone, with a scary looking drop. You see what looks like a trampoline on a building's roof at the bottom. Do you **{}** in?".format(ewcfg.cmd_jump),
 		str_event_end="The wall collapses.",
+	),
+	EwEventDef(
+		event_type=ewcfg.event_type_spookyghost,
+		str_event_start="A fucking **GHOST** flies out of the rock you just hit! And not a slime one, like an actual white-blanket **SCARY GHOST**. Beat the shit out of it!",
+		str_event_end="The ghost flies past you, hopefully getting the beating of its life.",
+	),
+	EwEventDef(
+		event_type=ewcfg.event_type_spookyskeleton,
+		str_event_start="A fucking **SKELETON** emerges from the rock you just hit! You should beat the shit out of it ):< !",
+		str_event_end="The skeleton crumbles to dust, hopefully getting the beating of its life.",
 	)
 ]
 
