@@ -2,6 +2,8 @@ import asyncio
 import math
 import random
 import time
+import traceback
+import sys
 
 import discord
 
@@ -38,11 +40,9 @@ from ..backend.item import EwItem
 from ..static import cfg as ewcfg
 from ..static import items as static_items
 from ..static.food import swilldermuk_food
-from ..static.food import food_map
 from ..static import poi as poi_static
 from ..static import status as se_static
 from ..static import weapons as static_weapons
-from ..static import vendors
 
 
 async def event_tick_loop(id_server):
@@ -1364,4 +1364,5 @@ async def clock_tick_loop(id_server = None, force_active = False):
                     ewutils.logMsg("Finished clock tick.")
                 await asyncio.sleep(60)
     except Exception as e:
+        traceback.print_exc(file=sys.stdout)
         ewutils.logMsg('An error occurred in the scheduled slime market update task: {}. Fix that.'.format(e))

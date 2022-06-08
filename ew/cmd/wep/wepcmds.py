@@ -176,7 +176,7 @@ async def attack(cmd):
                 attacker.change_slimecoin(n=bounty, coinsource=ewcfg.coinsource_bounty)
             else:
                 if target.life_state in [ewcfg.life_state_juvenile]:
-                    # attacking juvies send half to bleed and half to splatter
+                    # attacking juvies sends half to bleed and half to splatter
                     to_bleed = ctn.slimes_damage/2
                     to_district = ctn.slimes_damage/2
                 elif target.life_state == ewcfg.life_state_enlisted and target.faction == attacker.faction:
@@ -275,7 +275,7 @@ async def attack(cmd):
                     ewstats.increment_stat(user=attacker, metric=ewcfg.stat_lifetime_takedowns)
 
                 end = time.perf_counter()
-                print("{} seconds to run attack ln 252 stat updates".format(end-start))
+
             else:
                 attacker.change_crime(n=ewcfg.cr_assault_points)
 
@@ -474,11 +474,11 @@ async def attack(cmd):
         # build final response
         if mass_status is not None: resp_ctn.add_response_container(mass_status)
         if wep_explode is not None: resp_ctn.add_response_container(wep_explode)
-        if napalm != "": resp_ctn.add_channel_response(cmd.message.channel.name, napalm)
+        if napalm != "": resp_ctn.add_channel_response(cmd.message.channel, napalm)
         if die_resp is not None: resp_ctn.add_response_container(die_resp)
         response = hit_msg + rel_warn + new_cap + slimeoid_resp + bounty_resp + contract_resp
-        resp_ctn.add_channel_response(cmd.message.channel.name, response)
-        if lvl_resp != "": resp_ctn.add_channel_response(cmd.message.channel.name, "\n" + lvl_resp)
+        resp_ctn.add_channel_response(cmd.message.channel, response)
+        if lvl_resp != "": resp_ctn.add_channel_response(cmd.message.channel, "\n" + lvl_resp)
 
         # Now copy for the killfeed if necessary
         if target_killed:
@@ -514,7 +514,7 @@ async def attack(cmd):
 
         # Build final response
         resp_ctn.add_response_container(bust_ctn)
-        resp_ctn.add_channel_response(cmd.message.channel.name, response)
+        resp_ctn.add_channel_response(cmd.message.channel, response)
         resp_ctn.add_member_to_update(target_member)
 
     elif check_resp == ewcfg.enemy_targeted_string:
@@ -525,7 +525,7 @@ async def attack(cmd):
         return await attackEnemy(cmd)
 
     else:
-        resp_ctn.add_channel_response(cmd.message.channel.name, check_resp)
+        resp_ctn.add_channel_response(cmd.message.channel, check_resp)
 
     # format and post the response container
     resp_ctn.format_channel_response(cmd.message.channel.name, attacker_member)
@@ -729,7 +729,7 @@ async def suicide(cmd):
             response = "\*click* Alas, your gun has jammed."
 
     # Send the response to the player.
-    resp_cont.add_channel_response(cmd.message.channel.name, fe_utils.formatMessage(cmd.message.author, response))
+    resp_cont.add_channel_response(cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     await resp_cont.post()
 
 

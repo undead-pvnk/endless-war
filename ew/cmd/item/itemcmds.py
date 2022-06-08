@@ -246,7 +246,11 @@ async def inventory_print(cmd):
 
     else:
         # Ensure the inventory response in sent in dms, in case they requested it from in-server
-        target_channel = cmd.message.author
+        target_channel = cmd.message.author.dm_channel
+        # User.dm_channel can just decide to be none if it would like, so create it if it's not there
+        if target_channel is None:
+            target_channel = await cmd.message.author.create_dm()
+
         targeting_dms = True
 
     # Don't interrupt if there is already an inventory printing in that channel
@@ -836,7 +840,7 @@ async def item_use(cmd):
                 item_action = ""
                 side_effect = ""
 
-                if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False):  # or (user_data.poi not in poi_static.capturable_districts):
+                if cmd.message.guild is None or not ewutils.channel_name_is_poi(cmd.message.channel.name):  # or (user_data.poi not in poi_static.capturable_districts):
                     response = "You need to be on the city streets to unleash that prank item's full potential."
                 else:
                     if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:

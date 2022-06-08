@@ -57,7 +57,7 @@ async def retire(cmd = None, isGoto = False, movecurrent = None):
 
     if owner_user:
         return await usekey(cmd, owner_user)
-    if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+    if cmd.message.guild is None or not ewutils.channel_name_is_poi(cmd.message.channel.name):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
     elif ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
         response = "You can't do that right now."
@@ -144,7 +144,7 @@ async def consult(cmd):
 
     response = ""
 
-    if cmd.message.channel.name != ewcfg.channel_realestateagency:
+    if cmd.message.guild is None or cmd.message.channel.name != ewcfg.channel_realestateagency:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You have to !consult at the Real Estate Agency in Old New Yonkers."))
 
     if not target_name:
@@ -438,7 +438,7 @@ async def knock(cmd = None):
 async def trickortreat(cmd = None):
     user_data = EwUser(member=cmd.message.author)
 
-    if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+    if cmd.message.guild is None or not ewutils.channel_name_is_poi(cmd.message.channel.name):
         response = "There will be neither trick nor treat found in these parts."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
@@ -1242,6 +1242,10 @@ async def browse(cmd):
 
 
 async def store_item(cmd):
+    if len(cmd.tokens) < 2:
+        response = "{} what?".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
     cmd_text = cmd.tokens[0].lower() if len(cmd.tokens) >= 1 else ""
 
     # Consider moving this map to ewcfg, though its inconsequential
@@ -1414,7 +1418,7 @@ async def store_item(cmd):
             name_string = "{}(x{})".format(name_string, items_had)
 
         bknd_item.give_item_multi(id_list=item_list, destination=recipient + destination)
-        print(item_list)
+
         if (destination == ewcfg.compartment_id_decorate):
             response = item.item_props['furniture_place_desc']
             if items_had > 1:
@@ -1435,6 +1439,10 @@ async def store_item(cmd):
 
 
 async def remove_item(cmd):
+    if len(cmd.tokens) < 2:
+        response = "{} what?".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
     cmd_text = cmd.tokens[0].lower() if len(cmd.tokens) >= 1 else ""
 
     # Consider moving this map to ewcfg, though its inconsequential
