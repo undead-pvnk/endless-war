@@ -87,10 +87,10 @@ async def smelt(cmd):
                         style = ewcfg.style_beautiful
                     elif found_recipe.id_recipe == "cutecosmetic":
                         style = ewcfg.style_cute
-                    elif found_recipe.id_recipe == "coolcosmetic":
-                        style = ewcfg.style_cool
-                    else:
+                    elif found_recipe.id_recipe == "evilcosmetic":
                         style = ewcfg.style_evil
+                    else:
+                        style = ewcfg.style_cool #The style here is what cosmetics will default to, according to Stotle. 
 
                     for result in static_cosmetics.cosmetic_items_list:
                         if result.style == style and result.acquisition == ewcfg.acquisition_smelting and result.id_cosmetic not in static_cosmetics.unique_smeltables:
