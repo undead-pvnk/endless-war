@@ -14,6 +14,7 @@ from ew.static import poi as poi_static
 from ew.static import slimeoid as sl_static
 from ew.static import weather as weather_static
 from ew.utils import core as ewutils
+from ew.utils import item as item_utils
 from ew.utils import frontend as fe_utils
 from ew.utils import move as move_utils
 from ew.utils import rolemgr as ewrolemgr
@@ -23,8 +24,8 @@ from ew.utils.item import EwItem
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
-from ew.cmd.spooky.spookyutils import chefs
-from ew.cmd.spooky.spookyutils import EwChef
+from ew.model.spooky import chefs
+from ew.model.spooky import EwChef
 try:
     from ew.cmd.debugr import debug13
 except:
@@ -655,7 +656,10 @@ async def startshift(cmd):
 			await asyncio.sleep(5)
 			
 			while True:
-				if chef.prompts > 0:
+				if user_data.poi != 'ghostmaidcafe':
+					chef.stop()
+					break
+				elif chef.prompts > 0:
 					response = random.choice(cookingresponses)
 					await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 					chef.serve = True
@@ -679,6 +683,7 @@ async def startshift(cmd):
 					user_data.persist()
 					market_data.persist()
 					chef.cooking = False
+					chef.stop()
 					break
 					
 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -705,21 +710,18 @@ async def sow_cloth(cmd):
     response = ""
     if user_data.life_state != ewcfg.life_state_corpse:
         response = "You dry to tug at your flesh, but it won't come free!"
-    elif user_data.slimes >= -100000:
+    elif user_data.slimes > -100000:
         response = "Using your form to create cloth would probably destroy you... Get more antislime!"
     else:
-        cloth_data = next(i for i in static_items.item_list if i.id_item == ewcfg.item_id_ghostlycloth)
+        cloth_data = static_items.item_map.get('ghostlycloth')
+        item_props = item_utils.gen_item_props(cloth_data)
         bknd_item.item_create(
             item_type=ewcfg.it_item,
             id_user=user_data.id_user,
             id_server=cmd.guild.id,
-            item_props={
-                'id_item': cloth_data.id_item,
-                'item_name': cloth_data.str_name,
-                'item_desc': cloth_data.str_desc,
-            }
+            item_props=item_props
         )
-        user_data.change_slimes(n=-(-100000), source=ewcfg.source_spending)
+        user_data.change_slimes(n=100000, source=ewcfg.source_spending)
         user_data.persist()
         response = "You rip a sheet of your ghostly form free, feeling the essence ripped from your very being. Using your teeth to refine it into a fine white cloth."
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
