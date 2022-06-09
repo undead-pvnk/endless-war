@@ -31,7 +31,7 @@ try:
 except:
     from ew.cmd.debugr_dummy import debug13
 
-cookingresponses = ['A fat man slams his fist down, demanding his chicken nuggies!\nquick! **!serve** !', 'A truly fashionable man, wearing a kimono, slides up to the bar and asks you for a drink.\nquick! **!serve**', 'A girl with a "Ghots FTW" shirt demands some authentic quizie!\nQuick! **!serve**!!!', 'A killer with four lip piercings slams their slime on the counter! They want a big ass cake!\nquick! **!serve** !', 'Past president Ronald Raegan demands some nice ghost pie!\nquick! **!serve** !', 'A large humanoid slug slithers into the cafe! He wants the worst pie ever!\nquick! **!serve** !', 'The human version of a pile of phlegm enters the cafe. He wants to drink your best brew with ghost milk!\nquick! **!serve** !']
+cookingresponses = ['A fat man slams his fist down, demanding his chicken nuggies!\nquick! **!serve** !', 'A truly fashionable man, wearing a kimono, slides up to the bar and asks you for a drink.\nquick! **!serve**', 'A girl with a "Ghots FTW" shirt demands some authentic quizie!\nQuick! **!serve**!!!', 'A killer with four lip piercings slams their slime on the counter! They want a big ass cake!\nquick! **!serve** !', 'Past president Ronald Reagan demands some nice ghost pie!\nquick! **!serve** !', 'A large humanoid slug slithers into the cafe! He wants the worst pie ever!\nquick! **!serve** !', 'The human version of a pile of phlegm enters the cafe. He wants to drink your best brew with ghost milk!\nquick! **!serve** !']
 
 async def negapool(cmd):
     # Add persisted negative slime.
@@ -683,6 +683,17 @@ async def startshift(cmd):
 					user_data.persist()
 					market_data.persist()
 					chef.cooking = False
+					funnything = random.randrange(1, 5)
+					if funnything == 3:
+								token_data = static_items.item_map.get('ghosttoken')
+								item_props = item_utils.gen_item_props(token_data)
+								bknd_item.item_create(
+                                    item_type=ewcfg.it_item,
+                                    id_user=user_data.id_user,
+                                    id_server=cmd.guild.id,
+                                    item_props=item_props
+                                )
+								response += "\nYou got a ghost token!"
 					chef.stop()
 					break
 					

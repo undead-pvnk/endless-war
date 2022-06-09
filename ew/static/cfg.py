@@ -2587,6 +2587,7 @@ vendor_rpcity = "RP City"  # Double halloween costume store
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
 item_id_ghostlycloth = 'ghostlycloth'
+item_id_ghosttoken = 'ghosttoken'
 item_id_monstersoup = 'monstersoup'
 item_id_doublestuffedcrust = 'doublestuffedcrust'
 item_id_quadruplestuffedcrust = 'quadruplestuffedcrust'

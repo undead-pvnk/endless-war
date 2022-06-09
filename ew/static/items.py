@@ -1904,6 +1904,11 @@ item_list = [
         id_item=ewcfg.item_id_ghostlycloth,
         str_name="Ghostly Cloth",
         str_desc="A smooth piece of white fabric. It is almost translucent, and is so light it feels like its almost not there.",
+    ),
+    EwGeneralItem(
+        id_item=ewcfg.item_id_ghosttoken,
+        str_name="Ghost Token",
+        str_desc="A token received for good behavior at the ghost maid cafe!"
     )
 ]
 # item_list += ewdebug.debugitem_set
