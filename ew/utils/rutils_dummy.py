@@ -11,7 +11,7 @@ debug4 = {
 }
 debug5 = "guh?"
 
-
+auction_relic_date_map = {}
 
 def canCreateRelic(item, id_server, createstate = 0):
     state = EwGamestate(id_server=id_server, id_state=item)

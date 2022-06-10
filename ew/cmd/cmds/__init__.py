@@ -156,12 +156,12 @@ cmd_map = {
     ewcfg.cmd_pray: cmdcmds.pray,
 
 
-
-
+    # PRANK people
     ewcfg.cmd_prank: cmdcmds.prank,
 
-
+    # Check GvS almanac - obsolete, but contains a large amount of flavor text and lore for plants, Garden Gankers, and Shamblers, as well as art.
     ewcfg.cmd_gvs_almanac: cmdcmds.almanac,
+
 
     # Check your weapon masteries
     ewcfg.cmd_mastery: cmdcmds.check_mastery,

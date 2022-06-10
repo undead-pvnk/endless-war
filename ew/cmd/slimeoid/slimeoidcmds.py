@@ -1258,7 +1258,7 @@ async def dress_slimeoid(cmd):
                     if cos.item_props.get('slimeoid') == 'true':
                         already_adorned = True
                     elif cos.item_props.get("context") == 'costume':
-                        if not ewutils.check_fursuit_active(market_data) and not ewcfg.dh_active:
+                        if ewutils.check_moon_phase(market_data) != ewcfg.moon_full and not ewcfg.dh_active:
                             response = "You can't dress your slimeoid with your costume right now."
                             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                         else:

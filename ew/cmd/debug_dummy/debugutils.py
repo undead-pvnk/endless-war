@@ -28,6 +28,7 @@ act_pois = {}
 
 zone_bonus_flavor = {}
 
+
 def initialize_gamestate(id_server):
     return
 
@@ -42,3 +43,7 @@ def debug_code():
 
 def act(cmd_obj, poi, content_tolower):
     return None
+
+
+async def secret_context(user_data, item, cmd):
+    return False

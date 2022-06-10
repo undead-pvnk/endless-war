@@ -22,6 +22,9 @@ cmd_map = {
     ewcfg.cmd_create: kingpincmds.create,
     # ewcfg.cmd_exalt: cmds.exalt,
 
+    # Award players for artistic contributions
+    ewcfg.cmd_awardart: kingpincmds.awardart,
+
     # Stop a player from speaking out of game
     ewcfg.cmd_hogtie: kingpincmds.hogtie,
     ewcfg.cmd_defect: kingpincmds.defect

@@ -2,6 +2,8 @@ import asyncio
 import math
 import random
 import time
+import traceback
+import sys
 
 import discord
 
@@ -18,10 +20,6 @@ from . import leaderboard as leaderboard_utils
 from . import weather as weather_utils
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
-try:
-    from ew.utils import rutils as relicutils
-except:
-    from ew.utils import rutils_dummy as relicutils
 from .combat import EwEnemy
 from .combat import EwUser
 from .district import EwDistrict
@@ -866,6 +864,7 @@ async def release_timed_prisoners_and_blockparties(id_server, day):
                 blockparty.value = ''
                 blockparty.persist()
 
+
 async def spawn_prank_items_tick_loop(id_server):
     # DEBUG
     # interval = 10
@@ -1298,7 +1297,7 @@ async def clock_tick_loop(id_server = None, force_active = False):
                     ewutils.logMsg("Handling weather cycle...")
                     await weather_utils.weather_cycle(id_server)
 
-                    if not ewutils.check_fursuit_active(market_data) and not ewcfg.dh_active: # I don't see why costumes should be dedorned automatically so, like, just removing this. It's dumb.
+                    if ewutils.check_moon_phase(market_data) != ewcfg.moon_full and not ewcfg.dh_active: # I don't see why costumes should be dedorned automatically so, like, just removing this. It's dumb.
                          await cosmetic_utils.dedorn_all_costumes()
 
                     ewutils.logMsg('Setting off alarms...')
@@ -1365,4 +1364,5 @@ async def clock_tick_loop(id_server = None, force_active = False):
                     ewutils.logMsg("Finished clock tick.")
                 await asyncio.sleep(60)
     except Exception as e:
+        traceback.print_exc(file=sys.stdout)
         ewutils.logMsg('An error occurred in the scheduled slime market update task: {}. Fix that.'.format(e))

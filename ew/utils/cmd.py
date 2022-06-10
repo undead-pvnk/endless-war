@@ -10,6 +10,7 @@ from ew.static import hue as hue_static
 from ew.static import poi as poi_static
 from ew.static import status as se_static
 from ew.static import weapons as static_weapons
+from ew.static import cosmetics as static_cosmetics
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import stats as ewstats
@@ -90,7 +91,6 @@ def gen_data_text(
         id_user = None,
         id_server = None,
         display_name = None,
-        channel_name = None
 ):
     user_data = EwUser(
         id_user=id_user,
@@ -105,9 +105,12 @@ def gen_data_text(
         item_type_filter=ewcfg.it_cosmetic
     )
     adorned_cosmetics = []
+    # A list for all adorned cosmetics' ids
+    cosmetic_id_list = []
     for cosmetic in cosmetics:
         cos = EwItem(id_item=cosmetic.get('id_item'))
         if cos.item_props['adorned'] == 'true':
+            cosmetic_id_list.append(cos.item_props['id_cosmetic'])
             hue = hue_static.hue_map.get(cos.item_props.get('hue'))
             adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
@@ -184,8 +187,12 @@ def gen_data_text(
 
         if len(adorned_cosmetics) > 0:
             response_block += "They have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
-
-            if user_data.freshness < ewcfg.freshnesslevel_1:
+       
+            # If user is wearing all pieces of the NMS mascot costume, add text 
+            if all(elem in cosmetic_id_list for elem in static_cosmetics.cosmetic_nmsmascot):
+                response_block += "They're dressed like a fucking airplane with tits, dude. "
+            # Otherwise, generate response text.
+            elif user_data.freshness < ewcfg.freshnesslevel_1:
                 response_block += "Their outfit is starting to look pretty fresh, but They’ve got a long way to go if they wanna be NLACakaNM’s next top model. "
             elif user_data.freshness < ewcfg.freshnesslevel_2:
                 response_block += "Their outfit is low-key on point, not gonna lie. They’re goin’ places, kid. "
