@@ -136,7 +136,8 @@ async def autocannibalize(cmd):
 
 async def rattle(cmd):
     user_data = EwUser(member=cmd.message.author)
-
+    response = ""
+    
     if user_data.race == ewcfg.race_skeleton:
         time_now = int(time.time())
 
@@ -158,28 +159,74 @@ async def rattle(cmd):
             user_data.persist()
 
         # spook mentioned player
+        target_name = ""
+        responses = []
+        
         if cmd.mentions_count == 1:
-            agroskelly_response = [
-                ", sending a shiver down their spine.",
-                ", who clearly does not appreciate it.",
-                ". They almost faint in shock.",
-                ", scaring them so bad they pee themselves a little.",
-                ". **NYEEEH!**",
-                ", trying to appeal to the bones deep within them.",
-                " a little bit too hard. Oof ouch owie.",
-                " so viciously they actually get offended.",
-                " in an attempt to socialize, but they don't think you should.",
-                ", inviting them to have a bad time.", #blame loom
-                ", coaxing the skeleton within to become without.",
-                ", assuring them it's too late.",
-                ", wondering if they know who the girl next door is, living in the haunted mansion.",
-                " to assure them that this is, in fact, Halloween."
-            ]
-            response = random.choice([ # thanks zug
-                "You start removing ribs and throwing them at {}. Rib fight!".format(cmd.mentions[0].display_name),
-                "You rattle your bones at {}{}".format(cmd.mentions[0].display_name, random.choice(agroskelly_response)),
-                "You have a bone to pick with {}.".format(cmd.mentions[0].display_name) # blame org
-            ])
+            target_name = cmd.mentions[0].display_name
+            
+            #Bone Jenga time. blame ebola
+            bone_jenga_outcome = ""
+            p1 = random.randrange(206)
+            p2 = random.randrange(206)
+            
+            if p1 > p2:
+                bone_jenga_outcome = "You win! Look at {}, all stupid and dumb like a loser. Hopefully they stick around long enought o put you back together.".format(target_name)
+            elif p1 < p2:
+                bone_jenga_outcome = "{} wins! Look at you, all crumpled on the floor like a disjointed pile of bones.".format(targe_name)
+            else:
+                bone_jenga_outcome = "It's a draw! This was a massive waste of time, worse than a pissing contest."
+            
+            roll = random.randrange(10)
+            
+            if roll > 1:
+                agroskelly_response = [
+                    ", sending a shiver down their spine.",
+                    ", who clearly does not appreciate it.",
+                    ". They almost faint in shock.",
+                    ", scaring them so bad they pee themselves a little.",
+                    ". **NYEEEH!**",
+                    ", trying to appeal to the bones deep within them.",
+                    " a little bit too hard. Oof ouch owie.",
+                    " so viciously they actually get offended.",
+                    " in an attempt to socialize, but they don't think you should.",
+                    ", inviting them to have a bad time.", #blame loom
+                    ", coaxing the skeleton within to become without.",
+                    ", assuring them it's too late.",
+                    ", wondering if they know who the girl next door is, living in the haunted mansion.",
+                    " to assure them that this is, in fact, Halloween."
+                ]
+                responses = [
+                    "You rattle your bones at {}{}".format(target_name, random.choice(agroskelly_response)),
+                    "You clack your jaw at {}{}".format(target_name, random.choice(agroskelly_response)),
+                    "You waggle your bony finger at {}{}".format(target_name, random.choice(agroskelly_response)),
+                    "{} is bone-tired of your sass.".format(target_name),
+                    "{} is shaken down for all they're worth! It ain't much.".format(target_name), #blame ebola
+                    "You start removing ribs and throwing them at {}. Rib fight!".format(target_name),
+                    "You have a bone to pick with {}.".format(target_name) # blame org
+                ]
+            
+            else:
+                target_data = EwUser(member=target_member)
+                
+                response = "You forcibly challenge {} to a game of Bone Jenga!".format(target_name)
+                await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                await asyncio.sleep(1)
+                if target_data.race = ewcfg.race_skeleton:
+                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    await asyncio.sleep(1)
+                    response = "..."
+                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    await asyncio.sleep(1)
+                    response = "You successfully remove {} bones from {}'s body before they collapse. Naturally, you reassemmble them so they can take their turn.".format(p1, target_name)
+                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    await asyncio.sleep(1)
+                    response = "..."
+                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                    await asyncio.sleep(1)
+                    response = "{} successfully removes {} bones from your body before you collapse. {}".format(target_name, p2, bone_jenga_outcome)
+                else:
+                    response = "Wait, how are you planning to do that?"
         # rattle alone
         else:
             roll = random.randrange(100)
@@ -209,27 +256,27 @@ async def rattle(cmd):
                     "You play a somber tune on your ribcage, fondly remembering the last Double Halloween.",
                     "You shiver loudly as you remember the cold of the catacombs."
                 ]
-            # rare rattles
+           # rare rattles
             elif roll > 1:
                 bones = random.randrange(206)
-                insult1 = []
-                insult2 = []
+                insult1 = ""
+                insult2 = ""
                 # grammar is important, retards
                 if bones > 1:
                     insult1 = "s "
                     insult2 = "."
-                elif bones > 0:
+                else:
                     insult1 = " "
                     insult2 = ". What? How? Did you go straight for a thigh?"
-                    lonelyskelly_response = [
-                        "You rattle your bones so aggressively, you collapse into a pile of bones. It takes a second for you to reassemble yourself",
-                        "You successfully remove {} bone{}before collapsing{}".format(bones, insult1, insult2), # blame ebola
-                        "You remove your head before entering a nearby bowling alley."
-                    ]
-                # ultra rare rattle
-                elif roll > 0:
-                    lonelyskelly_response = "https://youtu.be/TFwXbp9bLlY"
-                response = random.choice(lonelyskelly_response) # thanks zug
+                lonelyskelly_response = [
+                    "You rattle your bones so aggressively, you collapse into a pile of bones. It takes a second for you to reassemble yourself",
+                    "You successfully remove {} bone{}before collapsing{}".format(bones, insult1, insult2), # blame ebola
+                    "You remove your head before entering a nearby bowling alley."
+                ]
+            # ultra rare rattle
+            else:
+                lonelyskelly_response = ["https://youtu.be/TFwXbp9bLlY"]
+            response = random.choice(lonelyskelly_response) # thanks zug
     else:
         response = "You people are not allowed to do that."
 
