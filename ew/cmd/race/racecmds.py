@@ -221,11 +221,11 @@ async def rattle(cmd):
                 elif bones > 0:
                     insult1 = " "
                     insult2 = ". What? How? Did you go straight for a thigh?"
-                lonelyskelly_response = [
-                    "You rattle your bones so aggressively, you collapse into a pile of bones. It takes a second for you to reassemble yourself",
-                    "You successfully remove {} bone{}before collapsing{}".format(bones, insult1, insult2), # blame ebola
-                    "You remove your head before entering a nearby bowling alley."
-                ]
+                    lonelyskelly_response = [
+                        "You rattle your bones so aggressively, you collapse into a pile of bones. It takes a second for you to reassemble yourself",
+                        "You successfully remove {} bone{}before collapsing{}".format(bones, insult1, insult2), # blame ebola
+                        "You remove your head before entering a nearby bowling alley."
+                    ]
                 # ultra rare rattle
                 elif roll > 0:
                     lonelyskelly_response = "https://youtu.be/TFwXbp9bLlY"
