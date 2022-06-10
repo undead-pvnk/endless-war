@@ -3,7 +3,7 @@ import os
 
 from ..model.item import EwCosmeticItem
 
-unique_smeltables = ['skinsuit', 'eldritchsoul', 'safaribadge', 'cloutgoggles', 'programmersocks',]
+unique_smeltables = ['skinsuit', 'eldritchsoul', 'safaribadge', 'cloutgoggles', 'programmersocks', 'maidoutfit', 'drapeddress', 'widebrimmedhat', 'cigaretteholder']
 
 # Because all profollean cosmetics are complicated, they are in the same boat as unique_smeltables. DO NOT add profollean cosmetics to unique_smeltables! 
 # Profollean cosmetics and unique_smeltables are not smeltable in the slimepoudrin + stylecosmeticitem recipe. (Example: 4 slimepoudrin + 1 coolbeans will NOT give you a programmer socks or a cool profollean cosmetic! ) 
