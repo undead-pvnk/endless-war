@@ -8,6 +8,7 @@ cmd_map = {
 
     # Vape a vape
     ewcfg.cmd_vape: cosmeticcmds.vape,
+    ewcfg.cmd_vapealt1: cosmeticcmds.vape,
 
     # Wearing cosmetics
     ewcfg.cmd_adorn: cosmeticcmds.adorn,

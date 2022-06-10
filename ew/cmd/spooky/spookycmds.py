@@ -1,6 +1,7 @@
 import random
 import re
 import time
+import asyncio
 
 from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
@@ -13,6 +14,7 @@ from ew.static import poi as poi_static
 from ew.static import slimeoid as sl_static
 from ew.static import weather as weather_static
 from ew.utils import core as ewutils
+from ew.utils import item as item_utils
 from ew.utils import frontend as fe_utils
 from ew.utils import move as move_utils
 from ew.utils import rolemgr as ewrolemgr
@@ -22,10 +24,14 @@ from ew.utils.item import EwItem
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
+from ew.model.spooky import chefs
+from ew.model.spooky import EwChef
 try:
     from ew.cmd.debugr import debug13
 except:
     from ew.cmd.debugr_dummy import debug13
+
+cookingresponses = ['A fat man slams his fist down, demanding his chicken nuggies!\nquick! **!serve** !', 'A truly fashionable man, wearing a kimono, slides up to the bar and asks you for a drink.\nquick! **!serve**', 'A girl with a "Ghots FTW" shirt demands some authentic quizie!\nQuick! **!serve**!!!', 'A killer with four lip piercings slams their slime on the counter! They want a big ass cake!\nquick! **!serve** !', 'Past president Ronald Reagan demands some nice ghost pie!\nquick! **!serve** !', 'A large humanoid slug slithers into the cafe! He wants the worst pie ever!\nquick! **!serve** !', 'The human version of a pile of phlegm enters the cafe. He wants to drink your best brew with ghost milk!\nquick! **!serve** !']
 
 async def negapool(cmd):
     # Add persisted negative slime.
@@ -625,3 +631,108 @@ async def favor(cmd):
         favor = ewstats.get_stat(user=user_data, metric='sacrificerate')
         response = "You have {} favor with the ancient eldritch gods.".format(favor)
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+async def startshift(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	if user_data.poi != 'ghostmaidcafe' or poi_static.chname_to_poi.get(cmd.message.channel.name).id_poi != 'ghostmaidcafe':
+		response = "Sowwy, you can't stawt cooking unwess you'we at the maid cafe! (✿◡‿◡)"
+	elif user_data.life_state != ewcfg.life_state_corpse:
+		response = "Sowwy, you awen't enough of a degenewate to do that. UwU💝"
+	else:
+		if cmd.message.author.id not in chefs.keys():
+			chefs[cmd.message.author.id] = EwChef()
+		chef = chefs[cmd.message.author.id]
+
+		if chef.cooking == True:
+			response = "You are already on the clock! You might boil the milk if you try to do more dishes!"
+		else:
+			market_data = EwMarket(id_server=cmd.guild.id)
+			chef.cooking = True
+			chef.prompts = random.randrange(1, 50)
+			reward = chef.prompts * random.randrange(20, 50)
+			response = "You punch your time card and get ready to serve!"
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+			await asyncio.sleep(5)
+			
+			while True:
+				if user_data.poi != 'ghostmaidcafe':
+					chef.stop()
+					break
+				elif chef.prompts > 0:
+					response = random.choice(cookingresponses)
+					await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+					chef.serve = True
+					await asyncio.sleep(random.randrange(3, 6))
+					if chef.serve == True:
+						response = "You messed up and dwopped the dish ಥ_ಥ! Your manager angwily shoos you away into the bathwoom to cwean up and takes cawe of the guest. You eawned no moneyz!"
+						await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+						chef.stop()
+						chef.cooking = False
+						user_data.persist()
+						break
+					else:
+						response = "you slide the dish over to the customer! nice job!"
+						await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+						chef.prompts -= 1
+						await asyncio.sleep(random.randrange(5, 9))
+				else:
+					response = "You finish up youw shift and punch out! You wost {} slime!!!".format(reward)
+					user_data.change_slimes(n=-reward)
+					market_data.negaslime -= reward
+					user_data.persist()
+					market_data.persist()
+					chef.cooking = False
+					funnything = random.randrange(1, 5)
+					if funnything == 3:
+								token_data = static_items.item_map.get('ghosttoken')
+								item_props = item_utils.gen_item_props(token_data)
+								bknd_item.item_create(
+                                    item_type=ewcfg.it_item,
+                                    id_user=user_data.id_user,
+                                    id_server=cmd.guild.id,
+                                    item_props=item_props
+                                )
+								response += "\nYou got a ghost token!"
+					chef.stop()
+					break
+					
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+async def serve(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	if cmd.message.author.id not in chefs.keys():
+		chefs[cmd.message.author.id] = EwChef()
+	chef = chefs[cmd.message.author.id]
+	if user_data.poi != 'ghostmaidcafe':
+		response = "Sowwy, you can't stawt cooking unwess you'we at the maid cafe! (✿◡‿◡)"
+	elif user_data.life_state != ewcfg.life_state_corpse:
+		response = "Sowwy, you awen't enough of a degenewate to do that. UwU <3"
+	elif chef.serve != True:
+		response = "No one is hewe... (┬┬﹏┬┬)"
+	else:
+		chef.serve = False
+		response = "You gwab a dish and..."
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+async def sow_cloth(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    response = ""
+    if user_data.life_state != ewcfg.life_state_corpse:
+        response = "You dry to tug at your flesh, but it won't come free!"
+    elif user_data.slimes > -100000:
+        response = "Using your form to create cloth would probably destroy you... Get more antislime!"
+    else:
+        cloth_data = static_items.item_map.get('ghostlycloth')
+        item_props = item_utils.gen_item_props(cloth_data)
+        bknd_item.item_create(
+            item_type=ewcfg.it_item,
+            id_user=user_data.id_user,
+            id_server=cmd.guild.id,
+            item_props=item_props
+        )
+        user_data.change_slimes(n=100000, source=ewcfg.source_spending)
+        user_data.persist()
+        response = "You rip a sheet of your ghostly form free, feeling the essence ripped from your very being. Using your teeth to refine it into a fine white cloth."
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

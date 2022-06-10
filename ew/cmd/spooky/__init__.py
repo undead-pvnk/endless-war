@@ -57,8 +57,16 @@ cmd_map = {
     ewcfg.cmd_crystalize_negapoudrin_alt1: spookycmds.crystalize_negapoudrin,
     ewcfg.cmd_crystalize_negapoudrin_alt2: spookycmds.crystalize_negapoudrin,
     ewcfg.cmd_crystalize_negapoudrin_alt3: spookycmds.crystalize_negapoudrin,
+	
     ewcfg.cmd_favor:spookycmds.favor,
+    # ghosts can work at the maid cafe ╰(*°w°*)╯
+    ewcfg.cmd_startshift: spookycmds.startshift,
 
+    # ghosts can serve food at the maid cafe (¬‿¬)
+    ewcfg.cmd_serve: spookycmds.serve,
+    
+    ewcfg.cmd_sow_cloth: spookycmds.sow_cloth,
 }
 if ewcfg.dh_active and ewcfg.dh_stage == 2:
     cmd_map[ewcfg.cmd_sacrifice] = spookycmds.sacrifice
+

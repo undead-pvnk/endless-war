@@ -163,6 +163,8 @@ poi_id_clinicofslimoplasty = "clinicofslimoplasty"
 poi_id_thebreakroom = "thebreakroom"
 poi_id_underworld = "underworld"
 poi_id_themuseum = "themuseum"
+poi_id_ghostcafe = "ghostmaidcafe"
+
 
 poi_id_themoon = "themoon"
 
@@ -855,6 +857,7 @@ cmd_sacrifice = cmd_prefix + 'sacrifice'
 cmd_makecostume = cmd_prefix + 'makecostume'
 cmd_stunt = cmd_prefix + 'stunt'
 cmd_stuntalt1 = cmd_prefix + 'skate'
+cmd_stuntalt2 = cmd_prefix + 'sk8'
 cmd_treat = cmd_prefix + 'treat'
 cmd_russian = cmd_prefix + 'russianroulette'
 cmd_duel = cmd_prefix + 'duel'
@@ -970,6 +973,9 @@ cmd_rejuvenate = cmd_prefix + 'rejuvenate'
 cmd_win = cmd_prefix + 'win'
 cmd_slimefest = cmd_prefix + 'slimefest'
 cmd_identify = cmd_prefix + 'identify'
+cmd_startshift = cmd_prefix + 'startshift'
+cmd_serve = cmd_prefix + 'serve'
+cmd_sow_cloth = cmd_prefix + 'sowcloth'
 
 cmd_preserve = cmd_prefix + 'preserve'
 cmd_stink = cmd_prefix + 'stink'
@@ -1042,6 +1048,7 @@ cmd_wash = cmd_prefix + 'wash'
 cmd_browse = cmd_prefix + 'browse'
 cmd_smoke = cmd_prefix + 'smoke'
 cmd_vape = cmd_prefix + 'vape'
+cmd_vapealt1 = cmd_prefix + 'oop'
 cmd_frame = cmd_prefix + 'frame'
 cmd_addart = cmd_prefix + 'addart'
 cmd_extractsoul = cmd_prefix + 'extractsoul'
@@ -2582,6 +2589,8 @@ vendor_rpcity = "RP City"  # Double halloween costume store
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
+item_id_ghostlycloth = 'ghostlycloth'
+item_id_ghosttoken = 'ghosttoken'
 item_id_monstersoup = 'monstersoup'
 item_id_doublestuffedcrust = 'doublestuffedcrust'
 item_id_quadruplestuffedcrust = 'quadruplestuffedcrust'
