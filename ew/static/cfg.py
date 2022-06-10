@@ -1,7 +1,7 @@
 # Global configuration options.
 
 
-version = "v4.104 S4A1 Cosmiture First Wave"
+version = "v4.15 S4A1 Community Aneurysm Update"
 
 
 dir_msgqueue = 'msgqueue'
