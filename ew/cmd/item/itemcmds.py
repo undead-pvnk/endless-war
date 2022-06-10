@@ -698,6 +698,8 @@ async def item_look(cmd):
                     response += "Its got a beautiful, refined feel. "
                 if item.item_props['fashion_style'] == ewcfg.style_cute:
                     response += "It's super cuuuutttiieeeeeeeeeeeee~ deeeessuusususususususuusususufuswvgslgerphi4hjetbhjhjbetbjtrrpo"
+                if item.item_props['fashion_style'] == ewcfg.style_evil:
+                    response += "It's got an evil energy to it."
 
                 response += "\n\nIts freshness rating is {rating}.".format(rating=item.item_props['freshness'])
 

@@ -30,7 +30,8 @@ browse_list = [
     "@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\nhttps://discord.gg/b2hP68k",
     "It's the land of the nateheads. You're really opening Pandora's box, fucking with this one. \nhttps://discordapp.com/invite/2Kc7nTA",
     "You used to not be a big fan of hippos, but then you learned they like tearing people limb from limb and you've been in love ever since. Maybe now's your chance to meet one.\nhttps://discordapp.com/invite/6ksZrne",
-    "Y'arrr. \nhttps://discord.gg/VFcUmgc"
+    "Y'arrr. \nhttps://discord.gg/VFcUmgc",
+    "A bunch of people with horrible ideas are trying to bloat the item pool by adding in new items for people to spend their useless slime and items on. The horror! \nhttps://discord.gg/Xn44yMDRjz",
 ]
 
 
@@ -91,7 +92,7 @@ generic_fishing_text = [
     "You start to slip into an existential crisis...",
     "You hum some sea shanties...",
     "Fuck fish...",
-    "Fish..."
+    "Fish...",
 ]
 normal_fishing_text = [
                           "You watch your hook bob...",
@@ -111,6 +112,7 @@ normal_fishing_text = [
                           "You spot a stray bullet in the distance...",
                           "You see a dead body float up to the surface of the Slime...",
                           "You let out a deep sigh, scaring away a fish...",
+                          "♪ Don't worry, stay slimey... ♪",
                       ] + generic_fishing_text
 void_fishing_text = [
                         "You get the urge to jump in and try to grab a fish, before the voice reminds you that you can't swim...",

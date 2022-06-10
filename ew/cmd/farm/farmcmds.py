@@ -9,6 +9,7 @@ from ew.static import cfg as ewcfg
 from ew.static import farm as farm_static
 from ew.static import food as static_food
 from ew.static import poi as poi_static
+from ew.static import items as static_items
 from ew.static import vendors
 from ew.static import weapons as static_weapons
 from ew.utils import core as ewutils
@@ -78,6 +79,7 @@ async def sow(cmd):
             if item_sought == None:
                 response = "You don't have anything to plant! Try collecting a poudrin."
             else:
+                is_item = False
                 slimes_onreap = ewcfg.reap_gain
                 item_data = EwItem(id_item=item_sought.get("id_item"))
                 if item_data.item_type == ewcfg.it_item:
@@ -104,6 +106,15 @@ async def sow(cmd):
                         response = "You lack the knowledge required to grow {}.".format(item_sought.get("name"))
                         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+                elif item_data.item_type == ewcfg.it_cosmetic:
+                    if item_data.item_props['id_cosmetic'] == 'scalp':
+                        vegetable = static_items.item_map.get('evilstuds')
+                        slimes_onreap *= 0.25
+                        is_item = True
+                    else:
+                        response = "The soil has enough toxins without you burying your trash here."
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
                 else:
                     response = "The soil has enough toxins without you burying your trash here."
                     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -126,10 +137,13 @@ async def sow(cmd):
                 farm.time_lastsow = int(time.time() / 60)  # Grow time is stored in minutes.
                 farm.time_lastphase = int(time.time())
                 farm.slimes_onreap = slimes_onreap
-                farm.crop = vegetable.id_food
                 farm.phase = ewcfg.farm_phase_sow
                 farm.action_required = ewcfg.farm_action_none
                 farm.sow_life_state = user_data.life_state
+                if is_item:
+                    farm.crop = vegetable.id_item
+                else:
+                    farm.crop = vegetable.id_food
                 if ewcfg.mutation_id_greenfingers in mutations:
                     if user_data.life_state == ewcfg.life_state_juvenile:
                         farm.sow_life_state = ewcfg.farm_life_state_juviethumb
@@ -267,7 +281,11 @@ async def reap(cmd):
                             response += "two {}s, ".format(item.str_name)
 
                     #  Determine what crop is grown.
-                    vegetable = static_food.food_map.get(farm.crop)
+                    if farm.crop == ewcfg.item_id_evil_material:
+                        vegetable = static_items.item_map.get(farm.crop)
+                    else:
+                        vegetable = static_food.food_map.get(farm.crop)
+                        
                     if vegetable is None:
                         vegetable = random.choice(static_food.vegetable_list)
 

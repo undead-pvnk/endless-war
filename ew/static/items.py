@@ -1513,6 +1513,11 @@ item_list = [
         str_desc="A wardrobe of cute buttons. You know you should probably be concerned that these lil’ guys were hiding in your crops, but honestly you’re overcome with emotion and feel utterly blessed. Lookit ‘em! They’re adorable! D’awww...",
     ),
     EwGeneralItem(
+        id_item=ewcfg.item_id_evil_material,
+        str_name="Evil Studs",
+        str_desc="A handful of studs, cultivated from a useless rotting scalp. They're razor-sharp, and just holding them cuts your hand. Damn, these make you mad!",
+    ),
+    EwGeneralItem(
         id_item=ewcfg.item_id_dyesolution,
         str_name="Dye Solution",
         str_desc="A small vial of salt, water, and vinegar. You can smelt this together with crop materials to make dyes.",
@@ -3457,8 +3462,62 @@ furniture_list = [
         furniture_look_desc = "A large display case rests neat the center of the room.",
         furn_set='collection'
     ),
+    EwFurniture(
+        id_furniture = "shipinabottle",
+        str_name = "Ship in a Bottle",
+        str_desc = "One of those mass-manufactured, cheaply-produced ships inside a large glass bottle.",
+        rarity = "Plebeian",
+        acquisition = "bartering",
+        price = 400000,
+        vendors = ['Beach Resort'],
+        furniture_place_desc = "You carefully place the small display down onto your desk. It doesn't really matter since the fake sand got all over the ship already.",
+        furniture_look_desc = "On your desk, there's a tiny ship in a bottle.",
+    ),
+    EwFurniture(
+        id_furniture = "lifepreserver",
+        str_name = "Life Preserver",
+        str_desc = "It's one of those big floatation devices ships have to throw overboard when someone falls out like a moron. I suppose you can throw this on someone's corpse when they die to lighten the mood.",
+        rarity = "Plebeian",
+        acquisition = "bartering",
+        price = 800000,
+        vendors = ['Beach Resort'],
+        furniture_place_desc = "You stick ten nails in the wall and affix the life preserver to the wall.",
+        furniture_look_desc = "There's a large life preserver on the wall.",
+    ),
+    EwFurniture(
+        id_furniture = "exquisiterug",
+        str_name = "Exquisite Rug",
+        str_desc = "A old-fashioned XXL rug to fit into your living room. It reminds you of the ones your grandparents would have.",
+        rarity = "Patrician",
+        acquisition = "bartering",
+        price = 1600000,
+        vendors = ['Country Club'],
+        furniture_place_desc = "You clear your living room out and kick the rug down the room in one go. You'll have to vacuum this twice a week just by feeling how heavy of a carpet it is.",
+        furniture_look_desc = "Your living room's floor is just one giant pattern rug.",
+    ),
+    EwFurniture(
+        id_furniture = "youreawinnertrophy",
+        str_name = "You're a Winner Trophy",
+        str_desc = "It's a gaudish 40 pound trophy made of fake gold along with a plaque to rest it on. The plaque is intentionally smudged to become illegible so you can carry your faux achievement.",
+        rarity = "Patrician",
+        acquisition = "bartering",
+        price = 30000000,
+        vendors = ['Country Club'],
+        furniture_place_desc = "You heave the trophy up onto your desk. The weight of this doesn't compare to the weight placed upon your ego though; you'll be a narcissist in no time!",
+        furniture_look_desc = "Your greatest achievement trophy is showing off in a bold display.",
+    ),
+    EwFurniture(
+        id_furniture = "chimneyfireplace",
+        str_name = "Chimney Fireplace",
+        str_desc = "It's an entire luxury fireplace. The mantel is easily wide enough to consider more shelving space, and the entire assembly is made only from artisanal materials.",
+        rarity = "Plebeian",
+        acquisition = "bartering",
+        price = 10000000,
+        vendors = ['Country Club'],
+        furniture_place_desc = "You hire a bunch of contract workers from the yellow pages, getting the fireplace installed. Of course, you act like a curmudgeon all the while and don't even pay them afterwards, citing that you wanted it a few centimeters to the left.",
+        furniture_look_desc = "Your apartment has a luxury chimney fireplace, giving your entire apartment supercilious aura.",
+    ),
 ]
-
 
 furniture_map = {}
 furniture_names = []

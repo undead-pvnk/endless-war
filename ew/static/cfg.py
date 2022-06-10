@@ -1,8 +1,8 @@
 # Global configuration options.
 
 
+version = "v4.104 S4A1 Cosmiture First Wave"
 
-version = "v4.1031 Event Cleanup 🚛"
 
 dir_msgqueue = 'msgqueue'
 
@@ -2315,7 +2315,8 @@ it_relic = 'relic'
 # Cosmetic item rarities
 rarity_plebeian = "Plebeian"
 rarity_patrician = "Patrician"
-rarity_promotional = "Promotional"  # Cosmetics that should not be awarded through smelting/hunting
+rarity_profollean = "Profollean"
+rarity_promotional = "Promotional"  # Cosmetics awarded at events / achieved through limited ways
 rarity_princeps = "princeps"
 
 # Leaderboard score categories
@@ -2551,23 +2552,25 @@ context_prankitem = 'prankitem'
 
 # Item vendor names.
 vendor_bar = 'bar'  # rate of non-mtn dew drinks are 100 slime to 9 hunger
-vendor_pizzahut = 'Pizza Hut'  # rate of fc vendors are 100 slime to 10 hunger
-vendor_tacobell = 'Taco Bell'
-vendor_kfc = 'KFC'
-vendor_mtndew = 'Mtn Dew Fountain'
-vendor_vendingmachine = 'vending machine'
+vendor_pizzahut = 'Pizza Hut'  # rate of fc vendors are 100 slime to 10 hunger, Sub-menu in Food Court
+vendor_tacobell = 'Taco Bell' # Sub-menu in Food Court
+vendor_kfc = 'KFC' # Sub-menu in Food Court
+vendor_mtndew = 'Mtn Dew Fountain' # Sub-menu in Food Court
+vendor_vendingmachine = 'vending machine' # Pourdin Alley's 7/11.
 vendor_seafood = 'Red Mobster Seafood'  # rate of seafood is 100 slime to 9 hunger
 vendor_diner = "Smoker's Cough"  # rate of drinks are 100 slime to 15 hunger
-vendor_beachresort = "Beach Resort"  # Just features clones from the Speakeasy and Red Mobster
-vendor_countryclub = "Country Club"  # Just features clones from the Speakeasy and Red Mobster
+vendor_beachresort = "Beach Resort"  # Assault Flats Beach bar and the sunburnt greasy man to sell you summer-season amenities.
+vendor_countryclub = "Country Club"  # Dreadford's snobbish vendor. Crookline's Splatify is the southwest bar in the game now.
 vendor_farm = "Farm"  # contains all the vegetables you can !reap
-vendor_bazaar = "bazaar"
-vendor_giftshop = "giftshop"
+vendor_bazaar = "bazaar" # General store, and pulls in the item pool from every other vendor in the game.
+vendor_giftshop = "giftshop" 
 vendor_college = "College"  # You can buy game guides from either of the colleges
 vendor_glocksburycomics = "Glocksbury Comics"  # Repels and trading cards are sold here
 vendor_slimypersuits = "Slimy Persuits"  # You can buy candy from here
 vendor_greencakecafe = "Green Cake Cafe"  # Brunch foods
-vendor_bodega = "Bodega"  # Clothing store in Krak Bay
+vendor_bodega = "Bodega"  # Default clothing store in Krak Bay
+vendor_snottopic = "Snot Topic" # Sub-store within Bodega, featuring crappy clothing that no other store would sell.
+vendor_caravan = "Caravan" #Sub-store within Bodega, filters a lot of shoes into one store.
 vendor_secretbodega = "Secret Bodega"  # The secret clothing store in Krak Bay
 vendor_wafflehouse = "Waffle House"  # waffle house in the void, sells non-perishable foods, 50 slime to 1 hunger
 vendor_basedhardware = "Based Hardware"  # Hardware store in West Glocksbury
@@ -2621,6 +2624,7 @@ item_id_tough_material = "toughnails"
 item_id_smart_material = "smartcookies"
 item_id_beautiful_material = "beautyspots"
 item_id_cute_material = "cutebuttons"
+item_id_evil_material = "evilstuds"
 item_id_dragonsoul = "dragonsoul"
 item_id_monsterbones = "monsterbones"
 item_id_faggot = "faggot"
@@ -3132,8 +3136,9 @@ style_tough = "tough"
 style_smart = "smart"
 style_beautiful = "beautiful"
 style_cute = "cute"
+style_evil = "evil"
 
-fashion_styles = [style_cool, style_tough, style_smart, style_beautiful, style_cute]
+fashion_styles = [style_cool, style_tough, style_smart, style_beautiful, style_cute, style_evil]
 
 freshnesslevel_1 = 500
 freshnesslevel_2 = 1000
@@ -4575,7 +4580,7 @@ captcha_dict = [
     'KFC', 'GAY', 'LOL', 'GUN', 'MUK',
     'POW', 'WOW', 'POP', 'OWO', 'HIP',
     'END', 'HAT', 'CUP', '911', '711',
-    'SIX', 'SMG', 'BOW',
+    'SIX', 'SMG', 'BOW', 'UWU',
     # 4
     'GOON', 'DOOR', 'CORP', 'SPAM', 'BLAM',
     'FISH', 'MINE', 'LOCK', 'OURS', 'ROCK',
@@ -4583,48 +4588,51 @@ captcha_dict = [
     'HEHE', 'WEED', 'LMAO', 'EPIC', 'NICE',
     'SOUL', 'KILL', 'FREE', 'GOOP', 'CAVE',
     'ZOOM', 'FIVE', 'NINE', 'BASS', 'FIRE',
-    'TEXT', 'AWOO', 'GOKU',
+    'TEXT', 'AWOO', 'GOKU', 'FOUR', 'VAPE', 
     # 5
     'GUNKY', 'BOORU', 'ROWDY', 'GHOST', 'ORDER',
     'SCARE', 'BULLY', 'FERRY', 'SAINT', 'SLASH',
-    'SLOSH', 'PARTY', 'BASED', 'TULPA',
+    'SLOSH', 'PARTY', 'BASED', 'TULPA', 'RELIC',
     'SLURP', 'MONTH', 'SEVEN', 'BRASS', 'MINES',
     'CHEMO', 'LIGHT', 'FURRY', 'PIZZA', 'ARENA',
-    'LUCKY', 'RIFLE', '56709',
+    'LUCKY', 'RIFLE', '56709', 'SNIPE', 'SLIME', 
     # 6
     'SLUDGE', 'KILLER', 'MUNCHY', 'BLAAAP', 'BARTER',
     'ARTIST', 'FUCKER', 'MINING', 'SURVEY', 'THRASH',
     'BEWARE', 'STOCKS', 'COWARD', 'CRINGE', 'INVEST',
     'BUSTAH', 'KILLAH', 'KATANA', 'GHOSTS', 'BASSED',
-    'REVIVE', 'BATTLE', 'PAWPAW',
+    'REVIVE', 'BATTLE', 'PAWPAW', 'SLEDGE', 'HAMMER', 
     # 7
     'KINGPIN', 'ENDLESS', 'ATTACKS', 'FUCKERS', 'FISHING',
     'VIOLENT', 'SQUEEZE', 'LOBSTER', 'WESTERN', 'EASTERN',
     'REGIONS', 'DISCORD', 'KNUCKLE', 'MOLOTOV', 'SHAMBLE',
     'WARFARE', 'BIGIRON', 'POUDRIN', 'PATRIOT', 'MINIGUN',
     'MONSTER', 'DIVORCE', 'GARROTE', 'ASSAULT', 'PICKAXE',
+    'HARPOON', 'HUNTING', 
     # 8
     'GAMEPLAY', 'CONFLICT', 'EXCHANGE', 'FEEDBACK', 'GRENADES',
     'VIOLENCE', 'TACOBELL', 'PIZZAHUT', 'OUTSKIRT', 'WHATEVER',
     'WITHDRAW', 'SOUTHERN', 'NORTHERN', 'ASTATINE', 'SLIMEOID',
     'SHAMBLIN', 'STAYDEAD', 'DOWNTOWN', 'DISTRICT', 'BASEBALL',
-    'BIGBONES', 'LONEWOLF', 'KEENSMELL', 'RAZORNUTS', 'REVOLVER',
+    'BIGBONES', 'LONEWOLF', 'REVOLVER', 'COMMANDO', 'STINKEYE',
     # 9
     'APARTMENT', 'SURVIVORS', 'NEGASLIME', 'COMMUNITY', 'GIGASLIME',
     'DETENTION', 'CATHEDRAL', 'TOXINGTON', 'SLIMEGIRL', 'INVESTING',
-    'SLIMECOIN', 'RATELIMIT', 'NARRATIVE', 'COMMANDO', 'SHAMBLERS',
-    'NUNCHUCKS', 'SLIMECORP', 'ARSONBROOK', 'SMOGSBURG', 'SLIMEFEST',
+    'SLIMECOIN', 'RATELIMIT', 'NARRATIVE', 'SHAMBLERS', 'KEENSMELL',
+    'NUNCHUCKS', 'SLIMECORP', 'SMOGSBURG', 'SLIMEFEST', 'RAZORNUTS',
     'COMMANDER', 'FATCHANCE', 'DANKWHEAT',
     # 10
     'SLUDGECORE', 'LOREMASTER', 'ROUGHHOUSE', 'GLOCKSBURY', 'CALCULATED',
     'PLAYGROUND', 'NEWYONKERS', 'OLDYONKERS', 'VANDALPARK', 'SLIMERMAID',
     'SLIMEXODIA', 'WEBBEDFEET', 'NOSEFERATU', 'BINGEEATER', 'TRASHMOUTH',
     'DIREAPPLES', 'BLACKLIMES', 'POKETUBERS', 'PULPGOURDS', 'ROWDDISHES',
-    'DRAGONCLAW',
+    'DRAGONCLAW', 'ARSONBROOK', 'SKATEBOARD', 'POPPEPPERS', 
     # 27
     'STOPSCAVENGINGANDTOUCHGRASS', 'GETSERIOUSPSYCHOLOGICALHELP',
     'FEELTHETOUCHOFAWOMANINSTEAD', 'THISISNTVERYIMPRESSIVECHUMP',
     'YOUCOULDBEDOINGSOMUCHBETTER', 'GOGETAJOBINSTEADOFDOINGTHIS',
+    'CONTESTARENEVERJUDGEDONTIME',
+    # To the people who don't know how to count to 10 letters, I feel pity for your parents.
 ]
 
 riflecap = ['UP', 'DOWN', 'LEFT', 'RIGHT']

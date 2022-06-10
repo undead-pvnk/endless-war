@@ -23,6 +23,7 @@ debug2 = 'clownfart'
 debugsmoke = 'debugsmoke'
 
 relic_map = {}
+question_map = {}
 relic_names = []
 alt_relics = []
 dontfilter_relics = []

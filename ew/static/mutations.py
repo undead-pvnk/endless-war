@@ -36,7 +36,7 @@ mutations = [
     EwMutationFlavor(
         id_mutation=ewcfg.mutation_id_2ndamendment,
         str_name="2nd Amendment",
-        alias=['2a', 'second', 'secondamendment'],
+        alias=['2a', 'second', 'secondamendment', '2nd'],
         str_describe_self="A spare pair of arms extend from your monstrously large shoulders due to **2nd Amendment**.",
         str_describe_other="A spare pair of arms extend from their monstrously large shoulders due to **2nd Amendment**.",
         str_acquire="You feel an intense, sharp pain in the back of your shoulders. Skin tears and muscles rip as you grow a brand new set of arms, ready, willing, prepared to fight. You have developed the mutation **2nd Amendment**. Extra equippable gun slot, and a damage bonus when sidearming another weapon.",
