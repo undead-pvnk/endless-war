@@ -159,7 +159,7 @@ async def rattle(cmd):
 
         # spook mentioned player
         if cmd.mentions_count == 1:
-            responses = [
+            agroskelly_response = [
                 ", sending a shiver down their spine.",
                 ", who clearly does not appreciate it.",
                 ". They almost faint in shock.",
@@ -169,12 +169,67 @@ async def rattle(cmd):
                 " a little bit too hard. Oof ouch owie.",
                 " so viciously they actually get offended.",
                 " in an attempt to socialize, but they don't think you should.",
+                ", inviting them to have a bad time.", #blame loom
+                ", coaxing the skeleton within to become without.",
+                ", assuring them it's too late.",
+                ", wondering if they know who the girl next door is, living in the haunted mansion.",
+                " to assure them that this is, in fact, Halloween."
             ]
-            response = "You rattle your bones at {}{}".format(cmd.mentions[0].display_name, random.choice(responses))
-
+            response = random.choice([ # thanks zug
+                "You start removing ribs and throwing them at {}. Rib fight!".format(cmd.mentions[0].display_name),
+                "You rattle your bones at {}{}".format(cmd.mentions[0].display_name, random.choice(agroskelly_response)),
+                "You have a bone to pick with {}.".format(cmd.mentions[0].display_name) # blame org
+            ])
         # rattle alone
         else:
-            response = "You rattle your bones."
+            roll = random.randrange(100)
+            lonelyskelly_response = []
+            # common rattles
+            if roll > 9:
+                lonelyskelly_response = [
+                    "You rattle your bones.",
+                    "You  r a t t l e  your  b o n e s .",
+                    "You rattle your bones so aggressively your head goes flying off.",
+                    "You rattle your bones so aggressively your arm flies out of your shoulder's socket.",
+                    "You rattle your bones so aggressively your leg is shaken out of your pelvis, sending you to the floor.",
+                    "You rattle your bones so aggressively a rib flies out and nearly hits someone else's eye.",
+                    "You rattle your bones so aggressively a rib collapses inward, bouncing around your chest cavirty for a good ten minutes."
+                    "You bang your ribcage with a couple of sticks. Sounds less like a xylophone than you would expect.", # partially blame pyro
+                    "You 'nyehh' to yourself",
+                    "Every day you rattlin'.",
+                    "You rattle your bones, thinking about the last time you gave someone a bad time" # blame loom
+                    "You set to work tickling your own ivories. How shameful." # blame dublyn
+                    "A few spinal plates fall out, you give them a lick and stick them back in." # blame ebola
+                    "You give everyone the chills from chattering your teeth too much.", # blame ebola
+                    "You trip on a wayward rock and topple over. What a boner!", # blame loom
+                    "You rib with the fellas. Good bants all 'round.",
+                    "You rib with the ladies, heheh. What, what did I say wrong?", # blame ebola
+                    "You rib with the non-b folk. A healthy mix of people with and without a sense of humor.",
+                    "You spook yourself with how effectively you rattle your bones.",
+                    "You play a somber tune on your ribcage, fondly remembering the last Double Halloween.",
+                    "You shiver loudly as you remember the cold of the catacombs."
+                ]
+            # rare rattles
+            elif roll > 1:
+                bones = random.randrange(206)
+                insult1 = []
+                insult2 = []
+                # grammar is important, retards
+                if bones > 1:
+                    insult1 = "s "
+                    insult2 = "."
+                elif bones > 0:
+                    insult1 = " "
+                    insult2 = ". What? How? Did you go straight for a thigh?"
+                lonelyskelly_response = [
+                    "You rattle your bones so aggressively, you collapse into a pile of bones. It takes a second for you to reassemble yourself",
+                    "You successfully remove {} bone{}before collapsing{}".format(bones, insult1, insult2), # blame ebola
+                    "You remove your head before entering a nearby bowling alley."
+                ]
+                # ultra rare rattle
+                elif roll > 0:
+                    lonelyskelly_response = "https://youtu.be/TFwXbp9bLlY"
+                response = random.choice(lonelyskelly_response) # thanks zug
     else:
         response = "You people are not allowed to do that."
 
