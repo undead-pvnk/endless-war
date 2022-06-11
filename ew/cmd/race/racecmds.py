@@ -171,9 +171,10 @@ async def rattle(cmd):
             p2 = random.randrange(206)
             
             if p1 > p2:
-                bone_jenga_outcome = "You win! Look at {}, all stupid and dumb like a loser. Hopefully they stick around long enought o put you back together.".format(target_name)
+
+                bone_jenga_outcome = "You win! Look at {}, all stupid and dumb like a loser. Hopefully they stick around long enough to put you back together.".format(target_name)
             elif p1 < p2:
-                bone_jenga_outcome = "{} wins! Look at you, all crumpled on the floor like a disjointed pile of bones.".format(targe_name)
+                bone_jenga_outcome = "{} wins! Look at you, all crumpled on the floor like a disjointed pile of bones.".format(target_name)
             else:
                 bone_jenga_outcome = "It's a draw! This was a massive waste of time, worse than a pissing contest."
             
@@ -205,16 +206,17 @@ async def rattle(cmd):
                     "You start removing ribs and throwing them at {}. Rib fight!".format(target_name),
                     "You have a bone to pick with {}.".format(target_name) # blame org
                 ]
+
+                response = random.choice(responses)
             
             else:
-                target_data = EwUser(member=target_member)
+                target_data = EwUser(member=cmd.mentions[0])
                 
                 response = "You forcibly challenge {} to a game of Bone Jenga!".format(target_name)
                 await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                 await asyncio.sleep(1)
-                if target_data.race = ewcfg.race_skeleton:
-                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-                    await asyncio.sleep(1)
+
+                if target_data.race == ewcfg.race_skeleton:
                     response = "..."
                     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                     await asyncio.sleep(1)
@@ -240,13 +242,13 @@ async def rattle(cmd):
                     "You rattle your bones so aggressively your arm flies out of your shoulder's socket.",
                     "You rattle your bones so aggressively your leg is shaken out of your pelvis, sending you to the floor.",
                     "You rattle your bones so aggressively a rib flies out and nearly hits someone else's eye.",
-                    "You rattle your bones so aggressively a rib collapses inward, bouncing around your chest cavirty for a good ten minutes."
+                    "You rattle your bones so aggressively a rib collapses inward, bouncing around your chest cavity for a good ten minutes.",
                     "You bang your ribcage with a couple of sticks. Sounds less like a xylophone than you would expect.", # partially blame pyro
                     "You 'nyehh' to yourself",
                     "Every day you rattlin'.",
-                    "You rattle your bones, thinking about the last time you gave someone a bad time" # blame loom
-                    "You set to work tickling your own ivories. How shameful." # blame dublyn
-                    "A few spinal plates fall out, you give them a lick and stick them back in." # blame ebola
+                    "You rattle your bones, thinking about the last time you gave someone a bad time", # blame loom
+                    "You set to work tickling your own ivories. How shameful.", # blame dublyn
+                    "A few spinal plates fall out, you give them a lick and stick them back in.", # blame ebola
                     "You give everyone the chills from chattering your teeth too much.", # blame ebola
                     "You trip on a wayward rock and topple over. What a boner!", # blame loom
                     "You rib with the fellas. Good bants all 'round.",
@@ -259,15 +261,16 @@ async def rattle(cmd):
            # rare rattles
             elif roll > 1:
                 bones = random.randrange(206)
-                insult1 = ""
-                insult2 = ""
                 # grammar is important, retards
                 if bones > 1:
                     insult1 = "s "
                     insult2 = "."
-                else:
+                elif bones == 1:
                     insult1 = " "
                     insult2 = ". What? How? Did you go straight for a thigh?"
+                else:
+                    insult1 = "s "
+                    insult2 = ". You're really having a day..."
                 lonelyskelly_response = [
                     "You rattle your bones so aggressively, you collapse into a pile of bones. It takes a second for you to reassemble yourself",
                     "You successfully remove {} bone{}before collapsing{}".format(bones, insult1, insult2), # blame ebola
