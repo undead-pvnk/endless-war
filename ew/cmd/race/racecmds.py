@@ -171,6 +171,7 @@ async def rattle(cmd):
             p2 = random.randrange(206)
             
             if p1 > p2:
+
                 bone_jenga_outcome = "You win! Look at {}, all stupid and dumb like a loser. Hopefully they stick around long enough to put you back together.".format(target_name)
             elif p1 < p2:
                 bone_jenga_outcome = "{} wins! Look at you, all crumpled on the floor like a disjointed pile of bones.".format(target_name)
@@ -205,6 +206,7 @@ async def rattle(cmd):
                     "You start removing ribs and throwing them at {}. Rib fight!".format(target_name),
                     "You have a bone to pick with {}.".format(target_name) # blame org
                 ]
+
                 response = random.choice(responses)
             
             else:
@@ -213,6 +215,7 @@ async def rattle(cmd):
                 response = "You forcibly challenge {} to a game of Bone Jenga!".format(target_name)
                 await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                 await asyncio.sleep(1)
+
                 if target_data.race == ewcfg.race_skeleton:
                     response = "..."
                     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
