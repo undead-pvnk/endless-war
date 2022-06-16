@@ -331,7 +331,8 @@ async def rattle(cmd):
                 "{} is bone-tired of your sass.".format(target_name),
                 "{} is shaken down for all they're worth! It ain't much.".format(target_name), #blame ebola
                 "You start removing ribs and throwing them at {}. Rib fight!".format(target_name),
-                "You have a bone to pick with {}.".format(target_name) # blame org
+                "You have a bone to pick with {}.".format(target_name), # blame org
+                "You rib with {}.".format(target_name)
             ]
 
             response = random.choice(responses)
