@@ -109,7 +109,7 @@ async def updateRoles(client, member, server_default=None, refresh_perms=True, n
         ewutils.logMsg('error: failed to replace roles for {}:{}'.format(member.display_name, str(e)))
 
     if refresh_perms:
-        await refresh_user_perms(client=client, id_server=id_server, used_member=member, new_poi = new_poi)
+        await refresh_user_perms(client, id_server, member, new_poi=new_poi)
 
 
 # Removes and updates user permissions. It's got a fair amount of debuggers, sorry about the mess!
