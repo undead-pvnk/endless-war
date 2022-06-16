@@ -297,7 +297,7 @@ def get_channel(server: discord.Guild, channel_name: str):
                 channel_map[server.id][channel_name] = chan
                 found_ch = chan
 
-        if not found_ch:
+        if not found_ch and not ewutils.DEBUG:
             ewutils.logMsg(f'Error: In get_channel(), could not find channel using channel_name "{channel_name}"')
             return None
 
