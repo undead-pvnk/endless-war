@@ -87,18 +87,6 @@ cmd_map = {
     # Enemies
     ewcfg.cmd_deleteallenemies: bknd_hunt.delete_all_enemies,
 
-    # restores poi roles to their proper names, only usable by admins
-    ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
-
-    # hides all poi role names, only usable by admins
-    ewcfg.cmd_hiderolenames: ewrolemgr.hideRoleNames,
-
-    # recreates all hidden poi roles in the server in case restoreRoleNames doesnt work, only usable by admins
-    ewcfg.cmd_recreateroles: ewrolemgr.recreateRoles,
-
-    # deletes all roles in the server of a particular type
-    ewcfg.cmd_deleteroles: ewrolemgr.deleteRoles,
-
     # removes all user overwrites in the server's poi channels
     ewcfg.cmd_removeuseroverwrites: ewrolemgr.remove_user_overwrites,
 

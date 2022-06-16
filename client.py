@@ -210,20 +210,14 @@ async def on_ready():
     fake_observer = EwUser()
     fake_observer.life_state = ewcfg.life_state_observer
     for poi in poi_static.poi_list:
+        # This just cleans poi roles, why is this here?
         if poi.role != None:
             poi.role = ewutils.mapRoleName(poi.role)
-        if poi.major_role != None:
-            poi.major_role = ewutils.mapRoleName(poi.major_role)
-        if poi.minor_role != None:
-            poi.minor_role = ewutils.mapRoleName(poi.minor_role)
 
         neighbors = []
         neighbor_ids = []
-        # if poi.coord != None:
         if len(poi.neighbors.keys()) > 0:
             neighbors = move_utils.path_to(poi_start=poi.id_poi, user_data=fake_observer)
-        # elif poi.id_poi == ewcfg.poi_id_thesewers:
-        #	neighbors = poi_static.poi_list
 
         if neighbors != None:
 
@@ -231,7 +225,6 @@ async def on_ready():
                 neighbor_ids.append(neighbor.id_poi)
 
         poi_static.poi_neighbors[poi.id_poi] = set(neighbor_ids)
-        # ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, poi_static.poi_neighbors[poi.id_poi]))
 
     for id_poi in poi_static.landmark_pois:
         ewutils.logMsg("beginning landmark precomputation for " + id_poi)
@@ -242,9 +235,6 @@ async def on_ready():
         )
 
     ewutils.logMsg("finished landmark precomputation")
-
-    # Channels in the connected discord servers to announce to.
-    channels_announcement = []
 
     # Channels in the connected discord servers to send stock market updates to. Map of server ID to channel.
     channels_stockmarket = {}
@@ -264,30 +254,14 @@ async def on_ready():
 
         # Grep around for channels
         ewutils.logMsg("connected to server: {}".format(server.name))
-        for channel in server.channels:
-            if (channel.type == discord.ChannelType.text):
-                if (channel.name == ewcfg.channel_stockexchange):
-                    channels_stockmarket[server.id] = channel
-                    ewutils.logMsg("• found channel for stock exchange: {}".format(channel.name))
 
-                elif (channel.name == ewcfg.channel_slimetwitter):
-                    channels_slimetwitter[server.id] = channel
-                    ewutils.logMsg("• found channel for slime twitter: {}".format(channel.name))
-
-                elif (channel.name == ewcfg.channel_artexhibits):
-                    channels_artexhibits[server.id] = channel
-                    ewutils.logMsg("• found channel for art exhibits: {}".format(channel.name))
-
-                elif (channel.name == ewcfg.channel_deviantsplaart):
-                    channels_deviantsplaart[server.id] = channel
-                    ewutils.logMsg("• found channel for deviantSPLAART: {}".format(channel.name))
+        # Map a bunch of the main channels
+        fe_utils.map_channels(server)
 
         ewdebug.initialize_gamestate(id_server=server.id)
 
-
         # get or make the weapon items for fists and fingernails
         combat_utils.set_unarmed_items(server.id)
-        #ewutils.logMsg("Global fists are {}\nGlobal fingernails are {}".format(combat_utils.fist_item, combat_utils.fingernails_item))
 
         # create all the districts in the database
         for poi_object in poi_static.poi_list:
@@ -304,9 +278,6 @@ async def on_ready():
             resp_cont = dist.change_ownership(new_owner=dist.controlling_faction, actor="init", client=client)
             dist.persist()
             await resp_cont.post()
-
-        # kill people who left the server while the bot was offline
-        # ewutils.kill_quitters(server.id) #FIXME function get_member doesn't find users reliably
 
         asyncio.ensure_future(loop_utils.capture_tick_loop(id_server=server.id))
 
@@ -1050,10 +1021,7 @@ async def on_message(message):
             return
 
         # assign the appropriate roles to a user with less than @everyone, faction, both location roles
-        # if len(message.author.roles) < 4:
-        # await ewrolemgr.updateRoles(client = client, member = message.author)
 
-        #user_data = EwUser(member=message.author)
         if usermodel.arrested > 0:
             return
 
