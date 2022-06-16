@@ -32,7 +32,7 @@ async def updateRoles(client, member, server_default=None, refresh_perms=True, n
     time_now = int(time.time())
 
     roles_add = set()
-    replacement_roles = []
+    replacement_roles = set()
 
     if server_default is not None:
         user_data = EwUser(id_user=member.id, id_server=server_default)
@@ -89,17 +89,17 @@ async def updateRoles(client, member, server_default=None, refresh_perms=True, n
     roles_remove.update(ewcfg.misc_roles)
     roles_remove = roles_remove - roles_add
 
-    # Refunds the roles you already have if they dont need to be removed
+    # Refunds non-critical roles
     for role_id in roles_map_user:
         role_data = roles_map.get(role_id)
-        if role_data and role_id not in roles_remove:
-            replacement_roles.append(role_data)
+        if role_data and role_id not in roles_remove and role_id not in roles_add:
+            replacement_roles.add(role_data)
 
-    # Find the actual discord roles based on the strings we've been using
+    # Adds critical roles
     for role in roles_add:
         role_data = roles_map.get(role)
         if role_data:
-            replacement_roles.append(role_data)
+            replacement_roles.add(role_data)
         else:
             ewutils.logMsg(f"Failed to find role for {role}.")
 
@@ -113,10 +113,8 @@ async def updateRoles(client, member, server_default=None, refresh_perms=True, n
 
 
 # Removes and updates user permissions. It's got a fair amount of debuggers, sorry about the mess!
-async def refresh_user_perms(client, id_server, used_member=None, startup=False, new_poi=None):
+async def refresh_user_perms(client, id_server, used_member, new_poi=None):
     server = client.get_guild(id_server)
-
-    has_overrides = False
 
     user_data = EwUser(member=used_member)
     if new_poi is not None:
@@ -124,94 +122,40 @@ async def refresh_user_perms(client, id_server, used_member=None, startup=False,
     else:
         user_poi_obj = poi_static.id_to_poi.get(user_data.poi)
 
-    if not startup:
-        for poi in poi_static.poi_list:
-            # this code goes through every single channel every time you call it
-            channel = fe_utils.get_channel(server, poi.channel)
-            if not channel:
-                continue
+    if not user_poi_obj:
+        user_poi_obj = poi_static.id_to_poi.get(ewcfg.poi_id_downtown)
 
-            if used_member in channel.overwrites and user_poi_obj.id_poi != poi.id_poi:
-                # Incorrect overwrite found for user
+    # Part 1: Remove overrides the user shouldn't have
+    for poi in poi_static.poi_list:
+        channel = fe_utils.get_channel(server, poi.channel)
+        if not channel:
+            continue
 
-                try:
-
-                    for chname in poi.permissions:
-                        ch = fe_utils.get_channel(server, chname)
-                        if ch != None:
-                            await ch.set_permissions(used_member, overwrite=None)
-
-                except:
-                    ewutils.logMsg("Failed to remove permissions for {} in channel {}.".format(used_member.display_name, channel.name))
-
-            # User doesn't have permissions for his current poi's gameplay channel
-            elif used_member not in channel.overwrites and user_poi_obj.id_poi == poi.id_poi:
-
-                correct_poi = poi_static.id_to_poi.get(user_poi_obj.id_poi)
-
-                if correct_poi == None:
-                    print('User {} has invalid POI of {}'.format(user_data.id_user, user_poi_obj.id_poi))
-                    correct_poi = poi_static.id_to_poi.get(ewcfg.poi_id_downtown)
-
-                try:
-
-                    # Set permissions for the user's current poi
-
-                    for chname in poi.permissions:
-                        ch = fe_utils.get_channel(server, chname)
-                        if ch != None:
-                            permissions_dict = poi.permissions[chname]
-                            overwrite = discord.PermissionOverwrite()
-                            overwrite.read_messages = True if ewcfg.permission_read_messages in permissions_dict else False
-                            overwrite.send_messages = True if ewcfg.permission_send_messages in permissions_dict else False
-                            overwrite.connect = True if ewcfg.permission_connect_to_voice in permissions_dict else False
-                            await ch.set_permissions(used_member, overwrite=overwrite)
-                        else:
-                            ewutils.logMsg("Channel {} not found".format(chname))
-
-                except Exception as e:
-                    ewutils.logMsg("Failed to add permissions to {} in channel {}:{}.".format(used_member.display_name, channel.name, str(e)))
-
-                has_overrides = True
-
-        if not has_overrides:
-            # Member has no overwrites -- fix this:
-            user_data = EwUser(member=used_member)
-            if new_poi is not None:
-                user_poi_obj = poi_static.id_to_poi.get(new_poi)
-            else:
-                user_poi_obj = poi_static.id_to_poi.get(user_poi_obj.id_poi)
-
-            # User might not have their poi set to downtown when they join the server.
-            if user_poi_obj.id_poi == None:
-                correct_poi = poi_static.id_to_poi.get(ewcfg.poi_id_downtown)
-            else:
-                correct_poi = poi_static.id_to_poi.get(user_poi_obj.id_poi)
-
-            if correct_poi == None:
-                print('User {} has invalid POI of {}'.format(user_data.id_user, user_poi_obj.id_poi))
-                correct_poi = poi_static.id_to_poi.get(ewcfg.poi_id_downtown)
+        if used_member in channel.overwrites and user_poi_obj.id_poi != poi.id_poi:
+            # Incorrect overwrite found for user
 
             try:
-
-                # Set permissions for the user's current poi
-                for chname in correct_poi.permissions:
+                for chname in poi.permissions:
                     ch = fe_utils.get_channel(server, chname)
-                    if ch != None:
-
-                        permissions_dict = correct_poi.permissions[chname]
-                        overwrite = discord.PermissionOverwrite()
-
-                        overwrite.read_messages = True if ewcfg.permission_read_messages in permissions_dict else False
-                        overwrite.send_messages = True if ewcfg.permission_send_messages in permissions_dict else False
-                        overwrite.connect = True if ewcfg.permission_connect_to_voice in permissions_dict else False
-                        await ch.set_permissions(used_member, overwrite=overwrite)
-
-                    else:
-                        ewutils.logMsg("Channel {} not found".format(chname))
-
+                    if ch:
+                        await ch.set_permissions(used_member, overwrite=None)
             except Exception as e:
-                ewutils.logMsg("Failed to fix permissions for {}:{}.".format(used_member.display_name, str(e)))
+                ewutils.logMsg("Failed to remove permissions for {} in channel {}: {}.".format(used_member.display_name, channel.name, e))
+
+    # Part 2: Add overrides for the POI the user should be in
+    channel = fe_utils.get_channel(server, user_poi_obj.channel)
+    if channel:
+        for chname in user_poi_obj.permissions:
+            perms_dict = user_poi_obj.permissions[chname]
+            overwrite = discord.PermissionOverwrite()
+            overwrite.read_messages = True if ewcfg.permission_read_messages in perms_dict else False
+            overwrite.send_messages = True if ewcfg.permission_send_messages in perms_dict else False
+            overwrite.connect = True if ewcfg.permission_connect_to_voice in perms_dict else False
+            ch = fe_utils.get_channel(server, chname)
+            if ch:
+                await ch.set_permissions(used_member, overwrite=overwrite)
+    else:
+        ewutils.logMsg(f"Couldn't apply overwrites for user {user_data.id_user}, channel {user_poi_obj.channel} doesn't exist.")
 
 
 # Remove all user overwrites in the server's POI channels
@@ -250,7 +194,7 @@ async def remove_user_overwrites(cmd):
 
 
 def check_clearance(member = None) -> int:
-    
+
     """
     Returns an int showing the clearance of the user depending on the roles they have attached to their discord member.
     The lower the number, the greater the clearance.
