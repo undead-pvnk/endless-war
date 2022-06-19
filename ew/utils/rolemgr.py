@@ -73,7 +73,7 @@ async def updateRoles(client, member, server_default=None, refresh_perms=True, n
     #  If faction has an associated PVP role
     if faction_role in ewcfg.role_to_pvp_role:
         # If the POI the user is in is PVP or not
-        if not (user_poi.is_apartment or not mother_poi.pvp) or lastwarp > time_now:
+        if user_poi.pvp or not (user_poi.is_apartment or not mother_poi.pvp) or lastwarp > time_now:
             pvp_role = ewcfg.role_to_pvp_role.get(faction_role)
             roles_add.add(pvp_role)
 
