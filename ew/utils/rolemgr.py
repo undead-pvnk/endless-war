@@ -47,6 +47,9 @@ async def updateRoles(client, member, server_default=None, refresh_perms=True, n
     if new_poi is not None:
         user_poi = poi_static.id_to_poi.get(new_poi)
 
+    if len(user_poi.mother_districts) != 0:
+        mother_poi = poi_static.id_to_poi.get(user_poi.mother_districts[0])
+
     if user_data.life_state != ewcfg.life_state_kingpin and ewcfg.role_kingpin in roles_map_user:
         # Fix the life_state of kingpins, if somehow it wasn't set.
         user_data.life_state = ewcfg.life_state_kingpin
@@ -70,7 +73,7 @@ async def updateRoles(client, member, server_default=None, refresh_perms=True, n
     #  If faction has an associated PVP role
     if faction_role in ewcfg.role_to_pvp_role:
         # If the POI the user is in is PVP or not
-        if (not user_poi.is_apartment and user_poi.pvp) or lastwarp > time_now:
+        if not (user_poi.is_apartment or not mother_poi.pvp) or lastwarp > time_now:
             pvp_role = ewcfg.role_to_pvp_role.get(faction_role)
             roles_add.add(pvp_role)
 
