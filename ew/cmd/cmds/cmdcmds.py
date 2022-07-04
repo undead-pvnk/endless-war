@@ -436,15 +436,15 @@ async def mutations(cmd):
         if user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_lucky]:
             return await exec_mutations(cmd)
 
-        if ewcfg.mutation_id_gay in mutations:
-            # PRESENT DAY
-            # PRESENT TIME
-            the_month = datetime.datetime.now().month
-            if the_month != 6: # If it's not pride month, sorry bucko.
-                resp_cont = EwResponseContainer(client=cmd.client, id_server=user_data.id_server)
-                die_resp = user_data.die(cause=ewcfg.cause_gay)
-                resp_cont.add_response_container(die_resp)
-                return await resp_cont.post()
+        # if ewcfg.mutation_id_gay in mutations:
+        #     # PRESENT DAY
+        #     # PRESENT TIME
+        #     the_month = datetime.datetime.now().month
+        #     if the_month != 6: # If it's not pride month, sorry bucko.
+        #         resp_cont = EwResponseContainer(client=cmd.client, id_server=user_data.id_server)
+        #         die_resp = user_data.die(cause=ewcfg.cause_gay)
+        #         resp_cont.add_response_container(die_resp)
+        #         return await resp_cont.post()
 
         for mutation in mutations:
             mutation_flavor = static_mutations.mutations_map[mutation]
