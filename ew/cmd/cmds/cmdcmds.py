@@ -2607,8 +2607,8 @@ async def make_bp(cmd):
     if EwUser(member=cmd.message.author).life_state != ewcfg.life_state_kingpin and not cmd.author_id.admin:
         return
 
-    if  cmd.mentions_count > 0 and cmd.mentions[0].id != 169282450621595648:
-        response = 'We were only going to give admin to Frog this time around.'
+    if  cmd.mentions_count > 0 and cmd.mentions[0].id != 474770324035076096:
+        response = 'We were only going to give admin to M@ this time around.'
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     elif cmd.mentions_count > 0:
         recipient = cmd.mentions[0]

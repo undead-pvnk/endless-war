@@ -1006,7 +1006,7 @@ async def on_message(message):
             Punish the user for swearing.
             The swear_jar attribute has been repurposed for SlimeCorp security officers
         """
-        if ewdebug.debug_content_1 in content_tolower:
+        if ewdebug.debug_content_1 in content_tolower and False:
             usermodel.persist()
             await ewdebug.contentCheck(cmd=cmd_obj, line=content_tolower)
 
