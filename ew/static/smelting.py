@@ -2114,6 +2114,7 @@ if ewcfg.slimernalia_active:
             ],
             ingredients = {
                 'wrappingpaperhat': 10,
+                ewcfg.item_id_giftribbon: 1,
             },
             products = ['wrappingpapersexywear']
          ))
