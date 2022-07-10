@@ -1,7 +1,7 @@
 # Global configuration options.
 
 
-version = "v4.15 S4A1 Community Aneurysm Update"
+version = "v4.15.2 S4A1 Junior Coders Make Mistakes Edition"
 
 
 dir_msgqueue = 'msgqueue'
@@ -920,6 +920,8 @@ cmd_object_alt1 = cmd_prefix + 'protest'
 cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_scavenge_alt1 = cmd_prefix + 'lookbetweenthecushions'
 cmd_scavenge_alt2 = cmd_prefix + 'dumpsterdive'
+cmd_scavenge_alt3 = cmd_prefix + 'loot'
+cmd_scavenge_alt4 = cmd_prefix + 'scav'
 cmd_scrub = cmd_prefix + 'scrub'
 cmd_question = cmd_prefix + 'question'
 cmd_answer = cmd_prefix + 'answer'
@@ -2668,6 +2670,7 @@ item_id_ten_story_tobacco_pod = "tenstorytobaccopod"
 item_id_cop_killer_cotton_candy_pod = "copkillercottoncandypod"
 item_id_mustard_gas_pod = "mustardgaspod"
 item_id_spent_pod = "spentpod"
+item_id_giftribbon = "giftribbon"
 item_id_civilianscalp = "civilianscalp"
 item_id_modelovaccine = "modelovirusvaccine"
 item_id_key = "key"

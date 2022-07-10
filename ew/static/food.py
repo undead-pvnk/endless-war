@@ -2187,8 +2187,8 @@ food_list = [
         time_expir = 43200,
     ),
     EwFood(
-        id_food = "rustyricerudding",
-        alias = ['rustyricepudding', 'ricepudding', 'rice pudding'],
+        id_food = "rustyricepudding",
+        alias = ['rustyricerudding', 'ricepudding', 'rice pudding'],
         recover_hunger = 1000,
         price = 50000,
         str_name = "Rusty Rice Pudding",
