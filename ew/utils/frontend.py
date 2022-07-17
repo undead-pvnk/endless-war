@@ -18,6 +18,16 @@ from ..static import weapons as static_weapons
 from ew.backend.dungeons import EwGamestate
 from ew.utils import stats as ewstats
 
+channel_map = {}
+"""
+    channel_map = {
+        server_id : {
+            channel_str: channel_obj
+            }
+        }
+"""
+
+
 class Message:
     # Send the message to this exact channel by name.
     channel = None
@@ -275,27 +285,43 @@ async def post_in_channels(id_server, message, channels = None):
     return
 
 
-"""
-	Find a chat channel by name in a server.
-"""
+def get_channel(server: discord.Guild, channel_name: str):
+    """ Find a chat channel by name in a server. """
+    server_channel_map = channel_map.get(server.id)
+    found_ch = server_channel_map.get(channel_name)
+
+    if not found_ch:
+        # Look up the channel in discord and assign it to the map
+        for chan in server.channels:
+            if chan.name == channel_name:
+                channel_map[server.id][channel_name] = chan
+                found_ch = chan
+
+        if not found_ch and not ewutils.DEBUG:
+            ewutils.logMsg(f'Error: In get_channel(), could not find channel using channel_name "{channel_name}"')
+            return None
+
+    return found_ch
 
 
-def get_channel(server = None, channel_name = ""):
-    channel = None
+def map_channels(server):
+    """ Map every channel str to the proper channel object """
+    ch_found = 0
+    total_ch = len(poi_static.poi_list)
 
-    for chan in server.channels:
-        if chan.name == channel_name:
-            channel = chan
+    server_channel_map = {}
 
-    if channel is None and not ewutils.DEBUG:
-        ewutils.logMsg('Error: In get_channel(), could not find channel using channel_name "{}"'.format(channel_name))
+    # Map POI Channels
+    for poi in poi_static.poi_list:
+        ch_search = poi.channel
+        for chan in server.channels:
+            if chan.name == ch_search:
+                server_channel_map[ch_search] = chan
+                ch_found += 1
 
-    return channel
+    channel_map[server.id] = server_channel_map
 
-
-"""
-	Returns an EwUser object of the selected kingpin
-"""
+    ewutils.logMsg(f"{server.name}: Found {ch_found} POI channels. {total_ch - ch_found} POI channels missing.")
 
 
 def find_kingpin(id_server, kingpin_role):
