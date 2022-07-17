@@ -2004,6 +2004,7 @@ EwSmeltingRecipe(
         str_name="Drug Gumbo",
         alias=[
             'drugsoup',
+            'zugisacrackhead',
         ],
         ingredients={
             ewcfg.item_id_foodbase: 1,
@@ -2102,9 +2103,21 @@ if ewcfg.dh_active:
             },
             products = ['ticket']
          ))
-
-
-
+# Nobody fucking say anything and let this be a surprise.
+if ewcfg.slimernalia_active:
+    smelting_recipe_list.append(EwSmeltingRecipe(
+            id_recipe = "wrappingpapersexywear",
+            str_name = "Wrapping Paper Sexywear",
+            alias = [
+                "everythingM@everwanted",
+                "itsaslimernaliadiaster"
+            ],
+            ingredients = {
+                'wrappingpaperhat': 10,
+                ewcfg.item_id_giftribbon: 1,
+            },
+            products = ['wrappingpapersexywear']
+         ))
 
 # smelting_recipe_list += ewdebug.debugrecipes
 

@@ -71,7 +71,7 @@ poi_list = [
 		id_poi = "krakbay",
 		alias = ['krak', 'kb'],
 		str_name = "Krak Bay",
-		str_desc = "Long street blocks are are densely packed with stores and restaurants, mixed in with townhouses and accompanied by modern skyscrapers and sprawling in-door shopping malls. These amenities, and a scenic view of the River of Slime on its coast, make this district a favorite of juveniles out on the town.\nKrak Bay is a bustling commercial district, featuring stores from across the retail spectrum. From economic, practical convenience stores to high-class, swanky restaurants, Krak Bay has it all. It is also home to some of the most recognizable fixtures of the city's skyline, most notably the Poudrintial Tower and the shopping mall at its base (which contains the city's prized food court).\n\nThis area contains the Food Court, Bicarbonate Soda Fountain, and the Krak Bay Subway Station. To the East is Downtown NLACakaNM. To the Southeast is Poudrin Alley. To the South is Ooze Gardens. To the Southwest is South Sleezeborough. To the West is North Sleezeborough. To the Northwest is Glocksbury.",
+		str_desc = "Long street blocks are are densely packed with stores and restaurants, mixed in with townhouses and accompanied by modern skyscrapers and sprawling in-door shopping malls. These amenities, and a scenic view of the River of Slime on its coast, make this district a favorite of juveniles out on the town.\nKrak Bay is a bustling commercial district, featuring stores from across the retail spectrum. From economic, practical convenience stores to high-class, swanky restaurants, Krak Bay has it all. It is also home to some of the most recognizable fixtures of the city's skyline, most notably the Poudrintial Tower and the shopping mall at its base (which contains the city's prized food court).\n\nThis area contains the Food Court, Bodega, Bicarbonate Soda Fountain, and the Krak Bay Subway Station. To the East is Downtown NLACakaNM. To the Southeast is Poudrin Alley. To the South is Ooze Gardens. To the Southwest is South Sleezeborough. To the West is North Sleezeborough. To the Northwest is Glocksbury.",
 		coord = [21, 24],
 		channel = "krak-bay",
 		role = "Krak Bay",
@@ -615,7 +615,7 @@ poi_list = [
 		id_poi = "thevoid",
 		alias = ['void', 'the-void', 'abyss', 'tv', 'v'],
 		str_name = "the Void",
-		str_desc = "A large open space, pitch black aside from the many old-style street lights illuminating several paths, whose intersection is marked by street sign, standing tall next to a metal bench. At the end of each path is a well lit staircase leading underground. One shorter path from the sign leads to the Waffle House, on the back of which is a ladder leading to its roof. The total silence of this place makes you very aware of the sounds your own body makes as you walk around, and the overbright lamps strain your vision even as total darkness envelops you.\n\nThis area contains the Waffle House and the Black Pond.",
+		str_desc = "A large open space, pitch black aside from the many old-style street lights illuminating several paths, whose intersection is marked by street sign, standing tall next to a metal bench. At the end of each path is a well lit staircase leading underground. One shorter path from the sign leads to the Waffle House, on the back of which is a ladder leading to its roof. The total silence of this place makes you very aware of the sounds your own body makes as you walk around, and the overbright lamps strain your vision even as total darkness envelops you.\n\nThis area contains the Waffle House, Black Pond, and the Ghost Maid Cafe.",
 		channel = "the-void",
 		major_role = "thevoid_major",
 		minor_role = "thevoid_minor",
@@ -3120,7 +3120,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "themoon",
-		alias = ['moon', 'luna', 'loona', 'n1'],
+		alias = ['moon', 'luna', 'loona'],
 		str_name = "The Moon",
 		str_desc = "Hey wait, you're on the moon. How are you able to breathe? Well never mind that. You're doing it and that's what counts. There's a pretty sizable chunk taken out of it ever since N1 went and exploded. If only you could fish here, then you'd be able to fulfill your lifelong dream of imitating the guy from the Dreamworks logo. Whatever the case, there isn't anywhere else to go. !loop back or die, it's your decision.\n\nThis area continues to the Crest of the Crescent Moon.",
 		channel = "the-moon",
@@ -3147,7 +3147,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "themuseum",
-		alias = ['ogm', 'oozegardensmuseum', 'mus', 'relic', 'museumofnaturalhistory', 'museum'],
+		alias = ['ogm', 'oozegardensmuseum', 'mus', 'relic', 'museumofnaturalhistory', 'museum', 'colonelmustardsretirementhome', 'mistermildewstaxwaster', 'artgalleryhell'],
 		str_name = "NLACakaNM Museum of History",
 		str_desc = "You walk into an out-of-the-way, bland brick building, one of NLACakaNM's history museums. Even with the fishy smell from the aquariums in the left wing, you can't help but feel like you're at the DMV. The directories tell you there are some relics and art exhibits on the right, but it doesn't look like many have been donated yet. The only thing that isn't completely dick-flattening in here is the bizarre enthusiasm of the curator behind the counter, chipper and egg-like. You guess some people just have a taste for the dull. This area exits into Ooze Gardens.",
 		channel = "the-museum",
@@ -3273,14 +3273,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi = "rpcity",
-		alias = [
-			"rp",
-			"rp city",
-			"roleplay city",
-			"rpc",
-			"costumestore",
-			"costume"
-		],
+		alias = ['rp', 'rp city', 'roleplaly city', 'rpc', 'costumestore', 'costume'],
 		str_name = "RP City",
 		str_desc = "This place gives you the fucking creeps. A run-down shell of its former self, the RP City store has been long forgotten by most of the residents of NLACakaNM, but every Double Halloween, it somehow comes crawling back. All the amenities and costumes are ragged and decrepit, but it seems there's still a fresh supply of costume creation kits. Oh yeah, the register is also manned by a ghost, because why wouldn't it be. He doesn't seem to mind you browsing though, you figure he's just here to collect a paycheck. Such is life... er... the afterlife, rather.",
 		channel = "rp-city",
@@ -3298,13 +3291,7 @@ poi_list = [
 	),
 	EwPoi(
 		id_poi="splatify",
-		alias=[
-			"jazzclub",
-			"cljazz",
-			"splatshack",
-			"spf",
-			"splatifyjazzclub"
-		],
+		alias = ['jazzclub', 'cljazz', 'splatshack', 'spf', 'splatifyjazzclub'],
 		str_name="\"Splatify\"",
 		str_desc="Welcome to the premier jazz hotspot this side of the Grand Canyon. That gangsters are still allowed in. The owners keep the place dim and smoky, and happily abide the suicide by decibel that is the bar band. Some of these horn players are known to play so loud they blow their guts out through their instruments. And that's just the way you like it. Better yet? They take requests. Splatify exits into Crookline.",
 		channel="splatify",
@@ -3318,14 +3305,9 @@ poi_list = [
 		neighbors={"crookline": 20},
 		wikipage="https://rfck.miraheze.org/wiki/Crookline#Splatify"
 	),
-EwPoi(
+	EwPoi(
 		id_poi="ufoufo",
-		alias=[
-			"ufo",
-			"flyingsaucer",
-			"saucer",
-			"spaceship"
-		],
+		alias = ['ufo', 'flyingsaucer', 'saucer', 'spaceship'],
 		str_name="UFO UFO",
 		str_desc="You stand in the Unnerving Fighting Operator Unidentified Flying Object. Honestly, the stark white, sterile spaceship environment pales in comparison to a different revelation: finding the sedated bodies of so many former gangsters. Happy, DryIceBros, the Undercover Cop and Code Soda are all suspended floating in glass tubes, just to name a few. You try to hide your nervousness around all these UFOs (the aliens, not other spacecraft) behind your skinsuit. You don't want to join them, after all. When on the ground, this area exits to the West Outskirts.",
 		channel="ufo-ufo",
@@ -3367,8 +3349,7 @@ EwPoi(
     ),
 	EwPoi(
 		id_poi="greenroom",
-		alias=[
-		],
+		alias=['funny'],
 		str_name="The Green Room",
 		str_desc="That feeling. Think back to every time you were knocked down and humiliated. Every time you wanted to clench your fists and show the world who it decided to abandon. Every time you saw the light at the top of the stairs and your legs started moving on their own. That fire in your belly that can only be smothered with victory and excess. Your life is a number. You are a number. You can only go up or you'll feel it again. *That* feeling.\n\nThat's me. And I've consumed everyone. From the dregs scavenging for scraps to the smug pigs in the penthouses to the spoiled fragile little rats like you, conceited enough to think they could ever beat me. There's a reason you can't move without me. Why you can't fight or die or eat or do anything. And it began long before this city, long before that sludge snatched your DNA and made it run lockstep to my whims. I've always been a part of you.",
 		channel="the-green-room",
@@ -3387,7 +3368,7 @@ EwPoi(
 		id_poi = "ghostmaidcafe",
 		alias = ['ghost maid cafe', 'gmc', 'maidcafe', 'maid cafe', 'mcafe', 'ghost cafe', 'gcafe', 'goth ihop', 'brazils bakery', 'cheesecakefactory'],
 		str_name = "The Ghost Maid Cafe",
-		str_desc = "This small rundown cafe is filled with all kinds of degenerates. They sit at their tables, eagerly waiting for the ghosts dressed in maid outfits and cat ears to serve them. The food coming from the back looks horrible, too, but that's not why people are here. \n\nExits into Charcoal Park",
+		str_desc = "This small rundown cafe is filled with all kinds of degenerates. They sit at their tables, eagerly waiting for the ghosts dressed in maid outfits and cat ears to serve them. The food coming from the back looks horrible, too, but that's not why people are here. \n\nExits back into the Void.",
 		channel = "ghost-maid-cafe",
 		major_role = "thevoid_major",
 		minor_role = "nullminorrole",
