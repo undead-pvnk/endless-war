@@ -1,7 +1,7 @@
 # Global configuration options.
 
 
-version = "v4.15 S4A1 Community Aneurysm Update"
+version = "v4.15.2 S4A1 Junior Coders Make Mistakes Edition"
 
 
 dir_msgqueue = 'msgqueue'
@@ -932,6 +932,8 @@ cmd_object_alt1 = cmd_prefix + 'protest'
 cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_scavenge_alt1 = cmd_prefix + 'lookbetweenthecushions'
 cmd_scavenge_alt2 = cmd_prefix + 'dumpsterdive'
+cmd_scavenge_alt3 = cmd_prefix + 'loot'
+cmd_scavenge_alt4 = cmd_prefix + 'scav'
 cmd_scrub = cmd_prefix + 'scrub'
 cmd_question = cmd_prefix + 'question'
 cmd_answer = cmd_prefix + 'answer'
@@ -2680,6 +2682,7 @@ item_id_ten_story_tobacco_pod = "tenstorytobaccopod"
 item_id_cop_killer_cotton_candy_pod = "copkillercottoncandypod"
 item_id_mustard_gas_pod = "mustardgaspod"
 item_id_spent_pod = "spentpod"
+item_id_giftribbon = "giftribbon"
 item_id_civilianscalp = "civilianscalp"
 item_id_modelovaccine = "modelovirusvaccine"
 item_id_key = "key"
@@ -3317,7 +3320,7 @@ mutation_id_airlock = "airlock"
 mutation_id_lightminer = "lightminer"
 mutation_id_amnesia = "amnesia"
 mutation_id_stinkeye = "stinkeye"
-mutation_id_gay = "gay"
+# mutation_id_gay = "gay"
 
 mutation_milestones = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
 
@@ -3656,7 +3659,7 @@ mutation_descriptions = {
     mutation_id_landlocked: "When standing in a street either bordering an outskirt or the Slime Sea, use !loop to warp to the opposite side of the map. This also works on the ferry and at Slime's End Cliffs. There is a 60 second travel time when using !loop.",
     mutation_id_amnesia: "Your display name is replaced with ????? in EW's messages, and you can delete your message commands without ENDLESS WAR reacting. On a kill, the kill feed message is delayed by 60 seconds.",
     mutation_id_stinkeye: "When surveying a district, the amount of slime on the ground is shown, along with 4 items starting with the lowest IDs.",
-    mutation_id_gay: "You're gay.",
+    # mutation_id_gay: "You're gay.",
 
 }
 

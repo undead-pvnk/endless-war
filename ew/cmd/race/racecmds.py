@@ -134,9 +134,153 @@ async def autocannibalize(cmd):
     return await fe_utils.send_response(response, cmd)
 
 
+
+
+async def bonejenga(cmd): #blame ebola
+    user_data = EwUser(member=cmd.message.author)
+    response = ""
+    
+    if user_data.race == ewcfg.race_skeleton:
+        target_name = cmd.mentions[0].display_name
+        target_data = EwUser(member=cmd.mentions[0])
+        
+        if cmd.mentions_count > 1:
+            response = "Bone Jenga is a sacred art, far too complex for any but the highest of scholars to play with more than two people involved."
+            
+        elif cmd.mentions_count < 1:
+            response = "Who are you trying to challenge?"
+            
+        else:
+            if target_data.race == ewcfg.race_skeleton:
+                if target_member.id == cmd.message.author.id:
+                    response = "That's not how this works."
+                    
+                else:
+                     proposal_response = "*{}:* {} is challenging you to a game of Bone Jenga! Will you **{accept}** or **{refuse}** their invitation?".format(target_member.display_name, cmd.message.author.display_name, accept=ewcfg.cmd_accept, refuse=ewcfg.cmd_refuse)
+                    await fe_utils.send_response(proposal_response, cmd, format_name=False)
+
+                    #wait for response
+                    accepted = False
+                    try:
+                        msg = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == target_member and
+                                                                                                    message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
+                        if msg != None:
+                            if msg.content.lower() == ewcfg.cmd_accept:
+                                accepted = True
+                            elif msg.content.lower() == ewcfg.cmd_refuse:
+                                accepted = False
+                  except:
+                        accepted = False
+
+                    response = ""
+                    #Jenga accepted response
+                    if accepted:
+                    
+                        outcome = ""
+                        p1 = random.randrange(206)
+                        p2 = random.randrange(206)
+            
+                        #in-depth insult system
+                        if p1 > p2:
+                            if p1 == 206 and p2 == 1:
+                                outcome = "You win! Flawless victory! Holy shit, what an absolute stomp. You should be as proud of yourself as {} should be ashamed of themselves.".format(target_name)
+                        
+                            elif p1 == 206:
+                                outcome = "You win! Flawless victory! Jesus fucking christ, dude. You took a whole person apart and put them back together like it was nothing."
+                        
+                            elif p2 == 1:
+                                outcome = "You win! Hardly even any cleanup either, you could probably snatch what they took right back from them. Were you even trying, {}?".format(target_name)
+                        
+                            else:
+                                outcome = "You win! Look at {}, all stupid and dumb like a loser. Hopefully they stick around long enough to put you back together.".format(target_name)
+                    
+                        elif p1 < p2:
+                            if p1 == 1 and p2 ==206:
+                                outcome = "{} wins! Flawless victory! They might as well stuff your parts in a bag, sling it over their shoulder, and !recycle you.".format(target_name)
+                        
+                            elif p2 == 206:
+                                outcome = "{} wins! Flawless victory! They just took you apart in every way physically possible, how are you ever going to challenge anyone again after this?".format(target_name)
+                        
+                            elif p1 == 1:
+                                outcome = "{} wins! Not that you made it all that difficult for them, how are they meant to get any dopamine from this kind of victory?".format(target_name)
+                        
+                            else:
+                                outcome = "{} wins! Look at you, all crumpled on the floor like a disjointed pile of bones.".format(target_name)
+                    
+                        else:
+                            if p1 == 206 and p2 == 206:
+                                outcome = "It's a draw! One that wasted the maximum amount of time between the two of you, congratulations."
+                        
+                            elif p1 == 1 and p2 == 1:
+                                outcome = "Just stop. Forever. Never do this again, I'm so embarrassed for the both of you."
+                        
+                            else:
+                                outcome = "It's a draw! This was a massive waste of time, worse than a pissing contest."                
+            
+                        #Jenga Time
+                        response = "You successfully challenge {} to a game of Bone Jenga!".format(target_name)
+                        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                        await asyncio.sleep(1)
+                        response = "..."
+                        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                        await asyncio.sleep(1)
+                        response = "You successfully remove {} bones from {}'s body before they collapse. Naturally, you reassemmble them so they can take their turn.".format(p1, target_name)
+                        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                        await asyncio.sleep(1)
+                        response = "..."
+                        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                        await asyncio.sleep(1)
+                        response = "{} successfully removes {} bones from your body before you collapse. {}".format(target_name, p2, outcome)
+                        
+                    else:
+                        responses = [
+                            "{target} rudely refuses your kind offer of a bone-rattlin' good time.",
+                            "Wow, {target}, too good for Bone Jenga?",
+                            "What a boner you are, {target}."
+                        ]
+                        response = random.choice{responses}
+            
+            elif target_data.race == ewcfg.race_forbidden:
+                response = "They're not cool enough to handle Bone Jenga."
+                
+            elif target_data.race == ewcfg.race_amphibian:
+                response = "They've more than likely found at least three ways to goon Bone Jenga, best to just leave those types alone."
+                
+            elif target_data.race == ewcfg.race_food:
+                response = "Most food is, unfortunately, boneless. Lost cause, lost long ago."
+                
+            elif target_data.race == ewcfg.race_robot:
+                response = "Ah, if only robot bones weren't bolted to the rest of their body."
+                
+            elif target_data.race == ewcfg.race_slimederived:
+                response = "They don't have bones. Don't ask, it's weird."
+                
+            elif target_data.race == ewcfg.race_avian:
+                response = "Haha, sick prank bro. Bird bones are way too weak for Bone Jenga."
+                
+            elif target_data.race == ewcfg.race_monster:
+                response = "Monster bones are way too big for Bone Jenga, dangerous ideas like that lead to the Ivory Skyscrapers."
+            
+            elif target_data.race == ewcfg.race_insectoid:
+                response = "Exoskeletons are... weird."
+                
+            elif target_data.race == ewcfg.race_shambler:
+                response = "This one needs a little longer in the sun before they're a skeleton."
+                
+            else:
+                response = "Way, waaay too many layers to bother dealing with."
+    else:
+        response = "You people aren't allowed to do that."
+    
+    return await fe_utils.send_response(response, cmd)
+
+
+
+
 async def rattle(cmd):
     user_data = EwUser(member=cmd.message.author)
-
+    response = ""
+    
     if user_data.race == ewcfg.race_skeleton:
         time_now = int(time.time())
 
@@ -158,7 +302,12 @@ async def rattle(cmd):
             user_data.persist()
 
         # spook mentioned player
+        target_name = ""
+        responses = []
+        
         if cmd.mentions_count == 1:
+            target_name = cmd.mentions[0].display_name
+
             agroskelly_response = [
                 ", sending a shiver down their spine.",
                 ", who clearly does not appreciate it.",
@@ -175,11 +324,19 @@ async def rattle(cmd):
                 ", wondering if they know who the girl next door is, living in the haunted mansion.",
                 " to assure them that this is, in fact, Halloween."
             ]
-            response = random.choice([ # thanks zug
-                "You start removing ribs and throwing them at {}. Rib fight!".format(cmd.mentions[0].display_name),
-                "You rattle your bones at {}{}".format(cmd.mentions[0].display_name, random.choice(agroskelly_response)),
-                "You have a bone to pick with {}.".format(cmd.mentions[0].display_name) # blame org
-            ])
+            responses = [
+                "You rattle your bones at {}{}".format(target_name, random.choice(agroskelly_response)),
+                "You clack your jaw at {}{}".format(target_name, random.choice(agroskelly_response)),
+                "You waggle your bony finger at {}{}".format(target_name, random.choice(agroskelly_response)),
+                "{} is bone-tired of your sass.".format(target_name),
+                "{} is shaken down for all they're worth! It ain't much.".format(target_name), #blame ebola
+                "You start removing ribs and throwing them at {}. Rib fight!".format(target_name),
+                "You have a bone to pick with {}.".format(target_name), # blame org
+                "You rib with {}.".format(target_name)
+            ]
+
+            response = random.choice(responses)
+
         # rattle alone
         else:
             roll = random.randrange(100)
@@ -193,13 +350,13 @@ async def rattle(cmd):
                     "You rattle your bones so aggressively your arm flies out of your shoulder's socket.",
                     "You rattle your bones so aggressively your leg is shaken out of your pelvis, sending you to the floor.",
                     "You rattle your bones so aggressively a rib flies out and nearly hits someone else's eye.",
-                    "You rattle your bones so aggressively a rib collapses inward, bouncing around your chest cavirty for a good ten minutes."
+                    "You rattle your bones so aggressively a rib collapses inward, bouncing around your chest cavity for a good ten minutes.",
                     "You bang your ribcage with a couple of sticks. Sounds less like a xylophone than you would expect.", # partially blame pyro
                     "You 'nyehh' to yourself",
                     "Every day you rattlin'.",
-                    "You rattle your bones, thinking about the last time you gave someone a bad time" # blame loom
-                    "You set to work tickling your own ivories. How shameful." # blame dublyn
-                    "A few spinal plates fall out, you give them a lick and stick them back in." # blame ebola
+                    "You rattle your bones, thinking about the last time you gave someone a bad time", # blame loom
+                    "You set to work tickling your own ivories. How shameful.", # blame dublyn
+                    "A few spinal plates fall out, you give them a lick and stick them back in.", # blame ebola
                     "You give everyone the chills from chattering your teeth too much.", # blame ebola
                     "You trip on a wayward rock and topple over. What a boner!", # blame loom
                     "You rib with the fellas. Good bants all 'round.",
@@ -209,31 +366,34 @@ async def rattle(cmd):
                     "You play a somber tune on your ribcage, fondly remembering the last Double Halloween.",
                     "You shiver loudly as you remember the cold of the catacombs."
                 ]
-            # rare rattles
+           # rare rattles
             elif roll > 1:
                 bones = random.randrange(206)
-                insult1 = []
-                insult2 = []
                 # grammar is important, retards
                 if bones > 1:
                     insult1 = "s "
                     insult2 = "."
-                elif bones > 0:
+                elif bones == 1:
                     insult1 = " "
                     insult2 = ". What? How? Did you go straight for a thigh?"
-                    lonelyskelly_response = [
-                        "You rattle your bones so aggressively, you collapse into a pile of bones. It takes a second for you to reassemble yourself",
-                        "You successfully remove {} bone{}before collapsing{}".format(bones, insult1, insult2), # blame ebola
-                        "You remove your head before entering a nearby bowling alley."
-                    ]
-                # ultra rare rattle
-                elif roll > 0:
-                    lonelyskelly_response = "https://youtu.be/TFwXbp9bLlY"
-                response = random.choice(lonelyskelly_response) # thanks zug
+                else:
+                    insult1 = "s "
+                    insult2 = ". You're really having a day..."
+                lonelyskelly_response = [
+                    "You rattle your bones so aggressively, you collapse into a pile of bones. It takes a second for you to reassemble yourself",
+                    "You successfully remove {} bone{}before collapsing{}".format(bones, insult1, insult2), # blame ebola
+                    "You remove your head before entering a nearby bowling alley."
+                ]
+            # ultra rare rattle
+            else:
+                lonelyskelly_response = ["https://youtu.be/TFwXbp9bLlY"]
+            response = random.choice(lonelyskelly_response) # thanks zug
     else:
         response = "You people are not allowed to do that."
 
     return await fe_utils.send_response(response, cmd)
+
+
 
 
 async def beep(cmd):
@@ -277,6 +437,8 @@ async def beep(cmd):
         response = "You people are not allowed to do that."
 
     return await fe_utils.send_response(response, cmd)
+
+
 
 
 async def yiff(cmd):

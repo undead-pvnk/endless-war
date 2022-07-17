@@ -436,15 +436,15 @@ async def mutations(cmd):
         if user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_lucky]:
             return await exec_mutations(cmd)
 
-        if ewcfg.mutation_id_gay in mutations:
-            # PRESENT DAY
-            # PRESENT TIME
-            the_month = datetime.datetime.now().month
-            if the_month != 6: # If it's not pride month, sorry bucko.
-                resp_cont = EwResponseContainer(client=cmd.client, id_server=user_data.id_server)
-                die_resp = user_data.die(cause=ewcfg.cause_gay)
-                resp_cont.add_response_container(die_resp)
-                return await resp_cont.post()
+        # if ewcfg.mutation_id_gay in mutations:
+        #     # PRESENT DAY
+        #     # PRESENT TIME
+        #     the_month = datetime.datetime.now().month
+        #     if the_month != 6: # If it's not pride month, sorry bucko.
+        #         resp_cont = EwResponseContainer(client=cmd.client, id_server=user_data.id_server)
+        #         die_resp = user_data.die(cause=ewcfg.cause_gay)
+        #         resp_cont.add_response_container(die_resp)
+        #         return await resp_cont.post()
 
         for mutation in mutations:
             mutation_flavor = static_mutations.mutations_map[mutation]
@@ -2607,8 +2607,8 @@ async def make_bp(cmd):
     if EwUser(member=cmd.message.author).life_state != ewcfg.life_state_kingpin and not cmd.author_id.admin:
         return
 
-    if  cmd.mentions_count > 0 and cmd.mentions[0].id != 169282450621595648:
-        response = 'We were only going to give admin to Frog this time around.'
+    if  cmd.mentions_count > 0 and cmd.mentions[0].id != 474770324035076096:
+        response = 'We were only going to give admin to M@ this time around.'
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     elif cmd.mentions_count > 0:
         recipient = cmd.mentions[0]

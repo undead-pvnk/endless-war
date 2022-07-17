@@ -2190,6 +2190,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "drapeddress",
         str_name = "Draped Evening Dress",
+        str_desc = "A long gown, with ample room for large bosoms and tall stature. It is fitted for someone of height 289.56 cm. If you are shorter than that, it's gonna be pooling around your feet."
         str_onadorn = "You slide into the beautiful dress... you are now absolutely breathtaking. Men (and women) bow before you, almost trying to throw themselves under your feet. It is rather annoying.",
         str_unadorn = "Your huge body rips out of the dress, tearing it to shreds! It was no match for your impressive figure! (Don't worry though it still is in your inventory.)",
         durability = 2500000,
@@ -2197,6 +2198,18 @@ cosmetic_items_list = [
         freshness = 10,
         acquisition = "smelting",
         price = 5000000,
+    ),
+    EwCosmeticItem(
+        id_cosmetic = "wrappingpapersexywear" # Reasons to never listen to the community, especially M@.
+        str_name = "Wrapping Paper Sexywear" # Nobody fucking say anything and let this be a surprise.
+        str_desc = "This awful collection of wrapping paper is what you're going to wrap parts of yourself to present yourself as a present. You think this is funny? Even if you wear this during slimernalia, nobody will like you.",
+        str_onadorn = "You wrap yourself up in wrapping paper to do the century old reinterpretation of \"I am your present!\"... you do realize that this is gross and wrong, right?", 
+        str_unadorn = "You rip off the awful, awful clothing. Of course, this will be your lowest point in your whole life." ,
+        durability = 4,
+        style = "evil",
+        freshness = -1,
+        acquisition = "smelting",
+        price = 100,
     ),
 ]
 
