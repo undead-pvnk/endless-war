@@ -13,6 +13,7 @@ cmd_map = {
     ewcfg.cmd_autocannibalize: racecmds.autocannibalize,
     ewcfg.cmd_autocannibalize_alt1: racecmds.autocannibalize,
     ewcfg.cmd_rattle: racecmds.rattle,
+    ewcfg.cmd_bonejenga: racecmds.bonejenga,
     ewcfg.cmd_beep: racecmds.beep,
     ewcfg.cmd_yiff: racecmds.yiff,
     ewcfg.cmd_hiss: racecmds.hiss,

@@ -141,8 +141,6 @@ async def bonejenga(cmd): #blame ebola
     response = ""
     
     if user_data.race == ewcfg.race_skeleton:
-        target_name = cmd.mentions[0].display_name
-        target_data = EwUser(member=cmd.mentions[0])
         
         if cmd.mentions_count > 1:
             response = "Bone Jenga is a sacred art, far too complex for any but the highest of scholars to play with more than two people involved."
@@ -151,28 +149,28 @@ async def bonejenga(cmd): #blame ebola
             response = "Who are you trying to challenge?"
             
         else:
+            target_data = EwUser(member=cmd.mentions[0])
             if target_data.race == ewcfg.race_skeleton:
-                if target_member.id == cmd.message.author.id:
+                if target_data.id_user == cmd.message.author.id:
                     response = "That's not how this works."
                     
                 else:
-                     proposal_response = "*{}:* {} is challenging you to a game of Bone Jenga! Will you **{accept}** or **{refuse}** their invitation?".format(target_member.display_name, cmd.message.author.display_name, accept=ewcfg.cmd_accept, refuse=ewcfg.cmd_refuse)
+                    target_name = cmd.mentions[0].display_name
+                    proposal_response = "*{}:* {} is challenging you to a game of Bone Jenga! Will you **{accept}** or **{refuse}** their invitation?".format(target_name, cmd.message.author.display_name, accept=ewcfg.cmd_accept, refuse=ewcfg.cmd_refuse)
                     await fe_utils.send_response(proposal_response, cmd, format_name=False)
 
                     #wait for response
                     accepted = False
                     try:
-                        msg = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == target_member and
-                                                                                                    message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
+                        msg = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.mentions[0] and message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
                         if msg != None:
                             if msg.content.lower() == ewcfg.cmd_accept:
                                 accepted = True
                             elif msg.content.lower() == ewcfg.cmd_refuse:
                                 accepted = False
-                  except:
+                    except:
                         accepted = False
 
-                    response = ""
                     #Jenga accepted response
                     if accepted:
                     
@@ -234,11 +232,11 @@ async def bonejenga(cmd): #blame ebola
                         
                     else:
                         responses = [
-                            "{target} rudely refuses your kind offer of a bone-rattlin' good time.",
-                            "Wow, {target}, too good for Bone Jenga?",
-                            "What a boner you are, {target}."
+                            "{} rudely refuses your kind offer of a bone-rattlin' good time.".format(target_name),
+                            "Wow, {}, too good for Bone Jenga?".format(target_name),
+                            "What a boner you are, {}.".format(target_name)
                         ]
-                        response = random.choice{responses}
+                        response = random.choice(responses)
             
             elif target_data.race == ewcfg.race_forbidden:
                 response = "They're not cool enough to handle Bone Jenga."
